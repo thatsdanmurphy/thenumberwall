@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 // --- SPORTS ------------------------------------------------------------------
-const SPORTS = ["ALL","NHL","NBA","NFL","MLB","Soccer","PWHL"];
+const SPORTS = ["ALL","Hockey","Basketball","Football","Baseball","Soccer"];
 // Single color language - white active state, no per-sport hues
 const SPORT_TAB = {
   active:   { bg:"rgba(255,255,255,0.92)", border:"rgba(255,255,255,0.9)", color:"#0a0d14", glow:"0 0 12px rgba(255,255,255,0.35)" },
@@ -17,238 +17,363 @@ const tierHeat = { SACRED:10, LEGEND:8, RISING:5, UNWRITTEN:1 };
 // --- NUMBER DATA -------------------------------------------------------------
 // players: { name, sport, era, stat, statLabel, role, icon }
 const NUMBER_DATA = {
-  1:  { tier:TIER.LEGEND, players:[
-    { name:"Oscar Robertson",  sport:"NBA", era:"1960-1974", team:"Royals - Bucks",       stat:"9887",  statLabel:"Career Assists",           role:"Point Guard",  icon:"🏀" },
-    { name:"Warren Moon",      sport:"NFL", era:"1984-2000", team:"Oilers - Vikings",      stat:"291",   statLabel:"TD Passes",                role:"Quarterback",  icon:"🏈" },
-    { name:"Terry Sawchuk",    sport:"NHL", era:"1949-1970", team:"Red Wings",              stat:"103",   statLabel:"Career Shutouts (record)", role:"Goaltender",   icon:"🏒" },
+  1: { tier:TIER.LEGEND, players:[
+    { name:"Oscar Robertson", sport:"NBA", league:"NBA", status:"Retired", era:"1960-1974", team:"Cincinnati Royals", stat:"9887", statLabel:"Career Assists", role:"Point Guard", icon:"🏀" },
+    { name:"Ozzie Smith", sport:"MLB", league:"MLB", status:"Retired", era:"1978-1996", team:"St. Louis Cardinals", stat:"2460", statLabel:"Career Assists (SS record)", role:"Shortstop", icon:"⚾" },
+    { name:"Warren Moon", sport:"NFL", league:"NFL", status:"Retired", era:"1984-2000", team:"Houston Oilers", stat:"49325", statLabel:"Career Passing Yards", role:"Quarterback", icon:"🏈" },
+    { name:"Terry Sawchuk", sport:"NHL", league:"NHL", status:"Retired", era:"1949-1970", team:"Detroit Red Wings", stat:"103", statLabel:"Career Shutouts", role:"Goaltender", icon:"🏒" },
+    { name:"Bryce Harper", sport:"MLB", league:"MLB", status:"Active", era:"2012-pres", team:"Philadelphia Phillies", stat:"2", statLabel:"MVP Awards", role:"Right Field", icon:"⚾" },
+    { name:"Alexia Putellas", sport:"Soccer", league:"Liga F", status:"Active", era:"2012-pres", team:"FC Barcelona", stat:"2", statLabel:"Ballon d'Or Awards", role:"Midfielder", icon:"⚽" },
   ]},
-  2:  { tier:TIER.LEGEND, players:[
-    { name:"Derek Jeter",      sport:"MLB", era:"1995-2014", team:"Yankees",                stat:"3465",  statLabel:"Career Hits",              role:"Shortstop",    icon:"⚾" },
-    { name:"Brian Leetch",     sport:"NHL", era:"1988-2006", team:"Rangers",                stat:"1028",  statLabel:"Career Points",            role:"Defenseman",   icon:"🏒" },
-    { name:"Kawhi Leonard",    sport:"NBA", era:"2011-pres", team:"Spurs - Clippers",      stat:"2",     statLabel:"Championships",            role:"Small Forward",icon:"🏀" },
+  2: { tier:TIER.LEGEND, players:[
+    { name:"Derek Jeter", sport:"MLB", league:"MLB", status:"Retired", era:"1995-2014", team:"New York Yankees", stat:"3465", statLabel:"Career Hits", role:"Shortstop", icon:"⚾" },
+    { name:"Eddie Shore", sport:"NHL", league:"NHL", status:"Retired", era:"1926-1940", team:"Boston Bruins", stat:"4", statLabel:"Hart Trophies", role:"Defenseman", icon:"🏒" },
+    { name:"Brian Leetch", sport:"NHL", league:"NHL", status:"Retired", era:"1988-2006", team:"New York Rangers", stat:"1028", statLabel:"Career Points", role:"Defenseman", icon:"🏒" },
+    { name:"Kawhi Leonard", sport:"NBA", league:"NBA", status:"Active", era:"2011-pres", team:"LA Clippers", stat:"2", statLabel:"Championships", role:"Small Forward", icon:"🏀" },
   ]},
-  3:  { tier:TIER.LEGEND, players:[
-    { name:"Babe Ruth",        sport:"MLB", era:"1914-1935", team:"Yankees",                stat:"714",   statLabel:"Home Runs",                role:"Outfielder",   icon:"⚾" },
-    { name:"Dwyane Wade",      sport:"NBA", era:"2003-2019", team:"Heat",                   stat:"3",     statLabel:"Championships",            role:"Shooting Guard",icon:"🏀"},
-    { name:"Allen Iverson",    sport:"NBA", era:"1996-2010", team:"76ers",                  stat:"31.1",  statLabel:"Peak Season PPG",          role:"Point Guard",  icon:"🏀" },
+  3: { tier:TIER.LEGEND, players:[
+    { name:"Babe Ruth", sport:"MLB", league:"MLB", status:"Retired", era:"1914-1935", team:"New York Yankees", stat:"714", statLabel:"Career Home Runs", role:"Right Field", icon:"⚾" },
+    { name:"Dwyane Wade", sport:"NBA", league:"NBA", status:"Retired", era:"2003-2019", team:"Miami Heat", stat:"3", statLabel:"Championships", role:"Shooting Guard", icon:"🏀" },
+    { name:"Jonathan Toews", sport:"NHL", league:"NHL", status:"Retired", era:"2006-2023", team:"Chicago Blackhawks", stat:"3", statLabel:"Stanley Cup Rings", role:"Center", icon:"🏒" },
+    { name:"Candace Parker", sport:"NBA", league:"WNBA", status:"Retired", era:"2008-2023", team:"Los Angeles Sparks", stat:"2", statLabel:"Championships", role:"Forward", icon:"🏀" },
+    { name:"Diana Taurasi", sport:"NBA", league:"WNBA", status:"Active", era:"2004-pres", team:"Phoenix Mercury", stat:"10000", statLabel:"Career Points (WNBA record)", role:"Guard", icon:"🏀" },
   ]},
-  4:  { tier:TIER.LEGEND, players:[
-    { name:"Bobby Orr",        sport:"NHL", era:"1966-1979", team:"Bruins",                 stat:"915",   statLabel:"Career Points",            role:"Defenseman",   icon:"🏒" },
-    { name:"Lou Gehrig",       sport:"MLB", era:"1923-1939", team:"Yankees",                stat:"493",   statLabel:"Home Runs",                role:"First Base",   icon:"⚾" },
-    { name:"Brett Favre",      sport:"NFL", era:"1991-2010", team:"Packers - Vikings",      stat:"508",   statLabel:"Career TD Passes",         role:"Quarterback",  icon:"🏈" },
+  4: { tier:TIER.LEGEND, players:[
+    { name:"Lou Gehrig", sport:"MLB", league:"MLB", status:"Retired", era:"1923-1939", team:"New York Yankees", stat:"1995", statLabel:"Consecutive Games", role:"First Base", icon:"⚾" },
+    { name:"Bobby Orr", sport:"NHL", league:"NHL", status:"Retired", era:"1966-1979", team:"Boston Bruins", stat:"102", statLabel:"Career Goals (D)", role:"Defenseman", icon:"🏒" },
+    { name:"Brett Favre", sport:"NFL", league:"NFL", status:"Retired", era:"1991-2010", team:"Green Bay Packers", stat:"297", statLabel:"TD Passes", role:"Quarterback", icon:"🏈" },
   ]},
-  5:  { tier:TIER.LEGEND, players:[
-    { name:"Joe DiMaggio",     sport:"MLB", era:"1936-1951", team:"Yankees",                stat:"56",    statLabel:"Game Hit Streak",          role:"Center Field", icon:"⚾" },
-    { name:"Nicklas Lidstrom", sport:"NHL", era:"1991-2012", team:"Red Wings",              stat:"7",     statLabel:"Norris Trophies",          role:"Defenseman",   icon:"🏒" },
+  5: { tier:TIER.LEGEND, players:[
+    { name:"Joe DiMaggio", sport:"MLB", league:"MLB", status:"Retired", era:"1936-1951", team:"New York Yankees", stat:"56", statLabel:"Game Hit Streak", role:"Center Field", icon:"⚾" },
+    { name:"George Hainsworth", sport:"NHL", league:"NHL", status:"Retired", era:"1926-1937", team:"Montreal Canadiens", stat:"94", statLabel:"Career Shutouts", role:"Goaltender", icon:"🏒" },
+    { name:"Donovan McNabb", sport:"NFL", league:"NFL", status:"Retired", era:"1999-2011", team:"Philadelphia Eagles", stat:"234", statLabel:"TD Passes", role:"Quarterback", icon:"🏈" },
   ]},
-  6:  { tier:TIER.SACRED, sacredSport:"NBA", players:[
-    { name:"Bill Russell",     sport:"NBA", era:"1956-1969", team:"Celtics",                stat:"11",    statLabel:"Championships",            role:"Center",       icon:"🏀" },
+  6: { tier:TIER.SACRED, sacredSport:"NBA", players:[
+    { name:"Bill Russell", sport:"NBA", league:"NBA", status:"Retired", era:"1956-1969", team:"Boston Celtics", stat:"11", statLabel:"Championships", role:"Center", icon:"🏀" },
   ]},
-  7:  { tier:TIER.LEGEND, players:[
-    { name:"Cristiano Ronaldo", sport:"Soccer", era:"2002-pres", team:"Man Utd - Real Madrid", stat:"900+", statLabel:"Career Goals (all comps)", role:"Forward", icon:"⚽" },
-    { name:"Mickey Mantle",    sport:"MLB", era:"1951-1968", team:"Yankees",                stat:"536",   statLabel:"Home Runs",                role:"Center Field", icon:"⚾" },
-    { name:"Phil Esposito",    sport:"NHL", era:"1963-1981", team:"Bruins",                 stat:"717",   statLabel:"Career Goals",             role:"Center",       icon:"🏒" },
+  7: { tier:TIER.LEGEND, players:[
+    { name:"Mickey Mantle", sport:"MLB", league:"MLB", status:"Retired", era:"1951-1968", team:"New York Yankees", stat:"536", statLabel:"Career Home Runs", role:"Center Field", icon:"⚾" },
+    { name:"Phil Esposito", sport:"NHL", league:"NHL", status:"Retired", era:"1963-1981", team:"Boston Bruins", stat:"717", statLabel:"Career Goals", role:"Center", icon:"🏒" },
+    { name:"Cristiano Ronaldo", sport:"Soccer", league:"Premier League / La Liga", status:"Active", era:"2002-pres", team:"Al Nassr", stat:"900", statLabel:"Career Goals (all comps)", role:"Forward", icon:"⚽" },
   ]},
-  8:  { tier:TIER.LEGEND, players:[
-    { name:"Cal Ripken Jr.",   sport:"MLB", era:"1981-2001", team:"Orioles",                stat:"2632",  statLabel:"Consecutive Games",        role:"Shortstop",    icon:"⚾" },
-    { name:"Alex Ovechkin",    sport:"NHL", era:"2005-pres", team:"Capitals",               stat:"893+",  statLabel:"Career Goals",             role:"Left Wing",    icon:"🏒" },
-    { name:"Kobe Bryant",      sport:"NBA", era:"1996-2016", team:"Lakers",                 stat:"33643", statLabel:"Career Points",            role:"Shooting Guard",icon:"🏀"},
+  8: { tier:TIER.LEGEND, players:[
+    { name:"Cal Ripken Jr.", sport:"MLB", league:"MLB", status:"Retired", era:"1981-2001", team:"Baltimore Orioles", stat:"2632", statLabel:"Consecutive Games", role:"Shortstop", icon:"⚾" },
+    { name:"Kobe Bryant", sport:"NBA", league:"NBA", status:"Retired", era:"1996-2016", team:"Los Angeles Lakers", stat:"33643", statLabel:"Career Points", role:"Shooting Guard", icon:"🏀" },
+    { name:"Alex Ovechkin", sport:"NHL", league:"NHL", status:"Active", era:"2005-pres", team:"Washington Capitals", stat:"893", statLabel:"Career Goals", role:"Left Wing", icon:"🏒" },
   ]},
-  9:  { tier:TIER.LEGEND, players:[
-    { name:"Ronaldo R9",        sport:"Soccer", era:"1994-2011", team:"Barcelona - Real Madrid", stat:"352",  statLabel:"Club Goals", role:"Forward", icon:"⚽" },
-    { name:"Gordie Howe",      sport:"NHL", era:"1946-1980", team:"Red Wings",              stat:"801",   statLabel:"Career Goals",             role:"Right Wing",   icon:"🏒" },
-    { name:"Ted Williams",     sport:"MLB", era:"1939-1960", team:"Red Sox",                stat:".406",  statLabel:"Season Batting AVG",       role:"Left Field",   icon:"⚾" },
-    { name:"Rocket Richard",   sport:"NHL", era:"1942-1960", team:"Canadiens",              stat:"544",   statLabel:"Career Goals",             role:"Right Wing",   icon:"🏒" },
+  9: { tier:TIER.LEGEND, players:[
+    { name:"Gordie Howe", sport:"NHL", league:"NHL", status:"Retired", era:"1946-1980", team:"Detroit Red Wings", stat:"801", statLabel:"Career Goals", role:"Right Wing", icon:"🏒" },
+    { name:"Ted Williams", sport:"MLB", league:"MLB", status:"Retired", era:"1939-1960", team:"Boston Red Sox", stat:".406", statLabel:"Season Batting AVG", role:"Left Field", icon:"⚾" },
+    { name:"Rocket Richard", sport:"NHL", league:"NHL", status:"Retired", era:"1942-1960", team:"Montreal Canadiens", stat:"544", statLabel:"Career Goals", role:"Right Wing", icon:"🏒" },
+    { name:"Ronaldo R9", sport:"Soccer", league:"La Liga", status:"Retired", era:"1994-2011", team:"Barcelona - Real Madrid", stat:"352", statLabel:"Club Goals", role:"Forward", icon:"⚽" },
   ]},
   10: { tier:TIER.LEGEND, players:[
-    { name:"Diego Maradona",    sport:"Soccer", era:"1976-1997", team:"Napoli - Barcelona",       stat:"312",  statLabel:"Club Goals", role:"Forward", icon:"⚽" },
-    { name:"Lionel Messi",      sport:"Soccer", era:"2004-pres", team:"Barcelona - Inter Miami",  stat:"850+", statLabel:"Career Goals (all comps)", role:"Forward", icon:"⚽" },
-    { name:"Pele",             sport:"Soccer",era:"1956-1977",team:"Santos",                stat:"1281", statLabel:"Career Goals (all comps)",  role:"Forward",      icon:"⚽" },
-    { name:"Guy Lafleur",      sport:"NHL", era:"1971-1991", team:"Canadiens",              stat:"560",   statLabel:"Career Goals",             role:"Right Wing",   icon:"🏒" },
-    { name:"Steve Nash",       sport:"NBA", era:"1996-2014", team:"Suns",                   stat:"2",     statLabel:"MVP Awards",               role:"Point Guard",  icon:"🏀" },
+    { name:"Pele", sport:"Soccer", league:"Brazilian Serie A", status:"Retired", era:"1956-1977", team:"Santos", stat:"1281", statLabel:"Career Goals (all comps)", role:"Forward", icon:"⚽" },
+    { name:"Guy Lafleur", sport:"NHL", league:"NHL", status:"Retired", era:"1971-1991", team:"Montreal Canadiens", stat:"560", statLabel:"Career Goals", role:"Right Wing", icon:"🏒" },
+    { name:"Steve Nash", sport:"NBA", league:"NBA", status:"Retired", era:"1996-2014", team:"Phoenix Suns", stat:"2", statLabel:"MVP Awards", role:"Point Guard", icon:"🏀" },
+    { name:"Diego Maradona", sport:"Soccer", league:"Serie A", status:"Retired", era:"1976-1997", team:"Napoli - Barcelona", stat:"312", statLabel:"Club Goals", role:"Forward", icon:"⚽" },
+    { name:"Lionel Messi", sport:"Soccer", league:"MLS", status:"Active", era:"2004-pres", team:"Inter Miami", stat:"850", statLabel:"Career Goals (all comps)", role:"Forward", icon:"⚽" },
+    { name:"Marta", sport:"Soccer", league:"NWSL", status:"Active", era:"2001-pres", team:"Orlando Pride", stat:"6", statLabel:"World Player of Year Awards", role:"Forward", icon:"⚽" },
   ]},
   11: { tier:TIER.LEGEND, players:[
-    { name:"Ronaldinho",        sport:"Soccer", era:"1998-2015", team:"Barcelona - AC Milan",      stat:"229",  statLabel:"Club Goals", role:"Forward/AM", icon:"⚽" },
-    { name:"Mark Messier",     sport:"NHL", era:"1979-2004", team:"Oilers - Rangers",       stat:"6",     statLabel:"Stanley Cup Rings",        role:"Center",       icon:"🏒" },
-    { name:"Isiah Thomas",     sport:"NBA", era:"1981-1994", team:"Pistons",                stat:"2",     statLabel:"Championships",            role:"Point Guard",  icon:"🏀" },
-    { name:"Carl Hubbell",     sport:"MLB", era:"1928-1943", team:"Giants",                 stat:"253",   statLabel:"Career Wins",              role:"Pitcher",      icon:"⚾" },
+    { name:"Mark Messier", sport:"NHL", league:"NHL", status:"Retired", era:"1979-2004", team:"Edmonton Oilers - NY Rangers", stat:"6", statLabel:"Stanley Cup Rings", role:"Center", icon:"🏒" },
+    { name:"Isiah Thomas", sport:"NBA", league:"NBA", status:"Retired", era:"1981-1994", team:"Detroit Pistons", stat:"2", statLabel:"Championships", role:"Point Guard", icon:"🏀" },
+    { name:"Carl Hubbell", sport:"MLB", league:"MLB", status:"Retired", era:"1928-1943", team:"New York Giants", stat:"253", statLabel:"Career Wins", role:"Pitcher", icon:"⚾" },
+    { name:"Ronaldinho", sport:"Soccer", league:"La Liga", status:"Retired", era:"1998-2015", team:"FC Barcelona", stat:"229", statLabel:"Club Goals", role:"Forward/AM", icon:"⚽" },
+    { name:"Caitlin Clark", sport:"NBA", league:"WNBA", status:"Active", era:"2024-pres", team:"Indiana Fever", stat:"895", statLabel:"College Points (record)", role:"Point Guard", icon:"🏀" },
   ]},
   12: { tier:TIER.LEGEND, players:[
-    { name:"Tom Brady",        sport:"NFL", era:"2000-2023", team:"Patriots - Buccaneers",  stat:"7",     statLabel:"Super Bowl Rings",         role:"Quarterback",  icon:"🏈" },
-    { name:"Joe Namath",       sport:"NFL", era:"1965-1977", team:"Jets",                   stat:"1",     statLabel:"Super Bowl + guaranteed it",role:"Quarterback", icon:"🏈" },
-    { name:"John Stockton",    sport:"NBA", era:"1984-2003", team:"Jazz",                   stat:"15806", statLabel:"Career Assists (record)",  role:"Point Guard",  icon:"🏀" },
-    { name:"Roberto Alomar",   sport:"MLB", era:"1988-2004", team:"Blue Jays - Indians",    stat:"10",    statLabel:"Gold Glove Awards",        role:"Second Base",  icon:"⚾" },
+    { name:"Roger Staubach", sport:"NFL", league:"NFL", status:"Retired", era:"1969-1979", team:"Dallas Cowboys", stat:"2", statLabel:"Super Bowl Wins", role:"Quarterback", icon:"🏈" },
+    { name:"Joe Namath", sport:"NFL", league:"NFL", status:"Retired", era:"1965-1977", team:"New York Jets", stat:"1", statLabel:"Super Bowl Win", role:"Quarterback", icon:"🏈" },
+    { name:"John Stockton", sport:"NBA", league:"NBA", status:"Retired", era:"1984-2003", team:"Utah Jazz", stat:"15806", statLabel:"Career Assists (record)", role:"Point Guard", icon:"🏀" },
+    { name:"Tom Brady", sport:"NFL", league:"NFL", status:"Retired", era:"2000-2022", team:"New England Patriots - Tampa Bay Buccaneers", stat:"7", statLabel:"Super Bowl Wins", role:"Quarterback", icon:"🏈" },
   ]},
   13: { tier:TIER.LEGEND, players:[
-    { name:"Wilt Chamberlain", sport:"NBA", era:"1959-1973", team:"Warriors - Lakers",      stat:"100",   statLabel:"Points in One Game",       role:"Center",       icon:"🏀" },
-    { name:"Dan Marino",       sport:"NFL", era:"1983-1999", team:"Dolphins",               stat:"420",   statLabel:"Career TD Passes",         role:"Quarterback",  icon:"🏈" },
-    { name:"Alex Rodriguez",   sport:"MLB", era:"1994-2016", team:"Yankees",                stat:"696",   statLabel:"Home Runs",                role:"Shortstop/3B", icon:"⚾" },
+    { name:"Dan Marino", sport:"NFL", league:"NFL", status:"Retired", era:"1983-1999", team:"Miami Dolphins", stat:"420", statLabel:"TD Passes", role:"Quarterback", icon:"🏈" },
+    { name:"Wilt Chamberlain", sport:"NBA", league:"NBA", status:"Retired", era:"1959-1973", team:"Philadelphia 76ers", stat:"100", statLabel:"Points in One Game", role:"Center", icon:"🏀" },
+    { name:"Alex Rodriguez", sport:"MLB", league:"MLB", status:"Retired", era:"1994-2016", team:"New York Yankees", stat:"696", statLabel:"Career Home Runs", role:"Shortstop / 3B", icon:"⚾" },
+    { name:"Mats Sundin", sport:"NHL", league:"NHL", status:"Retired", era:"1990-2009", team:"Toronto Maple Leafs", stat:"564", statLabel:"Career Goals", role:"Center", icon:"🏒" },
   ]},
   14: { tier:TIER.LEGEND, players:[
-    { name:"Thierry Henry",     sport:"Soccer", era:"1994-2012", team:"Arsenal - Barcelona",       stat:"360",  statLabel:"Club Goals", role:"Striker", icon:"⚽" },
-    { name:"Pete Rose",        sport:"MLB", era:"1963-1986", team:"Reds",                   stat:"4256",  statLabel:"Career Hits (all-time record)", role:"OF/3B/1B",icon:"⚾"},
-    { name:"Bob Cousy",        sport:"NBA", era:"1950-1963", team:"Celtics",                stat:"6",     statLabel:"Championships",            role:"Point Guard",  icon:"🏀" },
-    { name:"Brendan Shanahan", sport:"NHL", era:"1987-2009", team:"Red Wings",              stat:"656",   statLabel:"Career Goals",             role:"Left Wing",    icon:"🏒" },
+    { name:"Pete Rose", sport:"MLB", league:"MLB", status:"Retired", era:"1963-1986", team:"Cincinnati Reds", stat:"4256", statLabel:"Career Hits (record)", role:"Outfield / 3B", icon:"⚾" },
+    { name:"Thierry Henry", sport:"Soccer", league:"Premier League", status:"Retired", era:"1994-2012", team:"Arsenal - Barcelona", stat:"360", statLabel:"Club Goals", role:"Striker", icon:"⚽" },
+    { name:"Bob Cousy", sport:"NBA", league:"NBA", status:"Retired", era:"1950-1963", team:"Boston Celtics", stat:"6", statLabel:"Championships", role:"Point Guard", icon:"🏀" },
   ]},
   15: { tier:TIER.LEGEND, players:[
-    { name:"Nikola Jokic",     sport:"NBA", era:"2015-pres", team:"Nuggets",                stat:"3",     statLabel:"MVP Awards",               role:"Center",       icon:"🏀" },
-    { name:"Thurman Munson",   sport:"MLB", era:"1969-1979", team:"Yankees",                stat:"1",     statLabel:"MVP Award",                role:"Catcher",      icon:"⚾" },
+    { name:"Bart Starr", sport:"NFL", league:"NFL", status:"Retired", era:"1956-1971", team:"Green Bay Packers", stat:"2", statLabel:"Super Bowl Wins", role:"Quarterback", icon:"🏈" },
+    { name:"Thurman Thomas", sport:"NFL", league:"NFL", status:"Retired", era:"1988-2000", team:"Buffalo Bills", stat:"4", statLabel:"AFC Championships", role:"Running Back", icon:"🏈" },
+    { name:"Carmelo Anthony", sport:"NBA", league:"NBA", status:"Retired", era:"2003-2022", team:"New York Knicks", stat:"28289", statLabel:"Career Points", role:"Small Forward", icon:"🏀" },
+    { name:"Patrick Mahomes", sport:"NFL", league:"NFL", status:"Active", era:"2017-pres", team:"Kansas City Chiefs", stat:"3", statLabel:"Super Bowl Wins", role:"Quarterback", icon:"🏈" },
   ]},
   16: { tier:TIER.LEGEND, players:[
-    { name:"Joe Montana",      sport:"NFL", era:"1979-1994", team:"49ers",                  stat:"4",     statLabel:"Super Bowl Wins",          role:"Quarterback",  icon:"🏈" },
+    { name:"Joe Montana", sport:"NFL", league:"NFL", status:"Retired", era:"1979-1994", team:"San Francisco 49ers", stat:"4", statLabel:"Super Bowl Wins", role:"Quarterback", icon:"🏈" },
+    { name:"Trevor Linden", sport:"NHL", league:"NHL", status:"Retired", era:"1988-2008", team:"Vancouver Canucks", stat:"375", statLabel:"Career Goals", role:"Center", icon:"🏒" },
   ]},
   17: { tier:TIER.LEGEND, players:[
-    { name:"Reggie Jackson",   sport:"MLB", era:"1967-1987", team:"Athletics - Yankees",    stat:"563",   statLabel:"Home Runs",                role:"Right Field",  icon:"⚾" },
+    { name:"Dizzy Dean", sport:"MLB", league:"MLB", status:"Retired", era:"1930-1947", team:"St. Louis Cardinals", stat:"30", statLabel:"Season Wins", role:"Pitcher", icon:"⚾" },
+    { name:"Cam Newton", sport:"NFL", league:"NFL", status:"Retired", era:"2011-2021", team:"Carolina Panthers", stat:"1", statLabel:"MVP Award", role:"Quarterback", icon:"🏈" },
+    { name:"Kylian Mbappe", sport:"Soccer", league:"La Liga", status:"Active", era:"2016-pres", team:"Real Madrid", stat:"300", statLabel:"Club Goals", role:"Forward", icon:"⚽" },
   ]},
   18: { tier:TIER.LEGEND, players:[
-    { name:"Peyton Manning",   sport:"NFL", era:"1998-2015", team:"Colts - Broncos",        stat:"539",   statLabel:"Career TD Passes",         role:"Quarterback",  icon:"🏈" },
+    { name:"Peyton Manning", sport:"NFL", league:"NFL", status:"Retired", era:"1998-2015", team:"Indianapolis Colts - Denver Broncos", stat:"2", statLabel:"Super Bowl Wins", role:"Quarterback", icon:"🏈" },
+    { name:"Denis Savard", sport:"NHL", league:"NHL", status:"Retired", era:"1980-1997", team:"Chicago Blackhawks", stat:"473", statLabel:"Career Goals", role:"Center", icon:"🏒" },
   ]},
   19: { tier:TIER.LEGEND, players:[
-    { name:"Steve Yzerman",    sport:"NHL", era:"1983-2006", team:"Red Wings",              stat:"3",     statLabel:"Stanley Cup Rings",        role:"Center",       icon:"🏒" },
-    { name:"Johnny Unitas",    sport:"NFL", era:"1956-1973", team:"Colts",                  stat:"290",   statLabel:"Career TD Passes",         role:"Quarterback",  icon:"🏈" },
-    { name:"Tony Gwynn",       sport:"MLB", era:"1982-2001", team:"Padres",                 stat:".338",  statLabel:"Career Batting Average",   role:"Right Field",  icon:"⚾" },
+    { name:"Johnny Unitas", sport:"NFL", league:"NFL", status:"Retired", era:"1956-1973", team:"Baltimore Colts", stat:"290", statLabel:"TD Passes", role:"Quarterback", icon:"🏈" },
+    { name:"Joe Sakic", sport:"NHL", league:"NHL", status:"Retired", era:"1988-2009", team:"Quebec Nordiques", stat:"625", statLabel:"Career Goals", role:"Center", icon:"🏒" },
+    { name:"Tony Gwynn", sport:"MLB", league:"MLB", status:"Retired", era:"1982-2001", team:"San Diego Padres", stat:".338", statLabel:"Career Batting AVG", role:"Right Field", icon:"⚾" },
   ]},
   20: { tier:TIER.LEGEND, players:[
-    { name:"Mike Schmidt",     sport:"MLB", era:"1972-1989", team:"Phillies",               stat:"548",   statLabel:"Home Runs",                role:"Third Base",   icon:"⚾" },
-    { name:"Barry Sanders",    sport:"NFL", era:"1989-1998", team:"Lions",                  stat:"15269", statLabel:"Rushing Yards",            role:"Running Back", icon:"🏈" },
-    { name:"Ed Belfour",       sport:"NHL", era:"1988-2007", team:"Blackhawks - Stars",     stat:"484",   statLabel:"Career Wins",              role:"Goaltender",   icon:"🏒" },
+    { name:"Mike Schmidt", sport:"MLB", league:"MLB", status:"Retired", era:"1972-1989", team:"Philadelphia Phillies", stat:"548", statLabel:"Career Home Runs", role:"Third Base", icon:"⚾" },
+    { name:"Ed Belfour", sport:"NHL", league:"NHL", status:"Retired", era:"1988-2007", team:"Chicago Blackhawks", stat:"484", statLabel:"Career Wins", role:"Goaltender", icon:"🏒" },
+    { name:"Barry Sanders", sport:"NFL", league:"NFL", status:"Retired", era:"1989-1998", team:"Detroit Lions", stat:"15269", statLabel:"Career Rushing Yards", role:"Running Back", icon:"🏈" },
+    { name:"Sam Kerr", sport:"Soccer", league:"WSL", status:"Active", era:"2009-pres", team:"Chelsea FC Women", stat:"68", statLabel:"Australia Goals (record)", role:"Striker", icon:"⚽" },
   ]},
   21: { tier:TIER.LEGEND, players:[
-    { name:"Tim Duncan",       sport:"NBA", era:"1997-2016", team:"Spurs",                  stat:"5",     statLabel:"Championships",            role:"Power Forward",icon:"🏀" },
-    { name:"Roberto Clemente", sport:"MLB", era:"1955-1972", team:"Pirates",                stat:"3000",  statLabel:"Career Hits (exactly)",    role:"Right Field",  icon:"⚾" },
+    { name:"Tim Duncan", sport:"NBA", league:"NBA", status:"Retired", era:"1997-2016", team:"San Antonio Spurs", stat:"5", statLabel:"Championships", role:"Power Forward", icon:"🏀" },
+    { name:"Roberto Clemente", sport:"MLB", league:"MLB", status:"Retired", era:"1955-1972", team:"Pittsburgh Pirates", stat:"3000", statLabel:"Career Hits (exactly)", role:"Right Field", icon:"⚾" },
+    { name:"Dominik Hasek", sport:"NHL", league:"NHL", status:"Retired", era:"1990-2008", team:"Buffalo Sabres", stat:"6", statLabel:"Vezina Trophies", role:"Goaltender", icon:"🏒" },
+    { name:"Hilary Knight", sport:"NHL", league:"PWHL", status:"Active", era:"2012-pres", team:"Boston Fleet", stat:"7", statLabel:"World Championship Golds", role:"Forward", icon:"🏒" },
   ]},
   22: { tier:TIER.LEGEND, players:[
-    { name:"Mike Bossy",       sport:"NHL", era:"1977-1987", team:"Islanders",              stat:"573",   statLabel:"Career Goals",             role:"Right Wing",   icon:"🏒" },
-    { name:"Emmitt Smith",     sport:"NFL", era:"1990-2004", team:"Cowboys",                stat:"18355", statLabel:"Rushing Yards (record)",   role:"Running Back", icon:"🏈" },
-    { name:"Caitlin Clark",    sport:"NBA", era:"2024-pres", team:"Fever",                  stat:"1",     statLabel:"Rookie of Year + All-Star",role:"Point Guard",  icon:"🏀" },
+    { name:"Jim Palmer", sport:"MLB", league:"MLB", status:"Retired", era:"1965-1984", team:"Baltimore Orioles", stat:"268", statLabel:"Career Wins", role:"Pitcher", icon:"⚾" },
+    { name:"Mike Bossy", sport:"NHL", league:"NHL", status:"Retired", era:"1977-1987", team:"New York Islanders", stat:"573", statLabel:"Career Goals", role:"Right Wing", icon:"🏒" },
+    { name:"Emmitt Smith", sport:"NFL", league:"NFL", status:"Retired", era:"1990-2004", team:"Dallas Cowboys", stat:"18355", statLabel:"Career Rushing Yards (record)", role:"Running Back", icon:"🏈" },
+    { name:"Clyde Drexler", sport:"NBA", league:"NBA", status:"Retired", era:"1983-1998", team:"Portland Trail Blazers", stat:"22195", statLabel:"Career Points", role:"Shooting Guard", icon:"🏀" },
+    { name:"A'ja Wilson", sport:"NBA", league:"WNBA", status:"Active", era:"2018-pres", team:"Las Vegas Aces", stat:"3", statLabel:"WNBA Championships", role:"Forward", icon:"🏀" },
   ]},
   23: { tier:TIER.SACRED, sacredSport:"NBA", players:[
-    { name:"David Beckham",     sport:"Soccer", era:"1992-2013", team:"Man Utd - Real Madrid",      stat:"127",  statLabel:"Career Goals", role:"Midfielder", icon:"⚽" },
-    { name:"Michael Jordan",   sport:"NBA", era:"1984-2003", team:"Bulls",                  stat:"6",     statLabel:"Championships",            role:"Shooting Guard",icon:"🏀"},
-    { name:"LeBron James",     sport:"NBA", era:"2003-pres", team:"Cavaliers - Lakers",     stat:"40474", statLabel:"All-Time Points Leader",   role:"Forward",      icon:"🏀" },
+    { name:"Michael Jordan", sport:"NBA", league:"NBA", status:"Retired", era:"1984-2003", team:"Chicago Bulls", stat:"6", statLabel:"Championships", role:"Shooting Guard", icon:"🏀" },
+    { name:"David Beckham", sport:"Soccer", league:"Premier League / La Liga", status:"Retired", era:"1992-2013", team:"Manchester United - Real Madrid", stat:"127", statLabel:"Career Goals", role:"Midfielder", icon:"⚽" },
+    { name:"Maya Moore", sport:"NBA", league:"WNBA", status:"Retired", era:"2011-2023", team:"Minnesota Lynx", stat:"4", statLabel:"WNBA Championships", role:"Forward", icon:"🏀" },
+    { name:"LeBron James", sport:"NBA", league:"NBA", status:"Active", era:"2003-pres", team:"Los Angeles Lakers", stat:"40000", statLabel:"Career Points (record)", role:"Small Forward", icon:"🏀" },
   ]},
   24: { tier:TIER.LEGEND, players:[
-    { name:"Kobe Bryant",      sport:"NBA", era:"1996-2016", team:"Lakers",                 stat:"5",     statLabel:"Championships",            role:"Shooting Guard",icon:"🏀"},
-    { name:"Rickey Henderson", sport:"MLB", era:"1979-2003", team:"Athletics - Yankees",    stat:"1406",  statLabel:"Stolen Bases (record)",    role:"Left Field",   icon:"⚾" },
+    { name:"Willie Mays", sport:"MLB", league:"MLB", status:"Retired", era:"1951-1973", team:"New York Giants", stat:"660", statLabel:"Career Home Runs", role:"Center Field", icon:"⚾" },
+    { name:"Kobe Bryant", sport:"NBA", league:"NBA", status:"Retired", era:"1996-2016", team:"Los Angeles Lakers", stat:"33643", statLabel:"Career Points", role:"Shooting Guard", icon:"🏀" },
   ]},
   25: { tier:TIER.LEGEND, players:[
-    { name:"Barry Bonds",      sport:"MLB", era:"1986-2007", team:"Giants",                 stat:"762",   statLabel:"Home Runs (all-time record)", role:"Left Field",icon:"⚾"},
-    { name:"Mark Messier",     sport:"NHL", era:"1979-2004", team:"Oilers - Rangers",       stat:"694",   statLabel:"Career Goals",             role:"Center",       icon:"🏒" },
+    { name:"Barry Bonds", sport:"MLB", league:"MLB", status:"Retired", era:"1986-2007", team:"San Francisco Giants", stat:"762", statLabel:"Career Home Runs (record)", role:"Left Field", icon:"⚾" },
+    { name:"Mark Recchi", sport:"NHL", league:"NHL", status:"Retired", era:"1988-2011", team:"Pittsburgh Penguins", stat:"1533", statLabel:"Career Points", role:"Right Wing", icon:"🏒" },
+  ]},
+  26: { tier:TIER.LEGEND, players:[
+    { name:"Rod Carew", sport:"MLB", league:"MLB", status:"Retired", era:"1967-1985", team:"Minnesota Twins", stat:".328", statLabel:"Career Batting AVG", role:"First Base / 2B", icon:"⚾" },
+    { name:"Patrice Bergeron", sport:"NHL", league:"NHL", status:"Retired", era:"2003-2023", team:"Boston Bruins", stat:"6", statLabel:"Selke Trophies", role:"Center", icon:"🏒" },
   ]},
   27: { tier:TIER.LEGEND, players:[
-    { name:"Vladimir Guerrero",sport:"MLB", era:"1996-2011", team:"Expos - Angels",         stat:"449",   statLabel:"Home Runs",                role:"Right Field",  icon:"⚾" },
-    { name:"Carlton Fisk",     sport:"MLB", era:"1969-1993", team:"Red Sox - White Sox",    stat:"376",   statLabel:"Home Runs (catcher record)",role:"Catcher",     icon:"⚾" },
+    { name:"Vladimir Guerrero", sport:"MLB", league:"MLB", status:"Retired", era:"1996-2011", team:"Montreal Expos", stat:"449", statLabel:"Career Home Runs", role:"Right Field", icon:"⚾" },
+  ]},
+  28: { tier:TIER.LEGEND, players:[
+    { name:"Jaromir Jagr", sport:"NHL", league:"NHL", status:"Retired", era:"1990-2018", team:"Pittsburgh Penguins", stat:"766", statLabel:"Career Goals", role:"Right Wing", icon:"🏒" },
+    { name:"Marshall Faulk", sport:"NFL", league:"NFL", status:"Retired", era:"1994-2005", team:"St. Louis Rams", stat:"12279", statLabel:"Career Rushing Yards", role:"Running Back", icon:"🏈" },
   ]},
   29: { tier:TIER.LEGEND, players:[
-    { name:"Nathan MacKinnon", sport:"NHL", era:"2013-pres", team:"Avalanche",              stat:"1",     statLabel:"Hart Trophy (+ 2x runner-up)",role:"Center",    icon:"🏒" },
-    { name:"Marie-Philip Poulin",sport:"PWHL",era:"2010-pres",team:"Team Canada - Montréal",stat:"4",    statLabel:"Olympic Gold Medals",      role:"Forward",      icon:"🏒" },
+    { name:"Rod Langway", sport:"NHL", league:"NHL", status:"Retired", era:"1977-1993", team:"Washington Capitals", stat:"2", statLabel:"Norris Trophies", role:"Defenseman", icon:"🏒" },
+    { name:"Sarah Nurse", sport:"NHL", league:"PWHL", status:"Active", era:"2023-pres", team:"Montreal Victoire", stat:"18", statLabel:"2022 Olympic Points (record)", role:"Forward", icon:"🏒" },
   ]},
   30: { tier:TIER.LEGEND, players:[
-    { name:"Martin Brodeur",   sport:"NHL", era:"1991-2015", team:"Devils",                 stat:"691",   statLabel:"Career Wins (record)",     role:"Goaltender",   icon:"🏒" },
-    { name:"Stephen Curry",    sport:"NBA", era:"2009-pres", team:"Warriors",               stat:"3747",  statLabel:"Career 3-Pointers (record)",role:"Point Guard", icon:"🏀" },
+    { name:"Martin Brodeur", sport:"NHL", league:"NHL", status:"Retired", era:"1991-2015", team:"New Jersey Devils", stat:"691", statLabel:"Career Wins (record)", role:"Goaltender", icon:"🏒" },
+    { name:"Stephen Curry", sport:"NBA", league:"NBA", status:"Active", era:"2009-pres", team:"Golden State Warriors", stat:"4", statLabel:"Championships", role:"Point Guard", icon:"🏀" },
+    { name:"Breanna Stewart", sport:"NBA", league:"WNBA", status:"Active", era:"2016-pres", team:"New York Liberty", stat:"2", statLabel:"WNBA Championships", role:"Forward", icon:"🏀" },
   ]},
   31: { tier:TIER.LEGEND, players:[
-    { name:"Patrick Roy",      sport:"NHL", era:"1984-2003", team:"Canadiens - Avalanche",  stat:"3",     statLabel:"Conn Smythe Trophies",     role:"Goaltender",   icon:"🏒" },
+    { name:"Mike Piazza", sport:"MLB", league:"MLB", status:"Retired", era:"1992-2007", team:"New York Mets", stat:"396", statLabel:"Home Runs (C record)", role:"Catcher", icon:"⚾" },
+    { name:"Grant Fuhr", sport:"NHL", league:"NHL", status:"Retired", era:"1981-2000", team:"Edmonton Oilers", stat:"5", statLabel:"Stanley Cup Rings", role:"Goaltender", icon:"🏒" },
   ]},
   32: { tier:TIER.LEGEND, players:[
-    { name:"Magic Johnson",    sport:"NBA", era:"1979-1996", team:"Lakers",                 stat:"5",     statLabel:"Championships",            role:"Point Guard",  icon:"🏀" },
-    { name:"Sandy Koufax",     sport:"MLB", era:"1955-1966", team:"Dodgers",                stat:"0.95",  statLabel:"World Series ERA",         role:"Pitcher",      icon:"⚾" },
+    { name:"Sandy Koufax", sport:"MLB", league:"MLB", status:"Retired", era:"1955-1966", team:"Los Angeles Dodgers", stat:"4", statLabel:"ERA Titles", role:"Pitcher", icon:"⚾" },
+    { name:"Magic Johnson", sport:"NBA", league:"NBA", status:"Retired", era:"1979-1996", team:"Los Angeles Showtime Lakers", stat:"5", statLabel:"Championships", role:"Point Guard", icon:"🏀" },
+    { name:"Jim Brown", sport:"NFL", league:"NFL", status:"Retired", era:"1957-1965", team:"Cleveland Browns", stat:"12", statLabel:"Career Rushing AVG", role:"Running Back", icon:"🏈" },
   ]},
   33: { tier:TIER.LEGEND, players:[
-    { name:"Larry Bird",       sport:"NBA", era:"1979-1992", team:"Celtics",                stat:"3",     statLabel:"Championships",            role:"Small Forward",icon:"🏀" },
-    { name:"Patrick Ewing",    sport:"NBA", era:"1985-2002", team:"Knicks",                 stat:"24815", statLabel:"Career Points",            role:"Center",       icon:"🏀" },
-    { name:"Zdeno Chara",      sport:"NHL", era:"1997-2022", team:"Bruins",                 stat:"1",     statLabel:"Stanley Cup Ring",         role:"Defenseman",   icon:"🏒" },
+    { name:"Larry Bird", sport:"NBA", league:"NBA", status:"Retired", era:"1979-1992", team:"Boston Celtics", stat:"3", statLabel:"Championships", role:"Small Forward", icon:"🏀" },
+    { name:"Patrick Roy", sport:"NHL", league:"NHL", status:"Retired", era:"1984-2003", team:"Montreal Canadiens - Colorado Avalanche", stat:"4", statLabel:"Stanley Cup Rings", role:"Goaltender", icon:"🏒" },
+    { name:"Kareem Abdul-Jabbar", sport:"NBA", league:"NBA", status:"Retired", era:"1969-1989", team:"Los Angeles Lakers", stat:"38387", statLabel:"Career Points (former record)", role:"Center", icon:"🏀" },
   ]},
   34: { tier:TIER.LEGEND, players:[
-    { name:"Walter Payton",    sport:"NFL", era:"1975-1987", team:"Bears",                  stat:"16726", statLabel:"Rushing Yards",            role:"Running Back", icon:"🏈" },
-    { name:"Shaquille O'Neal", sport:"NBA", era:"1992-2011", team:"Lakers - Heat",          stat:"4",     statLabel:"Championships",            role:"Center",       icon:"🏀" },
+    { name:"Walter Payton", sport:"NFL", league:"NFL", status:"Retired", era:"1975-1987", team:"Chicago Bears", stat:"16726", statLabel:"Career Rushing Yards", role:"Running Back", icon:"🏈" },
+    { name:"Nolan Ryan", sport:"MLB", league:"MLB", status:"Retired", era:"1966-1993", team:"Texas Rangers", stat:"5714", statLabel:"Career Strikeouts", role:"Pitcher", icon:"⚾" },
+    { name:"Charles Barkley", sport:"NBA", league:"NBA", status:"Retired", era:"1984-2000", team:"Philadelphia 76ers", stat:"1", statLabel:"MVP Award", role:"Power Forward", icon:"🏀" },
+  ]},
+  35: { tier:TIER.LEGEND, players:[
+    { name:"Frank Thomas", sport:"MLB", league:"MLB", status:"Retired", era:"1990-2008", team:"Chicago White Sox", stat:"521", statLabel:"Career Home Runs", role:"First Base", icon:"⚾" },
+    { name:"Phil Niekro", sport:"MLB", league:"MLB", status:"Retired", era:"1964-1987", team:"Atlanta Braves", stat:"318", statLabel:"Career Wins", role:"Pitcher", icon:"⚾" },
+  ]},
+  36: { tier:TIER.LEGEND, players:[
+    { name:"Robin Roberts", sport:"MLB", league:"MLB", status:"Retired", era:"1948-1966", team:"Philadelphia Phillies", stat:"286", statLabel:"Career Wins", role:"Pitcher", icon:"⚾" },
+    { name:"Jerome Bettis", sport:"NFL", league:"NFL", status:"Retired", era:"1993-2005", team:"Pittsburgh Steelers", stat:"13662", statLabel:"Career Rushing Yards", role:"Running Back", icon:"🏈" },
+  ]},
+  37: { tier:TIER.LEGEND, players:[
+    { name:"Casey Stengel", sport:"MLB", league:"MLB", status:"Retired", era:"1934-1965", team:"New York Yankees", stat:"7", statLabel:"World Series Titles (manager)", role:"Manager", icon:"⚾" },
+  ]},
+  38: { tier:TIER.LEGEND, players:[
+    { name:"Curt Schilling", sport:"MLB", league:"MLB", status:"Retired", era:"1988-2007", team:"Boston Red Sox", stat:"216", statLabel:"Career Wins", role:"Pitcher", icon:"⚾" },
+  ]},
+  39: { tier:TIER.LEGEND, players:[
+    { name:"Roy Campanella", sport:"MLB", league:"MLB", status:"Retired", era:"1948-1957", team:"Brooklyn Dodgers", stat:"3", statLabel:"MVP Awards", role:"Catcher", icon:"⚾" },
+    { name:"Dominique Wilkins", sport:"NBA", league:"NBA", status:"Retired", era:"1982-1999", team:"Atlanta Hawks", stat:"26668", statLabel:"Career Points", role:"Small Forward", icon:"🏀" },
   ]},
   40: { tier:TIER.LEGEND, players:[
-    { name:"Gale Sayers",      sport:"NFL", era:"1965-1971", team:"Bears",                  stat:"22",    statLabel:"Career TDs",               role:"Running Back", icon:"🏈" },
+    { name:"Gale Sayers", sport:"NFL", league:"NFL", status:"Retired", era:"1965-1971", team:"Chicago Bears", stat:"22", statLabel:"Career Touchdowns", role:"Running Back", icon:"🏈" },
+    { name:"Pat Tillman", sport:"NFL", league:"NFL", status:"Retired", era:"1998-2002", team:"Arizona Cardinals", stat:"226", statLabel:"Career Tackles", role:"Safety", icon:"🏈" },
   ]},
   41: { tier:TIER.LEGEND, players:[
-    { name:"Tom Seaver",       sport:"MLB", era:"1967-1986", team:"Mets",                   stat:"311",   statLabel:"Career Wins",              role:"Pitcher",      icon:"⚾" },
-    { name:"Dirk Nowitzki",    sport:"NBA", era:"1998-2019", team:"Mavericks",              stat:"31560", statLabel:"Career Points",            role:"Power Forward",icon:"🏀" },
+    { name:"Dirk Nowitzki", sport:"NBA", league:"NBA", status:"Retired", era:"1998-2019", team:"Dallas Mavericks", stat:"31560", statLabel:"Career Points", role:"Power Forward", icon:"🏀" },
   ]},
   42: { tier:TIER.SACRED, sacredSport:"MLB", players:[
-    { name:"Jackie Robinson",  sport:"MLB", era:"1947-1956", team:"Dodgers",                stat:"1947",  statLabel:"Year he changed baseball", role:"Second Base",  icon:"⚾" },
+    { name:"Jackie Robinson", sport:"MLB", league:"MLB", status:"Retired", era:"1947-1956", team:"Brooklyn Dodgers", stat:"6", statLabel:"Stolen Base Titles", role:"Second Base", icon:"⚾" },
   ]},
   43: { tier:TIER.LEGEND, players:[
-    { name:"Troy Polamalu",    sport:"NFL", era:"2003-2014", team:"Steelers",               stat:"32",    statLabel:"Career Interceptions",     role:"Safety",       icon:"🏈" },
+    { name:"Troy Polamalu", sport:"NFL", league:"NFL", status:"Retired", era:"2003-2014", team:"Pittsburgh Steelers", stat:"32", statLabel:"Career Interceptions", role:"Safety", icon:"🏈" },
   ]},
   44: { tier:TIER.LEGEND, players:[
-    { name:"Hank Aaron",       sport:"MLB", era:"1954-1976", team:"Braves",                 stat:"755",   statLabel:"Home Runs",                role:"Right Field",  icon:"⚾" },
-    { name:"Jerry West",       sport:"NBA", era:"1960-1974", team:"Lakers",                 stat:"27.0",  statLabel:"Career PPG",               role:"Guard",        icon:"🏀" },
+    { name:"Hank Aaron", sport:"MLB", league:"MLB", status:"Retired", era:"1954-1976", team:"Atlanta Braves", stat:"755", statLabel:"Career Home Runs", role:"Right Field", icon:"⚾" },
+    { name:"Jerry West", sport:"NBA", league:"NBA", status:"Retired", era:"1960-1974", team:"Los Angeles Lakers", stat:"25192", statLabel:"Career Points", role:"Guard", icon:"🏀" },
+    { name:"Floyd Little", sport:"NFL", league:"NFL", status:"Retired", era:"1967-1975", team:"Denver Broncos", stat:"6323", statLabel:"Career Rushing Yards", role:"Running Back", icon:"🏈" },
   ]},
   45: { tier:TIER.LEGEND, players:[
-    { name:"Pedro Martinez",   sport:"MLB", era:"1992-2009", team:"Red Sox",                stat:"1.74",  statLabel:"ERA (2000 season)",        role:"Pitcher",      icon:"⚾" },
+    { name:"Bob Gibson", sport:"MLB", league:"MLB", status:"Retired", era:"1959-1975", team:"St. Louis Cardinals", stat:"1.12", statLabel:"1968 ERA", role:"Pitcher", icon:"⚾" },
   ]},
+  46: { tier:TIER.LEGEND, players:[
+    { name:"Andy Pettitte", sport:"MLB", league:"MLB", status:"Retired", era:"1995-2013", team:"New York Yankees", stat:"256", statLabel:"Career Wins", role:"Pitcher", icon:"⚾" },
+  ]},
+  47: { tier:TIER.UNWRITTEN, players:[] },
+  48: { tier:TIER.UNWRITTEN, players:[] },
+  49: { tier:TIER.UNWRITTEN, players:[] },
   50: { tier:TIER.LEGEND, players:[
-    { name:"David Robinson",   sport:"NBA", era:"1989-2003", team:"Spurs",                  stat:"2",     statLabel:"Championships",            role:"Center",       icon:"🏀" },
+    { name:"Mike Singletary", sport:"NFL", league:"NFL", status:"Retired", era:"1981-1992", team:"Chicago Bears", stat:"1", statLabel:"Defensive MVP", role:"Linebacker", icon:"🏈" },
+    { name:"David Robinson", sport:"NBA", league:"NBA", status:"Retired", era:"1989-2003", team:"San Antonio Spurs", stat:"2", statLabel:"Championships", role:"Center", icon:"🏀" },
   ]},
   51: { tier:TIER.LEGEND, players:[
-    { name:"Randy Johnson",    sport:"MLB", era:"1988-2009", team:"Mariners - Diamondbacks",stat:"4875",  statLabel:"Career Strikeouts",        role:"Pitcher",      icon:"⚾" },
+    { name:"Dick Butkus", sport:"NFL", league:"NFL", status:"Retired", era:"1965-1973", team:"Chicago Bears", stat:"22", statLabel:"Career Interceptions", role:"Linebacker", icon:"🏈" },
+    { name:"Bernie Williams", sport:"MLB", league:"MLB", status:"Retired", era:"1991-2006", team:"New York Yankees", stat:"2336", statLabel:"Career Hits", role:"Center Field", icon:"⚾" },
   ]},
   52: { tier:TIER.LEGEND, players:[
-    { name:"Ray Lewis",        sport:"NFL", era:"1996-2012", team:"Ravens",                 stat:"2",     statLabel:"Super Bowl Rings",         role:"Linebacker",   icon:"🏈" },
+    { name:"Mike Webster", sport:"NFL", league:"NFL", status:"Retired", era:"1974-1990", team:"Pittsburgh Steelers", stat:"4", statLabel:"Super Bowl Rings", role:"Center", icon:"🏈" },
+    { name:"Ray Lewis", sport:"NFL", league:"NFL", status:"Retired", era:"1996-2012", team:"Baltimore Ravens", stat:"2", statLabel:"Super Bowl Wins", role:"Linebacker", icon:"🏈" },
+  ]},
+  53: { tier:TIER.LEGEND, players:[
+    { name:"Mel Blount", sport:"NFL", league:"NFL", status:"Retired", era:"1970-1983", team:"Pittsburgh Steelers", stat:"57", statLabel:"Career Interceptions", role:"Cornerback", icon:"🏈" },
   ]},
   54: { tier:TIER.LEGEND, players:[
-    { name:"Brian Urlacher",   sport:"NFL", era:"2000-2012", team:"Bears",                  stat:"41.5",  statLabel:"Career Sacks",             role:"Linebacker",   icon:"🏈" },
+    { name:"Brian Urlacher", sport:"NFL", league:"NFL", status:"Retired", era:"2000-2012", team:"Chicago Bears", stat:"1", statLabel:"Defensive Player of Year", role:"Linebacker", icon:"🏈" },
   ]},
   55: { tier:TIER.LEGEND, players:[
-    { name:"Junior Seau",      sport:"NFL", era:"1990-2009", team:"Chargers",               stat:"1527",  statLabel:"Career Tackles",           role:"Linebacker",   icon:"🏈" },
+    { name:"Junior Seau", sport:"NFL", league:"NFL", status:"Retired", era:"1990-2009", team:"San Diego Chargers", stat:"56", statLabel:"Career Sacks", role:"Linebacker", icon:"🏈" },
+    { name:"Dikembe Mutombo", sport:"NBA", league:"NBA", status:"Retired", era:"1991-2009", team:"Denver Nuggets", stat:"3289", statLabel:"Career Blocks", role:"Center", icon:"🏀" },
   ]},
-  60: { tier:TIER.LEGEND, players:[
-    { name:"Chuck Bednarik",   sport:"NFL", era:"1949-1962", team:"Eagles",                 stat:"2",     statLabel:"NFL Championships",        role:"C/LB (two-way)",icon:"🏈"},
+  56: { tier:TIER.LEGEND, players:[
+    { name:"Lawrence Taylor", sport:"NFL", league:"NFL", status:"Retired", era:"1981-1993", team:"New York Giants", stat:"132", statLabel:"Career Sacks", role:"Linebacker", icon:"🏈" },
   ]},
+  57: { tier:TIER.LEGEND, players:[
+    { name:"Tedy Bruschi", sport:"NFL", league:"NFL", status:"Retired", era:"1996-2008", team:"New England Patriots", stat:"3", statLabel:"Super Bowl Rings", role:"Linebacker", icon:"🏈" },
+  ]},
+  58: { tier:TIER.LEGEND, players:[
+    { name:"Derrick Thomas", sport:"NFL", league:"NFL", status:"Retired", era:"1989-1999", team:"Kansas City Chiefs", stat:"126", statLabel:"Career Sacks", role:"Linebacker", icon:"🏈" },
+  ]},
+  59: { tier:TIER.UNWRITTEN, players:[] },
+  60: { tier:TIER.UNWRITTEN, players:[] },
+  61: { tier:TIER.UNWRITTEN, players:[] },
+  62: { tier:TIER.UNWRITTEN, players:[] },
+  63: { tier:TIER.UNWRITTEN, players:[] },
+  64: { tier:TIER.UNWRITTEN, players:[] },
+  65: { tier:TIER.UNWRITTEN, players:[] },
   66: { tier:TIER.LEGEND, players:[
-    { name:"Mario Lemieux",    sport:"NHL", era:"1984-2006", team:"Penguins",               stat:"1723",  statLabel:"Career Points",            role:"Center",       icon:"🏒" },
+    { name:"Mario Lemieux", sport:"NHL", league:"NHL", status:"Retired", era:"1984-2006", team:"Pittsburgh Penguins", stat:"690", statLabel:"Career Goals", role:"Center", icon:"🏒" },
+    { name:"Ray Nitschke", sport:"NFL", league:"NFL", status:"Retired", era:"1958-1972", team:"Green Bay Packers", stat:"3", statLabel:"NFL Championships", role:"Linebacker", icon:"🏈" },
   ]},
-  68: { tier:TIER.LEGEND, players:[
-    { name:"Jaromir Jagr",     sport:"NHL", era:"1990-2018", team:"Penguins - Rangers",     stat:"766",   statLabel:"Career Goals",             role:"Right Wing",   icon:"🏒" },
+  67: { tier:TIER.UNWRITTEN, players:[] },
+  68: { tier:TIER.UNWRITTEN, players:[] },
+  69: { tier:TIER.UNWRITTEN, players:[] },
+  70: { tier:TIER.UNWRITTEN, players:[] },
+  71: { tier:TIER.UNWRITTEN, players:[] },
+  72: { tier:TIER.UNWRITTEN, players:[] },
+  73: { tier:TIER.LEGEND, players:[
+    { name:"John Hannah", sport:"NFL", league:"NFL", status:"Retired", era:"1973-1985", team:"New England Patriots", stat:"9", statLabel:"Pro Bowl Selections", role:"Offensive Guard", icon:"🏈" },
   ]},
-  71: { tier:TIER.LEGEND, players:[
-    { name:"Evgeni Malkin",    sport:"NHL", era:"2006-pres", team:"Penguins",               stat:"3",     statLabel:"Stanley Cup Rings",        role:"Center",       icon:"🏒" },
+  74: { tier:TIER.LEGEND, players:[
+    { name:"Merlin Olsen", sport:"NFL", league:"NFL", status:"Retired", era:"1962-1976", team:"Los Angeles Rams", stat:"14", statLabel:"Pro Bowl Selections", role:"Defensive Tackle", icon:"🏈" },
+    { name:"Bob Lilly", sport:"NFL", league:"NFL", status:"Retired", era:"1961-1974", team:"Dallas Cowboys", stat:"1", statLabel:"Super Bowl Ring", role:"Defensive Tackle", icon:"🏈" },
   ]},
   75: { tier:TIER.LEGEND, players:[
-    { name:"Mean Joe Greene",  sport:"NFL", era:"1969-1981", team:"Steelers",               stat:"4",     statLabel:"Super Bowl Rings",         role:"Defensive Tackle",icon:"🏈"},
+    { name:"Deacon Jones", sport:"NFL", league:"NFL", status:"Retired", era:"1961-1974", team:"Los Angeles Rams", stat:"173.5", statLabel:"Career Sacks (unofficial)", role:"Defensive End", icon:"🏈" },
+    { name:"Joe Greene", sport:"NFL", league:"NFL", status:"Retired", era:"1969-1981", team:"Pittsburgh Steelers", stat:"4", statLabel:"Super Bowl Rings", role:"Defensive Tackle", icon:"🏈" },
+  ]},
+  76: { tier:TIER.LEGEND, players:[
+    { name:"Lou Groza", sport:"NFL", league:"NFL", status:"Retired", era:"1946-1967", team:"Cleveland Browns", stat:"1608", statLabel:"Career Kicking Points", role:"Kicker / OT", icon:"🏈" },
   ]},
   77: { tier:TIER.LEGEND, players:[
-    { name:"Ray Bourque",      sport:"NHL", era:"1979-2001", team:"Bruins - Avalanche",     stat:"1579",  statLabel:"Career Points (defenseman record)", role:"Defenseman",icon:"🏒"},
+    { name:"Red Grange", sport:"NFL", league:"NFL", status:"Retired", era:"1925-1934", team:"Chicago Bears", stat:"1925", statLabel:"Year He Made Pro Football Legitimate", role:"Halfback", icon:"🏈" },
+    { name:"Ray Bourque", sport:"NHL", league:"NHL", status:"Retired", era:"1979-2001", team:"Boston Bruins - Colorado Avalanche", stat:"1169", statLabel:"Career Points (D record)", role:"Defenseman", icon:"🏒" },
+    { name:"Luca Doncic", sport:"NBA", league:"NBA", status:"Active", era:"2018-pres", team:"Dallas Mavericks", stat:"29.4", statLabel:"Career PPG", role:"Guard/Forward", icon:"🏀" },
   ]},
+  78: { tier:TIER.LEGEND, players:[
+    { name:"Anthony Munoz", sport:"NFL", league:"NFL", status:"Retired", era:"1980-1992", team:"Cincinnati Bengals", stat:"11", statLabel:"Pro Bowl Selections", role:"Offensive Tackle", icon:"🏈" },
+  ]},
+  79: { tier:TIER.UNWRITTEN, players:[] },
   80: { tier:TIER.LEGEND, players:[
-    { name:"Jerry Rice",       sport:"NFL", era:"1985-2004", team:"49ers",                  stat:"22895", statLabel:"Receiving Yards (record)", role:"Wide Receiver",icon:"🏈" },
+    { name:"Jerry Rice", sport:"NFL", league:"NFL", status:"Retired", era:"1985-2004", team:"San Francisco 49ers", stat:"197", statLabel:"Career Receiving TDs (record)", role:"Wide Receiver", icon:"🏈" },
+    { name:"Cris Carter", sport:"NFL", league:"NFL", status:"Retired", era:"1987-2002", team:"Minnesota Vikings", stat:"130", statLabel:"Career TDs", role:"Wide Receiver", icon:"🏈" },
   ]},
   81: { tier:TIER.LEGEND, players:[
-    { name:"Terrell Owens",    sport:"NFL", era:"1996-2010", team:"49ers - Cowboys",        stat:"15934", statLabel:"Receiving Yards",          role:"Wide Receiver",icon:"🏈" },
+    { name:"Terrell Owens", sport:"NFL", league:"NFL", status:"Retired", era:"1996-2010", team:"San Francisco 49ers", stat:"153", statLabel:"Career Receiving TDs", role:"Wide Receiver", icon:"🏈" },
+    { name:"Tim Brown", sport:"NFL", league:"NFL", status:"Retired", era:"1988-2004", team:"Los Angeles Raiders", stat:"1094", statLabel:"Career Receptions", role:"Wide Receiver", icon:"🏈" },
+  ]},
+  82: { tier:TIER.LEGEND, players:[
+    { name:"Reggie Wayne", sport:"NFL", league:"NFL", status:"Retired", era:"2001-2016", team:"Indianapolis Colts", stat:"1070", statLabel:"Career Receptions", role:"Wide Receiver", icon:"🏈" },
+  ]},
+  83: { tier:TIER.LEGEND, players:[
+    { name:"Andre Johnson", sport:"NFL", league:"NFL", status:"Retired", era:"2003-2016", team:"Houston Texans", stat:"1062", statLabel:"Career Receptions", role:"Wide Receiver", icon:"🏈" },
   ]},
   84: { tier:TIER.LEGEND, players:[
-    { name:"Randy Moss",       sport:"NFL", era:"1998-2012", team:"Vikings - Patriots",     stat:"23",    statLabel:"TD catches in one season (record)", role:"Wide Receiver",icon:"🏈"},
+    { name:"Randy Moss", sport:"NFL", league:"NFL", status:"Retired", era:"1998-2012", team:"Minnesota Vikings", stat:"23", statLabel:"Single Season TDs (record)", role:"Wide Receiver", icon:"🏈" },
+    { name:"Shannon Sharpe", sport:"NFL", league:"NFL", status:"Retired", era:"1990-2003", team:"Denver Broncos", stat:"3", statLabel:"Super Bowl Rings", role:"Tight End", icon:"🏈" },
+  ]},
+  85: { tier:TIER.LEGEND, players:[
+    { name:"Chad Johnson", sport:"NFL", league:"NFL", status:"Retired", era:"2001-2012", team:"Cincinnati Bengals", stat:"1058", statLabel:"Career Receptions", role:"Wide Receiver", icon:"🏈" },
+  ]},
+  86: { tier:TIER.LEGEND, players:[
+    { name:"Hines Ward", sport:"NFL", league:"NFL", status:"Retired", era:"1998-2011", team:"Pittsburgh Steelers", stat:"2", statLabel:"Super Bowl Rings", role:"Wide Receiver", icon:"🏈" },
   ]},
   87: { tier:TIER.RISING, players:[
-    { name:"Sidney Crosby",    sport:"NHL", era:"2005-pres", team:"Penguins",               stat:"3",     statLabel:"Stanley Cup Rings",        role:"Center",       icon:"🏒" },
-    { name:"Travis Kelce",     sport:"NFL", era:"2013-pres", team:"Chiefs",                 stat:"4",     statLabel:"Super Bowl Rings",         role:"Tight End",    icon:"🏈" },
+    { name:"Rob Gronkowski", sport:"NFL", league:"NFL", status:"Retired", era:"2010-2022", team:"New England Patriots - Tampa Bay Buccaneers", stat:"4", statLabel:"Super Bowl Rings", role:"Tight End", icon:"🏈" },
+    { name:"Travis Kelce", sport:"NFL", league:"NFL", status:"Active", era:"2013-pres", team:"Kansas City Chiefs", stat:"3", statLabel:"Super Bowl Wins", role:"Tight End", icon:"🏈" },
   ]},
   88: { tier:TIER.LEGEND, players:[
-    { name:"Tony Gonzalez",    sport:"NFL", era:"1997-2013", team:"Chiefs - Falcons",       stat:"1325",  statLabel:"Receptions",               role:"Tight End",    icon:"🏈" },
-    { name:"Eric Lindros",     sport:"NHL", era:"1992-2007", team:"Flyers",                 stat:"372",   statLabel:"Career Goals",             role:"Center",       icon:"🏒" },
-    { name:"Michael Irvin",    sport:"NFL", era:"1988-1999", team:"Cowboys",                stat:"3",     statLabel:"Super Bowl Rings",         role:"Wide Receiver",icon:"🏈" },
+    { name:"Eric Lindros", sport:"NHL", league:"NHL", status:"Retired", era:"1992-2007", team:"Philadelphia Flyers", stat:"372", statLabel:"Career Goals", role:"Center", icon:"🏒" },
+    { name:"Tony Gonzalez", sport:"NFL", league:"NFL", status:"Retired", era:"1997-2013", team:"Kansas City Chiefs", stat:"1325", statLabel:"Career Receptions", role:"Tight End", icon:"🏈" },
+    { name:"Lynn Swann", sport:"NFL", league:"NFL", status:"Retired", era:"1974-1982", team:"Pittsburgh Steelers", stat:"4", statLabel:"Super Bowl Rings", role:"Wide Receiver", icon:"🏈" },
   ]},
   89: { tier:TIER.LEGEND, players:[
-    { name:"Mike Ditka",       sport:"NFL", era:"1961-1972", team:"Bears",                  stat:"1",     statLabel:"First TE inducted into HOF",role:"Tight End",   icon:"🏈" },
+    { name:"Mike Ditka", sport:"NFL", league:"NFL", status:"Retired", era:"1961-1972", team:"Chicago Bears", stat:"427", statLabel:"Career Receptions", role:"Tight End", icon:"🏈" },
+    { name:"Wes Welker", sport:"NFL", league:"NFL", status:"Retired", era:"2004-2015", team:"New England Patriots", stat:"903", statLabel:"Career Receptions", role:"Wide Receiver / Slot", icon:"🏈" },
+  ]},
+  90: { tier:TIER.UNWRITTEN, players:[] },
+  91: { tier:TIER.LEGEND, players:[
+    { name:"Dennis Rodman", sport:"NBA", league:"NBA", status:"Retired", era:"1986-2000", team:"Detroit Pistons - Chicago Bulls", stat:"5", statLabel:"Championships", role:"Power Forward", icon:"🏀" },
   ]},
   92: { tier:TIER.LEGEND, players:[
-    { name:"Reggie White",     sport:"NFL", era:"1985-2000", team:"Eagles - Packers",       stat:"198",   statLabel:"Career Sacks",             role:"Defensive End",icon:"🏈" },
-    { name:"Michael Strahan",  sport:"NFL", era:"1993-2007", team:"Giants",                 stat:"22.5",  statLabel:"Sacks in one season (record)", role:"Defensive End",icon:"🏈"},
+    { name:"Michael Strahan", sport:"NFL", league:"NFL", status:"Retired", era:"2004-2007", team:"New York Giants", stat:"22.5", statLabel:"Single Season Sacks (record)", role:"Defensive End", icon:"🏈" },
+  ]},
+  93: { tier:TIER.LEGEND, players:[
+    { name:"Reggie White", sport:"NFL", league:"NFL", status:"Retired", era:"1985-2000", team:"Philadelphia Eagles - Green Bay Packers", stat:"198", statLabel:"Career Sacks", role:"Defensive End", icon:"🏈" },
+  ]},
+  94: { tier:TIER.LEGEND, players:[
+    { name:"Charles Haley", sport:"NFL", league:"NFL", status:"Retired", era:"1986-1999", team:"San Francisco 49ers - Dallas Cowboys", stat:"5", statLabel:"Super Bowl Rings", role:"Defensive End", icon:"🏈" },
+  ]},
+  95: { tier:TIER.LEGEND, players:[
+    { name:"Richard Dent", sport:"NFL", league:"NFL", status:"Retired", era:"1983-1997", team:"Chicago Bears", stat:"137", statLabel:"Career Sacks", role:"Defensive End", icon:"🏈" },
   ]},
   96: { tier:TIER.LEGEND, players:[
-    { name:"Pavel Bure",       sport:"NHL", era:"1991-2003", team:"Canucks - Panthers",     stat:"60",    statLabel:"Goals in one season (twice)", role:"Right Wing", icon:"🏒" },
+    { name:"Cortez Kennedy", sport:"NFL", league:"NFL", status:"Retired", era:"1990-2000", team:"Seattle Seahawks", stat:"1", statLabel:"Defensive Player of Year", role:"Defensive Tackle", icon:"🏈" },
   ]},
   97: { tier:TIER.RISING, players:[
-    { name:"Connor McDavid",   sport:"NHL", era:"2015-pres", team:"Oilers",                 stat:"4",     statLabel:"Art Ross Trophies",        role:"Center",       icon:"🏒" },
+    { name:"Megan Rapinoe", sport:"Soccer", league:"NWSL", status:"Retired", era:"2009-2023", team:"OL Reign", stat:"2", statLabel:"World Cup Wins", role:"Winger", icon:"⚽" },
+    { name:"Connor McDavid", sport:"NHL", league:"NHL", status:"Active", era:"2015-pres", team:"Edmonton Oilers", stat:"4", statLabel:"Hart Trophies", role:"Center", icon:"🏒" },
   ]},
+  98: { tier:TIER.UNWRITTEN, players:[] },
   99: { tier:TIER.SACRED, sacredSport:"NHL", players:[
-    { name:"Wayne Gretzky",    sport:"NHL", era:"1979-1999", team:"Oilers",                 stat:"2857",  statLabel:"Career Points (untouchable)", role:"Center",    icon:"🏒" },
+    { name:"Wayne Gretzky", sport:"NHL", league:"NHL", status:"Retired", era:"1979-1999", team:"Edmonton Oilers - Los Angeles Kings", stat:"2857", statLabel:"Career Points (record)", role:"Center", icon:"🏒" },
   ]},
 };
 
@@ -548,9 +673,12 @@ export default function WornNumbers() {
                 <div>
                   <div className="bebas" style={{ fontSize:20, letterSpacing:2, lineHeight:1, marginBottom:2 }}>{p.name}</div>
                   <div style={{ display:"flex", gap:5, alignItems:"center", flexWrap:"wrap" }}>
-                    <span style={{ fontSize:10, fontFamily:"'Share Tech Mono',monospace", color:"rgba(255,255,255,0.35)", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:4, padding:"1px 6px", letterSpacing:1 }}>{p.sport}</span>
+                    <span style={{ fontSize:10, fontFamily:"'Share Tech Mono',monospace", color:"rgba(255,255,255,0.35)", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:4, padding:"1px 6px", letterSpacing:1 }}>{p.sport}{p.league && p.league !== p.sport ? ` · ${p.league}` : ""}</span>
                     {p.team && (
                       <span style={{ fontSize:10, fontFamily:"'Share Tech Mono',monospace", color:"rgba(255,255,255,0.65)", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.18)", borderRadius:4, padding:"1px 7px", letterSpacing:1, fontWeight:600 }}>{p.team}</span>
+                    )}
+                    {p.status === "Active" && (
+                      <span style={{ fontSize:9, fontFamily:"'Share Tech Mono',monospace", color:"#8FD920", background:"rgba(143,217,32,0.1)", border:"1px solid rgba(143,217,32,0.3)", borderRadius:4, padding:"1px 6px", letterSpacing:1 }}>ACTIVE</span>
                     )}
                     <span style={{ fontSize:10, color:"rgba(255,255,255,0.28)", fontFamily:"'Share Tech Mono',monospace" }}>{p.era}</span>
                     <span style={{ fontSize:9, color:"rgba(255,255,255,0.2)", fontFamily:"'Share Tech Mono',monospace" }}>{p.role}</span>
@@ -580,18 +708,18 @@ export default function WornNumbers() {
     return (
       <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:16, gap:12 }}>
         <div style={{ display:"flex", alignItems:"center", gap:16 }}>
-          <div className="bebas panel-number" style={{ lineHeight:1, letterSpacing:2, color:selectedColors.text, textShadow:`0 0 30px ${selectedColors.border}` }}>
+          <div className="bebas" style={{ fontSize:64, lineHeight:1, letterSpacing:2, color:selectedColors.text, textShadow:`0 0 30px ${selectedColors.border}` }}>
             #{selected}
           </div>
           <div>
-            <div className="mono" style={{ fontSize:10, letterSpacing:3, color:"rgba(255,255,255,0.35)", marginBottom:4 }}>
+            <div className="mono" style={{ fontSize:9, letterSpacing:2, color:"rgba(255,255,255,0.35)", marginBottom:4, whiteSpace:"nowrap" }}>
               {sport === "ALL" ? "ALL SPORTS" : sport} - JERSEY NUMBER
             </div>
-            <div className="bebas" style={{ fontSize:18, letterSpacing:2, color:"rgba(255,255,255,0.7)" }}>
-              {selectedData?.tier === TIER.SACRED   ? "SACRED - RETIRED LEAGUE-WIDE" :
-               selectedData?.tier === TIER.LEGEND   ? `${selectedPlayers.length} LEGEND${selectedPlayers.length !== 1 ? "S" : ""} WORE THIS NUMBER` :
+            <div className="bebas" style={{ fontSize:16, letterSpacing:1, color:"rgba(255,255,255,0.7)", lineHeight:1.2 }}>
+              {selectedData?.tier === TIER.SACRED   ? "SACRED" :
+               selectedData?.tier === TIER.LEGEND   ? `${selectedPlayers.length} LEGEND${selectedPlayers.length !== 1 ? "S" : ""} WORE THIS` :
                selectedData?.tier === TIER.RISING   ? "ACTIVE" :
-               "UNWRITTEN - NO LEGEND YET"}
+               "UNWRITTEN"}
             </div>
             {selectedData?.tier === TIER.SACRED && (
               <div style={{ display:"inline-block", marginTop:4, background:"rgba(200,220,255,0.1)", border:"1px solid rgba(200,220,255,0.35)", borderRadius:6, padding:"2px 8px", fontSize:10, color:"#C8DCFF", fontFamily:"'Share Tech Mono',monospace", letterSpacing:2 }}>SACRED</div>
@@ -781,7 +909,7 @@ export default function WornNumbers() {
           </div>
         </div>
       ) : (
-        /* MOBILE LAYOUT */
+
         <div style={{ padding:"10px 8px", overflowX:"hidden", maxWidth:"100vw" }}>
           <div className="grid-wrap">
             {Array.from({ length: 99 }, (_, i) => renderCell(i + 1))}
