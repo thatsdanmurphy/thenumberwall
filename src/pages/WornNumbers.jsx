@@ -224,7 +224,21 @@ export default function WornNumbers() {
   const [hovered, setHovered]   = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [shareActive, setShareActive] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const sheetRef = useRef(null);
+
+  const handleShare = () => {
+    const url = `${window.location.origin}/?n=${selected}`;
+    const players = selectedPlayers.map(p => p.name).join(" · ");
+    if (navigator.share) {
+      navigator.share({ title: `#${selected} on The Number Wall`, text: players, url });
+    } else {
+      navigator.clipboard?.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     const check = () => {
@@ -234,6 +248,13 @@ export default function WornNumbers() {
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Read ?n= param from URL and auto-open that number
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const n = parseInt(params.get("n"));
+    if (!isNaN(n) && n >= 0 && n <= 99) setSelected(n);
   }, []);
 
   useEffect(() => { if (filterRef.current) filterRef.current.scrollLeft = 0; }, [sport]);
@@ -397,6 +418,7 @@ const sacredSport = numberData[num]?.sacredSport;
     }
 
     return (
+      <>
       <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
         {selPlayers.length > 0 ? selPlayers.map((p, i) => (
           <div key={i} className="player-card">
@@ -432,6 +454,25 @@ const sacredSport = numberData[num]?.sacredSport;
           </div>
         )}
       </div>
+
+      {selectedPlayers.length > 0 && (
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:14, paddingTop:12, borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+          <span style={{ fontFamily:"'Share Tech Mono',monospace", fontSize:9, letterSpacing:2, color:"rgba(255,255,255,0.2)" }}>
+            THENUMBERWALL.COM · #{selected}
+          </span>
+          <button onClick={handleShare}
+            style={{ display:"flex", alignItems:"center", gap:6, background:shareCopied?"rgba(143,217,32,0.12)":"rgba(232,124,42,0.12)", border:`1px solid ${shareCopied?"rgba(143,217,32,0.4)":"rgba(232,124,42,0.4)"}`, borderRadius:6, padding:"5px 12px", color:shareCopied?"#8FD920":"rgba(232,124,42,0.9)", fontFamily:"'Share Tech Mono',monospace", fontSize:10, letterSpacing:1, cursor:"pointer", transition:"all 0.15s" }}
+            onMouseEnter={e=>{ if(!shareCopied){e.currentTarget.style.background="rgba(232,124,42,0.22)";e.currentTarget.style.borderColor="rgba(232,124,42,0.7)";e.currentTarget.style.boxShadow="0 0 12px rgba(232,124,42,0.25)";}}}
+            onMouseLeave={e=>{ if(!shareCopied){e.currentTarget.style.background="rgba(232,124,42,0.12)";e.currentTarget.style.borderColor="rgba(232,124,42,0.4)";e.currentTarget.style.boxShadow="none";}}}
+          >
+            {shareCopied
+              ? <><svg style={{width:11,height:11,fill:"currentColor"}} viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>&nbsp;COPIED</>
+              : <><svg style={{width:12,height:12,fill:"currentColor"}} viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>&nbsp;SHARE #{selected}</>
+            }
+          </button>
+        </div>
+      )}
+      </>
     );
   };
 

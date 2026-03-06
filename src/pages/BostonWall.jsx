@@ -86,6 +86,19 @@ export default function BostonWall() {
   const [loading, setLoading]   = useState(true);
   const sheetRef  = useRef(null);
   const filterRef = useRef(null);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  const handleShare = (num, players, teamColor) => {
+    const url = `${window.location.origin}/boston?n=${num}`;
+    const names = players.map(p => p.name).join(" · ");
+    if (navigator.share) {
+      navigator.share({ title: `#${num} on The Boston Wall`, text: names, url });
+    } else {
+      navigator.clipboard?.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     const check = () => {
@@ -98,6 +111,13 @@ export default function BostonWall() {
   }, []);
 
   useEffect(() => { setSelected(null); }, [tab, teamFilter]);
+  // Read ?n= param from URL and auto-open that number
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const n = parseInt(params.get("n"));
+    if (!isNaN(n) && n >= 0 && n <= 99) setSelected(n);
+  }, []);
+
   useEffect(() => { if (filterRef.current) filterRef.current.scrollLeft = 0; }, [teamFilter]);
 
   useEffect(() => {
@@ -234,6 +254,33 @@ export default function BostonWall() {
             onClick={() => setSelected(null)}>X</button>
         </div>
         {selectedPlayers.map((p, i) => renderPlayerCard(p, i))}
+
+        {selectedPlayers.length > 0 && (() => {
+          // Team color for share button accent
+          const tc = selectedPlayers[0]?.color || "#FF6B00";
+          const r = parseInt(tc.slice(1,3)||"FF",16);
+          const g = parseInt(tc.slice(3,5)||"6B",16);
+          const b = parseInt(tc.slice(5,7)||"00",16);
+          const btnBg    = shareCopied ? "rgba(143,217,32,0.12)" : `rgba(${r},${g},${b},0.15)`;
+          const btnBdr   = shareCopied ? "rgba(143,217,32,0.4)"  : `rgba(${r},${g},${b},0.5)`;
+          const btnColor = shareCopied ? "#8FD920"               : `rgba(${Math.min(255,r+60)},${Math.min(255,g+60)},${Math.min(255,b+60)},0.95)`;
+          const btnGlow  = shareCopied ? "none" : `0 0 12px rgba(${r},${g},${b},0.25)`;
+          return (
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:14, paddingTop:12, borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+              <span style={{ fontFamily:"'Share Tech Mono',monospace", fontSize:9, letterSpacing:2, color:"rgba(255,255,255,0.2)" }}>
+                THENUMBERWALL.COM · #{selected}
+              </span>
+              <button onClick={() => handleShare(selected, selectedPlayers)}
+                style={{ display:"flex", alignItems:"center", gap:6, background:btnBg, border:`1px solid ${btnBdr}`, borderRadius:6, padding:"5px 12px", color:btnColor, fontFamily:"'Share Tech Mono',monospace", fontSize:10, letterSpacing:1, cursor:"pointer", transition:"all 0.15s", boxShadow:btnGlow }}
+              >
+                {shareCopied
+                  ? <><svg style={{width:11,height:11,fill:"currentColor"}} viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>&nbsp;COPIED</>
+                  : <><svg style={{width:12,height:12,fill:"currentColor"}} viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>&nbsp;SHARE #{selected}</>
+                }
+              </button>
+            </div>
+          );
+        })()}
       </div>
     );
   };
