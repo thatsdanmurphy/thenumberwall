@@ -257,6 +257,24 @@ export default function WornNumbers() {
     if (!isNaN(n) && n >= 0 && n <= 99) setSelected(n);
   }, []);
 
+  // Update OG meta tags when a number is selected
+  useEffect(() => {
+    if (selected === null) return;
+    const players = selectedPlayers.map(p => p.name).join(" · ");
+    const ogUrl = `https://thenumberwall.com/api/og?n=${selected}`;
+    const setMeta = (prop, content) => {
+      let el = document.querySelector(`meta[property="${prop}"]`) || document.querySelector(`meta[name="${prop}"]`);
+      if (!el) { el = document.createElement("meta"); el.setAttribute(prop.startsWith("og:") || prop.startsWith("twitter:") ? "property" : "name", prop); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    setMeta("og:title",       `#${selected} on The Number Wall`);
+    setMeta("og:description", players || `Who wore #${selected}? Find out on The Number Wall.`);
+    setMeta("og:image",       ogUrl);
+    setMeta("og:url",         `https://thenumberwall.com/?n=${selected}`);
+    setMeta("twitter:card",   "summary_large_image");
+    setMeta("twitter:image",  ogUrl);
+  }, [selected]);
+
   useEffect(() => { if (filterRef.current) filterRef.current.scrollLeft = 0; }, [sport]);
 
   const filteredPlayers = (num) => {
