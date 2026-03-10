@@ -1,196 +1,271 @@
 // api/og.js
-// Vercel Function in ES module format
+// Dynamic OG share card — returns PNG via @vercel/og
+// Works correctly on iMessage, Twitter, Slack, Discord, Facebook.
+// Same layout as previous SVG version, same data fetching.
+// Sprint 1 electrified color palette.
 
-import https from "node:https";
+import { ImageResponse } from "@vercel/og";
 
-const SHEET_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSK0TtNNPbOkdaVIRrV9zDl8HOeN_y64j5kvoDZI08seUPN0q8GXOXCfGjdIaW5MQ9WgYnH0EDGigbZ/pub?gid=0&single=true&output=csv";
+export const config = { runtime: "edge" };
 
-const BOSTON_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSK0TtNNPbOkdaVIRrV9zDl8HOeN_y64j5kvoDZI08seUPN0q8GXOXCfGjdIaW5MQ9WgYnH0EDGigbZ/pub?gid=125669984&single=true&output=csv";
+// ── Sheet URLs ────────────────────────────────────────────────
+const SHEET_URL  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSK0TtNNPbOkdaVIRrV9zDl8HOeN_y64j5kvoDZI08seUPN0q8GXOXCfGjdIaW5MQ9WgYnH0EDGigbZ/pub?gid=0&single=true&output=csv";
+const BOSTON_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSK0TtNNPbOkdaVIRrV9zDl8HOeN_y64j5kvoDZI08seUPN0q8GXOXCfGjdIaW5MQ9WgYnH0EDGigbZ/pub?gid=125669984&single=true&output=csv";
 
-function get(url) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
-        if (res.statusCode === 301 || res.statusCode === 302) {
-          return https
-            .get(res.headers.location, (res2) => {
-              let d = "";
-              res2.on("data", (c) => (d += c));
-              res2.on("end", () => resolve(d));
-            })
-            .on("error", reject);
-        }
-
-        let d = "";
-        res.on("data", (c) => (d += c));
-        res.on("end", () => resolve(d));
-      })
-      .on("error", reject);
-  });
-}
-
+// ── CSV parser ────────────────────────────────────────────────
 function parseCSV(csv) {
-  const lines = csv.split("\n").filter(Boolean);
-  const headers = lines[0]
-    .split(",")
-    .map((h) => h.trim().replace(/^"|"$/g, ""));
-
-  return lines.slice(1).map((line) => {
-    const vals = [];
-    let cur = "";
-    let inQ = false;
-
+  const lines   = csv.split("\n").filter(Boolean);
+  const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+  return lines.slice(1).map(line => {
+    const vals = []; let cur = ""; let inQ = false;
     for (let i = 0; i < line.length; i++) {
-      if (line[i] === '"') {
-        inQ = !inQ;
-      } else if (line[i] === "," && !inQ) {
-        vals.push(cur.trim());
-        cur = "";
-      } else {
-        cur += line[i];
-      }
+      if (line[i] === '"') { inQ = !inQ; }
+      else if (line[i] === "," && !inQ) { vals.push(cur.trim()); cur = ""; }
+      else { cur += line[i]; }
     }
-
     vals.push(cur.trim());
-
     const obj = {};
-    headers.forEach((h, i) => {
-      obj[h] = vals[i] || "";
-    });
-
+    headers.forEach((h, i) => { obj[h] = vals[i] || ""; });
     return obj;
   });
 }
 
+// ── Heat colors — orange scale, matches tokens.js ─────────────
 function heatColor(count) {
   if (count >= 6) return { bg: "#DC4600", border: "#FF7814", text: "#FFD278" };
   if (count >= 4) return { bg: "#D23C00", border: "#FF6414", text: "#FFBE64" };
   if (count >= 3) return { bg: "#C83200", border: "#FF550A", text: "#FFAA55" };
   if (count >= 2) return { bg: "#B42800", border: "#F04605", text: "#FF9141" };
-  return { bg: "#961E00", border: "#C83700", text: "#DC6E32" };
+  return              { bg: "#961E00", border: "#C83700", text: "#DC6E32" };
 }
 
+// ── Team colors — Sprint 1 electrified, matches tokens.js ─────
 const TEAM_COLORS = {
-  "Boston Bruins": "#FFB81C",
-  "Boston Celtics": "#4DCC7A",
-  "Boston Red Sox": "#FF8080",
-  "New England Patriots": "#C0C8D8",
-  "Boston Patriots": "#C0C8D8",
+  "Boston Bruins":        "#FFD278",
+  "Boston Celtics":       "#8CFFA8",
+  "Boston Red Sox":       "#FFA0A5",
+  "New England Patriots": "#B4D7FF",
+  "Boston Patriots":      "#B4D7FF",
 };
 
-function esc(str) {
-  return (str || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+// ── Name font size — scales down as player count rises ────────
+function nameFontSize(count) {
+  if (count <= 1) return 64;
+  if (count === 2) return 54;
+  if (count === 3) return 44;
+  return 36;
 }
 
-function buildSVG(num, players, wall) {
-  const count = players.length;
-  const heat =
-    count > 0
-      ? heatColor(count)
-      : { bg: "#1a1e25", border: "#2c3140", text: "rgba(255,255,255,0.25)" };
+// ── Handler ───────────────────────────────────────────────────
+export default async function handler(req) {
+  const { searchParams } = new URL(req.url);
+  const wall = searchParams.get("wall") || "global";
+  const num  = Math.max(0, Math.min(99, parseInt(searchParams.get("n"), 10) || 99));
 
-  const display = players.slice(0, 4);
-  const more = players.length > 4 ? `+${players.length - 4} more` : "";
-
-  let accentColor = heat.text;
-  if (wall === "boston" && players.length > 0) {
-    accentColor = TEAM_COLORS[players[0].team] || heat.text;
-  }
-
-  const wallLabel = wall === "boston" ? "THE BOSTON WALL" : "THE NUMBER WALL";
-  const tagline = wall === "boston" ? "617 legends live here." : "Legends live here.";
-  const fs =
-    display.length <= 1 ? 64 :
-    display.length === 2 ? 54 :
-    display.length === 3 ? 44 : 36;
-  const lh = fs * 1.25;
-
-  const nameLines = display
-    .map(
-      (p, i) => `<text x="480" y="${195 + i * lh}" font-size="${fs}" font-weight="900" fill="#ffffff" font-family="Arial Black, Arial, sans-serif" dominant-baseline="hanging">${esc(p.name)}</text>`
-    )
-    .join("\n    ");
-
-  const moreLine = more
-    ? `<text x="480" y="${195 + display.length * lh + 8}" font-size="20" fill="rgba(255,255,255,0.35)" font-family="Arial, sans-serif">${esc(more)}</text>`
-    : "";
-
-  return `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="glow" cx="18%" cy="28%" r="55%">
-      <stop offset="0%" stop-color="${heat.bg}" stop-opacity="0.65"/>
-      <stop offset="100%" stop-color="#080c10" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="#080c10"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
-
-  <rect x="40" y="55" width="390" height="430" rx="20" fill="${heat.bg}" stroke="${heat.border}" stroke-width="2.5" opacity="0.95"/>
-
-  <text x="235" y="290" font-size="210" font-weight="900" fill="${heat.text}"
-    font-family="Arial Black, Arial, sans-serif"
-    text-anchor="middle" dominant-baseline="middle"
-  >${num}</text>
-
-  ${
-    count > 0
-      ? `<text x="235" y="455" font-size="16" fill="rgba(255,255,255,0.3)"
-    font-family="Arial, monospace" text-anchor="middle" letter-spacing="4">${count} LEGEND${count !== 1 ? "S" : ""}</text>`
-      : ""
-  }
-
-  <line x1="450" y1="55" x2="450" y2="485" stroke="${heat.border}" stroke-width="1" opacity="0.2"/>
-
-  <text x="480" y="155" font-size="13" fill="rgba(255,255,255,0.28)"
-    font-family="Arial, monospace" letter-spacing="4" dominant-baseline="hanging">LEGENDS WHO WORE THIS</text>
-
-  ${
-    count > 0
-      ? nameLines
-      : `<text x="480" y="270" font-size="52" font-weight="900" fill="rgba(255,255,255,0.12)"
-    font-family="Arial Black, Arial, sans-serif" dominant-baseline="middle">UNWRITTEN</text>`
-  }
-  ${moreLine}
-
-  <line x1="0" y1="540" x2="1200" y2="540" stroke="${heat.border}" stroke-width="1" opacity="0.2"/>
-  <text x="60" y="590" font-size="19" font-weight="900" fill="rgba(255,255,255,0.2)"
-    font-family="Arial, sans-serif" letter-spacing="6" dominant-baseline="middle">${wallLabel}</text>
-  <text x="1140" y="590" font-size="23" fill="${accentColor}"
-    font-family="Georgia, serif" font-style="italic" text-anchor="end" dominant-baseline="middle">${tagline}</text>
-</svg>`;
-}
-
-export default async function handler(req, res) {
-  const { n, wall = "global" } = req.query;
-  const num = Math.max(0, Math.min(99, parseInt(n, 10) || 99));
-
+  // Fetch player data
   let players = [];
-
   try {
     const url = wall === "boston" ? BOSTON_URL : SHEET_URL;
-    const csv = await get(url);
+    const csv = await fetch(url).then(r => r.text());
     const rows = parseCSV(csv);
-
     players = rows
-      .filter((r) => parseInt(r["Number"], 10) === num && r["Name"])
-      .map((r) => ({
+      .filter(r => parseInt(r["Number"], 10) === num && r["Name"])
+      .map(r => ({
         name: r["Name"],
         team: r["Team"] || r["City + Team"] || "",
       }));
   } catch (e) {
-    console.error("OG generation failed:", e);
+    console.error("OG data fetch failed:", e);
   }
 
-  const svg = buildSVG(num, players, wall);
+  const count       = players.length;
+  const heat        = count > 0
+    ? heatColor(count)
+    : { bg: "#1a1e25", border: "#2c3140", text: "rgba(255,255,255,0.15)" };
 
-  res.setHeader("Content-Type", "image/svg+xml");
-  res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=3600");
-  res.status(200).send(svg);
+  const display     = players.slice(0, 4);
+  const more        = players.length > 4 ? `+${players.length - 4} more` : null;
+  const fs          = nameFontSize(display.length);
+  const wallLabel   = wall === "boston" ? "THE BOSTON WALL" : "THE NUMBER WALL";
+  const tagline     = wall === "boston" ? "617 legends live here." : "Legends live here.";
+  const accentColor = (wall === "boston" && players.length > 0)
+    ? (TEAM_COLORS[players[0].team] || heat.text)
+    : heat.text;
+
+  return new ImageResponse(
+    <div
+      style={{
+        width:         "1200px",
+        height:        "630px",
+        background:    "#080C10",
+        display:       "flex",
+        flexDirection: "column",
+        position:      "relative",
+        fontFamily:    "sans-serif",
+        overflow:      "hidden",
+      }}
+    >
+      {/* Radial glow behind tile */}
+      <div style={{
+        position:     "absolute",
+        top:          "-80px",
+        left:         "-80px",
+        width:        "560px",
+        height:       "560px",
+        borderRadius: "50%",
+        background:   heat.bg,
+        opacity:      0.35,
+        filter:       "blur(80px)",
+        display:      "flex",
+      }} />
+
+      {/* Main content row */}
+      <div style={{
+        display: "flex",
+        flex:    1,
+        padding: "55px 40px 0",
+      }}>
+
+        {/* Left — number tile */}
+        <div style={{
+          width:          "390px",
+          height:         "430px",
+          background:     heat.bg,
+          border:         `2.5px solid ${heat.border}`,
+          borderRadius:   "20px",
+          display:        "flex",
+          flexDirection:  "column",
+          alignItems:     "center",
+          justifyContent: "center",
+          flexShrink:     0,
+        }}>
+          <span style={{
+            fontSize:      "210px",
+            fontWeight:    900,
+            color:         heat.text,
+            lineHeight:    1,
+            letterSpacing: "-4px",
+          }}>
+            {num}
+          </span>
+          {count > 0 && (
+            <span style={{
+              fontSize:      "14px",
+              color:         "rgba(255,255,255,0.3)",
+              letterSpacing: "4px",
+              marginTop:     "8px",
+              fontFamily:    "monospace",
+            }}>
+              {count} LEGEND{count !== 1 ? "S" : ""}
+            </span>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div style={{
+          width:       "1px",
+          height:      "430px",
+          background:  heat.border,
+          opacity:     0.2,
+          marginLeft:  "10px",
+          marginRight: "30px",
+          flexShrink:  0,
+          display:     "flex",
+        }} />
+
+        {/* Right — player names */}
+        <div style={{
+          display:        "flex",
+          flexDirection:  "column",
+          justifyContent: "flex-start",
+          paddingTop:     "40px",
+          flex:           1,
+          overflow:       "hidden",
+        }}>
+          <span style={{
+            fontSize:      "13px",
+            color:         "rgba(255,255,255,0.28)",
+            letterSpacing: "4px",
+            fontFamily:    "monospace",
+            marginBottom:  "28px",
+          }}>
+            LEGENDS WHO WORE THIS
+          </span>
+
+          {count > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {display.map((p, i) => (
+                <span key={i} style={{
+                  fontSize:     `${fs}px`,
+                  fontWeight:   900,
+                  color:        "#ffffff",
+                  lineHeight:   1.2,
+                  whiteSpace:   "nowrap",
+                  overflow:     "hidden",
+                  textOverflow: "ellipsis",
+                }}>
+                  {p.name}
+                </span>
+              ))}
+              {more && (
+                <span style={{
+                  fontSize:  "20px",
+                  color:     "rgba(255,255,255,0.35)",
+                  marginTop: "8px",
+                }}>
+                  {more}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span style={{
+              fontSize:   "52px",
+              fontWeight: 900,
+              color:      "rgba(255,255,255,0.10)",
+              marginTop:  "40px",
+            }}>
+              UNWRITTEN
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Footer bar */}
+      <div style={{
+        display:        "flex",
+        alignItems:     "center",
+        justifyContent: "space-between",
+        borderTop:      `1px solid rgba(255,255,255,0.08)`,
+        padding:        "0 60px",
+        height:         "90px",
+        marginTop:      "auto",
+      }}>
+        <span style={{
+          fontSize:      "19px",
+          fontWeight:    900,
+          color:         "rgba(255,255,255,0.2)",
+          letterSpacing: "6px",
+          fontFamily:    "monospace",
+        }}>
+          {wallLabel}
+        </span>
+        <span style={{
+          fontSize:   "23px",
+          color:      accentColor,
+          fontStyle:  "italic",
+          fontFamily: "Georgia, serif",
+        }}>
+          {tagline}
+        </span>
+      </div>
+    </div>,
+
+    {
+      width:  1200,
+      height: 630,
+      headers: {
+        "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+      },
+    }
+  );
 }
