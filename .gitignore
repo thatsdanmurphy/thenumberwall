@@ -3,3 +3,5 @@ dist
 .DS_Store
 .env
 .env.local
+preview.html
+preview-latest.html
