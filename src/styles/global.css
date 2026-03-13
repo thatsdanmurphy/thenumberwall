@@ -1,0 +1,122 @@
+/* THE NUMBER WALL — Global Styles
+   All CSS custom properties derived from tokens.js.
+   Nothing hardcoded outside this file or tokens.js. */
+
+/* ─── CSS Custom Properties ─────────────────────────────────────── */
+
+:root {
+  /* Color */
+  --color-night:    #080C10;
+  --color-surface:  #0D1117;
+  --color-paper:    #F5F7FA;
+  --color-muted:    #9BA7B4;
+  --color-heat:     #E87C2A;
+  --color-blaze:    #F5C135;
+  --color-sacred:   #C8DCFF;
+  --color-action:   #FFFFFF;
+  --color-border:   rgba(255, 255, 255, 0.08);
+
+  /* Team */
+  --color-team-sox:      #E8182E;
+  --color-team-bruins:   #FFB81C;
+  --color-team-celtics:  #00C267;
+  --color-team-patriots: #1A72FF;
+
+  /* Typography */
+  --font-banner:      'Archivo Black', sans-serif;
+  --font-program:     'Inter', sans-serif;
+  --font-scoreboard:  'IBM Plex Mono', monospace;
+  --font-handwritten: 'Rock Salt', cursive;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  --space-8: 96px;
+
+  /* Grid */
+  --grid-gutter:    24px;
+  --grid-max-width: 1280px;
+  --grid-margin:    24px;
+
+  /* Panel */
+  --panel-ratio-grid:  61.8%;
+  --panel-ratio-panel: 38.2%;
+  --panel-max-width:   480px;
+
+  /* Motion */
+  --motion-hover:  180ms ease-out;
+  --motion-reveal: 250ms ease-in-out;
+  --motion-heat:   300ms ease-in-out;
+  --motion-color:  200ms ease-out;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-night);
+  color: var(--color-paper);
+  font-family: var(--font-program);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--color-heat);
+  text-decoration: none;
+  transition: color var(--motion-hover);
+}
+
+a:hover {
+  color: var(--color-blaze);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-sacred);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Breakpoint-responsive grid margin ─────────────────────────── */
+
+@media (min-width: 768px) {
+  :root { --grid-margin: 48px; }
+}
+
+@media (min-width: 1024px) {
+  :root { --grid-margin: 64px; }
+}
+
+@media (min-width: 1440px) {
+  :root { --grid-margin: 96px; }
+}

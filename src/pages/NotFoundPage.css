@@ -1,0 +1,54 @@
+.not-found-page {
+  flex:            1;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-3);
+  padding:         var(--space-6) var(--space-4);
+  text-align:      center;
+}
+
+.not-found-page__number {
+  font-family:    var(--font-banner);
+  font-size:      6rem;
+  line-height:    1;
+  letter-spacing: 0.02em;
+  color:          rgba(255,255,255,0.07);
+}
+
+.not-found-page__label {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.625rem;
+  letter-spacing: 0.22em;
+  color:          rgba(255,255,255,0.35);
+}
+
+.not-found-page__body {
+  font-family: var(--font-program);
+  font-size:   0.875rem;
+  color:       rgba(255,255,255,0.45);
+  font-style:  italic;
+  margin:      0;
+}
+
+.not-found-page__cta {
+  display:         inline-block;
+  margin-top:      var(--space-3);
+  font-family:     var(--font-scoreboard);
+  font-size:       0.5625rem;
+  letter-spacing:  0.18em;
+  color:           rgba(255,255,255,0.55);
+  text-decoration: none;
+  border:          1px solid rgba(255,255,255,0.16);
+  border-radius:   4px;
+  padding:         var(--space-2) var(--space-4);
+  transition:      color var(--motion-hover), border-color var(--motion-hover),
+                   background var(--motion-hover);
+}
+
+.not-found-page__cta:hover {
+  color:        var(--color-paper);
+  border-color: rgba(255,255,255,0.38);
+  background:   rgba(255,255,255,0.05);
+}

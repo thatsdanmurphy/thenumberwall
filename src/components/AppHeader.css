@@ -1,0 +1,91 @@
+/* AppHeader
+   Wordmark + tagline. About link in top-right of nav row.
+   Back-button row always reserves its height — wordmark never jumps. */
+
+.app-header {
+  padding: var(--space-5) 0 var(--space-4);
+  flex-shrink: 0;
+}
+
+/* Brand block */
+
+.app-header__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.app-header__wordmark {
+  font-family:    var(--font-banner);
+  font-size:      1.125rem;
+  letter-spacing: 0.03em;
+  color:          var(--color-paper);
+  line-height:    1;
+}
+
+.app-header__tagline {
+  font-family:    var(--font-handwritten);
+  font-size:      0.6875rem;   /* Rock Salt renders large — keep it tight */
+  color:          var(--color-heat);
+  letter-spacing: 0;
+  line-height:    1.3;
+  text-shadow:    0 0 18px rgba(232, 124, 42, 0.4);
+}
+
+/* Nav row — back button left, About right.
+   Both slots always present so wordmark never jumps. */
+
+.app-header__back-row {
+  height:          24px;
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   var(--space-1);
+}
+
+/* Left slot — always reserves space even when back button is absent */
+.app-header__back-slot {
+  min-width: 60px;
+}
+
+/* About link — right slot, always visible */
+.app-header__about {
+  font-family:     var(--font-program);
+  font-size:       0.75rem;
+  font-weight:     500;
+  color:           var(--color-muted);
+  letter-spacing:  0.04em;
+  text-decoration: none;
+  transition:      color var(--motion-hover);
+}
+
+.app-header__about:hover {
+  color: var(--color-paper);
+}
+
+.app-header__about:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 4px;
+  border-radius:  2px;
+}
+
+/* Back button — left slot */
+.app-header__back {
+  font-family:    var(--font-program);
+  font-size:      0.75rem;
+  font-weight:    500;
+  color:          var(--color-muted);
+  letter-spacing: 0.04em;
+  padding:        0;
+  transition:     color var(--motion-hover);
+}
+
+.app-header__back:hover {
+  color: var(--color-paper);
+}
+
+.app-header__back:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 4px;
+  border-radius:  2px;
+}

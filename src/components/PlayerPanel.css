@@ -1,0 +1,422 @@
+/* PlayerPanel
+   Desktop: sticky golden-ratio panel, always visible, scrolls internally.
+   Mobile: fixed bottom sheet — slides up over grid, backdrop behind it. */
+
+/* ── Drag handle (mobile only) ───────────────────────────────────────────── */
+
+.player-panel__handle {
+  display: none;
+}
+
+/* ── Outer shell ─────────────────────────────────────────────────────────── */
+
+.player-panel {
+  background:    var(--color-surface);
+  border:        1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+/* Idle — no footprint on mobile */
+.player-panel--idle {
+  display: none;
+}
+
+/* ── Mobile: fixed bottom sheet ──────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  .player-panel {
+    /* Always in DOM so transform can animate */
+    display:       block !important;
+    position:      fixed;
+    bottom:        0;
+    left:          0;
+    right:         0;
+    margin-top:    0;
+    max-height:    82vh;
+    border-radius: 14px 14px 0 0;
+    border-bottom: none;
+    overflow-y:    auto;
+    z-index:       200;
+    /* Off-screen by default */
+    transform:     translateY(100%);
+    transition:    transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  /* Slide up when selected */
+  .player-panel:not(.player-panel--idle) {
+    transform: translateY(0);
+  }
+
+  /* Handle visible on mobile */
+  .player-panel__handle {
+    display:       block;
+    width:         36px;
+    height:        4px;
+    background:    rgba(255,255,255,0.18);
+    border-radius: 2px;
+    margin:        12px auto 0;
+    flex-shrink:   0;
+  }
+}
+
+/* ── Desktop: sticky, internally scrollable ──────────────────────────────── */
+
+@media (min-width: 768px) {
+  .player-panel {
+    position:   sticky;
+    top:        var(--space-4);
+    max-height: calc(100vh - var(--space-4) * 2);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .player-panel--idle {
+    display: block;
+  }
+}
+
+/* ── Inner padding ───────────────────────────────────────────────────────── */
+
+.player-panel__inner {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+/* ── Idle state ──────────────────────────────────────────────────────────── */
+
+.player-panel__idle {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  min-height:      260px;
+  gap:             var(--space-2);
+  color:           var(--color-paper);
+}
+
+.player-panel__idle-jersey {
+  width:         72px;
+  height:        66px;
+  opacity:       0.07;
+  margin-bottom: 4px;
+}
+
+.player-panel__idle-wall {
+  font-family:    var(--font-banner);
+  font-size:      1.375rem;
+  letter-spacing: 0.04em;
+  color:          rgba(255,255,255,0.08);
+  text-align:     center;
+  width:          100%;
+}
+
+.player-panel__idle-prompt {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5875rem;
+  letter-spacing: 0.28em;
+  color:          rgba(255,255,255,0.13);
+  text-align:     center;
+  width:          100%;
+}
+
+/* ── Header: number + subtitle + close ───────────────────────────────────── */
+
+.player-panel__header {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             var(--space-3);
+  margin-bottom:   var(--space-4);
+}
+
+.player-panel__header-actions {
+  display:     flex;
+  align-items: flex-start;
+  gap:         var(--space-2);
+  flex-shrink: 0;
+}
+
+.player-panel__header-left {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+}
+
+.player-panel__number {
+  font-family:    var(--font-banner);
+  font-size:      2.5rem;
+  line-height:    1;
+  letter-spacing: 0.02em;
+  white-space:    nowrap;
+}
+
+@media (min-width: 1024px) {
+  .player-panel__number { font-size: 3rem; }
+}
+
+.player-panel__subtitle {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.6875rem;
+  letter-spacing: 0.18em;
+  color:          var(--color-muted);
+}
+
+
+/* ── Panel-level share button ───────────────────────────────────────────── */
+
+.player-panel__share {
+  flex-shrink:    0;
+  background:     none;
+  border:         1px solid rgba(255,255,255,0.20);
+  border-radius:  4px;
+  color:          rgba(255,255,255,0.62);
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.14em;
+  padding:        5px 10px;
+  cursor:         pointer;
+  transition:     color var(--motion-hover), border-color var(--motion-hover),
+                  background var(--motion-hover);
+  white-space:    nowrap;
+}
+
+.player-panel__share:hover {
+  color:        var(--color-paper);
+  border-color: rgba(255,255,255,0.45);
+  background:   rgba(255,255,255,0.07);
+}
+
+.player-panel__share--copied {
+  color:        rgba(158,212,76,0.9);
+  border-color: rgba(158,212,76,0.40);
+  background:   rgba(158,212,76,0.08);
+}
+
+/* ── Close button — no box, text only ───────────────────────────────────── */
+
+.player-panel__close {
+  flex-shrink:    0;
+  background:     none;
+  border:         1px solid rgba(255,255,255,0.20);
+  border-radius:  4px;
+  color:          rgba(255,255,255,0.62);
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.14em;
+  padding:        5px 10px;
+  cursor:         pointer;
+  transition:     color var(--motion-hover), border-color var(--motion-hover),
+                  background var(--motion-hover);
+  white-space:    nowrap;
+}
+
+.player-panel__close:hover {
+  color:        var(--color-paper);
+  border-color: rgba(255,255,255,0.45);
+  background:   rgba(255,255,255,0.07);
+}
+
+/* ── Sacred badge ───────────────────────────────────────────────────────── */
+
+.player-panel__sacred-badge {
+  display:        inline-block;
+  margin-bottom:  var(--space-3);
+  background:     rgba(200,220,255,0.08);
+  border:         1px solid rgba(200,220,255,0.28);
+  border-radius:  4px;
+  padding:        3px 10px;
+  font-family:    var(--font-scoreboard);
+  font-size:      0.625rem;
+  letter-spacing: 0.2em;
+  color:          var(--color-sacred);
+}
+
+/* ── Unwritten state ─────────────────────────────────────────────────────── */
+
+.player-panel__unwritten {
+  padding:        var(--space-6) 0;
+  text-align:     center;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            var(--space-2);
+}
+
+.player-panel__unwritten-line {
+  font-family:    var(--font-banner);
+  font-size:      1rem;
+  letter-spacing: 0.04em;
+  color:          rgba(255,255,255,0.55);
+  text-wrap:      balance;
+  max-width:      22ch;
+}
+
+.player-panel__unwritten-sub {
+  font-family:    var(--font-program);
+  font-size:      0.8125rem;
+  letter-spacing: 0;
+  color:          rgba(255,255,255,0.35);
+  font-style:     italic;
+}
+
+.player-panel__unwritten-cta {
+  display:         inline-block;
+  margin-top:      var(--space-2);
+  padding:         var(--space-1) var(--space-3);
+  background:      rgba(255,255,255,0.05);
+  border:          1px solid rgba(255,255,255,0.16);
+  border-radius:   4px;
+  font-family:     var(--font-scoreboard);
+  font-size:       0.625rem;
+  letter-spacing:  0.18em;
+  color:           rgba(255,255,255,0.50);
+  text-decoration: none;
+  transition:      background var(--motion-hover), color var(--motion-hover),
+                   border-color var(--motion-hover);
+}
+
+.player-panel__unwritten-cta:hover {
+  background:   rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.30);
+  color:        rgba(255,255,255,0.80);
+}
+
+/* ── Player cards stack ─────────────────────────────────────────────────── */
+
+.player-panel__cards {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+/* ── Player card ────────────────────────────────────────────────────────── */
+
+.player-card {
+  background:    rgba(0,0,0,0.28);
+  border:        1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding:       var(--space-3);
+}
+
+/* Top row: info left, stat right */
+.player-card__row {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             var(--space-2);
+}
+
+/* Info column — takes remaining width, name starts flush left */
+.player-card__info {
+  flex:      1;
+  min-width: 0;
+}
+
+/* Name row — name + sport icon on the same line */
+.player-card__name-row {
+  display:     flex;
+  align-items: baseline;
+  gap:         6px;
+  margin-bottom: var(--space-1);
+}
+
+.player-card__name {
+  font-family:    var(--font-banner);
+  font-size:      1.0625rem;
+  letter-spacing: 0.03em;
+  line-height:    1.15;
+  color:          var(--color-paper);
+}
+
+/* Sport icon — sits right after the name, baseline-aligned */
+.player-card__sport-icon {
+  font-size:   0.875rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── Badges ─────────────────────────────────────────────────────────────── */
+
+.player-card__badges {
+  display:     flex;
+  gap:         4px;
+  align-items: center;
+  flex-wrap:   wrap;
+}
+
+.player-card__badge {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.08em;
+  color:          rgba(255,255,255,0.55);
+  background:     rgba(255,255,255,0.07);
+  border:         1px solid rgba(255,255,255,0.14);
+  border-radius:  3px;
+  padding:        2px 6px;
+  white-space:    nowrap;
+}
+
+/* Sport emoji badge — no text transform, just the icon */
+.player-card__badge--sport {
+  font-size:      0.75rem;
+  padding:        1px 5px;
+  letter-spacing: 0;
+  line-height:    1.4;
+}
+
+.player-card__badge--active {
+  color:      #9ED44C;
+  background: rgba(158,212,76,0.10);
+  border:     1px solid rgba(158,212,76,0.28);
+}
+
+.player-card__badge--dim {
+  background:   transparent;
+  border:       none;
+  color:        rgba(255,255,255,0.35);
+  padding-left: 0;
+}
+
+/* ── Fun fact — full width, flush left with name ────────────────────────── */
+
+.player-card__fact {
+  font-family: var(--font-program);
+  font-size:   0.6875rem;
+  line-height: 1.5;
+  color:       var(--color-muted);
+  margin-top:  var(--space-2);
+}
+
+/* Per-card footer removed — share lives in panel header */
+
+/* ── Stat — fixed right column ──────────────────────────────────────────── */
+
+.player-card__stat {
+  text-align:  right;
+  flex-shrink: 0;
+  min-width:   0;
+  max-width:   72px;
+  width:       72px;
+  margin-left: var(--space-2);
+  overflow:    hidden;
+}
+
+.player-card__stat-value {
+  font-family:    var(--font-banner);
+  font-size:      1.3rem;
+  line-height:    1;
+  letter-spacing: 0.01em;
+  color:          var(--color-paper);
+  overflow:       hidden;
+  text-overflow:  clip;
+  word-break:     break-all;
+}
+
+.player-card__stat-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.08em;
+  color:          rgba(255,255,255,0.62);
+  text-align:     right;
+  line-height:    1.4;
+  margin-top:     3px;
+}

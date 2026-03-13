@@ -1,0 +1,64 @@
+/* WallTile — Individual number tile
+   Square. Heat background + glow. Number centered.
+   Background, border, and box-shadow set via inline style from data layer. */
+
+.wall-tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: visible; /* glow bleeds out */
+  transition:
+    background   var(--motion-heat),
+    box-shadow   var(--motion-heat),
+    border-color var(--motion-hover),
+    transform    160ms ease,
+    filter       160ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wall-tile:hover {
+  z-index:   1;
+  transform: scale(1.08);
+  filter:    brightness(1.2);
+}
+
+.wall-tile:focus-visible {
+  outline: 2px solid var(--color-sacred);
+  outline-offset: 2px;
+  z-index: 2;
+}
+
+/* Active — white ring + elevated z. Background/border/glow handled inline. */
+.wall-tile--active {
+  z-index: 3;
+}
+
+/* Unwritten — number opacity handled via rgba text color in data layer */
+
+/* The number */
+.wall-tile__number {
+  font-family: var(--font-banner);
+  font-size: 0.875rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+  transition: color var(--motion-color);
+  user-select: none;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .wall-tile__number { font-size: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  .wall-tile__number { font-size: 1.125rem; }
+}
+
+@media (min-width: 1280px) {
+  .wall-tile__number { font-size: 1.25rem; }
+}

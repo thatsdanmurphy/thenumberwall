@@ -1,0 +1,38 @@
+/* AppFooter — One line. Nothing more. */
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) 0 var(--space-5);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.app-footer__copy {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+
+.app-footer__link {
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+  transition: color var(--motion-hover);
+}
+
+.app-footer__link:hover {
+  color: var(--color-paper);
+}
+
+.app-footer__link:focus-visible {
+  outline: 2px solid var(--color-sacred);
+  outline-offset: 4px;
+  border-radius: 2px;
+}

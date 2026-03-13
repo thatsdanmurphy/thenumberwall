@@ -1,0 +1,51 @@
+/* SportsFilter — horizontal pill row above the wall grid */
+
+.sports-filter {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         6px;
+  padding:     0 0 var(--space-3);
+}
+
+.sports-filter__pill {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            5px;
+  padding:        5px 10px;
+  background:     rgba(255,255,255,0.05);
+  border:         1px solid rgba(255,255,255,0.12);
+  border-radius:  4px;
+  font-family:    var(--font-scoreboard);
+  font-size:      0.6875rem;
+  letter-spacing: 0.10em;
+  color:          rgba(255,255,255,0.42);
+  cursor:         pointer;
+  transition:     background var(--motion-hover),
+                  border-color var(--motion-hover),
+                  color var(--motion-hover);
+  white-space:    nowrap;
+}
+
+.sports-filter__pill:hover {
+  background:   rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.24);
+  color:        rgba(255,255,255,0.72);
+}
+
+/* Active state — lit up in heat orange */
+.sports-filter__pill--active {
+  background:   rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.55);
+  color:        var(--color-paper);
+}
+
+.sports-filter__pill--active:hover {
+  background:   rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.75);
+  color:        var(--color-paper);
+}
+
+.sports-filter__icon {
+  font-size:   0.875rem;
+  line-height: 1;
+}

@@ -1,19 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom'
+import ErrorBoundary  from './components/ErrorBoundary.jsx'
+import WallPage       from './pages/WallPage.jsx'
+import BostonPage     from './pages/BostonPage.jsx'
+import AboutPage      from './pages/AboutPage.jsx'
+import NotFoundPage   from './pages/NotFoundPage.jsx'
 
-import WornNumbers from "./pages/WornNumbers";
-import BostonWall  from "./pages/BostonWall";
-import About       from "./pages/About";
-
-function App() {
+export default function App() {
   return (
-    <BrowserRouter>
+    <ErrorBoundary>
       <Routes>
-        <Route path="/"       element={<WornNumbers />} />
-        <Route path="/boston" element={<BostonWall />} />
-        <Route path="/about"  element={<About />} />
+        <Route path="/"       element={<WallPage />} />
+        <Route path="/boston" element={<BostonPage />} />
+        <Route path="/about"  element={<AboutPage />} />
+        <Route path="*"       element={<NotFoundPage />} />
       </Routes>
-    </BrowserRouter>
-  );
+    </ErrorBoundary>
+  )
 }
-
-export default App;

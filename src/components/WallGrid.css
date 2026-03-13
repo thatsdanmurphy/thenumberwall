@@ -1,0 +1,23 @@
+/* WallGrid — 101-tile number grid.
+   8 cols minimum always — expanse over readability on small screens.
+   10 at desktop → 12 at wide. 4px gap — tight but breathes. */
+
+.wall-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  padding: 0 0 var(--space-4);
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .wall-grid {
+    grid-template-columns: repeat(10, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .wall-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}

@@ -1,0 +1,19 @@
+/* AppShell
+   Full-height column layout. Max-width container. Responsive margins.
+   Nothing else. */
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell__inner {
+  width: 100%;
+  max-width: calc(var(--grid-max-width) + (var(--grid-margin) * 2));
+  margin: 0 auto;
+  padding: 0 var(--grid-margin);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
