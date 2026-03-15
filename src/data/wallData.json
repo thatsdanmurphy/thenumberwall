@@ -868,6 +868,23 @@
     "Notes": "ACTIVE - review annually"
   },
   {
+  "Number": "12",
+  "Tier": "SACRED",
+  "Name": "Tom Brady",
+  "Sport": "Football",
+  "League": "NFL",
+  "Status": "Retired",
+  "Era": "NFL Modern Era",
+  "Team": "New England Patriots",
+  "Hometown": "San Mateo, California, USA",
+  "Signature Stat": "7",
+  "Stat Label": "Super Bowl Wins",
+  "Stat Weight": "3",
+  "Role": "Quarterback",
+  "Fun Fact": "He was the 199th pick in the 2000 NFL Draft and went on to win more Super Bowls than any franchise in league history",
+  "Notes": "Widely considered the greatest quarterback in NFL history"
+},
+  {
     "Number": "12",
     "Tier": "LEGEND",
     "Name": "Joe Namath",
