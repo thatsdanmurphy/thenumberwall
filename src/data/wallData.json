@@ -1326,6 +1326,23 @@
     "Fun Fact": "Her deep-range shooting and playmaking at Iowa helped drive record TV audiences for women's college basketball and made her the NCAA's all-time leading scorer",
     "Notes": "ACTIVE - review annually"
   },
+    {
+    "Number": "23",
+    "Tier": "SACRED",
+    "Name": "Michael Jordan",
+    "Sport": "Basketball",
+    "League": "NBA",
+    "Status": "Retired",
+    "Era": "NBA Dynasty",
+    "Team": "Chicago Bulls",
+    "Hometown": "",
+    "Signature Stat": "6",
+    "Stat Label": "Championships",
+    "Stat Weight": "3",
+    "Role": "Shooting Guard",
+    "Fun Fact": "The NBA retired his number across all 30 franchises - then granted one exception for LeBron James - the only player deemed equivalent enough to wear it",
+    "Notes": "SACRED - LeBron is the documented exception"
+  },
   {
     "Number": "23",
     "Tier": "ACTIVE",
@@ -1342,23 +1359,6 @@
     "Role": "Small Forward",
     "Fun Fact": "He's the all-time NBA scoring leader and the only player ever granted an exception to wear a league-retired number - wearing Jordan's sacred #23",
     "Notes": "The documented exception to the Sacred retirement"
-  },
-  {
-    "Number": "23",
-    "Tier": "SACRED",
-    "Name": "Michael Jordan",
-    "Sport": "Basketball",
-    "League": "NBA",
-    "Status": "Retired",
-    "Era": "NBA Dynasty",
-    "Team": "Chicago Bulls",
-    "Hometown": "",
-    "Signature Stat": "6",
-    "Stat Label": "Championships",
-    "Stat Weight": "3",
-    "Role": "Shooting Guard",
-    "Fun Fact": "The NBA retired his number across all 30 franchises - then granted one exception for LeBron James - the only player deemed equivalent enough to wear it",
-    "Notes": "SACRED - LeBron is the documented exception"
   },
   {
     "Number": "24",
