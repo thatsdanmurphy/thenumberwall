@@ -1,0 +1,62 @@
+[
+  {
+    "number": "7",
+    "question": "Who owns #7?",
+    "context": "Two generational icons. One number. Baseball's golden era versus football's defining quarterback.",
+    "sideA": {
+      "name": "Mickey Mantle",
+      "team": "New York Yankees",
+      "sport": "Baseball",
+      "argument": "536 home runs on two surgically repaired knees, seven World Series rings, three MVPs. The Commerce Comet defined #7 for an era when baseball was America's religion. He did it all while playing through pain no other player would have survived."
+    },
+    "sideB": {
+      "name": "John Elway",
+      "team": "Denver Broncos",
+      "sport": "Football",
+      "argument": "The Drive. The Comeback. Two Super Bowls at ages 37 and 38, going out as Finals MVP on his own terms. For a generation raised on football, #7 means one thing: Elway in the fourth quarter, facing the impossible, winning anyway."
+    },
+    "seedVotesA": 518,
+    "seedVotesB": 329,
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "0",
+    "question": "Who defines #0?",
+    "context": "The number that wasn't supposed to mean anything — until two players made it impossible to ignore.",
+    "sideA": {
+      "name": "Damian Lillard",
+      "team": "Portland Trail Blazers",
+      "sport": "Basketball",
+      "argument": "Dame Time. Eight All-Stars, the most iconic buzzer-beater of his era — pointed at his wrist like he was checking the time and walked off. Lillard made #0 a state of mind: the number you wear when you own the moment."
+    },
+    "sideB": {
+      "name": "Russell Westbrook",
+      "team": "Oklahoma City Thunder",
+      "sport": "Basketball",
+      "argument": "198 career triple-doubles — an all-time record so absurd the stat feels made up. A 2017 MVP season averaging a triple-double for the entire year. Westbrook gave #0 a fury and relentlessness it had never had before and may never have again."
+    },
+    "seedVotesA": 441,
+    "seedVotesB": 387,
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "23",
+    "question": "The greatest number in basketball. Jordan or LeBron?",
+    "context": "The most debated question in sports. No right answer. Yours is the only one that matters.",
+    "sideA": {
+      "name": "Michael Jordan",
+      "team": "Chicago Bulls",
+      "sport": "Basketball",
+      "argument": "Six for six. Six rings, six Finals MVPs, zero losses in the Finals. Jordan's #23 is the most studied jersey in basketball history. He changed the game on both ends of the floor, every night, and never once blinked."
+    },
+    "sideB": {
+      "name": "LeBron James",
+      "team": "Los Angeles Lakers",
+      "sport": "Basketball",
+      "argument": "The all-time leading scorer in NBA history. Four championships on three different franchises. LeBron has been the best player in the world for two decades running. The argument that he is the greatest player ever is not a fringe opinion. It is the statistical reality."
+    },
+    "seedVotesA": 1204,
+    "seedVotesB": 891,
+    "seasonLabel": "Season 1 · Q1 2026"
+  }
+]

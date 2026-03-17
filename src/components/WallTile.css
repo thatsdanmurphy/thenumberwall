@@ -39,6 +39,27 @@
 
 /* Unwritten — number opacity handled via rgba text color in data layer */
 
+/* ── Debate pulse ───────────────────────────────────────────────────────────
+   A ring expands from the tile border and fades — like a heartbeat.
+   Layered on top of the existing heat glow; doesn't replace it.          */
+
+@keyframes debate-ring {
+  0%   { opacity: 1; transform: scale(1);    }
+  70%  { opacity: 0; transform: scale(1.55); }
+  100% { opacity: 0; transform: scale(1.55); }
+}
+
+.wall-tile--debating::after {
+  content:        '';
+  position:       absolute;
+  inset:          -2px;
+  border:         1.5px solid rgba(232, 124, 42, 0.7);
+  border-radius:  6px;
+  animation:      debate-ring 2.2s ease-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
 /* The number */
 .wall-tile__number {
   font-family: var(--font-banner);

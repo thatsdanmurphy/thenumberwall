@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
+import DebateCard from './DebateCard.jsx'
+import debatesData from '../data/debates.json'
 import './PlayerPanel.css'
+
+// O(1) lookup: number string → debate object
+const DEBATE_MAP = Object.fromEntries(debatesData.map(d => [String(d.number), d]))
 
 // ─── Team accent colors ───────────────────────────────────────────────────────
 const TEAM_ACCENT = {
@@ -80,11 +85,20 @@ function PlayerCard({ entry }) {
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
 export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
-  const [copied, setCopied] = useState(false)
+  const [copied,  setCopied]  = useState(false)
+  const [tab,     setTab]     = useState('legends')  // 'legends' | 'debate'
 
   const hasSelection = Boolean(selected)
   const entries      = selected?.entries ?? []
   const number       = selected?.number  ?? null
+  const debate       = number ? DEBATE_MAP[String(number)] : null
+
+  // Reset to legends tab when number changes; auto-switch to debate tab if no legends
+  useEffect(() => {
+    if (!number) return
+    const hasLegends = entries.some(e => e.tier !== 'UNWRITTEN')
+    setTab(hasLegends ? 'legends' : 'debate')
+  }, [number])
 
   const legends     = entries.filter(e => e.tier !== 'UNWRITTEN')
   const isSacred    = legends.some(e => e.tier === 'SACRED')
@@ -106,6 +120,11 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
     shareNumber(number)
     setCopied(true)
     setTimeout(() => setCopied(false), 1800)
+  }
+
+  function handleTabChange(next) {
+    setTab(next)
+    track('panel_tab_change', { number, tab: next })
   }
 
   return (
@@ -155,22 +174,54 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
               <div className="player-panel__sacred-badge">RETIRED LEAGUE-WIDE</div>
             )}
 
-            {legendCount === 0 && (
-              <div className="player-panel__unwritten">
-                <div className="player-panel__unwritten-line">No legend has claimed this number yet.</div>
-                <div className="player-panel__unwritten-sub">This could be your story.</div>
-                <a className="player-panel__unwritten-cta" href="mailto:dan@thenumberwall.com?subject=Missing%20Legend">
-                  Submit a legend →
-                </a>
+            {/* ── Tab bar — only shown when a debate exists ──── */}
+            {debate && legendCount > 0 && (
+              <div className="player-panel__tabs" role="tablist">
+                <button
+                  role="tab"
+                  aria-selected={tab === 'legends'}
+                  className={`player-panel__tab${tab === 'legends' ? ' player-panel__tab--active' : ''}`}
+                  onClick={() => handleTabChange('legends')}
+                >
+                  LEGENDS
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={tab === 'debate'}
+                  className={`player-panel__tab${tab === 'debate' ? ' player-panel__tab--active' : ''}`}
+                  onClick={() => handleTabChange('debate')}
+                >
+                  DEBATE
+                  <span className="player-panel__tab-dot" aria-hidden="true" />
+                </button>
               </div>
             )}
 
-            {legendCount > 0 && (
-              <div className="player-panel__cards">
-                {legends.map((entry, i) => (
-                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} />
-                ))}
-              </div>
+            {/* ── LEGENDS tab (or unwritten) ─────────────────── */}
+            {(tab === 'legends' || !debate) && (
+              <>
+                {legendCount === 0 && (
+                  <div className="player-panel__unwritten">
+                    <div className="player-panel__unwritten-line">No legend has claimed this number yet.</div>
+                    <div className="player-panel__unwritten-sub">This could be your story.</div>
+                    <a className="player-panel__unwritten-cta" href="mailto:dan@thenumberwall.com?subject=Missing%20Legend">
+                      Submit a legend →
+                    </a>
+                  </div>
+                )}
+                {legendCount > 0 && (
+                  <div className="player-panel__cards">
+                    {legends.map((entry, i) => (
+                      <PlayerCard key={`${entry.name}-${i}`} entry={entry} />
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* ── DEBATE tab ─────────────────────────────────── */}
+            {tab === 'debate' && debate && (
+              <DebateCard debate={debate} />
             )}
           </>
         )}

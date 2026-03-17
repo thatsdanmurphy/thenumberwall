@@ -1,8 +1,12 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useMemo } from 'react'
 import { track } from '@vercel/analytics'
 import { TILE_NUMBERS, globalIndex } from '../data/index.js'
+import debatesData from '../data/debates.json'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
+
+// Build a Set of numbers that have active debates — O(1) lookup per tile
+const DEBATE_NUMBERS = new Set(debatesData.map(d => String(d.number)))
 
 /**
  * WallGrid — 101-tile number grid.
@@ -63,6 +67,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           number={num}
           entries={index.get(num) || []}
           isActive={activeNumber === num}
+          isDebating={DEBATE_NUMBERS.has(String(num))}
           onClick={() => handleTileClick(num)}
         />
       ))}
