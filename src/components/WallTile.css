@@ -87,22 +87,85 @@
   z-index:        0;
 }
 
-/* ── C · "Border breathe" — border color fades amber→dim, amber→dim ────────
-   The tile outline itself comes alive. Minimal, precise.
-   Works on any heat level. Reads like a live indicator light.             */
+/* ── C · "Border breathe" — border + outer glow pulse together ──────────────
+   Border fades amber→invisible while a glow corona breathes with it.
+   The glow extends outside the tile so it reads on any heat level.
+   Louder than a border-only approach but still clean on dense tiles.      */
 
 @keyframes debate-border {
-  0%, 100% { opacity: 0.12; }
-  50%       { opacity: 1;   }
+  0%, 100% {
+    opacity:    0.08;
+    box-shadow: none;
+  }
+  50% {
+    opacity:    1;
+    box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.22),
+                0 0 10px 2px rgba(232, 124, 42, 0.35),
+                0 0 22px 4px rgba(232, 124, 42, 0.12);
+  }
 }
 
 .wall-tile--debating-c::after {
   content:        '';
   position:       absolute;
-  inset:          0;
-  border-radius:  4px;
+  inset:          -1px;
+  border-radius:  5px;
   border:         1.5px solid rgba(232, 124, 42, 1);
-  animation:      debate-border 2.0s ease-in-out infinite;
+  animation:      debate-border 2.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+/* ── C sub-variants — louder steps for A/B testing intensity ────────────────
+   c-2: same as C but faster + slightly thicker border
+   c-3: same glow but with a very subtle scale pulse on the tile itself     */
+
+@keyframes debate-border-fast {
+  0%, 100% {
+    opacity:    0.06;
+    box-shadow: none;
+  }
+  45% {
+    opacity:    1;
+    box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.28),
+                0 0 12px 3px rgba(232, 124, 42, 0.42),
+                0 0 26px 6px rgba(232, 124, 42, 0.15);
+  }
+}
+
+.wall-tile--debating-c2::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         2px solid rgba(232, 124, 42, 1);
+  animation:      debate-border-fast 1.7s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+@keyframes debate-border-scale {
+  0%, 100% {
+    opacity:    0.08;
+    box-shadow: none;
+    transform:  scale(1);
+  }
+  50% {
+    opacity:    1;
+    box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.22),
+                0 0 10px 2px rgba(232, 124, 42, 0.35),
+                0 0 22px 4px rgba(232, 124, 42, 0.12);
+    transform:  scale(1.04);
+  }
+}
+
+.wall-tile--debating-c3::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         1.5px solid rgba(232, 124, 42, 1);
+  animation:      debate-border-scale 2.2s ease-in-out infinite;
   pointer-events: none;
   z-index:        2;
 }
