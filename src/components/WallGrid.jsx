@@ -5,8 +5,10 @@ import debatesData from '../data/debates.json'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
 
-// Build a Set of numbers that have active debates — O(1) lookup per tile
-const DEBATE_NUMBERS = new Set(debatesData.map(d => String(d.number)))
+// PROTOTYPE: one variant per tile so all three can be compared at once.
+// Set all to null (or remove debateVariant prop) when a winner is chosen.
+const DEBATE_VARIANTS = { '0': 'a', '7': 'b', '23': 'c' }
+const DEBATE_NUMBERS  = new Set(debatesData.map(d => String(d.number)))
 
 /**
  * WallGrid — 101-tile number grid.
@@ -68,6 +70,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           entries={index.get(num) || []}
           isActive={activeNumber === num}
           isDebating={DEBATE_NUMBERS.has(String(num))}
+          debateVariant={DEBATE_VARIANTS[String(num)] ?? null}
           onClick={() => handleTileClick(num)}
         />
       ))}

@@ -1,7 +1,7 @@
 import { getHeatStyle, getTileTextColor, SELECTED_TILE } from '../data/index.js'
 import './WallTile.css'
 
-export default function WallTile({ number, entries, isActive, isDebating, onClick }) {
+export default function WallTile({ number, entries, isActive, isDebating, debateVariant, onClick }) {
   const isSacred    = entries.some(e => e.tier === 'SACRED')
   // UNWRITTEN placeholder rows don't count — a tile is unwritten if it has no real legends
   const isUnwritten = !entries.some(e => e.tier !== 'UNWRITTEN')
@@ -28,11 +28,18 @@ export default function WallTile({ number, entries, isActive, isDebating, onClic
 
   const textColor = isActive ? SELECTED_TILE.text : getTileTextColor(entries, isSacred)
 
+  // debateVariant: 'a' | 'b' | 'c' | null (null = production default .wall-tile--debating)
+  const debateClass = isDebating
+    ? debateVariant
+      ? `wall-tile--debating-${debateVariant}`
+      : 'wall-tile--debating'
+    : null
+
   const classes = [
     'wall-tile',
     isUnwritten  && 'wall-tile--unwritten',
     isActive     && 'wall-tile--active',
-    isDebating   && 'wall-tile--debating',
+    debateClass,
   ].filter(Boolean).join(' ')
 
   return (
