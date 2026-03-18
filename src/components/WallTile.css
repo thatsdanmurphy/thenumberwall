@@ -94,8 +94,9 @@
 
 @keyframes debate-border {
   0%, 100% {
-    opacity:    0.08;
-    box-shadow: none;
+    opacity:    0.30;
+    box-shadow: 0 0 0 1px rgba(232, 124, 42, 0.15),
+                0 0 5px 1px rgba(232, 124, 42, 0.10);
   }
   50% {
     opacity:    1;
@@ -122,8 +123,9 @@
 
 @keyframes debate-border-fast {
   0%, 100% {
-    opacity:    0.06;
-    box-shadow: none;
+    opacity:    0.30;
+    box-shadow: 0 0 0 1px rgba(232, 124, 42, 0.18),
+                0 0 5px 1px rgba(232, 124, 42, 0.10);
   }
   45% {
     opacity:    1;
@@ -146,8 +148,9 @@
 
 @keyframes debate-border-scale {
   0%, 100% {
-    opacity:    0.08;
-    box-shadow: none;
+    opacity:    0.30;
+    box-shadow: 0 0 0 1px rgba(232, 124, 42, 0.15),
+                0 0 5px 1px rgba(232, 124, 42, 0.10);
     transform:  scale(1);
   }
   50% {
@@ -168,30 +171,6 @@
   animation:      debate-border-scale 2.2s ease-in-out infinite;
   pointer-events: none;
   z-index:        2;
-}
-
-/* ── Active + pulsing: boosted keyframe — dark tile gives full contrast ─────
-   When the tile is selected (panel open) + has an association, the tile goes
-   dark and this override fires a wider swing: dim glow → full amber corona.  */
-
-@keyframes debate-border-active {
-  0%, 100% {
-    opacity:    0.22;
-    box-shadow: 0 0 0 1.5px rgba(232, 124, 42, 0.25);
-  }
-  50% {
-    opacity:    1;
-    box-shadow: 0 0 0 2.5px rgba(232, 124, 42, 0.9),
-                0 0 18px 5px rgba(232, 124, 42, 0.65),
-                0 0 36px 10px rgba(232, 124, 42, 0.28);
-  }
-}
-
-.wall-tile--active.wall-tile--debating-c::after,
-.wall-tile--active.wall-tile--debating-c2::after,
-.wall-tile--active.wall-tile--debating-c3::after {
-  animation-name:     debate-border-active;
-  animation-duration: 1.8s;
 }
 
 /* ── Active debate class — set to whichever variant wins ───────────────── */

@@ -168,8 +168,6 @@ function YourNumberPick({ number, legends, assoc }) {
 
   return (
     <div className="your-pick">
-      <div className="your-pick__divider" />
-
       {!revealed && (
         <>
           <span className="your-pick__label">WHO OWNS THIS NUMBER FOR YOU?</span>
@@ -179,7 +177,7 @@ function YourNumberPick({ number, legends, assoc }) {
                 key={i}
                 className={[
                   'your-pick__chip',
-                  tapping === i           && 'your-pick__chip--tapping',
+                  tapping === i                    && 'your-pick__chip--tapping',
                   tapping !== null && tapping !== i && 'your-pick__chip--fading',
                 ].filter(Boolean).join(' ')}
                 onClick={() => handlePick(i)}
@@ -188,6 +186,12 @@ function YourNumberPick({ number, legends, assoc }) {
                 {shortName(leg.name)}
               </button>
             ))}
+            <a
+              className="your-pick__nominate"
+              href={`mailto:dan@thenumberwall.com?subject=Missing%20Legend%20%23${number}&body=I%20think%20someone%20is%20missing%20from%20%23${number}.%20Here%27s%20who%3A`}
+            >
+              + missing someone?
+            </a>
           </div>
         </>
       )}
@@ -328,13 +332,17 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
               </div>
             )}
 
-            {/* ── Legend cards + inline pick ────────────────── */}
+            {/* ── Inline pick — above cards so it's the entry point ── */}
+            {legendCount > 0 && (
+              <YourNumberPick number={number} legends={legends} assoc={assoc} />
+            )}
+
+            {/* ── Legend cards ─────────────────────────────────── */}
             {legendCount > 0 && (
               <div className="player-panel__cards">
                 {legends.map((entry, i) => (
                   <PlayerCard key={`${entry.name}-${i}`} entry={entry} />
                 ))}
-                <YourNumberPick number={number} legends={legends} assoc={assoc} />
               </div>
             )}
           </>

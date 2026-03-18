@@ -428,10 +428,10 @@
 
 /* ── YourNumberPick — inline "who owns this number for you?" ─────────────── */
 
-.your-pick__divider {
-  height:     1px;
-  background: rgba(255, 255, 255, 0.07);
-  margin:     var(--space-2) 0;
+.your-pick {
+  padding-bottom: var(--space-3);
+  border-bottom:  1px solid rgba(255, 255, 255, 0.07);
+  margin-bottom:  var(--space-1);
 }
 
 .your-pick__label {
@@ -569,4 +569,22 @@
   color:       rgba(255, 255, 255, 0.42);
   margin:      0;
   font-style:  italic;
+}
+
+/* "Missing someone?" nomination link — sits inline with chips */
+.your-pick__nominate {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.4rem;
+  letter-spacing: 0.14em;
+  color:          rgba(255, 255, 255, 0.22);
+  text-decoration: none;
+  align-self:     center;
+  padding:        4px 6px;
+  border-radius:  3px;
+  transition:     color 150ms ease;
+  white-space:    nowrap;
+}
+
+.your-pick__nominate:hover {
+  color: rgba(232, 124, 42, 0.65);
 }
