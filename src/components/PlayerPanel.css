@@ -502,16 +502,16 @@
   transform: scale(0.96);
 }
 
-/* Rank-1 chip: subtle amber wash — the wall's editorial nod to the leader */
+/* Rank-1 chip: amber wash — the wall's editorial nod to the leader */
 .your-pick__chip--top {
-  background:   rgba(232, 124, 42, 0.10);
-  border-color: rgba(232, 124, 42, 0.28);
-  color:        rgba(255, 255, 255, 0.85);
+  background:   rgba(232, 124, 42, 0.18);
+  border-color: rgba(232, 124, 42, 0.55);
+  color:        var(--color-paper);
 }
 
 .your-pick__chip--top:hover:not(:disabled) {
-  background:   rgba(232, 124, 42, 0.18);
-  border-color: rgba(232, 124, 42, 0.55);
+  background:   rgba(232, 124, 42, 0.28);
+  border-color: rgba(232, 124, 42, 0.75);
   color:        var(--color-paper);
 }
 

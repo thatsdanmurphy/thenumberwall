@@ -10,8 +10,13 @@ import './WallGrid.css'
 const ASSOC_VARIANTS = {
   '0':  'c',   // Lillard / Westbrook
   '7':  'c',   // Mantle / Elway
+  '12': 'c',   // Brady / Namath
   '23': 'c',   // Jordan / LeBron
-  '34': 'c',   // Boston wall
+  '24': 'c',   // Mays / Kobe
+  '32': 'c',   // Magic / Jim Brown
+  '33': 'c',   // Bird / Kareem
+  '34': 'c',   // Ortiz / Pierce (Boston)
+  '44': 'c',   // Aaron / Reggie Jackson
 }
 const ASSOC_NUMBERS = new Set(Object.keys(ASSOC_VARIANTS))
 

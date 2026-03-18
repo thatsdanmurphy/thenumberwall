@@ -13,6 +13,71 @@
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
+    "number": "33",
+    "wallContext": "#33 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Larry Bird",             "team": "Boston Celtics" },
+      { "id": "B", "name": "Kareem Abdul-Jabbar",    "team": "Milwaukee Bucks" }
+    ],
+    "seedVotes": { "A": 1120, "B": 890 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Bird. Kareem won more. The argument doesn't end there.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "44",
+    "wallContext": "#44 · Baseball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Hank Aaron",      "team": "Atlanta Braves" },
+      { "id": "B", "name": "Reggie Jackson",  "team": "Oakland Athletics" }
+    ],
+    "seedVotes": { "A": 940, "B": 760 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Aaron. #44 broke the record. Reggie made October mean something different.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "12",
+    "wallContext": "#12 · Football",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Tom Brady",    "team": "New England Patriots" },
+      { "id": "B", "name": "Joe Namath",   "team": "New York Jets" }
+    ],
+    "seedVotes": { "A": 1340, "B": 620 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Brady. Namath is the reason #12 at quarterback means anything at all.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "32",
+    "wallContext": "#32 · Two Sports",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Magic Johnson", "team": "Los Angeles Lakers" },
+      { "id": "B", "name": "Jim Brown",     "team": "Cleveland Browns" }
+    ],
+    "seedVotes": { "A": 980, "B": 420 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Magic. Jim Brown wore it first. Neither argument is wrong.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "24",
+    "wallContext": "#24 · Two Sports",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Willie Mays",   "team": "San Francisco Giants" },
+      { "id": "B", "name": "Kobe Bryant",   "team": "Los Angeles Lakers" }
+    ],
+    "seedVotes": { "A": 780, "B": 740 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Mays. Kobe's claim on #24 is why this isn't obvious.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
     "number": "7",
     "wallContext": "#7 · Two Sports",
     "question": "Who do you see first?",

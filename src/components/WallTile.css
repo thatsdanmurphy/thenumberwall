@@ -94,15 +94,17 @@
 
 @keyframes debate-border {
   0%, 100% {
-    opacity:    0.30;
-    box-shadow: 0 0 0 1px rgba(232, 124, 42, 0.15),
-                0 0 5px 1px rgba(232, 124, 42, 0.10);
+    opacity:    0.55;
+    box-shadow: 0 0 0 1.5px rgba(232, 124, 42, 0.30),
+                0 0 8px  3px  rgba(232, 124, 42, 0.18),
+                0 0 18px 5px  rgba(232, 124, 42, 0.10);
   }
   50% {
     opacity:    1;
-    box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.22),
-                0 0 10px 2px rgba(232, 124, 42, 0.35),
-                0 0 22px 4px rgba(232, 124, 42, 0.12);
+    box-shadow: 0 0 0 2px   rgba(232, 124, 42, 0.55),
+                0 0 14px 5px rgba(232, 124, 42, 0.45),
+                0 0 32px 8px rgba(232, 124, 42, 0.22),
+                0 0 52px 14px rgba(232, 124, 42, 0.10);
   }
 }
 
@@ -111,8 +113,8 @@
   position:       absolute;
   inset:          -1px;
   border-radius:  5px;
-  border:         1.5px solid rgba(232, 124, 42, 1);
-  animation:      debate-border 2.2s ease-in-out infinite;
+  border:         2px solid rgba(232, 124, 42, 1);
+  animation:      debate-border 2.0s ease-in-out infinite;
   pointer-events: none;
   z-index:        2;
 }
