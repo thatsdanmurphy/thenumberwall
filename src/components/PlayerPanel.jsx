@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
-import DebateCard from './DebateCard.jsx'
-import debatesData from '../data/debates.json'
+import AssociationCard from './AssociationCard.jsx'
+import associationsData from '../data/associations.json'
 import './PlayerPanel.css'
 
-// O(1) lookup: number string → debate object
-const DEBATE_MAP = Object.fromEntries(debatesData.map(d => [String(d.number), d]))
+// O(1) lookup: number string → association object
+const ASSOC_MAP = Object.fromEntries(associationsData.map(a => [String(a.number), a]))
 
 // ─── Team accent colors ───────────────────────────────────────────────────────
 const TEAM_ACCENT = {
@@ -86,18 +86,18 @@ function PlayerCard({ entry }) {
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
 export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
   const [copied,  setCopied]  = useState(false)
-  const [tab,     setTab]     = useState('legends')  // 'legends' | 'debate'
+  const [tab,     setTab]     = useState('legends')  // 'legends' | 'firstthought'
 
   const hasSelection = Boolean(selected)
   const entries      = selected?.entries ?? []
   const number       = selected?.number  ?? null
-  const debate       = number ? DEBATE_MAP[String(number)] : null
+  const assoc        = number ? ASSOC_MAP[String(number)] : null
 
-  // Reset to legends tab when number changes; auto-switch to debate tab if no legends
+  // Reset to legends tab when number changes; auto-switch to firstthought tab if no legends
   useEffect(() => {
     if (!number) return
     const hasLegends = entries.some(e => e.tier !== 'UNWRITTEN')
-    setTab(hasLegends ? 'legends' : 'debate')
+    setTab(hasLegends ? 'legends' : 'firstthought')
   }, [number])
 
   const legends     = entries.filter(e => e.tier !== 'UNWRITTEN')
@@ -126,6 +126,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
     setTab(next)
     track('panel_tab_change', { number, tab: next })
   }
+
+  // Alias so JSX reads clearly
+  const debate = assoc  // kept for tab-show logic below
 
   return (
     <aside className={`player-panel${!hasSelection ? ' player-panel--idle' : ''}`}>
@@ -174,8 +177,8 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
               <div className="player-panel__sacred-badge">RETIRED LEAGUE-WIDE</div>
             )}
 
-            {/* ── Tab bar — only shown when a debate exists ──── */}
-            {debate && legendCount > 0 && (
+            {/* ── Tab bar — only shown when an association exists ── */}
+            {assoc && legendCount > 0 && (
               <div className="player-panel__tabs" role="tablist">
                 <button
                   role="tab"
@@ -187,18 +190,18 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
                 </button>
                 <button
                   role="tab"
-                  aria-selected={tab === 'debate'}
-                  className={`player-panel__tab${tab === 'debate' ? ' player-panel__tab--active' : ''}`}
-                  onClick={() => handleTabChange('debate')}
+                  aria-selected={tab === 'firstthought'}
+                  className={`player-panel__tab${tab === 'firstthought' ? ' player-panel__tab--active' : ''}`}
+                  onClick={() => handleTabChange('firstthought')}
                 >
-                  DEBATE
+                  FIRST THOUGHT
                   <span className="player-panel__tab-dot" aria-hidden="true" />
                 </button>
               </div>
             )}
 
             {/* ── LEGENDS tab (or unwritten) ─────────────────── */}
-            {(tab === 'legends' || !debate) && (
+            {(tab === 'legends' || !assoc) && (
               <>
                 {legendCount === 0 && (
                   <div className="player-panel__unwritten">
@@ -219,9 +222,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
               </>
             )}
 
-            {/* ── DEBATE tab ─────────────────────────────────── */}
-            {tab === 'debate' && debate && (
-              <DebateCard debate={debate} />
+            {/* ── FIRST THOUGHT tab ──────────────────────────── */}
+            {tab === 'firstthought' && assoc && (
+              <AssociationCard assoc={assoc} />
             )}
           </>
         )}

@@ -1,0 +1,54 @@
+[
+  {
+    "number": "23",
+    "wallContext": "#23 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Michael Jordan", "team": "Chicago Bulls" },
+      { "id": "B", "name": "LeBron James",   "team": "Los Angeles Lakers" }
+    ],
+    "seedVotes": { "A": 1891, "B": 1204 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Jordan. LeBron is the argument that keeps the question alive.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "7",
+    "wallContext": "#7 · Two Sports",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Mickey Mantle", "team": "New York Yankees" },
+      { "id": "B", "name": "John Elway",    "team": "Denver Broncos" }
+    ],
+    "seedVotes": { "A": 847, "B": 531 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Mantle. But Elway is why football fans have always pushed back.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "0",
+    "wallContext": "#0 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Damian Lillard",     "team": "Portland Trail Blazers" },
+      { "id": "B", "name": "Russell Westbrook",  "team": "Oklahoma City Thunder" }
+    ],
+    "seedVotes": { "A": 612, "B": 589 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Lillard. Dame Time gave #0 its first real legend.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "34",
+    "wallContext": "Boston · #34",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "David Ortiz",  "team": "Boston Red Sox" },
+      { "id": "B", "name": "Paul Pierce",  "team": "Boston Celtics" }
+    ],
+    "seedVotes": { "A": 1421, "B": 388 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Ortiz. Pierce makes this the most contested retired number in Boston sports.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  }
+]

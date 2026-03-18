@@ -1,30 +1,28 @@
 import { useCallback, useRef, useMemo } from 'react'
 import { track } from '@vercel/analytics'
 import { TILE_NUMBERS, globalIndex } from '../data/index.js'
-import debatesData from '../data/debates.json'
+import associationsData from '../data/associations.json'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
 
-// PROTOTYPE: C is the winner — testing 3 loudness sub-variants across
-// tiles at different heat levels (dim → medium → bright → very bright → sacred).
-// c  = border + glow, 2.2s  (base — on sparse tiles like #42 for sacred contrast)
-// c2 = thicker border, faster 1.7s (on medium tile)
-// c3 = border + scale pulse  (on dense/bright tiles)
+// Tiles with a FIRST THOUGHT association get the pulse animation.
+// Variant key drives the CSS class suffix: 'c' | 'c2' | 'c3'
 //
-// Actual debate numbers (#0, #7, #23) all get 'c' for the real debates.
-// Extra tiles (#4, #11, #42, #99) are heat-level test dummies only.
-const DEBATE_VARIANTS = {
-  // Real debates
+// Association tiles (#0, #7, #23, #34) all use 'c' (border + glow base).
+// Heat-level test dummies (#4, #11, #42, #99) kept for visual QA only.
+const ASSOC_VARIANTS = {
+  // Real associations
   '0':  'c',   // medium heat (Lillard/Westbrook)
-  '7':  'c',   // high heat   (Mantle/Elway/CR7)
+  '7':  'c',   // high heat   (Mantle/Elway)
   '23': 'c',   // very bright (Jordan/LeBron)
-  // Heat-level test tiles — pulse only, no panel debate
-  '4':  'c3',  // bright (Orr/Gehrig) — scale variant
-  '11': 'c2',  // medium (various)   — fast variant
-  '42': 'c',   // sacred/blue        — base on contrasting tile color
-  '99': 'c3',  // sacred/Gretzky     — scale on brightest tile in the wall
+  '34': 'c',   // Boston      (Ortiz/Pierce)
+  // Heat-level test tiles — pulse only, no panel card
+  '4':  'c3',
+  '11': 'c2',
+  '42': 'c',
+  '99': 'c3',
 }
-const DEBATE_NUMBERS = new Set(Object.keys(DEBATE_VARIANTS))
+const ASSOC_NUMBERS = new Set(Object.keys(ASSOC_VARIANTS))
 
 /**
  * WallGrid — 101-tile number grid.
@@ -85,8 +83,8 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           number={num}
           entries={index.get(num) || []}
           isActive={activeNumber === num}
-          isDebating={DEBATE_NUMBERS.has(String(num))}
-          debateVariant={DEBATE_VARIANTS[String(num)] ?? null}
+          isDebating={ASSOC_NUMBERS.has(String(num))}
+          debateVariant={ASSOC_VARIANTS[String(num)] ?? null}
           onClick={() => handleTileClick(num)}
         />
       ))}
