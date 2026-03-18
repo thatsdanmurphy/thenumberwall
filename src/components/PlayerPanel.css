@@ -426,58 +426,147 @@
   overflow-wrap:  break-word;
 }
 
-/* ── Debate tabs ─────────────────────────────────────────────────────────── */
+/* ── YourNumberPick — inline "who owns this number for you?" ─────────────── */
 
-.player-panel__tabs {
-  display:       flex;
-  gap:           0;
-  border-bottom: 1px solid var(--color-border);
-  margin:        0 calc(var(--space-4) * -1);
-  padding:       0 var(--space-4);
+.your-pick__divider {
+  height:     1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin:     var(--space-2) 0;
 }
 
-.player-panel__tab {
-  position:       relative;
+.your-pick__label {
+  display:        block;
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
-  letter-spacing: 0.18em;
-  color:          rgba(255, 255, 255, 0.35);
-  background:     none;
-  border:         none;
-  border-bottom:  2px solid transparent;
-  padding:        var(--space-2) var(--space-3) calc(var(--space-2) - 2px);
+  font-size:      0.4375rem;
+  letter-spacing: 0.2em;
+  color:          rgba(255, 255, 255, 0.32);
+  margin-bottom:  var(--space-2);
+}
+
+/* Name chips — compact, wrapping row */
+.your-pick__chips {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       var(--space-1);
+}
+
+.your-pick__chip {
+  font-family:    var(--font-banner);
+  font-size:      0.75rem;
+  letter-spacing: 0.01em;
+  color:          rgba(255, 255, 255, 0.65);
+  background:     rgba(255, 255, 255, 0.04);
+  border:         1px solid rgba(255, 255, 255, 0.1);
+  border-radius:  4px;
+  padding:        4px 10px;
   cursor:         pointer;
-  display:        flex;
-  align-items:    center;
-  gap:            6px;
-  transition:     color 150ms ease, border-color 150ms ease;
+  transition:
+    background   150ms ease,
+    border-color 150ms ease,
+    opacity      180ms ease,
+    transform    150ms ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.player-panel__tab:hover {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.player-panel__tab--active {
+.your-pick__chip:hover:not(:disabled) {
+  background:   rgba(232, 124, 42, 0.08);
+  border-color: rgba(232, 124, 42, 0.4);
   color:        var(--color-paper);
-  border-color: rgba(232, 124, 42, 0.8);
 }
 
-/* Live dot on DEBATE tab */
-@keyframes dot-pulse {
-  0%, 100% { opacity: 0.55; transform: scale(1);    }
-  50%       { opacity: 1;    transform: scale(1.35); }
+@keyframes chip-tap {
+  0%   { transform: scale(1);    }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1);    }
 }
 
-.player-panel__tab-dot {
-  display:       inline-block;
-  width:         5px;
-  height:        5px;
-  border-radius: 50%;
-  background:    rgba(232, 124, 42, 0.75);
-  animation:     dot-pulse 2.2s ease-in-out infinite;
+.your-pick__chip--tapping {
+  animation:    chip-tap 340ms ease forwards;
+  background:   rgba(232, 124, 42, 0.12) !important;
+  border-color: rgba(232, 124, 42, 0.6) !important;
+  color:        var(--color-paper) !important;
 }
 
-.player-panel__tab--active .player-panel__tab-dot {
-  background: rgba(232, 124, 42, 1);
+.your-pick__chip--fading {
+  opacity:   0.18;
+  transform: scale(0.96);
+}
+
+/* Result */
+@keyframes pick-result-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.your-pick__result {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+  animation:      pick-result-in 260ms ease forwards;
+}
+
+.your-pick__your-call {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+}
+
+.your-pick__your-call-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.4375rem;
+  letter-spacing: 0.18em;
+  color:          rgba(255, 255, 255, 0.28);
+}
+
+.your-pick__your-call-name {
+  font-family:    var(--font-banner);
+  font-size:      0.9375rem;
+  letter-spacing: 0.01em;
+  color:          var(--color-paper);
+}
+
+/* Split bar */
+.your-pick__split {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.your-pick__split-bar {
+  height:        6px;
+  border-radius: 3px;
+  overflow:      hidden;
+  display:       flex;
+  background:    rgba(255, 255, 255, 0.04);
+}
+
+.your-pick__split-fill {
+  height:     100%;
+  transition: width 450ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.your-pick__split-labels {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       var(--space-1) var(--space-2);
+}
+
+.your-pick__split-pct {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.4375rem;
+  letter-spacing: 0.1em;
+  color:          rgba(255, 255, 255, 0.28);
+}
+
+.your-pick__split-pct--yours {
+  color: rgba(232, 124, 42, 0.9);
+}
+
+.your-pick__wall-note {
+  font-family: var(--font-program);
+  font-size:   0.75rem;
+  line-height: 1.55;
+  color:       rgba(255, 255, 255, 0.42);
+  margin:      0;
+  font-style:  italic;
 }
