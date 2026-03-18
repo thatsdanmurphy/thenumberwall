@@ -1,12 +1,28 @@
-/* AppFooter — One line. Nothing more. */
+/* AppFooter */
 
 .app-footer {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--space-3);
   padding: var(--space-4) 0 var(--space-5);
   margin-top: auto;
   flex-shrink: 0;
+}
+
+.app-footer__jersey {
+  width: 40px;
+  height: auto;
+  color: var(--color-muted);
+  opacity: 0.18;
+  display: block;
+}
+
+.app-footer__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .app-footer__copy {

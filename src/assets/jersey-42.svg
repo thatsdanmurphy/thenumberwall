@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" fill="none" aria-hidden="true" focusable="false">
+  <!-- Jersey silhouette -->
+  <!-- Collar -->
+  <path
+    d="M46 8 C46 8 50 20 60 20 C70 20 74 8 74 8"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"
+  />
+  <!-- Left shoulder seam to sleeve -->
+  <path
+    d="M46 8 L18 28 L8 52 L24 56 L30 38 L30 124 L90 124 L90 38 L96 56 L112 52 L102 28 L74 8"
+    stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"
+  />
+  <!-- Number 42 -->
+  <text
+    x="60"
+    y="88"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-family="'Archivo Black', 'Arial Black', sans-serif"
+    font-size="32"
+    font-weight="900"
+    fill="currentColor"
+    letter-spacing="-1"
+  >42</text>
+</svg>
