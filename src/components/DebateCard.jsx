@@ -11,7 +11,7 @@ function getSavedVote(number) {
   } catch { return null }
 }
 
-function saveVote(number, side) {
+function saveVoteToStorage(number, side) {
   try {
     localStorage.setItem(`nw_debate_${number}`, JSON.stringify({ side, ts: Date.now() }))
   } catch {}
@@ -30,14 +30,20 @@ function computeSplit(debate, userSide) {
 }
 
 // ── DebateCard ────────────────────────────────────────────────────────────────
+//
+// Two-phase mechanic:
+//   Pre-vote  — shows the claim + two name-only buttons. No arguments shown.
+//               Forces a gut declaration before the case is revealed.
+//   Post-vote — reveals the crowd split, your argument, and the counter.
+//               The reveal is the moment, not the vote.
 
 export default function DebateCard({ debate }) {
-  const saved               = getSavedVote(debate.number)
-  const [vote, setVote]     = useState(saved)          // { side: 'A'|'B', ts } | null
-  const [choosing, setChoosing] = useState(null)       // 'A' | 'B' | null — the in-flight tap
-  const [revealed, setRevealed] = useState(!!saved)    // true once result is shown
+  const saved                   = getSavedVote(debate.number)
+  const [vote, setVote]         = useState(saved)          // { side: 'A'|'B', ts } | null
+  const [choosing, setChoosing] = useState(null)           // 'A' | 'B' | null — in-flight tap
+  const [revealed, setRevealed] = useState(!!saved)        // true once result is shown
 
-  // Reset state when debate changes (different number opened)
+  // Reset when a different debate number is opened
   useEffect(() => {
     const s = getSavedVote(debate.number)
     setVote(s)
@@ -46,18 +52,17 @@ export default function DebateCard({ debate }) {
   }, [debate.number])
 
   function handlePick(side) {
-    if (vote || choosing) return   // already voted or mid-animation
+    if (vote || choosing) return  // already voted or mid-animation
     setChoosing(side)
 
-    // Step 1: animate the pick (400ms)
-    // Step 2: save + reveal result
+    // Step 1: animate the pick (420ms)
+    // Step 2: save + brief pause + reveal
     setTimeout(() => {
-      saveVote(debate.number, side)
+      saveVoteToStorage(debate.number, side)
       const v = { side, ts: Date.now() }
       setVote(v)
-      track('debate_side_chosen', { number: debate.number, side, debate: debate.question })
+      track('debate_side_chosen', { number: debate.number, side, debate: debate.claim })
 
-      // Brief pause then reveal
       setTimeout(() => {
         setRevealed(true)
         setChoosing(null)
@@ -66,71 +71,76 @@ export default function DebateCard({ debate }) {
   }
 
   const { pctA, pctB, totalVotes } = computeSplit(debate, vote?.side)
-  const userSide = vote?.side
+  const userSide  = vote?.side
+  const userPick  = userSide === 'A' ? debate.sideA : debate.sideB
+  const otherPick = userSide === 'A' ? debate.sideB : debate.sideA
+  const userPct   = userSide === 'A' ? pctA : pctB
 
   return (
     <div className="debate-card">
 
-      {/* ── Header ──────────────────────────────────────────────── */}
+      {/* ── Header ─────────────────────────────────────────────── */}
       <div className="debate-card__header">
-        <span className="debate-card__eyebrow">LIVE DEBATE</span>
-        <h3 className="debate-card__question">{debate.question}</h3>
+        <span className="debate-card__eyebrow">DECLARE YOUR SIDE</span>
+        <h3 className="debate-card__claim">{debate.claim}</h3>
         <p className="debate-card__context">{debate.context}</p>
       </div>
 
-      {/* ── Pre-vote: pick a side ───────────────────────────────── */}
+      {/* ── Pre-vote: name-only pick buttons ───────────────────── */}
       {!revealed && (
         <div className="debate-card__arena">
-          <button
-            className={[
-              'debate-card__side',
-              'debate-card__side--a',
-              choosing === 'A' && 'debate-card__side--choosing',
-              choosing === 'B' && 'debate-card__side--dismissed',
-            ].filter(Boolean).join(' ')}
-            onClick={() => handlePick('A')}
-            disabled={!!choosing}
-          >
-            <span className="debate-card__side-name">{debate.sideA.name}</span>
-            <span className="debate-card__side-team">{debate.sideA.team} · {debate.sideA.sport}</span>
-            <p className="debate-card__side-arg">{debate.sideA.argument}</p>
-            <span className="debate-card__side-cta">I'm with {debate.sideA.name.split(' ').pop()} →</span>
-          </button>
+          <div className="debate-card__picks">
 
-          <div className="debate-card__vs" aria-hidden="true">VS</div>
+            <button
+              className={[
+                'debate-card__pick',
+                'debate-card__pick--a',
+                choosing === 'A' && 'debate-card__pick--choosing',
+                choosing === 'B' && 'debate-card__pick--dismissed',
+              ].filter(Boolean).join(' ')}
+              onClick={() => handlePick('A')}
+              disabled={!!choosing}
+            >
+              <span className="debate-card__pick-name">{debate.sideA.name}</span>
+              <span className="debate-card__pick-team">{debate.sideA.team}</span>
+            </button>
 
-          <button
-            className={[
-              'debate-card__side',
-              'debate-card__side--b',
-              choosing === 'B' && 'debate-card__side--choosing',
-              choosing === 'A' && 'debate-card__side--dismissed',
-            ].filter(Boolean).join(' ')}
-            onClick={() => handlePick('B')}
-            disabled={!!choosing}
-          >
-            <span className="debate-card__side-name">{debate.sideB.name}</span>
-            <span className="debate-card__side-team">{debate.sideB.team} · {debate.sideB.sport}</span>
-            <p className="debate-card__side-arg">{debate.sideB.argument}</p>
-            <span className="debate-card__side-cta">I'm with {debate.sideB.name.split(' ').pop()} →</span>
-          </button>
+            <div className="debate-card__vs" aria-hidden="true">VS</div>
+
+            <button
+              className={[
+                'debate-card__pick',
+                'debate-card__pick--b',
+                choosing === 'B' && 'debate-card__pick--choosing',
+                choosing === 'A' && 'debate-card__pick--dismissed',
+              ].filter(Boolean).join(' ')}
+              onClick={() => handlePick('B')}
+              disabled={!!choosing}
+            >
+              <span className="debate-card__pick-name">{debate.sideB.name}</span>
+              <span className="debate-card__pick-team">{debate.sideB.team}</span>
+            </button>
+
+          </div>
+          <p className="debate-card__commit-note">The argument reveals after you pick.</p>
         </div>
       )}
 
-      {/* ── Post-vote: result ────────────────────────────────────── */}
-      {revealed && (
+      {/* ── Post-vote: reveal ───────────────────────────────────── */}
+      {revealed && userSide && (
         <div className="debate-card__result">
 
-          {/* User's declared position */}
+          {/* Your declared position */}
           <div className="debate-card__verdict">
             <span className="debate-card__verdict-label">YOUR CALL</span>
-            <span className="debate-card__verdict-name">
-              {userSide === 'A' ? debate.sideA.name : debate.sideB.name}
-            </span>
+            <span className="debate-card__verdict-name">{userPick.name}</span>
           </div>
 
-          {/* Split bar */}
-          <div className="debate-card__split" aria-label={`${pctA}% ${debate.sideA.name}, ${pctB}% ${debate.sideB.name}`}>
+          {/* Crowd split bar */}
+          <div
+            className="debate-card__split"
+            aria-label={`${pctA}% ${debate.sideA.name}, ${pctB}% ${debate.sideB.name}`}
+          >
             <div className="debate-card__split-bar">
               <div
                 className="debate-card__split-fill debate-card__split-fill--a"
@@ -142,30 +152,29 @@ export default function DebateCard({ debate }) {
               />
             </div>
             <div className="debate-card__split-labels">
-              <span
-                className={`debate-card__split-pct${userSide === 'A' ? ' debate-card__split-pct--yours' : ''}`}
-              >
+              <span className={`debate-card__split-pct${userSide === 'A' ? ' debate-card__split-pct--yours' : ''}`}>
                 {pctA}% {debate.sideA.name.split(' ').pop()}
               </span>
-              <span
-                className={`debate-card__split-pct${userSide === 'B' ? ' debate-card__split-pct--yours' : ''}`}
-              >
+              <span className={`debate-card__split-pct${userSide === 'B' ? ' debate-card__split-pct--yours' : ''}`}>
                 {debate.sideB.name.split(' ').pop()} {pctB}%
               </span>
             </div>
           </div>
 
-          {/* Position framing */}
-          <p className="debate-card__position">
-            {userSide === 'A'
-              ? pctA >= 50
-                ? `You're with the majority — ${pctA}% of voters agree.`
-                : `You're in the minority — only ${pctA}% of voters agree. Hold your ground.`
-              : pctB >= 50
-                ? `You're with the majority — ${pctB}% of voters agree.`
-                : `You're in the minority — only ${pctB}% of voters agree. Hold your ground.`
-            }
-          </p>
+          {/* Your position — 1-2 sentences making the stance feel articulated */}
+          <p className="debate-card__position">{userPick.position}</p>
+
+          {/* Your argument — the case for the side you chose, now revealed */}
+          <div className="debate-card__argument">
+            <span className="debate-card__argument-label">THE CASE</span>
+            <p className="debate-card__argument-text">{userPick.argument}</p>
+          </div>
+
+          {/* The counter — other side's argument, dimmed */}
+          <div className="debate-card__counter">
+            <span className="debate-card__counter-label">THE OTHER SIDE</span>
+            <p className="debate-card__counter-text">{otherPick.argument}</p>
+          </div>
 
           {/* Season + vote count */}
           <div className="debate-card__meta">
