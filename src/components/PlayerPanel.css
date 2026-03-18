@@ -431,7 +431,7 @@
 .your-pick {
   padding-bottom: var(--space-3);
   border-bottom:  1px solid rgba(255, 255, 255, 0.07);
-  margin-bottom:  var(--space-1);
+  margin-bottom:  var(--space-3);
 }
 
 .your-pick__label {
@@ -490,6 +490,19 @@
 .your-pick__chip--fading {
   opacity:   0.18;
   transform: scale(0.96);
+}
+
+/* Rank-1 chip: subtle amber wash — the wall's editorial nod to the leader */
+.your-pick__chip--top {
+  background:   rgba(232, 124, 42, 0.10);
+  border-color: rgba(232, 124, 42, 0.28);
+  color:        rgba(255, 255, 255, 0.85);
+}
+
+.your-pick__chip--top:hover:not(:disabled) {
+  background:   rgba(232, 124, 42, 0.18);
+  border-color: rgba(232, 124, 42, 0.55);
+  color:        var(--color-paper);
 }
 
 /* Result */
@@ -599,7 +612,7 @@
   font-family:    var(--font-scoreboard);
   font-size:      0.5625rem;
   letter-spacing: 0.12em;
-  color:          rgba(255, 255, 255, 0.22);
+  color:          rgba(255, 255, 255, 0.50);
   text-transform: uppercase;
   transition:     color 160ms ease;
   white-space:    nowrap;
@@ -607,7 +620,7 @@
 }
 
 .your-pick__reset:hover {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 /* Fade-out before resetting back to pick state */
@@ -623,9 +636,9 @@
 /* "Missing someone?" nomination link — sits inline with chips */
 .your-pick__nominate {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
+  font-size:      0.5625rem;
   letter-spacing: 0.12em;
-  color:          rgba(255, 255, 255, 0.22);
+  color:          rgba(255, 255, 255, 0.50);
   text-decoration: none;
   align-self:     center;
   padding:        4px 6px;
@@ -635,5 +648,5 @@
 }
 
 .your-pick__nominate:hover {
-  color: rgba(232, 124, 42, 0.65);
+  color: rgba(232, 124, 42, 0.85);
 }

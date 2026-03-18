@@ -226,6 +226,7 @@ function YourNumberPick({ number, legends, assoc }) {
                 key={i}
                 className={[
                   'your-pick__chip',
+                  i === 0                          && 'your-pick__chip--top',
                   tapping === i                    && 'your-pick__chip--tapping',
                   tapping !== null && tapping !== i && 'your-pick__chip--fading',
                 ].filter(Boolean).join(' ')}
