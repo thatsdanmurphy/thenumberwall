@@ -68,7 +68,7 @@
 @media (min-width: 768px) {
   .boston-page__body {
     flex-direction: row;
-    align-items:    flex-start;
+    align-items:    stretch;
     gap:            var(--space-4);
   }
 
