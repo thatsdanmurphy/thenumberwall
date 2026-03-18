@@ -229,7 +229,9 @@ function YourNumberPick({ number, legends, assoc }) {
             ))}
             <a
               className="your-pick__nominate"
-              href={`mailto:dan@thenumberwall.com?subject=Missing%20Legend%20%23${number}&body=I%20think%20someone%20is%20missing%20from%20%23${number}.%20Here%27s%20who%3A`}
+              href="https://forms.gle/FdUYZoLakEYm9GiK8"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               + missing someone?
             </a>
