@@ -39,6 +39,281 @@
 
 /* Unwritten — number opacity handled via rgba text color in data layer */
 
+/* ── Debate pulse variants — A/B/C on tiles #0/#7/#23 for comparison ────────
+   Pick the winner then set all three to one class.                         */
+
+/* ── A · "Ember" — radial glow breathes from tile center ───────────────────
+   Feels lit from within. Warm amber gradient, no border, no ring.
+   Most integrated with the heat map aesthetic. Subtle at low heat,
+   dramatic on a bright tile.                                               */
+
+@keyframes debate-ember {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 0.85; }
+}
+
+.wall-tile--debating-a::after {
+  content:        '';
+  position:       absolute;
+  inset:          0;
+  border-radius:  4px;
+  background:     radial-gradient(ellipse at center,
+                    rgba(232, 124, 42, 0.55) 0%,
+                    rgba(232, 124, 42, 0.18) 45%,
+                    transparent 72%);
+  animation:      debate-ember 2.6s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        0;
+}
+
+/* ── B · "Halo" — ambient glow outside tile breathes in/out ────────────────
+   The tile's heat corona pulses. No shape change inside the tile itself.
+   Works best on already-glowing tiles. Very soft, very alive.             */
+
+@keyframes debate-halo {
+  0%, 100% { opacity: 0;    }
+  50%       { opacity: 1;   }
+}
+
+.wall-tile--debating-b::after {
+  content:        '';
+  position:       absolute;
+  inset:          -6px;
+  border-radius:  8px;
+  box-shadow:     0 0 14px 4px rgba(232, 124, 42, 0.45),
+                  0 0 28px 8px rgba(232, 124, 42, 0.18);
+  animation:      debate-halo 2.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        0;
+}
+
+/* ── C · "Border breathe" — border + outer glow pulse together ──────────────
+   Border fades amber→invisible while a glow corona breathes with it.
+   The glow extends outside the tile so it reads on any heat level.
+   Louder than a border-only approach but still clean on dense tiles.      */
+
+@keyframes debate-border {
+  0%, 100% {
+    opacity:    0.55;
+    box-shadow: 0 0 0 1.5px rgba(232, 124, 42, 0.30),
+                0 0 8px  3px  rgba(232, 124, 42, 0.18),
+                0 0 18px 5px  rgba(232, 124, 42, 0.10);
+  }
+  50% {
+    opacity:    1;
+    box-shadow: 0 0 0 2px   rgba(232, 124, 42, 0.55),
+                0 0 14px 5px rgba(232, 124, 42, 0.45),
+                0 0 32px 8px rgba(232, 124, 42, 0.22),
+                0 0 52px 14px rgba(232, 124, 42, 0.10);
+  }
+}
+
+.wall-tile--debating-c::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         2px solid rgba(232, 124, 42, 1);
+  animation:      debate-border 2.0s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+/* ── C sub-variants — louder steps for A/B testing intensity ────────────────
+   c-2: same as C but faster + slightly thicker border
+   c-3: same glow but with a very subtle scale pulse on the tile itself     */
+
+@keyframes debate-border-fast {
+  0%, 100% {
+    opacity:    0.30;
+    box-shadow: 0 0 0 1px rgba(232, 124, 42, 0.18),
+                0 0 5px 1px rgba(232, 124, 42, 0.10);
+  }
+  45% {
+    opacity:    1;
+    box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.28),
+                0 0 12px 3px rgba(232, 124, 42, 0.42),
+                0 0 26px 6px rgba(232, 124, 42, 0.15);
+  }
+}
+
+.wall-tile--debating-c2::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         2px solid rgba(232, 124, 42, 1);
+  animation:      debate-border-fast 1.7s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+@keyframes debate-border-scale {
+  0%, 100% {
+    opacity:    0.30;
+    box-shadow: 0 0 0 1px rgba(232, 124, 42, 0.15),
+                0 0 5px 1px rgba(232, 124, 42, 0.10);
+    transform:  scale(1);
+  }
+  50% {
+    opacity:    1;
+    box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.22),
+                0 0 10px 2px rgba(232, 124, 42, 0.35),
+                0 0 22px 4px rgba(232, 124, 42, 0.12);
+    transform:  scale(1.04);
+  }
+}
+
+.wall-tile--debating-c3::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         1.5px solid rgba(232, 124, 42, 1);
+  animation:      debate-border-scale 2.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+/* ── Active debate class — set to whichever variant wins ───────────────── */
+.wall-tile--debating::after {
+  content:        '';
+  position:       absolute;
+  inset:          0;
+  border-radius:  4px;
+  background:     radial-gradient(ellipse at center,
+                    rgba(232, 124, 42, 0.55) 0%,
+                    rgba(232, 124, 42, 0.18) 45%,
+                    transparent 72%);
+  animation:      debate-ember 2.6s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PULSE SUPERCUT — 5 variants for A/B comparison
+   Each pair: left tile = normal (heat) state, right tile = forceActive (white)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── pulse-1 · "Ghost border" — minimal, border only, no glow ──────────────
+   Quietest possible pulse. Just the border breathing 22%→100%.
+   No corona, no fill. Does it read at all?                                 */
+
+@keyframes pulse-1-kf {
+  0%, 100% { opacity: 0.22; }
+  50%       { opacity: 1.00; }
+}
+
+.wall-tile--debating-pulse-1::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         1.5px solid rgba(232, 124, 42, 1);
+  animation:      pulse-1-kf 2.0s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+/* ── pulse-2 · "Baseline+" — current c variant bumped, floor 0.40 ──────────
+   Stronger than current production. Floor raised so it never disappears.
+   Border + close glow, 2.2s rhythm.                                        */
+
+@keyframes pulse-2-kf {
+  0%, 100% {
+    opacity:    0.45;
+    box-shadow: 0 0 0 1.5px rgba(232, 124, 42, 0.30),
+                0 0 8px  3px rgba(232, 124, 42, 0.18),
+                0 0 18px 5px rgba(232, 124, 42, 0.08);
+  }
+  50% {
+    opacity:    1;
+    box-shadow: 0 0 0 2.5px rgba(232, 124, 42, 0.55),
+                0 0 16px 5px rgba(232, 124, 42, 0.60),
+                0 0 32px 8px rgba(232, 124, 42, 0.28),
+                0 0 52px 14px rgba(232, 124, 42, 0.10);
+  }
+}
+
+.wall-tile--debating-pulse-2::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         2px solid rgba(232, 124, 42, 1);
+  animation:      pulse-2-kf 2.0s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+/* ── pulse-3 · "Wide corona" — slow, big outer glow, no tight border ───────
+   3.6s period. No border ring — just an expanding amber haze outside tile.
+   Very ambient. Works best on dark tiles. Barely reads on white?           */
+
+@keyframes pulse-3-kf {
+  0%, 100% { opacity: 0;   }
+  50%       { opacity: 1;  }
+}
+
+.wall-tile--debating-pulse-3::after {
+  content:        '';
+  position:       absolute;
+  inset:          -8px;
+  border-radius:  10px;
+  box-shadow:     0 0 18px 6px  rgba(232, 124, 42, 0.50),
+                  0 0 40px 14px rgba(232, 124, 42, 0.22),
+                  0 0 60px 20px rgba(232, 124, 42, 0.10);
+  animation:      pulse-3-kf 3.6s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        0;
+}
+
+/* ── pulse-4 · "Heartbeat" — two quick beats then silence ──────────────────
+   Beat 1 at 12%, rest to 28%, beat 2 at 38%, then long rest until 100%.
+   3.0s cycle. Mimics a biological rhythm — active, alive.                  */
+
+@keyframes pulse-4-kf {
+  0%        { opacity: 0.22; box-shadow: 0 0 0 1px rgba(232,124,42,0.12); }
+  12%       { opacity: 1;    box-shadow: 0 0 0 2px rgba(232,124,42,0.32), 0 0 14px 4px rgba(232,124,42,0.42); }
+  28%       { opacity: 0.22; box-shadow: 0 0 0 1px rgba(232,124,42,0.12); }
+  38%       { opacity: 0.75; box-shadow: 0 0 0 2px rgba(232,124,42,0.22), 0 0 8px 2px rgba(232,124,42,0.28); }
+  55%, 100% { opacity: 0.22; box-shadow: 0 0 0 1px rgba(232,124,42,0.12); }
+}
+
+.wall-tile--debating-pulse-4::after {
+  content:        '';
+  position:       absolute;
+  inset:          -1px;
+  border-radius:  5px;
+  border:         1.5px solid rgba(232, 124, 42, 1);
+  animation:      pulse-4-kf 3.0s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        2;
+}
+
+/* ── pulse-5 · "Ember fill" — radial gradient breathes inside tile ─────────
+   No border ring. A warm glow floods from center, no hard edge.
+   Same approach as .wall-tile--debating (variant A) but faster + stronger. */
+
+@keyframes pulse-5-kf {
+  0%, 100% { opacity: 0.18; }
+  50%       { opacity: 0.95; }
+}
+
+.wall-tile--debating-pulse-5::after {
+  content:        '';
+  position:       absolute;
+  inset:          0;
+  border-radius:  4px;
+  background:     radial-gradient(ellipse at center,
+                    rgba(232, 124, 42, 0.70) 0%,
+                    rgba(232, 124, 42, 0.28) 45%,
+                    transparent 72%);
+  animation:      pulse-5-kf 2.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index:        0;
+}
+
 /* The number */
 .wall-tile__number {
   font-family: var(--font-banner);

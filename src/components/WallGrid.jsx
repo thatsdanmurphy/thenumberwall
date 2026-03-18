@@ -1,8 +1,24 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useMemo } from 'react'
 import { track } from '@vercel/analytics'
 import { TILE_NUMBERS, globalIndex } from '../data/index.js'
+import associationsData from '../data/associations.json'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
+
+// Tiles with a FIRST THOUGHT association get the pulse animation.
+// Variant 'c' = border + glow (production winner, confirmed pulse-2 baseline).
+const ASSOC_VARIANTS = {
+  '0':  'c',   // Lillard / Westbrook
+  '7':  'c',   // Mantle / Elway
+  '10': 'c',   // Messi / Pelé
+  '12': 'c',   // Brady / Namath
+  '23': 'c',   // Jordan / LeBron
+  '24': 'c',   // Mays / Kobe
+  '33': 'c',   // Bird / Kareem
+  '34': 'c',   // Ortiz / Pierce (Boston)
+  '44': 'c',   // Aaron / Reggie Jackson
+}
+const ASSOC_NUMBERS = new Set(Object.keys(ASSOC_VARIANTS))
 
 /**
  * WallGrid — 101-tile number grid.
@@ -63,6 +79,8 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           number={num}
           entries={index.get(num) || []}
           isActive={activeNumber === num}
+          isDebating={ASSOC_NUMBERS.has(String(num))}
+          debateVariant={ASSOC_VARIANTS[String(num)] ?? null}
           onClick={() => handleTileClick(num)}
         />
       ))}

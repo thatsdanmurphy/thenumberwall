@@ -2,6 +2,23 @@
   {
     "Number": "0",
     "Tier": "LEGEND",
+    "Name": "Robert Parish",
+    "Sport": "Basketball",
+    "League": "NBA",
+    "Status": "Retired",
+    "Era": "Celtics Dynasty",
+    "Team": "Boston Celtics",
+    "Hometown": "Shreveport, Louisiana",
+    "Signature Stat": "3",
+    "Stat Label": "Championship Rings (with Celtics)",
+    "Stat Weight": "3",
+    "Role": "Center",
+    "Fun Fact": "The Chief. Played 21 seasons, nine with the Celtics, winning three championships alongside Bird and McHale. His #00 is retired by the Celtics.",
+    "Notes": ""
+  },
+  {
+    "Number": "0",
+    "Tier": "LEGEND",
     "Name": "Jayson Tatum",
     "Sport": "Basketball",
     "League": "NBA",
@@ -30,7 +47,7 @@
     "Stat Label": "Career Home Runs",
     "Stat Weight": "2",
     "Role": "Second Base",
-    "Fun Fact": "Hall of Famer who played alongside Ted Williams - his #1 is retired by the Red Sox",
+    "Fun Fact": "One of the best second basemen of his era. Played his entire 14-season career with the Red Sox. Batted .325 in the 1946 World Series. Hall of Famer who played alongside Ted Williams.",
     "Notes": ""
   },
   {
@@ -61,10 +78,10 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "9",
-    "Stat Label": "Championships as coach",
+    "Stat Label": "Championships as Head Coach (including 8 consecutive 1959-1966)",
     "Stat Weight": "3",
     "Role": "Head Coach",
-    "Fun Fact": "He lit a victory cigar before the game even ended - that's how confident he was his team would win",
+    "Fun Fact": "Nine NBA championships as head coach, including eight consecutive titles from 1959 to 1966. He lit a victory cigar before the final buzzer as his signature move to celebrate.",
     "Notes": ""
   },
   {
@@ -234,7 +251,7 @@
     "Stat Label": "Championship",
     "Stat Weight": "2",
     "Role": "Shooting Guard",
-    "Fun Fact": "He was the forgotten man in Boston until he wasn't - then he won the 2024 Finals alongside Tatum",
+    "Fun Fact": "2024 NBA Finals MVP alongside Jayson Tatum. The first Celtics player to win Finals MVP since Paul Pierce in 2008. Built a new dynasty with Tatum.",
     "Notes": ""
   },
   {
@@ -353,7 +370,7 @@
     "Stat Label": "Super Bowl Rings",
     "Stat Weight": "2",
     "Role": "Wide Receiver",
-    "Fun Fact": "He was Brady's security blanket - most reliable hands in the clutch - and won Super Bowl LIII MVP with a circus catch performance",
+    "Fun Fact": "Super Bowl LIII MVP with 141 receiving yards in the lowest-scoring Super Bowl ever. A former college quarterback who converted to receiver. Brady's most reliable weapon.",
     "Notes": "Confidence 3 - Legend tier debated"
   },
   {
@@ -383,11 +400,11 @@
     "Era": "Celtics Dynasty",
     "Team": "Boston Celtics",
     "Hometown": "",
-    "Signature Stat": "6",
-    "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Signature Stat": "13",
+    "Stat Label": "All-Star Selections + 6x All-Star Game MVP",
+    "Stat Weight": "3",
     "Role": "Point Guard",
-    "Fun Fact": "He invented what modern point guards do - behind-the-back passes and court vision - in the 1950s when nobody had seen it before",
+    "Fun Fact": "He invented what modern point guards do - behind-the-back passes and no-look feeds - in the 1950s when nobody had seen it before. The Celtics tried to trade him and Boston fans threatened a citywide boycott.",
     "Notes": ""
   },
   {
@@ -444,23 +461,6 @@
   {
     "Number": "15",
     "Tier": "LEGEND",
-    "Name": "Kristaps Porzingis",
-    "Sport": "Basketball",
-    "League": "NBA",
-    "Status": "Active",
-    "Era": "New Dynasty",
-    "Team": "Boston Celtics",
-    "Hometown": "",
-    "Signature Stat": "1",
-    "Stat Label": "Championship",
-    "Stat Weight": "2",
-    "Role": "Center",
-    "Fun Fact": "He was the secret weapon of the 2024 title run - when healthy he's basically unguardable as a 7-foot shooter",
-    "Notes": "Active - update each season"
-  },
-  {
-    "Number": "15",
-    "Tier": "LEGEND",
     "Name": "Milt Schmidt",
     "Sport": "Hockey",
     "League": "NHL",
@@ -486,10 +486,10 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "8",
-    "Stat Label": "Championships as player",
-    "Stat Weight": "2",
+    "Stat Label": "Championships as Player (+ 2 More as Head Coach)",
+    "Stat Weight": "3",
     "Role": "Forward",
-    "Fun Fact": "He won eight rings as a player and then coached the Celtics to two more - and then called every game on TV for decades",
+    "Fun Fact": "He won eight rings as a player and then coached the Celtics to two more - and then called every game on TV for decades. No one touched this franchise more times across more roles.",
     "Notes": ""
   },
   {
@@ -537,10 +537,10 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "8",
-    "Stat Label": "Championships",
+    "Stat Label": "Championships + 1974 Finals MVP Bridged Both Dynasties",
     "Stat Weight": "3",
     "Role": "Small Forward",
-    "Fun Fact": "Havlicek stole the ball - those four words from the 1965 broadcast are the most famous call in Celtics history",
+    "Fun Fact": "Havlicek stole the ball. Those four words from the 1965 Eastern Conference Finals are the most famous call in NBA history. He won eight championships, the original sixth man who became a starter.",
     "Notes": ""
   },
   {
@@ -605,10 +605,10 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "5",
-    "Stat Label": "Championships",
+    "Stat Label": "Championships as a Celtics player",
     "Stat Weight": "1",
     "Role": "Forward",
-    "Fun Fact": "He won five rings as a Celtic and then became one of the great offensive coaching minds in NBA history - two careers, both exceptional",
+    "Fun Fact": "Won five rings as a Celtic player. Became one of the greatest offensive coaching minds in NBA history, coaching the Milwaukee Bucks, Golden State Warriors, Dallas Mavericks, and New York Knicks. Revolutionized the game with small-ball and Nellie Ball offense.",
     "Notes": ""
   },
   {
@@ -655,12 +655,12 @@
     "Era": "Red Sox Modern",
     "Team": "Boston Red Sox",
     "Hometown": "",
-    "Signature Stat": "2",
-    "Stat Label": "World Series Rings",
-    "Stat Weight": "2",
+    "Signature Stat": "",
+    "Stat Label": "",
+    "Stat Weight": "0",
     "Role": "First/Third Base",
-    "Fun Fact": "He was called The Greek God of Walks because his on-base percentage was absurd - two rings and a one-of-a-kind plate approach",
-    "Notes": "Youk"
+    "Fun Fact": "Bill James called him The Greek God of Walks before he played a single MLB game. Boston loved him for it. Two rings, a .382 career OBP, and a nickname that said everything about how he approached every at-bat.",
+    "Notes": "Cultural Legend: City Icon \u2014 The Greek God of Walks. Stat suppressed; his legend lives in the roar of Fenway, not a line in a box score."
   },
   {
     "Number": "20",
@@ -676,7 +676,7 @@
     "Stat Label": "Championship",
     "Stat Weight": "2",
     "Role": "Shooting Guard",
-    "Fun Fact": "He made the most important three-pointer in Finals history in 2013 - as a Miami Heat - but he earned his legend first in Boston",
+    "Fun Fact": "Made the most important three-pointer in Finals history in Game 6 of the 2013 NBA Finals. His legend was built in Boston, where he helped end a 22-year championship drought in 2008.",
     "Notes": ""
   },
   {
@@ -693,7 +693,7 @@
     "Stat Label": "All-Star selections",
     "Stat Weight": "1",
     "Role": "Center",
-    "Fun Fact": "He was traded to St. Louis in 1956 for the draft pick that became Bill Russell - the trade that built everything",
+    "Fun Fact": "Macauley and Cliff Hagan were traded to St. Louis in 1956 for the rights to Bill Russell. One of the most lopsided trades in NBA history. The Celtics got Russell and built a dynasty.",
     "Notes": ""
   },
   {
@@ -707,10 +707,10 @@
     "Team": "Boston Red Sox",
     "Hometown": "",
     "Signature Stat": "192",
-    "Stat Label": "Wins as Red Sox",
+    "Stat Label": "Wins as a Red Sox pitcher",
     "Stat Weight": "2",
     "Role": "Pitcher",
-    "Fun Fact": "He struck out 20 batters in a single game in 1986 - still one of the most dominant pitching performances ever",
+    "Fun Fact": "He struck out 20 batters in a single game in 1986. Still one of the most dominant pitching performances ever.",
     "Notes": "Complex legacy but undeniable Boston impact"
   },
   {
@@ -723,12 +723,12 @@
     "Era": "Bruins History",
     "Team": "Boston Bruins",
     "Hometown": "",
-    "Signature Stat": "4",
-    "Stat Label": "NHL Goals",
-    "Stat Weight": "3",
+    "Signature Stat": "",
+    "Stat Label": "",
+    "Stat Weight": "0",
     "Role": "Left Wing",
-    "Fun Fact": "In 1958 he became the first Black player in NHL history - he was also legally blind in one eye and nobody knew until decades later",
-    "Notes": ""
+    "Fun Fact": "He became the first Black player in NHL history in 1958 - breaking the color barrier 11 years after Jackie Robinson did the same in baseball - and he was legally blind in one eye the entire time. Nobody knew until decades later.",
+    "Notes": "Cultural Legend: Barrier Breaker \u2014 First Black player in NHL history (1958). Stat suppressed; the barrier he broke can't be measured."
   },
   {
     "Number": "23",
@@ -741,10 +741,10 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "7",
-    "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Stat Label": "Championships \u2014 Invented the Sixth Man Role Before It Had a Name",
+    "Stat Weight": "3",
     "Role": "Guard/Forward",
-    "Fun Fact": "He invented the sixth man role - coming off the bench to give the team a spark - seven rings for being great at something nobody had codified before",
+    "Fun Fact": "He invented the sixth man role - Red Auerbach started him off the bench because he was better as a weapon than a starter - and Boston rings started following him around",
     "Notes": ""
   },
   {
@@ -792,10 +792,10 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "10",
-    "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Stat Label": "Championships 10 in 12 Seasons",
+    "Stat Weight": "3",
     "Role": "Guard",
-    "Fun Fact": "Ten championships in twelve seasons - the greatest role player in the history of dynasty basketball",
+    "Fun Fact": "Ten NBA championships, the most by any player at the time. Known for bank shots. A key piece of 10 Celtics championships. The greatest role player in the history of dynasty basketball.",
     "Notes": "The Bank Shot"
   },
   {
@@ -812,26 +812,26 @@
     "Stat Label": "Career Goals",
     "Stat Weight": "2",
     "Role": "Right Wing",
-    "Fun Fact": "He was called Taz because he played like a Tasmanian devil - the most beloved Bruin of his era because he gave everything every night",
+    "Fun Fact": "Called Taz because he played like a Tasmanian devil. The toughest player on the Bruins in the late 1970s and early 1980s. A fan favorite who embodied blue-collar hockey and gave everything every night.",
     "Notes": ""
   },
   {
-  "Number": "24",
-  "Tier": "LEGEND",
-  "Name": "Ty Law",
-  "Sport": "Football",
-  "League": "NFL",
-  "Status": "Retired",
-  "Era": "Patriots Dynasty",
-  "Team": "New England Patriots",
-  "Hometown": "",
-  "Signature Stat": "53",
-  "Stat Label": "Career Interceptions",
-  "Stat Weight": "3",
-  "Role": "Cornerback",
-  "Fun Fact": "He jumped Kurt Warner's pass and took it back for a pick-six in Super Bowl XXXVI - the play that helped announce the Patriots dynasty to the world",
-  "Notes": "Hall of Famer"
-},
+    "Number": "24",
+    "Tier": "LEGEND",
+    "Name": "Ty Law",
+    "Sport": "Football",
+    "League": "NFL",
+    "Status": "Retired",
+    "Era": "Patriots Dynasty",
+    "Team": "New England Patriots",
+    "Hometown": "",
+    "Signature Stat": "53",
+    "Stat Label": "Career Interceptions",
+    "Stat Weight": "3",
+    "Role": "Cornerback",
+    "Fun Fact": "He jumped Kurt Warner's pass and took it back for a pick-six in Super Bowl XXXVI - the play that helped announce the Patriots dynasty to the world",
+    "Notes": "Hall of Famer"
+  },
   {
     "Number": "25",
     "Tier": "LEGEND",
@@ -842,11 +842,11 @@
     "Era": "Celtics Dynasty",
     "Team": "Boston Celtics",
     "Hometown": "",
-    "Signature Stat": "8",
-    "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Signature Stat": "10",
+    "Stat Label": "Boston Championships \u2014 8 as Player, 2 More Coaching Bird's Celtics",
+    "Stat Weight": "3",
     "Role": "Guard",
-    "Fun Fact": "He won eight rings as a Celtic player and then came back to coach Larry Bird and Kevin McHale to two more - a Celtic for two dynasties",
+    "Fun Fact": "He won eight rings as a Celtic player and then came back to coach Larry Bird and Kevin McHale to two more - a Celtic for two dynasties across three decades",
     "Notes": ""
   },
   {
@@ -863,7 +863,7 @@
     "Stat Label": "Career Home Runs",
     "Stat Weight": "3",
     "Role": "Right Field",
-    "Fun Fact": "He was 22 years old and had already hit 100 home runs - the youngest AL homer king ever - and then a pitch hit him in the face and changed everything",
+    "Fun Fact": "At age 20 he led the AL in home runs, youngest ever. At 22 he was among the game's brightest stars. Then Jack Hamilton's pitch hit him in the face in 1967, nearly costing him his eye. He came back two years later and hit 36 home runs in 1970. Vision problems forced his retirement, but his courage stands forever.",
     "Notes": ""
   },
   {
@@ -1254,8 +1254,8 @@
     "Stat Label": "Stanley Cup Ring",
     "Stat Weight": "3",
     "Role": "Left Wing",
-    "Fun Fact": "He's the franchise all-time points leader, won the Cup, and plays like a guy who was told he was too small to make it - because he was told that",
-    "Notes": "Active - update annually"
+    "Fun Fact": "He's the Bruins all-time points leader, won the Cup in 2011, and plays like a guy who was told he was too small to make it - because he was told that. Now with Florida Panthers (2025), but the Boston legend stays.",
+    "Notes": "Moved to Florida Panthers 2025 \u2014 legacy belongs to Boston. Keep on legends wall, review annually."
   },
   {
     "Number": "72",
@@ -1336,11 +1336,11 @@
     "Team": "New England Patriots",
     "Hometown": "",
     "Signature Stat": "23",
-    "Stat Label": "Single Season TDs (2007 record)",
+    "Stat Label": "Single Season TDs (2007 \u2014 NFL Record)",
     "Stat Weight": "3",
     "Role": "Wide Receiver",
-    "Fun Fact": "He caught 23 touchdown passes in 2007 - the single-season record that still stands - on a team that went 16-0 in the regular season",
-    "Notes": ""
+    "Fun Fact": "He was a Patriot for exactly one season - 2007 - and in that season he caught 23 touchdown passes (still the record) on the 16-0 team. One year. One record. That's the whole Boston story.",
+    "Notes": "One season on the Boston wall \u2014 the stat earns it"
   },
   {
     "Number": "83",

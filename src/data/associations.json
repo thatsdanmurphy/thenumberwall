@@ -1,0 +1,119 @@
+[
+  {
+    "number": "23",
+    "wallContext": "#23 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Michael Jordan", "team": "Chicago Bulls" },
+      { "id": "B", "name": "LeBron James",   "team": "Los Angeles Lakers" }
+    ],
+    "seedVotes": { "A": 1891, "B": 1204 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Jordan. LeBron is the argument that keeps the question alive.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "33",
+    "wallContext": "#33 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Larry Bird",             "team": "Boston Celtics" },
+      { "id": "B", "name": "Kareem Abdul-Jabbar",    "team": "Milwaukee Bucks" }
+    ],
+    "seedVotes": { "A": 1120, "B": 890 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Bird. Kareem won more. The argument doesn't end there.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "44",
+    "wallContext": "#44 · Baseball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Hank Aaron",      "team": "Atlanta Braves" },
+      { "id": "B", "name": "Reggie Jackson",  "team": "Oakland Athletics" }
+    ],
+    "seedVotes": { "A": 940, "B": 760 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Aaron. #44 broke the record. Reggie made October mean something different.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "12",
+    "wallContext": "#12 · Football",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Tom Brady",    "team": "New England Patriots" },
+      { "id": "B", "name": "Joe Namath",   "team": "New York Jets" }
+    ],
+    "seedVotes": { "A": 1340, "B": 620 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Brady. Namath is the reason #12 at quarterback means anything at all.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "10",
+    "wallContext": "#10 · Soccer",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Pelé",            "team": "Brazil" },
+      { "id": "B", "name": "Lionel Messi",    "team": "Argentina" }
+    ],
+    "seedVotes": { "A": 1080, "B": 1340 },
+    "wallCall": "B",
+    "wallNote": "The wall sees Messi. Pelé made #10 sacred. Messi made people ask the question again.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "24",
+    "wallContext": "#24 · Two Sports",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Willie Mays",   "team": "San Francisco Giants" },
+      { "id": "B", "name": "Kobe Bryant",   "team": "Los Angeles Lakers" }
+    ],
+    "seedVotes": { "A": 780, "B": 740 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Mays. Kobe's claim on #24 is why this isn't obvious.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "7",
+    "wallContext": "#7 · Two Sports",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Mickey Mantle", "team": "New York Yankees" },
+      { "id": "B", "name": "John Elway",    "team": "Denver Broncos" }
+    ],
+    "seedVotes": { "A": 847, "B": 531 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Mantle. But Elway is why football fans have always pushed back.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "0",
+    "wallContext": "#0 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Damian Lillard",     "team": "Portland Trail Blazers" },
+      { "id": "B", "name": "Russell Westbrook",  "team": "Oklahoma City Thunder" }
+    ],
+    "seedVotes": { "A": 612, "B": 589 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Lillard. Dame Time gave #0 its first real legend.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "34",
+    "wallContext": "Boston · #34",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "David Ortiz",  "team": "Boston Red Sox" },
+      { "id": "B", "name": "Paul Pierce",  "team": "Boston Celtics" }
+    ],
+    "seedVotes": { "A": 1421, "B": 388 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Ortiz. Pierce makes this the most contested retired number in Boston sports.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  }
+]

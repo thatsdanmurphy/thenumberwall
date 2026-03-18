@@ -1,0 +1,68 @@
+[
+  {
+    "number": "7",
+    "claim": "Two legends. Two sports. One number. Who actually owns #7?",
+    "context": "Baseball's golden era against football's defining fourth-quarter quarterback. Your gut knows before your brain does.",
+    "sideA": {
+      "name": "Mickey Mantle",
+      "team": "New York Yankees",
+      "sport": "Baseball",
+      "argument": "536 home runs on two surgically repaired knees. Seven World Series rings. Three MVPs. The Commerce Comet did it through pain no other player would have survived, in an era when baseball was America's religion.",
+      "position": "You see it: Mantle played his entire career at less than full health and still rewrote what #7 meant. That's not just greatness — that's something different."
+    },
+    "sideB": {
+      "name": "John Elway",
+      "team": "Denver Broncos",
+      "sport": "Football",
+      "argument": "The Drive. The Comeback. Two Super Bowls won at ages 37 and 38. For a generation raised on football, #7 means Elway in the fourth quarter — facing the impossible, winning anyway, and walking away on his own terms.",
+      "position": "You see it: for anyone who grew up watching football in the '80s and '90s, #7 has only ever meant one thing. Elway in the fourth. There is no debate."
+    },
+    "seedVotesA": 518,
+    "seedVotesB": 329,
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "0",
+    "claim": "Dame Time is the most iconic moment #0 has ever had. Westbrook has the stats. Lillard has the legend.",
+    "context": "The number nobody wanted — until two players made it impossible to ignore.",
+    "sideA": {
+      "name": "Damian Lillard",
+      "team": "Portland Trail Blazers",
+      "sport": "Basketball",
+      "argument": "The buzzer-beater against the Thunder. Pointed at his wrist like he was checking the time and walked off. Eight All-Stars. Dame Time isn't just a nickname — it's a cultural moment #0 will carry for fifty years.",
+      "position": "You see it: stats get forgotten. Moments don't. Dame Time is the only thing anyone will still be talking about when #0 comes up in fifty years."
+    },
+    "sideB": {
+      "name": "Russell Westbrook",
+      "team": "Oklahoma City Thunder",
+      "sport": "Basketball",
+      "argument": "198 career triple-doubles — an all-time record so absurd the stat feels made up. A 2017 MVP season averaging a triple-double for the entire year. Westbrook gave #0 a relentless fury it had never had before and may never have again.",
+      "position": "You see it: records are permanent. Moments are personal. No one in history wore #0 and compiled what Westbrook compiled. The record stands forever."
+    },
+    "seedVotesA": 441,
+    "seedVotesB": 387,
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "23",
+    "claim": "LeBron James is the greatest player ever to wear #23. Make the case for Jordan if you think he's wrong.",
+    "context": "The most debated question in sports. You have a take. You've always had a take.",
+    "sideA": {
+      "name": "LeBron James",
+      "team": "Los Angeles Lakers",
+      "sport": "Basketball",
+      "argument": "The all-time leading scorer. Four championships, three franchises, ten Finals appearances. He has been the best player alive for twenty years against every generation's best competition. The statistical case is not a close argument.",
+      "position": "You see it: this isn't nostalgia versus stats. It's two different definitions of greatness. LeBron's definition involves being the best player in the world for two straight decades. Hard to argue with that."
+    },
+    "sideB": {
+      "name": "Michael Jordan",
+      "team": "Chicago Bulls",
+      "sport": "Basketball",
+      "argument": "Six Finals. Six championships. Six Finals MVPs. Jordan never needed a Game 7. The 1990s were the most physical era in NBA history and he dominated every year of it. Six for six is a different kind of argument — it's perfection.",
+      "position": "You see it: Jordan didn't just win — he never lost. Six Finals, six titles, six MVPs. There is a version of greatness that looks like perfection, not longevity. Jordan owned #23 and never gave it back."
+    },
+    "seedVotesA": 1204,
+    "seedVotesB": 891,
+    "seasonLabel": "Season 1 · Q1 2026"
+  }
+]

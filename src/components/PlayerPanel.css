@@ -325,6 +325,10 @@
   letter-spacing: 0.03em;
   line-height:    1.15;
   color:          var(--color-paper);
+  /* Long names (e.g. Antetokounmpo) — step down font size rather than wrap awkwardly */
+  overflow-wrap:  break-word;
+  word-break:     break-word;
+  min-width:      0;
 }
 
 /* Sport icon — sits right after the name, baseline-aligned */
@@ -376,6 +380,16 @@
   padding-left: 0;
 }
 
+/* League-wide retirement badge — sacred blue, sport-specific label
+   Only 3 numbers in pro sports qualify: #42 MLB, #99 NHL, #6 NBA        */
+.player-card__badge--retired {
+  background:     rgba(200, 220, 255, 0.08);
+  border:         1px solid rgba(200, 220, 255, 0.30);
+  color:          rgba(200, 220, 255, 0.85);
+  font-size:      0.45rem;
+  letter-spacing: 0.14em;
+}
+
 /* ── Fun fact — full width, flush left with name ────────────────────────── */
 
 .player-card__fact {
@@ -394,10 +408,9 @@
   text-align:  right;
   flex-shrink: 0;
   min-width:   0;
-  max-width:   72px;
-  width:       72px;
+  max-width:   80px;
+  width:       80px;
   margin-left: var(--space-2);
-  overflow:    hidden;
 }
 
 .player-card__stat-value {
@@ -419,4 +432,195 @@
   text-align:     right;
   line-height:    1.4;
   margin-top:     3px;
+  word-break:     break-word;
+  overflow-wrap:  break-word;
+}
+
+/* ── YourNumberPick — inline "who owns this number for you?" ─────────────── */
+
+.your-pick {
+  padding-bottom: var(--space-3);
+  border-bottom:  1px solid rgba(255, 255, 255, 0.07);
+  margin-bottom:  var(--space-3);
+}
+
+.your-pick__label {
+  display:        block;
+  font-family:    var(--font-scoreboard);
+  font-size:      0.625rem;
+  letter-spacing: 0.16em;
+  color:          rgba(255, 255, 255, 0.62);
+  margin-bottom:  var(--space-2);
+}
+
+/* Name chips — compact, wrapping row */
+.your-pick__chips {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       var(--space-1);
+}
+
+.your-pick__chip {
+  font-family:    var(--font-banner);
+  font-size:      0.75rem;
+  letter-spacing: 0.01em;
+  color:          rgba(255, 255, 255, 0.65);
+  background:     rgba(255, 255, 255, 0.04);
+  border:         1px solid rgba(255, 255, 255, 0.1);
+  border-radius:  4px;
+  padding:        4px 10px;
+  cursor:         pointer;
+  transition:
+    background   150ms ease,
+    border-color 150ms ease,
+    opacity      180ms ease,
+    transform    150ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.your-pick__chip:hover:not(:disabled) {
+  background:   rgba(232, 124, 42, 0.08);
+  border-color: rgba(232, 124, 42, 0.4);
+  color:        var(--color-paper);
+}
+
+@keyframes chip-tap {
+  0%   { transform: scale(1);    }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1);    }
+}
+
+.your-pick__chip--tapping {
+  animation:    chip-tap 340ms ease forwards;
+  background:   rgba(232, 124, 42, 0.12) !important;
+  border-color: rgba(232, 124, 42, 0.6) !important;
+  color:        var(--color-paper) !important;
+}
+
+.your-pick__chip--fading {
+  opacity:   0.18;
+  transform: scale(0.96);
+}
+
+/* Rank-1 chip: amber wash — the wall's editorial nod to the leader */
+.your-pick__chip--top {
+  background:   rgba(232, 124, 42, 0.18);
+  border-color: rgba(232, 124, 42, 0.55);
+  color:        var(--color-paper);
+}
+
+.your-pick__chip--top:hover:not(:disabled) {
+  background:   rgba(232, 124, 42, 0.28);
+  border-color: rgba(232, 124, 42, 0.75);
+  color:        var(--color-paper);
+}
+
+/* Result */
+@keyframes pick-result-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.your-pick__result {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+  animation:      pick-result-in 260ms ease forwards;
+}
+
+.your-pick__your-call {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+}
+
+.your-pick__your-call-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.14em;
+  color:          rgba(255, 255, 255, 0.28);
+}
+
+.your-pick__your-call-name {
+  font-family:    var(--font-banner);
+  font-size:      0.9375rem;
+  letter-spacing: 0.01em;
+  color:          var(--color-paper);
+}
+
+/* Split bar */
+.your-pick__split {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.your-pick__split-bar {
+  height:        10px;
+  border-radius: 5px;
+  overflow:      hidden;
+  display:       flex;
+  gap:           2px;
+  background:    rgba(255, 255, 255, 0.04);
+}
+
+.your-pick__split-fill {
+  height:     100%;
+  flex-shrink: 0;
+  border-radius: 3px;
+  transition: width 450ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.your-pick__split-labels {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       var(--space-1) var(--space-2);
+}
+
+.your-pick__split-pct {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.08em;
+  /* color is set inline via rankOrange() — graded amber by rank */
+}
+
+/* Picked rank: full brightness + a "you" dot marker */
+.your-pick__split-pct--yours {
+  font-weight: 600;
+}
+
+.your-pick__split-pct--yours::before {
+  content:      '▸ ';
+  font-size:    0.45rem;
+  opacity:      0.7;
+}
+
+.your-pick__wall-note {
+  font-family: var(--font-program);
+  font-size:   0.75rem;
+  line-height: 1.55;
+  color:       rgba(255, 255, 255, 0.42);
+  margin:      0;
+  font-style:  italic;
+}
+
+/* Pick is permanent once made — no reset affordance.
+   Result state is the terminal view for this number on this device. */
+
+/* "Missing someone?" nomination link — sits inline with chips */
+.your-pick__nominate {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.6875rem;
+  letter-spacing: 0.10em;
+  color:          rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  align-self:     center;
+  padding:        4px 6px;
+  border-radius:  3px;
+  transition:     color 150ms ease;
+  white-space:    nowrap;
+}
+
+.your-pick__nominate:hover {
+  color: rgba(232, 124, 42, 0.85);
 }
