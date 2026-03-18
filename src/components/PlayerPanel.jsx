@@ -121,7 +121,9 @@ function savePick(number, idx) {
   } catch {}
 }
 
-function clearPick(number) {
+// clearPick retained for future use (e.g. admin/debug tools) but not exposed in UI.
+// Pick is permanent by design — prevents vote inflation from reset/re-vote loops.
+function clearPick(number) { // eslint-disable-line no-unused-vars
   try { localStorage.removeItem(`nw_pick_${number}`) } catch {}
 }
 
@@ -146,29 +148,17 @@ function rankOrange(i) {
 }
 
 function YourNumberPick({ number, legends, assoc }) {
-  const saved                   = getSavedPick(number)
-  const [pick, setPick]         = useState(saved)
-  const [tapping, setTapping]   = useState(null)
+  const saved                 = getSavedPick(number)
+  const [pick, setPick]       = useState(saved)
+  const [tapping, setTapping] = useState(null)
   const [revealed, setRevealed] = useState(!!saved)
-  const [resetting, setResetting] = useState(false)
 
   useEffect(() => {
     const s = getSavedPick(number)
     setPick(s)
     setTapping(null)
     setRevealed(!!s)
-    setResetting(false)
   }, [number])
-
-  function handleReset() {
-    setResetting(true)
-    setTimeout(() => {
-      clearPick(number)
-      setPick(null)
-      setRevealed(false)
-      setResetting(false)
-    }, 320)
-  }
 
   if (legends.length < 2) return null
 
@@ -193,25 +183,26 @@ function YourNumberPick({ number, legends, assoc }) {
   const total     = votes.reduce((a, b) => a + b, 0)
   const pcts      = votes.map(v => Math.round((v / total) * 100))
 
-  // Dynamic crowd message — responds to your pick and the actual margin.
-  // No static editorial line; the interesting data is *where you stand*.
+  // Crowd message — scoreboard voice. Short, plain, data-first.
   function crowdMessage() {
     if (pickedIdx === null) return ''
-    const leaderPct = pcts[0]
-    const yourPct   = pcts[pickedIdx]
-    const gap       = leaderPct - yourPct
+    const leaderPct  = pcts[0]
+    const yourPct    = pcts[pickedIdx]
+    const gap        = leaderPct - yourPct
+    const leaderName = shortName(legends[0].name)
 
     if (pickedIdx === 0) {
       // Picked the leader
-      if (leaderPct >= 70) return `You're with the ${leaderPct}% majority. The crowd has spoken.`
-      if (leaderPct >= 57) return `Solid lean — but ${100 - leaderPct}% aren't convinced. Not settled yet.`
-      return `Dead even territory. Your vote just moved the needle.`
+      if (leaderPct >= 70) return `${leaderName} — ${leaderPct}% of the wall.`
+      if (leaderPct >= 57) return `${leaderName} leads. ${100 - leaderPct}% push back.`
+      return `No clear owner. Split.`
     } else {
       // Picked a trailer
-      if (gap >= 35) return `You're in the ${yourPct}% minority. The crowd sees it differently.`
-      if (gap >= 18) return `You're going against the grain — ${shortName(legends[0].name)} leads by ${gap}%.`
-      if (gap >= 6)  return `Only ${gap}% behind. This one is closer than it looks.`
-      return `${gap > 0 ? gap + '% gap' : 'Tied'}. Your vote may have just tipped it.`
+      const yourName = shortName(legends[pickedIdx].name)
+      if (gap >= 35) return `${leaderName} leads this one. You're with ${yourPct}%.`
+      if (gap >= 18) return `${leaderName} leads. ${yourName} has ${yourPct}%.`
+      if (gap >= 6)  return `${gap}% gap. Closer than it looks.`
+      return gap > 0 ? `${gap}% gap.` : `Split.`
     }
   }
 
@@ -247,7 +238,7 @@ function YourNumberPick({ number, legends, assoc }) {
       )}
 
       {revealed && pickedIdx !== null && (
-        <div className={`your-pick__result${resetting ? ' your-pick__result--fading' : ''}`}>
+        <div className="your-pick__result">
           <div className="your-pick__your-call">
             <span className="your-pick__your-call-label">YOUR PICK</span>
             <span className="your-pick__your-call-name">{legends[pickedIdx]?.name}</span>
@@ -286,12 +277,7 @@ function YourNumberPick({ number, legends, assoc }) {
             </div>
           </div>
 
-          <div className="your-pick__bottom-row">
-            <p className="your-pick__wall-note">{crowdMessage()}</p>
-            <button className="your-pick__reset" onClick={handleReset} aria-label="Change your pick">
-              ↺ change pick
-            </button>
-          </div>
+          <p className="your-pick__wall-note">{crowdMessage()}</p>
         </div>
       )}
     </div>
