@@ -32,10 +32,10 @@ export default function AboutPage() {
         <section className="about-page__section">
           <h2 className="about-page__subheading">WHAT MAKES SOMEONE A LEGEND</h2>
           <p className="about-page__body">
-            One question: when fans across more than one generation hear a number, does a single name come up without prompting? That cross-generational consensus is the bar. Not first for one city — first across the sport. Jordan and #23. Gretzky and #99. No qualifier needed.
+            One question: when fans across more than one generation hear a number, does a single name come up without prompting? That cross-generational consensus is the bar. Not first for one city, first across the sport. Jordan and #23. Gretzky and #99. No qualifier needed.
           </p>
           <p className="about-page__body">
-            Active players can qualify — but only if what they've already done is beyond revision. The global wall is for athletes whose number means something to fans who never watched their team. Regional legends belong on city walls.
+            Active players can qualify, but only if what they've already done is beyond revision. The global wall is for athletes whose number means something to fans who never watched their team. Regional legends belong on city walls.
           </p>
         </section>
 
@@ -51,15 +51,6 @@ export default function AboutPage() {
             <span className="about-page__city-cta-teams">Red Sox · Patriots · Celtics · Bruins</span>
             <span className="about-page__city-cta-arrow" aria-hidden="true">→</span>
           </Link>
-        </section>
-
-        <hr className="about-page__rule" />
-
-        <section className="about-page__section">
-          <h2 className="about-page__subheading">THE TIERS</h2>
-          <p className="about-page__body">
-            Every entry carries a tier — from <span className="about-page__tier-inline about-page__tier-inline--sacred">Sacred</span> (league-wide retirement; three times in history) to <span className="about-page__tier-inline about-page__tier-inline--legend">Legend</span> to <span className="about-page__tier-inline about-page__tier-inline--active">Active</span> to <span className="about-page__tier-inline about-page__tier-inline--cultural">Cultural Legend</span> to <span className="about-page__tier-inline about-page__tier-inline--unwritten">Unwritten</span>. The tier is editorial — a statement about permanence, not popularity.
-          </p>
         </section>
 
         <hr className="about-page__rule" />

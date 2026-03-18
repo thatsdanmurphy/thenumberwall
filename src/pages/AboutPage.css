@@ -62,24 +62,6 @@
   margin:     0;
 }
 
-/* ── Inline tier labels ──────────────────────────────────────────────────── */
-
-.about-page__tier-inline {
-  font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
-  letter-spacing: 0.16em;
-  padding:        2px 5px;
-  border-radius:  3px;
-  vertical-align: middle;
-  white-space:    nowrap;
-}
-
-.about-page__tier-inline--sacred   { color: rgba(200,220,255,0.9);  background: rgba(200,220,255,0.08); }
-.about-page__tier-inline--legend   { color: rgba(255,210,120,1);    background: rgba(245,180,30,0.10); }
-.about-page__tier-inline--active   { color: rgba(232,124,42,0.9);   background: rgba(232,124,42,0.10); }
-.about-page__tier-inline--cultural { color: rgba(160,210,160,0.9);  background: rgba(160,210,160,0.08); }
-.about-page__tier-inline--unwritten{ color: rgba(255,255,255,0.38); background: rgba(255,255,255,0.04); }
-
 /* ── CTAs ───────────────────────────────────────────────────────────────── */
 
 /* City-card style CTA — matches Discover the Locals on the home screen */

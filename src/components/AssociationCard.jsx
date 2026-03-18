@@ -63,7 +63,9 @@ export default function AssociationCard({ assoc }) {
       savePick(assoc.number, id)
       const p = { id, ts: Date.now() }
       setPick(p)
-      track('association_picked', { number: assoc.number, picked: id, question: assoc.question })
+      const pickedName = assoc.options.find(o => o.id === id)?.name ?? id
+      const agreedWithWall = id === assoc.wallCall
+      track('debate_vote', { number: assoc.number, picked: pickedName, agreedWithWall })
 
       setTimeout(() => {
         setRevealed(true)
