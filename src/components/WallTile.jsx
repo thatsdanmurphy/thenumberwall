@@ -18,8 +18,8 @@ export default function WallTile({ number, entries, isActive, forceActive, isDeb
 
   const tileStyle = effectiveActive
     ? {
-        background:   SELECTED_TILE.bg,
-        border:       `1px solid ${SELECTED_TILE.border}`,
+        background:   heat.bg,
+        border:       `1px solid rgba(255,255,255,0.82)`,
         borderRadius: '4px',
         boxShadow:    selectedGlow,
       }
