@@ -131,6 +131,20 @@ function shortName(name) {
   return parts.length > 1 ? parts[parts.length - 1] : name
 }
 
+// Graded amber by rank position — rank 0 (leader) = full amber, steps down.
+// Applied as inline color so each label feels like a heat reading, not just white text.
+const RANK_ORANGE = [
+  'rgba(232, 124, 42, 1.00)',  // rank 1 — full amber
+  'rgba(232, 124, 42, 0.70)',  // rank 2
+  'rgba(232, 124, 42, 0.50)',  // rank 3
+  'rgba(232, 124, 42, 0.36)',  // rank 4
+  'rgba(232, 124, 42, 0.26)',  // rank 5
+  'rgba(232, 124, 42, 0.20)',  // rank 6+
+]
+function rankOrange(i) {
+  return RANK_ORANGE[Math.min(i, RANK_ORANGE.length - 1)]
+}
+
 function YourNumberPick({ number, legends, assoc }) {
   const saved                   = getSavedPick(number)
   const [pick, setPick]         = useState(saved)
@@ -245,11 +259,10 @@ function YourNumberPick({ number, legends, assoc }) {
                   key={i}
                   className="your-pick__split-fill"
                   style={{
-                    width:   `${pcts[i]}%`,
-                    opacity: i === pickedIdx ? 1 : 0.42,
-                    background: i === 0
-                      ? 'rgba(232, 124, 42, 0.85)'
-                      : `rgba(232, 124, 42, ${0.55 - i * 0.08})`,
+                    width:      `${pcts[i]}%`,
+                    // picked rank gets full opacity; others step down with rank
+                    opacity:    i === pickedIdx ? 1 : Math.max(0.22, 0.62 - i * 0.08),
+                    background: rankOrange(i),
                   }}
                 />
               ))}
@@ -263,6 +276,7 @@ function YourNumberPick({ number, legends, assoc }) {
                       'your-pick__split-pct',
                       i === pickedIdx && 'your-pick__split-pct--yours',
                     ].filter(Boolean).join(' ')}
+                    style={{ color: rankOrange(i) }}
                   >
                     {pcts[i]}% {shortName(leg.name)}
                   </span>

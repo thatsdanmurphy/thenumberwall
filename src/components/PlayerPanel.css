@@ -437,8 +437,8 @@
 .your-pick__label {
   display:        block;
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
-  letter-spacing: 0.2em;
+  font-size:      0.625rem;
+  letter-spacing: 0.16em;
   color:          rgba(255, 255, 255, 0.32);
   margin-bottom:  var(--space-2);
 }
@@ -513,8 +513,8 @@
 
 .your-pick__your-call-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
-  letter-spacing: 0.18em;
+  font-size:      0.5625rem;
+  letter-spacing: 0.14em;
   color:          rgba(255, 255, 255, 0.28);
 }
 
@@ -553,13 +553,20 @@
 
 .your-pick__split-pct {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
-  letter-spacing: 0.1em;
-  color:          rgba(255, 255, 255, 0.28);
+  font-size:      0.5625rem;
+  letter-spacing: 0.08em;
+  /* color is set inline via rankOrange() — graded amber by rank */
 }
 
+/* Picked rank: full brightness + a "you" dot marker */
 .your-pick__split-pct--yours {
-  color: rgba(232, 124, 42, 0.9);
+  font-weight: 600;
+}
+
+.your-pick__split-pct--yours::before {
+  content:      '▸ ';
+  font-size:    0.45rem;
+  opacity:      0.7;
 }
 
 .your-pick__wall-note {
@@ -590,8 +597,8 @@
   padding:        0;
   cursor:         pointer;
   font-family:    var(--font-scoreboard);
-  font-size:      0.4rem;
-  letter-spacing: 0.14em;
+  font-size:      0.5625rem;
+  letter-spacing: 0.12em;
   color:          rgba(255, 255, 255, 0.22);
   text-transform: uppercase;
   transition:     color 160ms ease;
@@ -616,8 +623,8 @@
 /* "Missing someone?" nomination link — sits inline with chips */
 .your-pick__nominate {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4rem;
-  letter-spacing: 0.14em;
+  font-size:      0.5rem;
+  letter-spacing: 0.12em;
   color:          rgba(255, 255, 255, 0.22);
   text-decoration: none;
   align-self:     center;
