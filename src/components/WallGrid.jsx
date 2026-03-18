@@ -18,7 +18,22 @@ const ASSOC_VARIANTS = {
   '34': 'c',   // Ortiz / Pierce (Boston)
   '44': 'c',   // Aaron / Reggie Jackson
 }
-const ASSOC_NUMBERS = new Set(Object.keys(ASSOC_VARIANTS))
+
+// Build the set of pulsing numbers scoped to a given wall.
+// wallId 'global' → all debates
+// wallId 'boston' → only associations tagged for Boston
+// wallId 'none'   → no debates (current roster, etc.)
+function buildAssocNumbers(wallId) {
+  if (wallId === 'none') return new Set()
+  if (wallId === 'global') return new Set(Object.keys(ASSOC_VARIANTS))
+  // City walls: only debates whose wallContext mentions this city
+  const tag = wallId.charAt(0).toUpperCase() + wallId.slice(1)
+  return new Set(
+    associationsData
+      .filter(a => a.wallContext.includes(tag))
+      .map(a => String(a.number))
+  )
+}
 
 /**
  * WallGrid — 101-tile number grid.
@@ -31,8 +46,9 @@ const ASSOC_NUMBERS = new Set(Object.keys(ASSOC_VARIANTS))
  *   Enter / Space    — select tile (native button behaviour)
  *   Arrow keys       — move focus directionally within the grid
  */
-export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect }) {
+export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global' }) {
   const gridRef = useRef(null)
+  const assocNumbers = useMemo(() => buildAssocNumbers(wallId), [wallId])
 
   function handleTileClick(number) {
     const entries = index.get(number) || []
@@ -79,8 +95,8 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           number={num}
           entries={index.get(num) || []}
           isActive={activeNumber === num}
-          isDebating={ASSOC_NUMBERS.has(String(num))}
-          debateVariant={ASSOC_VARIANTS[String(num)] ?? null}
+          isDebating={assocNumbers.has(String(num))}
+          debateVariant={assocNumbers.has(String(num)) ? (ASSOC_VARIANTS[String(num)] ?? 'c') : null}
           onClick={() => handleTileClick(num)}
         />
       ))}

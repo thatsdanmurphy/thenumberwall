@@ -97,6 +97,7 @@ export default function BostonPage() {
               index={filteredIndex}
               activeNumber={selected?.number ?? null}
               onSelect={setSelected}
+              wallId={tab === 'current' ? 'none' : 'boston'}
             />
           </div>
 
