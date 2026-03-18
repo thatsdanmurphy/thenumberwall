@@ -6,8 +6,8 @@
  * Re-run compile_wall_data.py to regenerate, then re-export to JSON.
  *
  * Three datasets:
- *   wallData       — 147 entries, numbers 0, 00, 1–99 (global wall)
- *   bostonLegends  — 80 entries (Boston legend wall)
+ *   wallData       — 171 entries, numbers 0, 00, 1–99 (global wall)
+ *   bostonLegends  — 82 entries (Boston legend wall)
  *   bostonCurrent  — 133 entries (Boston current season rosters)
  */
 
@@ -34,6 +34,11 @@ function normalise(row) {
     statWeight: Number(row['Stat Weight']) || 0,
     funFact:   row['Fun Fact'] ?? '',
     notes:     row.Notes      ?? '',
+    // League-wide retirement — only 3 numbers in all of pro sports qualify:
+    // #42 MLB (Jackie Robinson), #99 NHL (Wayne Gretzky), #6 NBA (Bill Russell)
+    leagueWideRetired: row['League Wide Retired'] === true || row['League Wide Retired'] === 'true',
+    retiredLeague:     row['Retired League']  ?? '',
+    retiredBadge:      row['Retired Badge']   ?? '',
   }
 }
 

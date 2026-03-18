@@ -380,6 +380,16 @@
   padding-left: 0;
 }
 
+/* League-wide retirement badge — sacred blue, sport-specific label
+   Only 3 numbers in pro sports qualify: #42 MLB, #99 NHL, #6 NBA        */
+.player-card__badge--retired {
+  background:     rgba(200, 220, 255, 0.08);
+  border:         1px solid rgba(200, 220, 255, 0.30);
+  color:          rgba(200, 220, 255, 0.85);
+  font-size:      0.45rem;
+  letter-spacing: 0.14em;
+}
+
 /* ── Fun fact — full width, flush left with name ────────────────────────── */
 
 .player-card__fact {

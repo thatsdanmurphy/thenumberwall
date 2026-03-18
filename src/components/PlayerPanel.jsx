@@ -78,6 +78,11 @@ function PlayerCard({ entry }) {
           </div>
 
           <div className="player-card__badges">
+            {entry.leagueWideRetired && (
+              <span className="player-card__badge player-card__badge--retired">
+                {entry.retiredBadge}
+              </span>
+            )}
             {entry.team && (
               <span className="player-card__badge" style={teamBadgeStyle}>{entry.team}</span>
             )}
