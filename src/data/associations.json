@@ -52,16 +52,16 @@
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "32",
-    "wallContext": "#32 · Two Sports",
+    "number": "10",
+    "wallContext": "#10 · Soccer",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Magic Johnson", "team": "Los Angeles Lakers" },
-      { "id": "B", "name": "Jim Brown",     "team": "Cleveland Browns" }
+      { "id": "A", "name": "Pelé",            "team": "Brazil" },
+      { "id": "B", "name": "Lionel Messi",    "team": "Argentina" }
     ],
-    "seedVotes": { "A": 980, "B": 420 },
-    "wallCall": "A",
-    "wallNote": "The wall sees Magic. Jim Brown wore it first. Neither argument is wrong.",
+    "seedVotes": { "A": 1080, "B": 1340 },
+    "wallCall": "B",
+    "wallNote": "The wall sees Messi. Pelé made #10 sacred. Messi made people ask the question again.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {

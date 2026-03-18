@@ -10,10 +10,10 @@ import './WallGrid.css'
 const ASSOC_VARIANTS = {
   '0':  'c',   // Lillard / Westbrook
   '7':  'c',   // Mantle / Elway
+  '10': 'c',   // Messi / Pelé
   '12': 'c',   // Brady / Namath
   '23': 'c',   // Jordan / LeBron
   '24': 'c',   // Mays / Kobe
-  '32': 'c',   // Magic / Jim Brown
   '33': 'c',   // Bird / Kareem
   '34': 'c',   // Ortiz / Pierce (Boston)
   '44': 'c',   // Aaron / Reggie Jackson
