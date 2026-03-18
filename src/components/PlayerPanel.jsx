@@ -163,8 +163,27 @@ function YourNumberPick({ number, legends, assoc }) {
   const total     = votes.reduce((a, b) => a + b, 0)
   const pcts      = votes.map(v => Math.round((v / total) * 100))
 
-  const wallNote = assoc?.wallNote
-    ?? `The wall's call: ${legends[0]?.name}.`
+  // Dynamic crowd message — responds to your pick and the actual margin.
+  // No static editorial line; the interesting data is *where you stand*.
+  function crowdMessage() {
+    if (pickedIdx === null) return ''
+    const leaderPct = pcts[0]
+    const yourPct   = pcts[pickedIdx]
+    const gap       = leaderPct - yourPct
+
+    if (pickedIdx === 0) {
+      // Picked the leader
+      if (leaderPct >= 70) return `You're with the ${leaderPct}% majority. The crowd has spoken.`
+      if (leaderPct >= 57) return `Solid lean — but ${100 - leaderPct}% aren't convinced. Not settled yet.`
+      return `Dead even territory. Your vote just moved the needle.`
+    } else {
+      // Picked a trailer
+      if (gap >= 35) return `You're in the ${yourPct}% minority. The crowd sees it differently.`
+      if (gap >= 18) return `You're going against the grain — ${shortName(legends[0].name)} leads by ${gap}%.`
+      if (gap >= 6)  return `Only ${gap}% behind. This one is closer than it looks.`
+      return `${gap > 0 ? gap + '% gap' : 'Tied'}. Your vote may have just tipped it.`
+    }
+  }
 
   return (
     <div className="your-pick">
@@ -236,7 +255,7 @@ function YourNumberPick({ number, legends, assoc }) {
             </div>
           </div>
 
-          <p className="your-pick__wall-note">{wallNote}</p>
+          <p className="your-pick__wall-note">{crowdMessage()}</p>
         </div>
       )}
     </div>
