@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import associationsData from '../data/associations.json'
-import EmailCapture from './EmailCapture.jsx'
 import './PlayerPanel.css'
 
 // O(1) lookup: number string → association (for wallNote only)
@@ -286,7 +285,6 @@ function YourNumberPick({ number, legends, assoc }) {
           </div>
 
           <p className="your-pick__wall-note">{crowdMessage()}</p>
-          <EmailCapture variant="panel" />
         </div>
       )}
     </div>
