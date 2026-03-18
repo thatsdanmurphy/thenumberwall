@@ -210,7 +210,7 @@ function YourNumberPick({ number, legends, assoc }) {
     <div className="your-pick">
       {!revealed && (
         <>
-          <span className="your-pick__label">WHO OWNS THIS NUMBER FOR YOU?</span>
+          <span className="your-pick__label">WHO REALLY OWNS THIS NUMBER?</span>
           <div className="your-pick__chips">
             {legends.map((leg, i) => (
               <button
