@@ -12,7 +12,16 @@ export default function WallTile({ number, entries, isActive, isDebating, debate
     ? `0 0 0 2px rgba(255,255,255,0.45), ${heat.glow}`
     : '0 0 0 2px rgba(255,255,255,0.45)'
 
-  const tileStyle = isActive
+  const tileStyle = isActive && isDebating
+    // Active + pulsing: go dark so the amber border has maximum contrast
+    ? {
+        background:   'rgba(8, 6, 4, 0.92)',
+        border:       '1px solid rgba(232, 124, 42, 0.12)',
+        borderRadius: '4px',
+        boxShadow:    'none',
+      }
+    : isActive
+    // Active, no pulse: normal white selection ring
     ? {
         background:   SELECTED_TILE.bg,
         border:       `1px solid ${SELECTED_TILE.border}`,
@@ -26,7 +35,11 @@ export default function WallTile({ number, entries, isActive, isDebating, debate
         boxShadow:    heat.glow,
       }
 
-  const textColor = isActive ? SELECTED_TILE.text : getTileTextColor(entries, isSacred)
+  const textColor = isActive && isDebating
+    ? 'rgba(255, 255, 255, 0.38)'   // dimmed number — let the pulse be the hero
+    : isActive
+    ? SELECTED_TILE.text
+    : getTileTextColor(entries, isSacred)
 
   // debateVariant: 'a' | 'b' | 'c' | null (null = production default .wall-tile--debating)
   const debateClass = isDebating
