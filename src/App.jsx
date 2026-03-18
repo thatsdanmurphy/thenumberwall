@@ -5,7 +5,6 @@ import BostonPage     from './pages/BostonPage.jsx'
 import AboutPage      from './pages/AboutPage.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
-
 export default function App() {
   return (
     <ErrorBoundary>

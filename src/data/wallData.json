@@ -78,10 +78,10 @@
     "Team": "Milwaukee Bucks",
     "Hometown": "",
     "Signature Stat": "1",
-    "Stat Label": "Season Averaging a Triple-Double (1961\u201362) \u2014 No One Did It Again for 55 Years",
+    "Stat Label": "Season Averaging a Triple-Double (1961-62) No One Did It Again for 55 Years",
     "Stat Weight": "3",
     "Role": "Point Guard",
-    "Fun Fact": "He averaged a triple-double for an entire season in 1961-62 - a feat so absurd it took 55 years for anyone to do it again",
+    "Fun Fact": "The Big O was the first player ever to average a triple-double across an entire 48-game season, establishing a standard so high that no one repeated it until Russell Westbrook came along 55 years later in 2016-17",
     "Notes": ""
   },
   {
@@ -437,11 +437,28 @@
     "Era": "NHL Modern",
     "Team": "Washington Capitals",
     "Hometown": "",
-    "Signature Stat": "894",
-    "Stat Label": "Career Goals",
+    "Signature Stat": "895",
+    "Stat Label": "Career Goals (All-time NHL record)",
     "Stat Weight": "3",
     "Role": "Left Wing",
-    "Fun Fact": "He passed Wayne Gretzky's all-time goals record in 2024 - the record everyone said was untouchable - and celebrated like he'd been waiting his whole life",
+    "Fun Fact": "On April 6, 2025, he broke Wayne Gretzky's all-time NHL goals record of 894, surpassing the record everyone said was untouchable. Ovechkin now holds the all-time NHL goals record.",
+    "Notes": ""
+  },
+  {
+    "Number": "8",
+    "Tier": "LEGEND",
+    "Name": "Troy Aikman",
+    "Sport": "Football",
+    "League": "NFL",
+    "Status": "Retired",
+    "Era": "Cowboys Dynasty",
+    "Team": "Dallas Cowboys",
+    "Hometown": "",
+    "Signature Stat": "3",
+    "Stat Label": "Super Bowl Rings",
+    "Stat Weight": "3",
+    "Role": "Quarterback",
+    "Fun Fact": "Super Bowl XXVII MVP. Won three championships in four years with the Cowboys in the 1990s. Took more hits than any elite QB of his era and kept winning anyway.",
     "Notes": ""
   },
   {
@@ -509,8 +526,8 @@
     "Stat Label": "Premier League Goals in a Season",
     "Stat Weight": "3",
     "Role": "Striker",
-    "Fun Fact": "He scored 36 Premier League goals in his first season in England - breaking the all-time record by a massive margin",
-    "Notes": "ACTIVE - review annually CONDITIONAL \u2014 cross-generational name test still building. Review annually."
+    "Fun Fact": "He scored 36 goals in the 2023-24 season, breaking the Premier League's all-time single-season record by nine goals. His scoring pace is historically unprecedented, putting him on track to surpass most players' career totals in just a few seasons.",
+    "Notes": "ACTIVE - review annually CONDITIONAL cross-generational name test still building. Review annually."
   },
   {
     "Number": "9",
@@ -540,10 +557,10 @@
     "Team": "Detroit Red Wings",
     "Hometown": "",
     "Signature Stat": "801",
-    "Stat Label": "Career Goals",
+    "Stat Label": "Career Goals (NHL plus WHA)",
     "Stat Weight": "3",
     "Role": "Right Wing",
-    "Fun Fact": "The Gordie Howe Hat Trick is a goal, an assist, and a fight in one game - named for him because he did it so often it became its own category",
+    "Fun Fact": "He scored 801 NHL goals plus 174 more in the WHA, a total that stood untouched for decades. The Gordie Howe Hat Trick is a goal, an assist, and a fight in one game because he did it so often it became its own category.",
     "Notes": ""
   },
   {
@@ -560,7 +577,7 @@
     "Stat Label": "Career Goals",
     "Stat Weight": "2",
     "Role": "Right Wing",
-    "Fun Fact": "When the NHL suspended him in 1955, Montreal fans rioted in the streets - the Richard Riot showed what he meant to an entire people",
+    "Fun Fact": "When the NHL suspended him in 1955 for the season, Montreal fans rioted in the streets. The Richard Riot demonstrated how much he meant to French-Canadian identity and his entire nation.",
     "Notes": ""
   },
   {
@@ -1053,7 +1070,7 @@
     "Stat Label": "Career Home Runs",
     "Stat Weight": "3",
     "Role": "Right Field",
-    "Fun Fact": "He hit three consecutive home runs on three consecutive pitches from three different pitchers in Game 6 of the 1977 World Series - the most theatrical performance in baseball history",
+    "Fun Fact": "Mr. October hit three consecutive home runs on three consecutive pitches from three different pitchers in Game 6 of the 1977 World Series. The most theatrical performance in baseball history.",
     "Notes": ""
   },
   {
@@ -1084,10 +1101,10 @@
     "Team": "Indianapolis Colts",
     "Hometown": "",
     "Signature Stat": "5477",
-    "Stat Label": "Peak Season Passing Yards",
+    "Stat Label": "Single-Season Passing Yards (NFL Record when set in 2013)",
     "Stat Weight": "3",
     "Role": "Quarterback",
-    "Fun Fact": "He set the single-season TD record with 55 in 2013 at age 37 - calling audibles at the line with surgical precision - the most cerebral QB who ever played",
+    "Fun Fact": "He set the single-season TD record with 55 in 2013 at age 37. Called audibles at the line with surgical precision. The most cerebral QB who ever played.",
     "Notes": ""
   },
   {
@@ -1172,7 +1189,7 @@
     "Stat Label": "Career Home Runs",
     "Stat Weight": "3",
     "Role": "Third Base",
-    "Fun Fact": "He hit 548 home runs and won 10 Gold Gloves - the most complete third baseman in baseball history - and the Phillies' only World Series title came with him at third",
+    "Fun Fact": "He hit 548 home runs and won 10 Gold Gloves. The most complete third baseman in baseball history. He led the Phillies to their first World Series title in 1980.",
     "Notes": ""
   },
   {
@@ -1325,7 +1342,7 @@
     "Stat Label": "WNBA Titles",
     "Stat Weight": "3",
     "Role": "Forward",
-    "Fun Fact": "She stepped away from basketball at her peak to help overturn a wrongful conviction, later marrying the man she helped free",
+    "Fun Fact": "Four WNBA championships and two Olympic gold medals. The most dominant women's basketball player of her era. Made her mark and left at the peak of her powers.",
     "Notes": ""
   },
   {
@@ -1699,7 +1716,7 @@
     "Stat Label": "Career Rushing Yards",
     "Stat Weight": "3",
     "Role": "Running Back",
-    "Fun Fact": "Sweetness - he ran with the grace of a dancer and the force of a freight train - the most complete running back in NFL history",
+    "Fun Fact": "Sweetness. 16,726 rushing yards at retirement (NFL record). Also caught passes, threw TD passes, and played special teams. The most complete running back in NFL history.",
     "Notes": "#34 sacred at Bears"
   },
   {
@@ -1772,19 +1789,19 @@
   },
   {
     "Number": "39",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Dominik Ha\u0161ek",
     "Sport": "Hockey",
     "League": "NHL",
     "Status": "Retired",
-    "Era": "NHL 1990s\u20132000s",
+    "Era": "NHL 1990s-2000s",
     "Team": "Buffalo Sabres",
     "Hometown": "Pardubice, Czech Republic",
     "Signature Stat": "6",
     "Stat Label": "Vezina Trophies",
     "Stat Weight": "3",
     "Role": "Goaltender",
-    "Fun Fact": "Nicknamed 'The Dominator', he won back-to-back NHL MVP awards in 1997 and 1998 \u2014 an almost unheard-of feat for a goaltender",
+    "Fun Fact": "Nicknamed The Dominator, he won back-to-back NHL MVP awards in 1997 and 1998, an almost unheard-of feat for a goaltender.",
     "Notes": "Widely considered one of the greatest goaltenders in NHL history"
   },
   {
@@ -1801,7 +1818,7 @@
     "Stat Label": "Career All-Purpose Yards",
     "Stat Weight": "3",
     "Role": "Running Back",
-    "Fun Fact": "He was inducted into the Hall of Fame at 34 - the youngest ever - after injuries cut his career short - Brian's Song made him known to a generation beyond football",
+    "Fun Fact": "He was inducted into the Hall of Fame at 34, the youngest ever, after injuries cut his career short. Brian's Song is a 1971 film about his friendship with Brian Piccolo and brought his story to a generation beyond football.",
     "Notes": "#40 sacred at Bears"
   },
   {
@@ -2583,10 +2600,10 @@
     "Team": "Minnesota Vikings",
     "Hometown": "",
     "Signature Stat": "156",
-    "Stat Label": "Career Receiving TDs",
+    "Stat Label": "Career Receiving TDs (NFL All-time Record)",
     "Stat Weight": "3",
     "Role": "Wide Receiver",
-    "Fun Fact": "He ran past defenders so easily in his prime that it looked like they were standing still - the most physically gifted receiver in NFL history",
+    "Fun Fact": "He ran past defenders so easily in his prime that it looked like they were standing still. 156 career receiving touchdowns, the all-time NFL record. The most physically gifted receiver in NFL history.",
     "Notes": "Note: wore #84 in Minnesota, #81 in New England"
   },
   {

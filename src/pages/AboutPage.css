@@ -78,10 +78,11 @@
 }
 
 /* Border color per tier */
-.about-page__tier--sacred   { border: 1px solid rgba(200, 220, 255, 0.38); }
-.about-page__tier--legend   { border: 1px solid rgba(245, 180, 30, 0.45); }
-.about-page__tier--active   { border: 1px solid rgba(232, 124, 42, 0.35); }
-.about-page__tier--unwritten { border: 1px solid rgba(255, 255, 255, 0.08); }
+.about-page__tier--sacred          { border: 1px solid rgba(200, 220, 255, 0.38); }
+.about-page__tier--legend          { border: 1px solid rgba(245, 180, 30, 0.45); }
+.about-page__tier--active          { border: 1px solid rgba(232, 124, 42, 0.35); }
+.about-page__tier--cultural_legend { border: 1px solid rgba(160, 210, 160, 0.35); }
+.about-page__tier--unwritten       { border: 1px solid rgba(255, 255, 255, 0.08); }
 
 .about-page__tier-label {
   font-family:    var(--font-scoreboard);
@@ -91,10 +92,11 @@
 }
 
 /* Label color per tier */
-.about-page__tier--sacred   .about-page__tier-label { color: rgba(200, 220, 255, 0.9); }
-.about-page__tier--legend   .about-page__tier-label { color: rgba(255, 210, 120, 1); }
-.about-page__tier--active   .about-page__tier-label { color: rgba(232, 124, 42, 0.9); }
-.about-page__tier--unwritten .about-page__tier-label { color: rgba(255, 255, 255, 0.38); }
+.about-page__tier--sacred          .about-page__tier-label { color: rgba(200, 220, 255, 0.9); }
+.about-page__tier--legend          .about-page__tier-label { color: rgba(255, 210, 120, 1); }
+.about-page__tier--active          .about-page__tier-label { color: rgba(232, 124, 42, 0.9); }
+.about-page__tier--cultural_legend .about-page__tier-label { color: rgba(160, 210, 160, 0.9); }
+.about-page__tier--unwritten       .about-page__tier-label { color: rgba(255, 255, 255, 0.38); }
 
 .about-page__tier-desc {
   font-family: var(--font-program);

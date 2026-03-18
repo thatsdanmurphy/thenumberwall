@@ -73,8 +73,7 @@ function PlayerCard({ entry }) {
 
         <div className="player-card__info">
           <div className="player-card__name-row">
-            <span className="player-card__name">{entry.name}</span>
-            <span className="player-card__sport-icon" aria-label={entry.sport}>{icon}</span>
+            <span className="player-card__name">{entry.name} <span className="player-card__sport-icon" aria-label={entry.sport}>{icon}</span></span>
           </div>
 
           <div className="player-card__badges">
