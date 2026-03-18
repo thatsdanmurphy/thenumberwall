@@ -6,23 +6,35 @@ import WallTile from './WallTile.jsx'
 import './WallGrid.css'
 
 // Tiles with a FIRST THOUGHT association get the pulse animation.
-// Variant key drives the CSS class suffix: 'c' | 'c2' | 'c3'
+// Variant key drives the CSS class suffix: 'c' | 'c2' | 'c3' | 'pulse-1'…'pulse-5'
 //
-// Association tiles (#0, #7, #23, #34) all use 'c' (border + glow base).
-// Heat-level test dummies (#4, #11, #42, #99) kept for visual QA only.
+// Real association tiles (#0, #7, #23, #34) use 'c' (border + glow base).
+//
+// ── PULSE SUPERCUT ─────────────────────────────────────────────────────────
+// 5 variant pairs for side-by-side comparison.
+// Left tile = normal (heat state). Right tile = forceActive (white/selected state).
+// Pair  Left  Right  Variant   Description
+//  1     #3    #4    pulse-1   Ghost border — minimal, no glow
+//  2    #11   #12    pulse-2   Baseline+ — floor 0.40, border+glow
+//  3    #28   #29    pulse-3   Wide corona — slow big outer haze, no border
+//  4    #40   #41    pulse-4   Heartbeat — two beats then silence
+//  5    #55   #56    pulse-5   Ember fill — radial gradient inside tile
 const ASSOC_VARIANTS = {
   // Real associations
-  '0':  'c',   // medium heat (Lillard/Westbrook)
-  '7':  'c',   // high heat   (Mantle/Elway)
-  '23': 'c',   // very bright (Jordan/LeBron)
-  '34': 'c',   // Boston      (Ortiz/Pierce)
-  // Heat-level test tiles — pulse only, no panel card
-  '4':  'c3',
-  '11': 'c2',
-  '42': 'c',
-  '99': 'c3',
+  '0':  'c',      // medium heat (Lillard/Westbrook)
+  '7':  'c',      // high heat   (Mantle/Elway)
+  '23': 'c',      // very bright (Jordan/LeBron)
+  '34': 'c',      // Boston      (Ortiz/Pierce)
+  // Supercut pairs — left = normal, right = forceActive
+  '3':  'pulse-1', '4':  'pulse-1',
+  '11': 'pulse-2', '12': 'pulse-2',
+  '28': 'pulse-3', '29': 'pulse-3',
+  '40': 'pulse-4', '41': 'pulse-4',
+  '55': 'pulse-5', '56': 'pulse-5',
 }
-const ASSOC_NUMBERS = new Set(Object.keys(ASSOC_VARIANTS))
+const ASSOC_NUMBERS    = new Set(Object.keys(ASSOC_VARIANTS))
+// Right tile of each pair is rendered with forceActive (white selected state)
+const FORCE_ACTIVE_TILES = new Set(['4', '12', '29', '41', '56'])
 
 /**
  * WallGrid — 101-tile number grid.
@@ -83,6 +95,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           number={num}
           entries={index.get(num) || []}
           isActive={activeNumber === num}
+          forceActive={FORCE_ACTIVE_TILES.has(String(num))}
           isDebating={ASSOC_NUMBERS.has(String(num))}
           debateVariant={ASSOC_VARIANTS[String(num)] ?? null}
           onClick={() => handleTileClick(num)}

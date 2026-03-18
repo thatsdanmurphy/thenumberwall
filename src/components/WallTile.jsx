@@ -1,18 +1,22 @@
 import { getHeatStyle, getTileTextColor, SELECTED_TILE } from '../data/index.js'
 import './WallTile.css'
 
-export default function WallTile({ number, entries, isActive, isDebating, debateVariant, onClick }) {
+export default function WallTile({ number, entries, isActive, forceActive, isDebating, debateVariant, onClick }) {
   const isSacred    = entries.some(e => e.tier === 'SACRED')
   // UNWRITTEN placeholder rows don't count — a tile is unwritten if it has no real legends
   const isUnwritten = !entries.some(e => e.tier !== 'UNWRITTEN')
   const heat        = getHeatStyle(entries, isSacred)
+
+  // forceActive: render selected (white) appearance without being the real active tile.
+  // Used for supercut A/B comparisons — right tile of each pair shows pulse in selected state.
+  const effectiveActive = isActive || forceActive
 
   // Selected: white ring + heat glow still bleeds through underneath
   const selectedGlow = heat.glow !== 'none'
     ? `0 0 0 2px rgba(255,255,255,0.45), ${heat.glow}`
     : '0 0 0 2px rgba(255,255,255,0.45)'
 
-  const tileStyle = isActive
+  const tileStyle = effectiveActive
     ? {
         background:   SELECTED_TILE.bg,
         border:       `1px solid ${SELECTED_TILE.border}`,
@@ -26,11 +30,11 @@ export default function WallTile({ number, entries, isActive, isDebating, debate
         boxShadow:    heat.glow,
       }
 
-  const textColor = isActive
+  const textColor = effectiveActive
     ? SELECTED_TILE.text
     : getTileTextColor(entries, isSacred)
 
-  // debateVariant: 'a' | 'b' | 'c' | null (null = production default .wall-tile--debating)
+  // debateVariant: 'a' | 'b' | 'c' | 'pulse-1'…'pulse-5' | null (null = production default)
   const debateClass = isDebating
     ? debateVariant
       ? `wall-tile--debating-${debateVariant}`

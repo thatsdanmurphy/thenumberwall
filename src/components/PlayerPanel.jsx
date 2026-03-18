@@ -121,6 +121,10 @@ function savePick(number, idx) {
   } catch {}
 }
 
+function clearPick(number) {
+  try { localStorage.removeItem(`nw_pick_${number}`) } catch {}
+}
+
 // Last name only for compact chips
 function shortName(name) {
   const parts = (name || '').trim().split(' ')
@@ -132,13 +136,25 @@ function YourNumberPick({ number, legends, assoc }) {
   const [pick, setPick]         = useState(saved)
   const [tapping, setTapping]   = useState(null)
   const [revealed, setRevealed] = useState(!!saved)
+  const [resetting, setResetting] = useState(false)
 
   useEffect(() => {
     const s = getSavedPick(number)
     setPick(s)
     setTapping(null)
     setRevealed(!!s)
+    setResetting(false)
   }, [number])
+
+  function handleReset() {
+    setResetting(true)
+    setTimeout(() => {
+      clearPick(number)
+      setPick(null)
+      setRevealed(false)
+      setResetting(false)
+    }, 320)
+  }
 
   if (legends.length < 2) return null
 
@@ -216,7 +232,7 @@ function YourNumberPick({ number, legends, assoc }) {
       )}
 
       {revealed && pickedIdx !== null && (
-        <div className="your-pick__result">
+        <div className={`your-pick__result${resetting ? ' your-pick__result--fading' : ''}`}>
           <div className="your-pick__your-call">
             <span className="your-pick__your-call-label">YOUR PICK</span>
             <span className="your-pick__your-call-name">{legends[pickedIdx]?.name}</span>
@@ -255,7 +271,12 @@ function YourNumberPick({ number, legends, assoc }) {
             </div>
           </div>
 
-          <p className="your-pick__wall-note">{crowdMessage()}</p>
+          <div className="your-pick__bottom-row">
+            <p className="your-pick__wall-note">{crowdMessage()}</p>
+            <button className="your-pick__reset" onClick={handleReset} aria-label="Change your pick">
+              ↺ change pick
+            </button>
+          </div>
         </div>
       )}
     </div>
