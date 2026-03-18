@@ -34,8 +34,9 @@ export default function WallTile({ number, entries, isActive, forceActive, isDeb
     ? SELECTED_TILE.text
     : getTileTextColor(entries, isSacred)
 
-  // debateVariant: 'a' | 'b' | 'c' | 'pulse-1'…'pulse-5' | null (null = production default)
-  const debateClass = isDebating
+  // Pulse only shows when tile is NOT selected — selected state is clean white ring only.
+  // Suppressing the amber ::after overlay when active prevents any sacred-tier confusion.
+  const debateClass = isDebating && !effectiveActive
     ? debateVariant
       ? `wall-tile--debating-${debateVariant}`
       : 'wall-tile--debating'
