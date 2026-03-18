@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import EmailCapture from './EmailCapture.jsx'
 import './AppFooter.css'
 
 /**
@@ -42,6 +43,7 @@ export default function AppFooter() {
   return (
     <footer className="app-footer">
       <JerseyIcon />
+      <EmailCapture variant="footer" />
       <div className="app-footer__row">
         <span className="app-footer__copy">© The Number Wall</span>
         <Link to="/about" className="app-footer__link">About</Link>
