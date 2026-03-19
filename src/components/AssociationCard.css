@@ -15,7 +15,7 @@
   font-family:    var(--font-scoreboard);
   font-size:      0.625rem;
   letter-spacing: 0.16em;
-  color:          rgba(232, 124, 42, 0.75);
+  color:          rgba(255, 255, 255, 0.38);
   margin-bottom:  var(--space-2);
 }
 

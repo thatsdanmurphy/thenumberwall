@@ -86,7 +86,7 @@ export default function AssociationCard({ assoc }) {
       {/* ── Pre-pick ────────────────────────────────────────────── */}
       {!revealed && (
         <>
-          <span className="assoc-card__label">FIRST THOUGHT</span>
+          <span className="assoc-card__label">WHO REALLY OWNS THIS NUMBER?</span>
           <div className="assoc-card__chips">
             {assoc.options.map((opt, i) => (
               <button
