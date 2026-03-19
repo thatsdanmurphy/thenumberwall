@@ -628,6 +628,24 @@
   font-style:  italic;
 }
 
+/* Inline verdict prefix — shown only on curated debates */
+.your-pick__wall-verdict {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5rem;
+  letter-spacing: 0.16em;
+  color:          rgba(232, 124, 42, 0.6);
+  font-style:     normal;
+}
+
+/* Vote count footer — shown only on curated debates */
+.your-pick__vote-count {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.4375rem;
+  letter-spacing: 0.12em;
+  color:          rgba(255, 255, 255, 0.18);
+  margin:         0;
+}
+
 /* Pick is permanent once made — no reset affordance.
    Result state is the terminal view for this number on this device. */
 
