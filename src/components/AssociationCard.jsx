@@ -103,6 +103,14 @@ export default function AssociationCard({ assoc }) {
                 {shortName(opt.name)}
               </button>
             ))}
+            <a
+              className="assoc-card__nominate"
+              href="https://forms.gle/FdUYZoLakEYm9GiK8"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              + missing someone?
+            </a>
           </div>
         </>
       )}

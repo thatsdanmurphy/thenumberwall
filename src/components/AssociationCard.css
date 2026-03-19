@@ -64,6 +64,21 @@
   border-color: rgba(232, 124, 42, 0.75);
 }
 
+.assoc-card__nominate {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.6875rem;
+  letter-spacing: 0.10em;
+  color:          rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  align-self:     center;
+  transition:     color 150ms ease;
+  white-space:    nowrap;
+}
+
+.assoc-card__nominate:hover {
+  color: rgba(232, 124, 42, 0.85);
+}
+
 @keyframes chip-tap {
   0%   { transform: scale(1);    }
   50%  { transform: scale(1.05); }
