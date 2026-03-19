@@ -160,6 +160,19 @@
   color:          var(--color-muted);
 }
 
+.player-panel__retired-badge {
+  display:        inline-block;
+  margin-top:     6px;
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5rem;
+  letter-spacing: 0.14em;
+  background:     rgba(200, 220, 255, 0.08);
+  border:         1px solid rgba(200, 220, 255, 0.30);
+  color:          rgba(200, 220, 255, 0.85);
+  padding:        3px 8px;
+  border-radius:  3px;
+}
+
 
 /* ── Panel-level share button ───────────────────────────────────────────── */
 

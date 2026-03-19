@@ -77,11 +77,6 @@ function PlayerCard({ entry }) {
           </div>
 
           <div className="player-card__badges">
-            {entry.leagueWideRetired && (
-              <span className="player-card__badge player-card__badge--retired">
-                {entry.retiredBadge}
-              </span>
-            )}
             {entry.team && (
               <span className="player-card__badge" style={teamBadgeStyle}>{entry.team}</span>
             )}
@@ -351,6 +346,12 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
                   #{number}
                 </div>
                 {subtitle && <div className="player-panel__subtitle">{subtitle}</div>}
+                {(() => {
+                  const retiredEntry = legends.find(e => e.leagueWideRetired && e.retiredBadge)
+                  return retiredEntry ? (
+                    <div className="player-panel__retired-badge">{retiredEntry.retiredBadge}</div>
+                  ) : null
+                })()}
               </div>
 
               <div className="player-panel__header-actions">
