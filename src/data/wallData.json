@@ -1313,6 +1313,23 @@
   },
   {
     "Number": "24",
+    "Tier": "SACRED",
+    "Name": "Willie Mays",
+    "Sport": "Baseball",
+    "League": "MLB",
+    "Status": "Retired",
+    "Era": "MLB Classic",
+    "Team": "San Francisco Giants",
+    "Hometown": "",
+    "Signature Stat": "660",
+    "Stat Label": "Career Home Runs",
+    "Stat Weight": "3",
+    "Role": "Center Field",
+    "Fun Fact": "The Say Hey Kid. Arguably the most complete player in baseball history — elite power, elite speed, and the greatest defensive outfielder ever. The over-the-shoulder catch in the 1954 World Series is still the catch.",
+    "Notes": ""
+  },
+  {
+    "Number": "24",
     "Tier": "LEGEND",
     "Name": "Kobe Bryant",
     "Sport": "Basketball",
