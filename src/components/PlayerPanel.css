@@ -311,6 +311,16 @@
   padding:       var(--space-3);
 }
 
+/* Top slot — amber border + heat tint to signal ownership */
+.player-card--top {
+  background:    rgba(232, 124, 42, 0.07);
+  border-color:  rgba(232, 124, 42, 0.30);
+}
+
+.player-card--top .player-card__name {
+  font-size: 1.125rem;
+}
+
 /* Top row: info left, stat right */
 .player-card__row {
   display:         flex;

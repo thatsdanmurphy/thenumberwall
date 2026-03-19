@@ -59,7 +59,7 @@ function shareNumber(number) {
 }
 
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
-function PlayerCard({ entry }) {
+function PlayerCard({ entry, isTop = false }) {
   const icon           = SPORT_ICON[entry.sport] || '🏅'
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
   const teamAccent     = TEAM_ACCENT[entry.team] ?? null
@@ -68,7 +68,7 @@ function PlayerCard({ entry }) {
     : {}
 
   return (
-    <div className="player-card">
+    <div className={`player-card${isTop ? ' player-card--top' : ''}`}>
       <div className="player-card__row">
 
         <div className="player-card__info">
@@ -393,7 +393,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
             {legendCount > 0 && (
               <div className="player-panel__cards">
                 {legends.map((entry, i) => (
-                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} />
+                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
                 ))}
               </div>
             )}
