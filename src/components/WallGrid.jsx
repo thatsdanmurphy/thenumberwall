@@ -90,9 +90,9 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
       onKeyDown={handleKeyDown}
     >
       {TILE_NUMBERS.map(num => {
-        const entries    = index.get(num) || []
-        const hasEntries = entries.some(e => e.tier !== 'UNWRITTEN')
-        const debating   = assocNumbers.has(String(num)) && hasEntries
+        const entries      = index.get(num) || []
+        const visibleCount = entries.filter(e => e.tier !== 'UNWRITTEN').length
+        const debating     = assocNumbers.has(String(num)) && visibleCount >= 2
         return (
           <WallTile
             key={num}
