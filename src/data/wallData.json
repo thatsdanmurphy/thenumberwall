@@ -324,7 +324,7 @@
   },
   {
     "Number": "6",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Bill Russell",
     "Sport": "Basketball",
     "League": "NBA",
@@ -820,7 +820,7 @@
   },
   {
     "Number": "12",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Tom Brady",
     "Sport": "Football",
     "League": "NFL",
@@ -1279,7 +1279,7 @@
   },
   {
     "Number": "23",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Michael Jordan",
     "Sport": "Basketball",
     "League": "NBA",
@@ -1313,7 +1313,7 @@
   },
   {
     "Number": "24",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Willie Mays",
     "Sport": "Baseball",
     "League": "MLB",
