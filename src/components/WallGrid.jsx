@@ -89,17 +89,22 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
       ref={gridRef}
       onKeyDown={handleKeyDown}
     >
-      {TILE_NUMBERS.map(num => (
-        <WallTile
-          key={num}
-          number={num}
-          entries={index.get(num) || []}
-          isActive={activeNumber === num}
-          isDebating={assocNumbers.has(String(num))}
-          debateVariant={assocNumbers.has(String(num)) ? (ASSOC_VARIANTS[String(num)] ?? 'c') : null}
-          onClick={() => handleTileClick(num)}
-        />
-      ))}
+      {TILE_NUMBERS.map(num => {
+        const entries    = index.get(num) || []
+        const hasEntries = entries.some(e => e.tier !== 'UNWRITTEN')
+        const debating   = assocNumbers.has(String(num)) && hasEntries
+        return (
+          <WallTile
+            key={num}
+            number={num}
+            entries={entries}
+            isActive={activeNumber === num}
+            isDebating={debating}
+            debateVariant={debating ? (ASSOC_VARIANTS[String(num)] ?? 'c') : null}
+            onClick={() => handleTileClick(num)}
+          />
+        )
+      })}
     </div>
   )
 }
