@@ -438,8 +438,11 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
               </div>
             )}
 
-            {/* ── Who owns this number? — debate or crowd pick ── */}
-            {legendCount > 0 && (
+            {/* ── Who owns this number? — debate or crowd pick ──
+                 Curated debates always show. Open crowd picks only
+                 appear when no SACRED entry dominates the number —
+                 SACRED means the wall considers it already settled. */}
+            {(assoc || (!isSacred && legendCount >= 2)) && (
               <YourNumberPick number={number} legends={legends} assoc={assoc} />
             )}
 
