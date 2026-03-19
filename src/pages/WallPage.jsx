@@ -77,6 +77,7 @@ export default function WallPage() {
           <PlayerPanel
             selected={selected}
             onClear={handleClear}
+            sportFilter={sportFilter}
           />
         </div>
       </main>

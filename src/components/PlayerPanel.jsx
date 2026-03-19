@@ -2,10 +2,28 @@ import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import associationsData from '../data/associations.json'
+import AssociationCard from './AssociationCard.jsx'
 import './PlayerPanel.css'
 
-// O(1) lookup: number string → association (for wallNote only)
-const ASSOC_MAP = Object.fromEntries(associationsData.map(a => [String(a.number), a]))
+// Group debates by number — multiple debates can share a number (e.g. #7 global + #7 Soccer)
+const ASSOC_MAP = {}
+associationsData.forEach(a => {
+  const key = String(a.number)
+  if (!ASSOC_MAP[key]) ASSOC_MAP[key] = []
+  ASSOC_MAP[key].push(a)
+})
+
+// Pick the right debate for the current sport filter context.
+// Sport filter active → prefer sport-specific debate, suppress if none found.
+// No filter → prefer cross-sport (sport: null) debate, fall back to first entry.
+function pickAssoc(assocList, sportFilter) {
+  if (!assocList || assocList.length === 0) return null
+  const activeSport = sportFilter ? [...sportFilter][0] : null
+  if (activeSport) {
+    return assocList.find(a => a.sport === activeSport) ?? null
+  }
+  return assocList.find(a => a.sport === null) ?? assocList[0] ?? null
+}
 
 // ─── Tier sort order ──────────────────────────────────────────────────────────
 const TIER_RANK = { SACRED: 0, LEGEND: 1, CONDITIONAL: 2, ACTIVE: 3 }
@@ -286,13 +304,14 @@ function YourNumberPick({ number, legends, assoc }) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null }) {
   const [copied, setCopied] = useState(false)
 
   const hasSelection = Boolean(selected)
   const entries      = selected?.entries ?? []
   const number       = selected?.number  ?? null
-  const assoc        = number ? ASSOC_MAP[String(number)] : null
+  const assocList    = number ? (ASSOC_MAP[String(number)] ?? []) : []
+  const assoc        = pickAssoc(assocList, sportFilter)
 
   const legends     = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
   const isSacred    = legends.some(e => e.tier === 'SACRED')
@@ -384,9 +403,12 @@ export default function PlayerPanel({ selected, onClear, mode = 'default' }) {
               </div>
             )}
 
-            {/* ── Inline pick — above cards so it's the entry point ── */}
-            {legendCount > 0 && (
-              <YourNumberPick number={number} legends={legends} assoc={assoc} />
+            {/* ── Curated debate (FIRST THOUGHT) or crowd pick ── */}
+            {legendCount > 0 && assoc && (
+              <AssociationCard assoc={assoc} />
+            )}
+            {legendCount > 0 && !assoc && (
+              <YourNumberPick number={number} legends={legends} />
             )}
 
             {/* ── Legend cards ─────────────────────────────────── */}

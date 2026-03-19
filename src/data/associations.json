@@ -1,6 +1,7 @@
 [
   {
     "number": "23",
+    "sport": "Basketball",
     "wallContext": "#23 · Basketball",
     "question": "Who do you see first?",
     "options": [
@@ -14,6 +15,7 @@
   },
   {
     "number": "33",
+    "sport": "Basketball",
     "wallContext": "#33 · Basketball",
     "question": "Who do you see first?",
     "options": [
@@ -27,6 +29,7 @@
   },
   {
     "number": "44",
+    "sport": "Baseball",
     "wallContext": "#44 · Baseball",
     "question": "Who do you see first?",
     "options": [
@@ -40,6 +43,7 @@
   },
   {
     "number": "12",
+    "sport": "Football",
     "wallContext": "#12 · Football",
     "question": "Who do you see first?",
     "options": [
@@ -53,6 +57,7 @@
   },
   {
     "number": "10",
+    "sport": "Soccer",
     "wallContext": "#10 · Soccer",
     "question": "Who do you see first?",
     "options": [
@@ -66,6 +71,7 @@
   },
   {
     "number": "24",
+    "sport": null,
     "wallContext": "#24 · Two Sports",
     "question": "Who do you see first?",
     "options": [
@@ -78,7 +84,22 @@
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
+    "number": "24",
+    "sport": "Baseball",
+    "wallContext": "#24 · Baseball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Willie Mays",       "team": "San Francisco Giants" },
+      { "id": "B", "name": "Ken Griffey Jr.",   "team": "Seattle Mariners" }
+    ],
+    "seedVotes": { "A": 820, "B": 760 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Mays. Griffey is the reason a generation of kids slept in their Mariners hats.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
     "number": "7",
+    "sport": null,
     "wallContext": "#7 · Two Sports",
     "question": "Who do you see first?",
     "options": [
@@ -91,7 +112,22 @@
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
+    "number": "7",
+    "sport": "Soccer",
+    "wallContext": "#7 · Soccer",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Cristiano Ronaldo", "team": "Portugal" },
+      { "id": "B", "name": "David Beckham",     "team": "England" }
+    ],
+    "seedVotes": { "A": 1180, "B": 580 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Ronaldo. Beckham made #7 a global brand. Ronaldo made it a body of work.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
     "number": "0",
+    "sport": "Basketball",
     "wallContext": "#0 · Basketball",
     "question": "Who do you see first?",
     "options": [
@@ -105,6 +141,7 @@
   },
   {
     "number": "34",
+    "sport": null,
     "wallContext": "Boston · #34",
     "question": "Who do you see first?",
     "options": [
