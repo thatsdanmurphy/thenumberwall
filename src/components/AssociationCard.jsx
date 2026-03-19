@@ -17,6 +17,12 @@ function savePick(number, id) {
   } catch {}
 }
 
+// Last name only for compact chips
+function shortName(name) {
+  const parts = (name || '').trim().split(' ')
+  return parts.length > 1 ? parts[parts.length - 1] : name
+}
+
 // Given seed votes + optional user pick, return array of { id, name, pct, votes }
 function computeSplit(assoc, pickedId) {
   const totals = {}
@@ -36,16 +42,14 @@ function computeSplit(assoc, pickedId) {
 
 // ── AssociationCard ───────────────────────────────────────────────────────────
 //
-// FIRST THOUGHT mechanic:
-//   Pre-pick  — question + name-only buttons. No arguments, no framing.
-//               Forces an instant gut response.
-//   Post-pick — crowd split + the wall's one-line editorial call.
-//               The wall has a take. It shares it after you share yours.
+// FIRST THOUGHT mechanic — compact chip style, consistent with YourNumberPick.
+// Pre-pick:  label + name chips. No framing, no stats. Gut tap only.
+// Post-pick: split bar + the wall's editorial call.
 
 export default function AssociationCard({ assoc }) {
-  const saved               = getSavedPick(assoc.number)
-  const [pick, setPick]     = useState(saved)          // { id, ts } | null
-  const [tapping, setTapping] = useState(null)         // option id mid-animation
+  const saved                 = getSavedPick(assoc.number)
+  const [pick, setPick]       = useState(saved)
+  const [tapping, setTapping] = useState(null)
   const [revealed, setRevealed] = useState(!!saved)
 
   useEffect(() => {
@@ -58,82 +62,75 @@ export default function AssociationCard({ assoc }) {
   function handlePick(id) {
     if (pick || tapping) return
     setTapping(id)
-
     setTimeout(() => {
       savePick(assoc.number, id)
       const p = { id, ts: Date.now() }
       setPick(p)
-      const pickedName = assoc.options.find(o => o.id === id)?.name ?? id
+      const pickedName    = assoc.options.find(o => o.id === id)?.name ?? id
       const agreedWithWall = id === assoc.wallCall
       track('debate_vote', { number: assoc.number, picked: pickedName, agreedWithWall })
-
       setTimeout(() => {
         setRevealed(true)
         setTapping(null)
       }, 160)
-    }, 380)
+    }, 340)
   }
 
   const { splits, totalVotes } = computeSplit(assoc, pick?.id)
   const pickedId   = pick?.id
-  const wallPicked = assoc.options.find(o => o.id === assoc.wallCall)
   const wallAgrees = pickedId === assoc.wallCall
 
   return (
     <div className="assoc-card">
 
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="assoc-card__header">
-        <span className="assoc-card__eyebrow">FIRST THOUGHT</span>
-        <span className="assoc-card__context">{assoc.wallContext}</span>
-        <h3 className="assoc-card__question">{assoc.question}</h3>
-      </div>
-
-      {/* ── Pre-pick: name buttons only ────────────────────────── */}
+      {/* ── Pre-pick ────────────────────────────────────────────── */}
       {!revealed && (
-        <div className="assoc-card__options">
-          {assoc.options.map((opt, i) => (
-            <button
-              key={opt.id}
-              className={[
-                'assoc-card__option',
-                `assoc-card__option--${opt.id.toLowerCase()}`,
-                tapping === opt.id && 'assoc-card__option--tapping',
-                tapping && tapping !== opt.id && 'assoc-card__option--fading',
-              ].filter(Boolean).join(' ')}
-              onClick={() => handlePick(opt.id)}
-              disabled={!!tapping}
-            >
-              <span className="assoc-card__option-name">{opt.name}</span>
-              <span className="assoc-card__option-team">{opt.team}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          <span className="assoc-card__label">FIRST THOUGHT</span>
+          <div className="assoc-card__chips">
+            {assoc.options.map((opt, i) => (
+              <button
+                key={opt.id}
+                className={[
+                  'assoc-card__chip',
+                  i === 0                            && 'assoc-card__chip--top',
+                  tapping === opt.id                 && 'assoc-card__chip--tapping',
+                  tapping && tapping !== opt.id      && 'assoc-card__chip--fading',
+                ].filter(Boolean).join(' ')}
+                onClick={() => handlePick(opt.id)}
+                disabled={!!tapping}
+              >
+                {shortName(opt.name)}
+              </button>
+            ))}
+          </div>
+        </>
       )}
 
-      {/* ── Post-pick: split + wall's call ─────────────────────── */}
+      {/* ── Post-pick ───────────────────────────────────────────── */}
       {revealed && pickedId && (
         <div className="assoc-card__result">
 
-          {/* What you said */}
           <div className="assoc-card__your-call">
-            <span className="assoc-card__your-call-label">YOU SEE</span>
+            <span className="assoc-card__your-call-label">YOUR PICK</span>
             <span className="assoc-card__your-call-name">
               {assoc.options.find(o => o.id === pickedId)?.name}
             </span>
           </div>
 
-          {/* Crowd split bar */}
           <div className="assoc-card__split">
             <div className="assoc-card__split-bar">
               {splits.map((s, i) => (
                 <div
                   key={s.id}
-                  className={[
-                    'assoc-card__split-fill',
-                    `assoc-card__split-fill--${s.id.toLowerCase()}`,
-                  ].join(' ')}
-                  style={{ width: `${s.pct}%` }}
+                  className="assoc-card__split-fill"
+                  style={{
+                    width:      `${s.pct}%`,
+                    background: i === 0
+                      ? 'rgba(74, 140, 255, 0.72)'
+                      : 'rgba(232, 124, 42, 0.72)',
+                    opacity: s.id === pickedId ? 1 : 0.45,
+                  }}
                 />
               ))}
             </div>
@@ -146,23 +143,20 @@ export default function AssociationCard({ assoc }) {
                     s.id === pickedId && 'assoc-card__split-pct--yours',
                   ].filter(Boolean).join(' ')}
                 >
-                  {s.pct}% {s.name.split(' ').pop()}
+                  {s.pct}% {shortName(s.name)}
                 </span>
               ))}
             </div>
           </div>
 
-          {/* The wall's take */}
-          <div className="assoc-card__wall-take">
-            <span className="assoc-card__wall-take-label">
-              {wallAgrees ? 'THE WALL AGREES' : 'THE WALL SEES IT DIFFERENTLY'}
+          <p className="assoc-card__wall-note">
+            <span className="assoc-card__wall-verdict">
+              {wallAgrees ? 'THE WALL AGREES · ' : 'THE WALL DIFFERS · '}
             </span>
-            <p className="assoc-card__wall-note">{assoc.wallNote}</p>
-          </div>
+            {assoc.wallNote}
+          </p>
 
-          {/* Footer */}
           <div className="assoc-card__meta">
-            <span className="assoc-card__season">{assoc.seasonLabel}</span>
             <span className="assoc-card__count">{totalVotes.toLocaleString()} first thoughts</span>
           </div>
 
