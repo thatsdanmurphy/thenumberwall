@@ -105,6 +105,8 @@ export default function BostonPage() {
             selected={selected}
             onClear={handleClear}
             mode={tab === 'current' ? 'current' : 'default'}
+            sportFilter={sportFilter}
+            wallId={tab === 'current' ? 'none' : 'boston'}
           />
 
         </div>

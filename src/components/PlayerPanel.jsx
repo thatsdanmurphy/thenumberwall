@@ -12,19 +12,21 @@ associationsData.forEach(a => {
   ASSOC_MAP[key].push(a)
 })
 
-// Pick the right debate for the current sport filter context.
-// Sport filter active → exact sport match only, null if none.
-// No filter (global wall) → cross-sport debates only (sport: null).
-//   Sport-specific debates belong on their tab, not the global view —
-//   showing a Soccer-only debate while 8 different-sport legends are
-//   listed below creates a confusing mismatch.
-function pickAssoc(assocList, sportFilter) {
+// Pick the right debate given wall + sport filter context.
+// Rules:
+//   1. Filter to debates scoped to this wall first.
+//   2. Sport tab active → exact sport match only (no cross-sport on a sport tab).
+//   3. All tab → cross-sport (sport: null) debates only.
+//   4. No match at any step → null (crowd pick with all legends).
+function pickAssoc(assocList, sportFilter, wallId = 'global') {
   if (!assocList || assocList.length === 0) return null
+  const wallDebates = assocList.filter(a => a.wall === wallId)
+  if (wallDebates.length === 0) return null
   const activeSport = sportFilter ? [...sportFilter][0] : null
   if (activeSport) {
-    return assocList.find(a => a.sport === activeSport) ?? null
+    return wallDebates.find(a => a.sport === activeSport) ?? null
   }
-  return assocList.find(a => a.sport === null) ?? null
+  return wallDebates.find(a => a.sport === null) ?? null
 }
 
 // ─── Tier sort order ──────────────────────────────────────────────────────────
@@ -337,14 +339,14 @@ function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global' }) {
   const [copied, setCopied] = useState(false)
 
   const hasSelection = Boolean(selected)
   const entries      = selected?.entries ?? []
   const number       = selected?.number  ?? null
   const assocList    = number ? (ASSOC_MAP[String(number)] ?? []) : []
-  const assoc        = pickAssoc(assocList, sportFilter)
+  const assoc        = pickAssoc(assocList, sportFilter, wallId)
 
   // Which debate option leads by seed votes — shared by YourNumberPick and card stack
   const panelLeadIdx = assoc

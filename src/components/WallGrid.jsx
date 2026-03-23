@@ -5,32 +5,14 @@ import associationsData from '../data/associations.json'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
 
-// Tiles with a FIRST THOUGHT association get the pulse animation.
-// Variant 'c' = border + glow (production winner, confirmed pulse-2 baseline).
-const ASSOC_VARIANTS = {
-  '0':  'c',   // Lillard / Westbrook
-  '7':  'c',   // Mantle / Elway
-  '10': 'c',   // Messi / Pelé
-  '12': 'c',   // Brady / Namath
-  '23': 'c',   // Jordan / LeBron
-  '24': 'c',   // Mays / Kobe
-  '33': 'c',   // Bird / Kareem
-  '34': 'c',   // Ortiz / Pierce (Boston)
-  '44': 'c',   // Aaron / Reggie Jackson
-}
-
 // Build the set of pulsing numbers scoped to a given wall.
-// wallId 'global' → all debates
-// wallId 'boston' → only associations tagged for Boston
-// wallId 'none'   → no debates (current roster, etc.)
+// Derives directly from associations.json wall field — single source of truth.
+// wallId 'none' → no pulses (current roster view)
 function buildAssocNumbers(wallId) {
   if (wallId === 'none') return new Set()
-  if (wallId === 'global') return new Set(Object.keys(ASSOC_VARIANTS))
-  // City walls: only debates whose wallContext mentions this city
-  const tag = wallId.charAt(0).toUpperCase() + wallId.slice(1)
   return new Set(
     associationsData
-      .filter(a => a.wallContext.includes(tag))
+      .filter(a => a.wall === wallId)
       .map(a => String(a.number))
   )
 }

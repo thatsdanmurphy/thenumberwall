@@ -78,6 +78,7 @@ export default function WallPage() {
             selected={selected}
             onClear={handleClear}
             sportFilter={sportFilter}
+            wallId="global"
           />
         </div>
       </main>

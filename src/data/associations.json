@@ -1,6 +1,7 @@
 [
   {
     "number": "23",
+    "wall": "global",
     "sport": "Basketball",
     "wallContext": "#23 · Basketball",
     "question": "Who do you see first?",
@@ -15,12 +16,13 @@
   },
   {
     "number": "33",
+    "wall": "global",
     "sport": "Basketball",
     "wallContext": "#33 · Basketball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Larry Bird",             "team": "Boston Celtics" },
-      { "id": "B", "name": "Kareem Abdul-Jabbar",    "team": "Milwaukee Bucks" }
+      { "id": "A", "name": "Larry Bird",          "team": "Boston Celtics" },
+      { "id": "B", "name": "Kareem Abdul-Jabbar", "team": "Milwaukee Bucks" }
     ],
     "seedVotes": { "A": 1120, "B": 890 },
     "wallCall": "A",
@@ -29,12 +31,13 @@
   },
   {
     "number": "44",
+    "wall": "global",
     "sport": "Baseball",
     "wallContext": "#44 · Baseball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Hank Aaron",      "team": "Atlanta Braves" },
-      { "id": "B", "name": "Reggie Jackson",  "team": "Oakland Athletics" }
+      { "id": "A", "name": "Hank Aaron",     "team": "Atlanta Braves" },
+      { "id": "B", "name": "Reggie Jackson", "team": "Oakland Athletics" }
     ],
     "seedVotes": { "A": 940, "B": 760 },
     "wallCall": "A",
@@ -43,12 +46,13 @@
   },
   {
     "number": "12",
+    "wall": "global",
     "sport": "Football",
     "wallContext": "#12 · Football",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Tom Brady",    "team": "New England Patriots" },
-      { "id": "B", "name": "Joe Namath",   "team": "New York Jets" }
+      { "id": "A", "name": "Tom Brady",  "team": "New England Patriots" },
+      { "id": "B", "name": "Joe Namath", "team": "New York Jets" }
     ],
     "seedVotes": { "A": 1340, "B": 620 },
     "wallCall": "A",
@@ -57,12 +61,13 @@
   },
   {
     "number": "10",
+    "wall": "global",
     "sport": "Soccer",
     "wallContext": "#10 · Soccer",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Pelé",            "team": "Brazil" },
-      { "id": "B", "name": "Lionel Messi",    "team": "Argentina" }
+      { "id": "A", "name": "Pelé",         "team": "Brazil" },
+      { "id": "B", "name": "Lionel Messi", "team": "Argentina" }
     ],
     "seedVotes": { "A": 1080, "B": 1340 },
     "wallCall": "B",
@@ -71,12 +76,13 @@
   },
   {
     "number": "24",
+    "wall": "global",
     "sport": null,
     "wallContext": "#24 · Two Sports",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Willie Mays",   "team": "San Francisco Giants" },
-      { "id": "B", "name": "Kobe Bryant",   "team": "Los Angeles Lakers" }
+      { "id": "A", "name": "Willie Mays",  "team": "San Francisco Giants" },
+      { "id": "B", "name": "Kobe Bryant",  "team": "Los Angeles Lakers" }
     ],
     "seedVotes": { "A": 780, "B": 740 },
     "wallCall": "A",
@@ -85,12 +91,13 @@
   },
   {
     "number": "24",
+    "wall": "global",
     "sport": "Baseball",
     "wallContext": "#24 · Baseball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Willie Mays",       "team": "San Francisco Giants" },
-      { "id": "B", "name": "Ken Griffey Jr.",   "team": "Seattle Mariners" }
+      { "id": "A", "name": "Willie Mays",     "team": "San Francisco Giants" },
+      { "id": "B", "name": "Ken Griffey Jr.", "team": "Seattle Mariners" }
     ],
     "seedVotes": { "A": 820, "B": 760 },
     "wallCall": "A",
@@ -99,6 +106,7 @@
   },
   {
     "number": "7",
+    "wall": "global",
     "sport": null,
     "wallContext": "#7 · Two Sports",
     "question": "Who do you see first?",
@@ -113,6 +121,7 @@
   },
   {
     "number": "7",
+    "wall": "global",
     "sport": "Soccer",
     "wallContext": "#7 · Soccer",
     "question": "Who do you see first?",
@@ -127,12 +136,13 @@
   },
   {
     "number": "0",
+    "wall": "global",
     "sport": "Basketball",
     "wallContext": "#0 · Basketball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Damian Lillard",     "team": "Portland Trail Blazers" },
-      { "id": "B", "name": "Russell Westbrook",  "team": "Oklahoma City Thunder" }
+      { "id": "A", "name": "Damian Lillard",    "team": "Portland Trail Blazers" },
+      { "id": "B", "name": "Russell Westbrook", "team": "Oklahoma City Thunder" }
     ],
     "seedVotes": { "A": 612, "B": 589 },
     "wallCall": "A",
@@ -141,16 +151,47 @@
   },
   {
     "number": "34",
+    "wall": "boston",
     "sport": null,
     "wallContext": "Boston · #34",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "David Ortiz",  "team": "Boston Red Sox" },
-      { "id": "B", "name": "Paul Pierce",  "team": "Boston Celtics" }
+      { "id": "A", "name": "David Ortiz", "team": "Boston Red Sox" },
+      { "id": "B", "name": "Paul Pierce", "team": "Boston Celtics" }
     ],
     "seedVotes": { "A": 1421, "B": 388 },
     "wallCall": "A",
     "wallNote": "The wall sees Ortiz. Pierce makes this the most contested retired number in Boston sports.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "5",
+    "wall": "boston",
+    "sport": null,
+    "wallContext": "Boston · #5",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Kevin Garnett",      "team": "Boston Celtics" },
+      { "id": "B", "name": "Nomar Garciaparra",  "team": "Boston Red Sox" }
+    ],
+    "seedVotes": { "A": 680, "B": 590 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Garnett. But Nomar was Boston before Boston knew it needed saving.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "33",
+    "wall": "boston",
+    "sport": null,
+    "wallContext": "Boston · #33",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Larry Bird",    "team": "Boston Celtics" },
+      { "id": "B", "name": "Zdeno Chara",  "team": "Boston Bruins" }
+    ],
+    "seedVotes": { "A": 1420, "B": 480 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Bird. But no one in Boston has worn a number with more physical authority than Chara.",
     "seasonLabel": "Season 1 · Q1 2026"
   }
 ]
