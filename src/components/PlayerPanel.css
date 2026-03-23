@@ -667,3 +667,22 @@
 .your-pick__nominate:hover {
   color: rgba(232, 124, 42, 0.85);
 }
+
+/* ── Add a Legend — sits below card stack, quiet invitation ─────────────── */
+
+.player-panel__add-legend {
+  display:        block;
+  margin-top:     var(--space-3);
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.14em;
+  color:          rgba(255, 255, 255, 0.28);
+  text-decoration: none;
+  text-align:     center;
+  padding:        var(--space-2) 0;
+  transition:     color 150ms ease;
+}
+
+.player-panel__add-legend:hover {
+  color: rgba(232, 124, 42, 0.70);
+}

@@ -246,17 +246,17 @@ function YourNumberPick({ number, legends, assoc }) {
     return gap > 0 ? `${gap}% gap.` : `Split.`
   }
 
-  // Split bar color — blue/amber for debates, graded amber by rank for open picks
+  // Which option leads by seed votes (for chip highlight + bar emphasis)
+  const leadIdx = assoc
+    ? (assoc.seedVotes[assoc.options[0].id] >= assoc.seedVotes[assoc.options[1].id] ? 0 : 1)
+    : 0
+
+  // Split bar — all amber, no blue. Leading option gets full amber, trailing is dim.
   function barStyle(i) {
-    if (assoc) {
-      return {
-        background: i === 0 ? 'rgba(74,140,255,0.72)' : 'rgba(232,124,42,0.72)',
-        opacity:    i === pickedIdx ? 1 : 0.45,
-      }
-    }
+    const isLeader = i === leadIdx
     return {
-      background: rankOrange(i),
-      opacity:    i === pickedIdx ? 1 : Math.max(0.22, 0.62 - i * 0.08),
+      background: isLeader ? 'rgba(232,124,42,0.80)' : 'rgba(255,255,255,0.10)',
+      opacity:    i === pickedIdx ? 1 : 0.55,
     }
   }
 
@@ -271,7 +271,7 @@ function YourNumberPick({ number, legends, assoc }) {
                 key={i}
                 className={[
                   'your-pick__chip',
-                  i === 0                           && 'your-pick__chip--top',
+                  i === leadIdx                     && 'your-pick__chip--top',
                   tapping === i                     && 'your-pick__chip--tapping',
                   tapping !== null && tapping !== i && 'your-pick__chip--fading',
                 ].filter(Boolean).join(' ')}
@@ -449,9 +449,21 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
             {/* ── Legend cards ─────────────────────────────────── */}
             {legendCount > 0 && (
               <div className="player-panel__cards">
-                {legends.map((entry, i) => (
-                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
-                ))}
+                {legends.map((entry, i) => {
+                  // When a curated debate is active, the top card treatment goes
+                  // to the debate's leading option — not just whoever sorts first.
+                  const debateLeaderName = assoc?.options[leadIdx]?.name
+                  const isTop = debateLeaderName
+                    ? entry.name === debateLeaderName
+                    : i === 0
+                  return <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={isTop} />
+                })}
+                <a
+                  className="player-panel__add-legend"
+                  href={`mailto:dan@thenumberwall.com?subject=Add a Legend — %23${number}`}
+                >
+                  + Add a Legend
+                </a>
               </div>
             )}
           </>
