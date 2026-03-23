@@ -171,7 +171,7 @@ function rankOrange(i) {
 // Without assoc: all-legend chips, auto-seeded by rank, crowd message post-pick.
 // Same UI, same storage key — one component, two data sources.
 
-function YourNumberPick({ number, legends, assoc }) {
+function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
   const saved                   = getSavedPick(number)
   const [pick, setPick]         = useState(saved)
   const [tapping, setTapping]   = useState(null)
@@ -245,11 +245,6 @@ function YourNumberPick({ number, legends, assoc }) {
     if (gap >= 6)  return `${gap}% gap. Closer than it looks.`
     return gap > 0 ? `${gap}% gap.` : `Split.`
   }
-
-  // Which option leads by seed votes (for chip highlight + bar emphasis)
-  const leadIdx = assoc
-    ? (assoc.seedVotes[assoc.options[0].id] >= assoc.seedVotes[assoc.options[1].id] ? 0 : 1)
-    : 0
 
   // Split bar — all amber, no blue. Leading option gets full amber, trailing is dim.
   function barStyle(i) {
@@ -354,6 +349,12 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const numberColor = getTileTextColor(legends, isSacred)
   const numberGlow  = `0 0 28px ${heat.border}`
 
+  // Which debate option leads by seed votes — used by both YourNumberPick
+  // (chip highlight) and the card stack (isTop amber treatment).
+  const panelLeadIdx = assoc
+    ? ((assoc.seedVotes[assoc.options[0]?.id] ?? 0) >= (assoc.seedVotes[assoc.options[1]?.id] ?? 0) ? 0 : 1)
+    : 0
+
   const legendCount = legends.length
 
   const subtitle = legendCount === 0
@@ -443,7 +444,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                  appear when no SACRED entry dominates the number —
                  SACRED means the wall considers it already settled. */}
             {(assoc || (!isSacred && legendCount >= 2)) && (
-              <YourNumberPick number={number} legends={legends} assoc={assoc} />
+              <YourNumberPick number={number} legends={legends} assoc={assoc} leadIdx={panelLeadIdx} />
             )}
 
             {/* ── Legend cards ─────────────────────────────────── */}
@@ -452,7 +453,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                 {legends.map((entry, i) => {
                   // When a curated debate is active, the top card treatment goes
                   // to the debate's leading option — not just whoever sorts first.
-                  const debateLeaderName = assoc?.options[leadIdx]?.name
+                  const debateLeaderName = assoc?.options[panelLeadIdx]?.name
                   const isTop = debateLeaderName
                     ? entry.name === debateLeaderName
                     : i === 0
