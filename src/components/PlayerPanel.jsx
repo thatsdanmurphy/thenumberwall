@@ -13,15 +13,18 @@ associationsData.forEach(a => {
 })
 
 // Pick the right debate for the current sport filter context.
-// Sport filter active → prefer sport-specific debate, suppress if none found.
-// No filter → prefer cross-sport (sport: null) debate, fall back to first entry.
+// Sport filter active → exact sport match only, null if none.
+// No filter (global wall) → cross-sport debates only (sport: null).
+//   Sport-specific debates belong on their tab, not the global view —
+//   showing a Soccer-only debate while 8 different-sport legends are
+//   listed below creates a confusing mismatch.
 function pickAssoc(assocList, sportFilter) {
   if (!assocList || assocList.length === 0) return null
   const activeSport = sportFilter ? [...sportFilter][0] : null
   if (activeSport) {
     return assocList.find(a => a.sport === activeSport) ?? null
   }
-  return assocList.find(a => a.sport === null) ?? assocList[0] ?? null
+  return assocList.find(a => a.sport === null) ?? null
 }
 
 // ─── Tier sort order ──────────────────────────────────────────────────────────
@@ -343,17 +346,29 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const assocList    = number ? (ASSOC_MAP[String(number)] ?? []) : []
   const assoc        = pickAssoc(assocList, sportFilter)
 
-  const legends     = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
+  // Which debate option leads by seed votes — shared by YourNumberPick and card stack
+  const panelLeadIdx = assoc
+    ? ((assoc.seedVotes[assoc.options[0]?.id] ?? 0) >= (assoc.seedVotes[assoc.options[1]?.id] ?? 0) ? 0 : 1)
+    : 0
+
+  const rawLegends = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
+
+  // When a debate is active, surface debate participants at the top in vote order
+  // so cards always reflect the same hierarchy as the debate chips.
+  const legends = (() => {
+    if (!assoc) return rawLegends
+    const leadName  = assoc.options[panelLeadIdx]?.name
+    const trailName = assoc.options[1 - panelLeadIdx]?.name
+    const lead  = rawLegends.find(e => e.name === leadName)
+    const trail = rawLegends.find(e => e.name === trailName)
+    const rest  = rawLegends.filter(e => e.name !== leadName && e.name !== trailName)
+    return [lead, trail, ...rest].filter(Boolean)
+  })()
+
   const isSacred    = legends.some(e => e.tier === 'SACRED')
   const heat        = getHeatStyle(legends, isSacred)
   const numberColor = getTileTextColor(legends, isSacred)
   const numberGlow  = `0 0 28px ${heat.border}`
-
-  // Which debate option leads by seed votes — used by both YourNumberPick
-  // (chip highlight) and the card stack (isTop amber treatment).
-  const panelLeadIdx = assoc
-    ? ((assoc.seedVotes[assoc.options[0]?.id] ?? 0) >= (assoc.seedVotes[assoc.options[1]?.id] ?? 0) ? 0 : 1)
-    : 0
 
   const legendCount = legends.length
 
@@ -450,15 +465,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
             {/* ── Legend cards ─────────────────────────────────── */}
             {legendCount > 0 && (
               <div className="player-panel__cards">
-                {legends.map((entry, i) => {
-                  // When a curated debate is active, the top card treatment goes
-                  // to the debate's leading option — not just whoever sorts first.
-                  const debateLeaderName = assoc?.options[panelLeadIdx]?.name
-                  const isTop = debateLeaderName
-                    ? entry.name === debateLeaderName
-                    : i === 0
-                  return <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={isTop} />
-                })}
+                {legends.map((entry, i) => (
+                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
+                ))}
                 <a
                   className="player-panel__add-legend"
                   href={`mailto:dan@thenumberwall.com?subject=Add a Legend — %23${number}`}
