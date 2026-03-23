@@ -351,19 +351,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
     ? ((assoc.seedVotes[assoc.options[0]?.id] ?? 0) >= (assoc.seedVotes[assoc.options[1]?.id] ?? 0) ? 0 : 1)
     : 0
 
-  const rawLegends = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
-
-  // When a debate is active, surface debate participants at the top in vote order
-  // so cards always reflect the same hierarchy as the debate chips.
-  const legends = (() => {
-    if (!assoc) return rawLegends
-    const leadName  = assoc.options[panelLeadIdx]?.name
-    const trailName = assoc.options[1 - panelLeadIdx]?.name
-    const lead  = rawLegends.find(e => e.name === leadName)
-    const trail = rawLegends.find(e => e.name === trailName)
-    const rest  = rawLegends.filter(e => e.name !== leadName && e.name !== trailName)
-    return [lead, trail, ...rest].filter(Boolean)
-  })()
+  // Cards sort by tier + stat weight — independent of the debate.
+  // The debate asks a contextual question; the cards show the global legend ranking.
+  const legends = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
 
   const isSacred    = legends.some(e => e.tier === 'SACRED')
   const heat        = getHeatStyle(legends, isSacred)
