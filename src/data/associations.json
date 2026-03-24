@@ -92,6 +92,21 @@
   {
     "number": "24",
     "wall": "global",
+    "sport": "Basketball",
+    "wallContext": "#24 · Basketball",
+    "question": "Who do you see first?",
+    "options": [
+      { "id": "A", "name": "Kobe Bryant",  "team": "Los Angeles Lakers" },
+      { "id": "B", "name": "Maya Moore",   "team": "Minnesota Lynx" }
+    ],
+    "seedVotes": { "A": 920, "B": 580 },
+    "wallCall": "A",
+    "wallNote": "The wall sees Kobe. Maya Moore is the most dominant player in WNBA history — #24 belongs to both.",
+    "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": "24",
+    "wall": "global",
     "sport": "Baseball",
     "wallContext": "#24 · Baseball",
     "question": "Who do you see first?",
