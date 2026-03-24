@@ -82,7 +82,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
             entries={entries}
             isActive={activeNumber === num}
             isDebating={debating}
-            debateVariant={debating ? (ASSOC_VARIANTS[String(num)] ?? 'c') : null}
+            debateVariant={debating ? 'c' : null}
             onClick={() => handleTileClick(num)}
           />
         )
