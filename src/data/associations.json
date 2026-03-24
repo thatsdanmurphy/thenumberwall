@@ -96,12 +96,12 @@
     "wallContext": "#24 · Baseball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Willie Mays",     "team": "San Francisco Giants" },
-      { "id": "B", "name": "Ken Griffey Jr.", "team": "Seattle Mariners" }
+      { "id": "A", "name": "Ken Griffey Jr.",     "team": "Seattle Mariners" },
+      { "id": "B", "name": "Rickey Henderson", "team": "Oakland Athletics" }
     ],
-    "seedVotes": { "A": 820, "B": 760 },
+    "seedVotes": { "A": 780, "B": 660 },
     "wallCall": "A",
-    "wallNote": "The wall sees Mays. Griffey is the reason a generation of kids slept in their Mariners hats.",
+    "wallNote": "The wall sees Griffey. Rickey is the greatest leadoff hitter who ever lived — #24 is just one chapter.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
