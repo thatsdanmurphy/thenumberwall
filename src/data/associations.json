@@ -1,210 +1,364 @@
 [
   {
-    "number": "23",
+    "number": 23,
     "wall": "global",
     "sport": "Basketball",
     "wallContext": "#23 · Basketball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Michael Jordan", "team": "Chicago Bulls" },
-      { "id": "B", "name": "LeBron James",   "team": "Los Angeles Lakers" }
+      {
+        "id": "A",
+        "name": "Michael Jordan",
+        "team": "Chicago Bulls"
+      },
+      {
+        "id": "B",
+        "name": "LeBron James",
+        "team": "Los Angeles Lakers"
+      }
     ],
-    "seedVotes": { "A": 1891, "B": 1204 },
+    "seedVotes": {
+      "A": 1891,
+      "B": 1204
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Jordan. LeBron is the argument that keeps the question alive.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "33",
+    "number": 33,
     "wall": "global",
     "sport": "Basketball",
     "wallContext": "#33 · Basketball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Larry Bird",          "team": "Boston Celtics" },
-      { "id": "B", "name": "Kareem Abdul-Jabbar", "team": "Milwaukee Bucks" }
+      {
+        "id": "A",
+        "name": "Larry Bird",
+        "team": "Boston Celtics"
+      },
+      {
+        "id": "B",
+        "name": "Kareem Abdul-Jabbar",
+        "team": "Milwaukee Bucks"
+      }
     ],
-    "seedVotes": { "A": 1120, "B": 890 },
+    "seedVotes": {
+      "A": 1120,
+      "B": 890
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Bird. Kareem won more. The argument doesn't end there.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "44",
+    "number": 44,
     "wall": "global",
     "sport": "Baseball",
     "wallContext": "#44 · Baseball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Hank Aaron",     "team": "Atlanta Braves" },
-      { "id": "B", "name": "Reggie Jackson", "team": "Oakland Athletics" }
+      {
+        "id": "A",
+        "name": "Hank Aaron",
+        "team": "Atlanta Braves"
+      },
+      {
+        "id": "B",
+        "name": "Reggie Jackson",
+        "team": "Oakland Athletics"
+      }
     ],
-    "seedVotes": { "A": 940, "B": 760 },
+    "seedVotes": {
+      "A": 940,
+      "B": 760
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Aaron. #44 broke the record. Reggie made October mean something different.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "12",
+    "number": 12,
     "wall": "global",
     "sport": "Football",
     "wallContext": "#12 · Football",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Tom Brady",  "team": "New England Patriots" },
-      { "id": "B", "name": "Joe Namath", "team": "New York Jets" }
+      {
+        "id": "A",
+        "name": "Tom Brady",
+        "team": "New England Patriots"
+      },
+      {
+        "id": "B",
+        "name": "Joe Namath",
+        "team": "New York Jets"
+      }
     ],
-    "seedVotes": { "A": 1340, "B": 620 },
+    "seedVotes": {
+      "A": 1340,
+      "B": 620
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Brady. Namath is the reason #12 at quarterback means anything at all.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "10",
+    "number": 10,
     "wall": "global",
     "sport": "Soccer",
     "wallContext": "#10 · Soccer",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Pelé",         "team": "Brazil" },
-      { "id": "B", "name": "Lionel Messi", "team": "Argentina" }
+      {
+        "id": "A",
+        "name": "Pelé",
+        "team": "Brazil"
+      },
+      {
+        "id": "B",
+        "name": "Lionel Messi",
+        "team": "Argentina"
+      }
     ],
-    "seedVotes": { "A": 1080, "B": 1340 },
+    "seedVotes": {
+      "A": 1080,
+      "B": 1340
+    },
     "wallCall": "B",
     "wallNote": "The wall sees Messi. Pelé made #10 sacred. Messi made people ask the question again.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "24",
+    "number": 24,
     "wall": "global",
     "sport": null,
     "wallContext": "#24 · Two Sports",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Willie Mays",  "team": "San Francisco Giants" },
-      { "id": "B", "name": "Kobe Bryant",  "team": "Los Angeles Lakers" }
+      {
+        "id": "A",
+        "name": "Willie Mays",
+        "team": "San Francisco Giants"
+      },
+      {
+        "id": "B",
+        "name": "Kobe Bryant",
+        "team": "Los Angeles Lakers"
+      }
     ],
-    "seedVotes": { "A": 780, "B": 740 },
+    "seedVotes": {
+      "A": 780,
+      "B": 740
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Mays. Kobe's claim on #24 is why this isn't obvious.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "24",
+    "number": 24,
     "wall": "global",
     "sport": "Basketball",
     "wallContext": "#24 · Basketball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Kobe Bryant",  "team": "Los Angeles Lakers" },
-      { "id": "B", "name": "Maya Moore",   "team": "Minnesota Lynx" }
+      {
+        "id": "A",
+        "name": "Kobe Bryant",
+        "team": "Los Angeles Lakers"
+      },
+      {
+        "id": "B",
+        "name": "Maya Moore",
+        "team": "Minnesota Lynx"
+      }
     ],
-    "seedVotes": { "A": 920, "B": 580 },
+    "seedVotes": {
+      "A": 920,
+      "B": 580
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Kobe. Maya Moore is the most dominant player in WNBA history — #24 belongs to both.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "24",
+    "number": 24,
     "wall": "global",
     "sport": "Baseball",
     "wallContext": "#24 · Baseball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Ken Griffey Jr.",     "team": "Seattle Mariners" },
-      { "id": "B", "name": "Rickey Henderson", "team": "Oakland Athletics" }
+      {
+        "id": "A",
+        "name": "Ken Griffey Jr.",
+        "team": "Seattle Mariners"
+      },
+      {
+        "id": "B",
+        "name": "Rickey Henderson",
+        "team": "Oakland Athletics"
+      }
     ],
-    "seedVotes": { "A": 780, "B": 660 },
+    "seedVotes": {
+      "A": 780,
+      "B": 660
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Griffey. Rickey is the greatest leadoff hitter who ever lived — #24 is just one chapter.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "7",
+    "number": 7,
     "wall": "global",
     "sport": null,
     "wallContext": "#7 · Two Sports",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Mickey Mantle", "team": "New York Yankees" },
-      { "id": "B", "name": "John Elway",    "team": "Denver Broncos" }
+      {
+        "id": "A",
+        "name": "Mickey Mantle",
+        "team": "New York Yankees"
+      },
+      {
+        "id": "B",
+        "name": "John Elway",
+        "team": "Denver Broncos"
+      }
     ],
-    "seedVotes": { "A": 847, "B": 531 },
+    "seedVotes": {
+      "A": 847,
+      "B": 531
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Mantle. But Elway is why football fans have always pushed back.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "7",
+    "number": 7,
     "wall": "global",
     "sport": "Soccer",
     "wallContext": "#7 · Soccer",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Cristiano Ronaldo", "team": "Portugal" },
-      { "id": "B", "name": "David Beckham",     "team": "England" }
+      {
+        "id": "A",
+        "name": "Cristiano Ronaldo",
+        "team": "Portugal"
+      },
+      {
+        "id": "B",
+        "name": "David Beckham",
+        "team": "England"
+      }
     ],
-    "seedVotes": { "A": 1180, "B": 580 },
+    "seedVotes": {
+      "A": 1180,
+      "B": 580
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Ronaldo. Beckham made #7 a global brand. Ronaldo made it a body of work.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "0",
+    "number": 0,
     "wall": "global",
     "sport": "Basketball",
     "wallContext": "#0 · Basketball",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Damian Lillard",    "team": "Portland Trail Blazers" },
-      { "id": "B", "name": "Russell Westbrook", "team": "Oklahoma City Thunder" }
+      {
+        "id": "A",
+        "name": "Damian Lillard",
+        "team": "Portland Trail Blazers"
+      },
+      {
+        "id": "B",
+        "name": "Russell Westbrook",
+        "team": "Oklahoma City Thunder"
+      }
     ],
-    "seedVotes": { "A": 612, "B": 589 },
+    "seedVotes": {
+      "A": 612,
+      "B": 589
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Lillard. Dame Time gave #0 its first real legend.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "34",
+    "number": 34,
     "wall": "boston",
     "sport": null,
     "wallContext": "Boston · #34",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "David Ortiz", "team": "Boston Red Sox" },
-      { "id": "B", "name": "Paul Pierce", "team": "Boston Celtics" }
+      {
+        "id": "A",
+        "name": "David Ortiz",
+        "team": "Boston Red Sox"
+      },
+      {
+        "id": "B",
+        "name": "Paul Pierce",
+        "team": "Boston Celtics"
+      }
     ],
-    "seedVotes": { "A": 1421, "B": 388 },
+    "seedVotes": {
+      "A": 1421,
+      "B": 388
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Ortiz. Pierce makes this the most contested retired number in Boston sports.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "5",
+    "number": 5,
     "wall": "boston",
     "sport": null,
     "wallContext": "Boston · #5",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Kevin Garnett",      "team": "Boston Celtics" },
-      { "id": "B", "name": "Nomar Garciaparra",  "team": "Boston Red Sox" }
+      {
+        "id": "A",
+        "name": "Kevin Garnett",
+        "team": "Boston Celtics"
+      },
+      {
+        "id": "B",
+        "name": "Nomar Garciaparra",
+        "team": "Boston Red Sox"
+      }
     ],
-    "seedVotes": { "A": 680, "B": 590 },
+    "seedVotes": {
+      "A": 680,
+      "B": 590
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Garnett. But Nomar was Boston before Boston knew it needed saving.",
     "seasonLabel": "Season 1 · Q1 2026"
   },
   {
-    "number": "33",
+    "number": 33,
     "wall": "boston",
     "sport": null,
     "wallContext": "Boston · #33",
     "question": "Who do you see first?",
     "options": [
-      { "id": "A", "name": "Larry Bird",    "team": "Boston Celtics" },
-      { "id": "B", "name": "Zdeno Chara",  "team": "Boston Bruins" }
+      {
+        "id": "A",
+        "name": "Larry Bird",
+        "team": "Boston Celtics"
+      },
+      {
+        "id": "B",
+        "name": "Zdeno Chara",
+        "team": "Boston Bruins"
+      }
     ],
-    "seedVotes": { "A": 1420, "B": 480 },
+    "seedVotes": {
+      "A": 1420,
+      "B": 480
+    },
     "wallCall": "A",
     "wallNote": "The wall sees Bird. But no one in Boston has worn a number with more physical authority than Chara.",
     "seasonLabel": "Season 1 · Q1 2026"

@@ -1,0 +1,344 @@
+player_id,name,sport,league,role,status,hometown,notes
+damian-lillard,Damian Lillard,Basketball,NBA,Point Guard,Active,,
+jim-otto,Jim Otto,Football,NFL,Center,Retired,,Number 00 is distinct from 0. Otto defines this number in football as Parish does in basketball.
+robert-parish,Robert Parish,Basketball,NBA,Center,Retired,,Number 00 is distinct from 0. Parish defines this number.
+russell-westbrook,Russell Westbrook,Basketball,NBA,Point Guard,Active,,
+oscar-robertson,Oscar Robertson,Basketball,NBA,Point Guard,Retired,,
+terry-sawchuk,Terry Sawchuk,Hockey,NHL,Goaltender,Retired,,
+warren-moon,Warren Moon,Football,NFL,Quarterback,Retired,,
+brian-leetch,Brian Leetch,Hockey,NHL,Defenseman,Retired,,
+derek-jeter,Derek Jeter,Baseball,MLB,Shortstop,Retired,,
+allen-iverson,Allen Iverson,Basketball,NBA,Point Guard,Retired,,
+babe-ruth,Babe Ruth,Baseball,MLB,Right Field,Retired,,#3 retired by Yankees
+dwyane-wade,Dwyane Wade,Basketball,NBA,Shooting Guard,Retired,,
+diana-taurasi,Diana Taurasi,Basketball,WNBA,Guard,Active,"Chino, California",
+brett-favre,Brett Favre,Football,NFL,Quarterback,Retired,"Gulfport, Mississippi, USA",Defined the gunslinger quarterback archetype
+bobby-orr,Bobby Orr,Hockey,NHL,Defenseman,Retired,,
+lou-gehrig,Lou Gehrig,Baseball,MLB,First Base,Retired,,
+joe-dimaggio,Joe DiMaggio,Baseball,MLB,Center Field,Retired,,
+nicklas-lidstrom,Nicklas Lidstrom,Hockey,NHL,Defenseman,Retired,,
+franz-beckenbauer,Franz Beckenbauer,Soccer,International,Sweeper,Retired,"Munich, Germany",
+bill-russell,Bill Russell,Basketball,NBA,Center,Retired,,SACRED
+mickey-mantle,Mickey Mantle,Baseball,MLB,Center Field,Retired,,
+john-elway,John Elway,Football,NFL,Quarterback,Retired,"Port Angeles, Washington, USA",One of the most iconic quarterbacks of the late 20th century
+phil-esposito,Phil Esposito,Hockey,NHL,Center,Retired,,
+cristiano-ronaldo,Cristiano Ronaldo,Soccer,International,Forward,Active,"Funchal, Madeira, Portugal",ACTIVE - review annually
+david-beckham,David Beckham,Soccer,International,Midfielder,Retired,"London, England",
+alex-ovechkin,Alex Ovechkin,Hockey,NHL,Left Wing,Retired,,
+troy-aikman,Troy Aikman,Football,NFL,Quarterback,Retired,,
+cal-ripken-jr,Cal Ripken Jr.,Baseball,MLB,Shortstop,Retired,,
+cale-makar,Cale Makar,Hockey,NHL,Defenseman,Active,,ACTIVE - review annually CONDITIONAL — cross-generational name test still building. Review annually.
+kobe-bryant,Kobe Bryant,Basketball,NBA,Shooting Guard,Retired,,Both 8 and 24 retired by Lakers
+erling-haaland,Erling Haaland,Soccer,Soccer,Striker,Active,,ACTIVE - review annually CONDITIONAL cross-generational name test still building. Review annually.
+mia-hamm,Mia Hamm,Soccer,International,Forward,Retired,"Selma, Alabama",
+gordie-howe,Gordie Howe,Hockey,NHL,Right Wing,Retired,,
+maurice-richard,Maurice Richard,Hockey,NHL,Right Wing,Retired,,
+ronaldo-naz-rio,Ronaldo Nazário,Soccer,International,Forward,Retired,"Rio de Janeiro, Brazil",
+roger-maris,Roger Maris,Baseball,MLB,Right Fielder,Retired,"Hibbing, Minnesota, USA",
+ted-williams,Ted Williams,Baseball,MLB,Left Field,Retired,,
+marta,Marta,Soccer,International,Forward,Active,"Dois Riachos, Brazil",
+guy-lafleur,Guy Lafleur,Hockey,NHL,Right Wing,Retired,,
+pel,Pelé,Soccer,Soccer,Forward,Retired,,
+diego-maradona,Diego Maradona,Soccer,International,Attacking Midfielder,Retired,"Lanús, Argentina",
+lionel-messi,Lionel Messi,Soccer,International,Forward,Active,"Rosario, Argentina",ACTIVE - review annually
+zinedine-zidane,Zinedine Zidane,Soccer,International,Attacking Midfielder,Retired,"Marseille, France",
+ronaldinho,Ronaldinho,Soccer,International,Attacking Midfielder,Retired,"Porto Alegre, Brazil",
+steve-nash,Steve Nash,Basketball,NBA,Point Guard,Retired,,
+isiah-thomas,Isiah Thomas,Basketball,NBA,Point Guard,Retired,,
+mark-messier,Mark Messier,Hockey,NHL,Center,Retired,,#11 retired by Rangers and Oilers
+mohamed-salah,Mohamed Salah,Soccer,Soccer,Right Wing,Active,,ACTIVE - review annually Active legend — review annually.
+tom-brady,Tom Brady,Football,NFL,Quarterback,Retired,"San Mateo, California, USA",Widely considered the greatest quarterback in NFL history
+joe-namath,Joe Namath,Football,NFL,Quarterback,Retired,,
+john-stockton,John Stockton,Basketball,NBA,Point Guard,Retired,,
+christine-sinclair,Christine Sinclair,Soccer,International,Forward,Retired,"Burnaby, British Columbia, Canada",
+dan-marino,Dan Marino,Football,NFL,Quarterback,Retired,,#13 retired by Dolphins
+wilt-chamberlain,Wilt Chamberlain,Basketball,NBA,Center,Retired,,
+alex-rodriguez,Alex Rodriguez,Baseball,MLB,Shortstop / Third Base,Retired,"New York City, New York, USA",Legacy complicated by PED suspension but statistical dominance is undeniable
+brendan-shanahan,Brendan Shanahan,Hockey,NHL,Right Wing,Retired,,
+pete-rose,Pete Rose,Baseball,MLB,Third Base/Outfield,Retired,,Gambling ban complicates but doesn't erase the stats
+abby-wambach,Abby Wambach,Soccer,International,Forward,Retired,"Rochester, New York",
+johan-cruyff,Johan Cruyff,Soccer,International,Forward,Retired,"Amsterdam, Netherlands",
+nikola-jokic,Nikola Jokic,Basketball,NBA,Center,Active,,Active but passes Legend test - per tier list
+thurman-munson,Thurman Munson,Baseball,MLB,Catcher,Retired,,#15 retired by Yankees
+joe-montana,Joe Montana,Football,NFL,Quarterback,Retired,,
+reggie-jackson,Reggie Jackson,Baseball,MLB,Right Field,Retired,,
+shohei-ohtani,Shohei Ohtani,Baseball,MLB,Pitcher/DH,Active,,ACTIVE - review annually Active legend — review annually.
+peyton-manning,Peyton Manning,Football,NFL,Quarterback,Retired,,
+johnny-unitas,Johnny Unitas,Football,NFL,Quarterback,Retired,,
+steve-yzerman,Steve Yzerman,Hockey,NHL,Center,Retired,,#19 retired by Red Wings
+tony-gwynn,Tony Gwynn,Baseball,MLB,Right Field,Retired,,#19 retired by Padres
+barry-sanders,Barry Sanders,Football,NFL,Running Back,Retired,,
+mike-schmidt,Mike Schmidt,Baseball,MLB,Third Base,Retired,,
+roberto-clemente,Roberto Clemente,Baseball,MLB,Right Field,Retired,,#21 sacred at Pirates
+tim-duncan,Tim Duncan,Basketball,NBA,Power Forward,Retired,,
+emmitt-smith,Emmitt Smith,Football,NFL,Running Back,Retired,,
+mike-bossy,Mike Bossy,Hockey,NHL,Right Wing,Retired,,#22 retired by Islanders
+caitlin-clark,Caitlin Clark,Basketball,WNBA,Guard,Active,"West Des Moines, Iowa",ACTIVE - review annually
+michael-jordan,Michael Jordan,Basketball,NBA,Shooting Guard,Retired,,SACRED - LeBron is the documented exception
+lebron-james,LeBron James,Basketball,NBA,Small Forward,Active,,Active legend — review annually. Wears #23 under documented NBA exception (normally sacred for Russell).
+willie-mays,Willie Mays,Baseball,MLB,Center Field,Retired,,
+maya-moore,Maya Moore,Basketball,WNBA,Forward,Retired,"Jefferson City, Missouri",
+ken-griffey-jr,Ken Griffey Jr.,Baseball,MLB,Center Fielder,Retired,"Donora, Pennsylvania, USA",
+rickey-henderson,Rickey Henderson,Baseball,MLB,Left Field,Retired,,
+barry-bonds,Barry Bonds,Baseball,MLB,Left Field,Retired,,PED era - HOF excluded - stats stand. Keep with honest context.
+mark-mcgwire,Mark McGwire,Baseball,MLB,First Baseman,Retired,"Pomona, California, USA","PED era - admitted user - HOF excluded. Stats real, context required."
+vladimir-guerrero,Vladimir Guerrero,Baseball,MLB,Right Field,Retired,,
+nathan-mackinnon,Nathan MacKinnon,Hockey,NHL,Center,Active,,Active but passes Legend test per tier list
+marie-philip-poulin,Marie-Philip Poulin,Hockey,International,Center,Active,"Beauceville, Quebec, Canada",CONDITIONAL — greatest women's hockey player; global recognition still building outside Canada. Review annually.
+martin-brodeur,Martin Brodeur,Hockey,NHL,Goaltender,Retired,,
+stephen-curry,Stephen Curry,Basketball,NBA,Point Guard,Active,,Active but passes Legend test per tier list
+patrick-roy,Patrick Roy,Hockey,NHL,Goaltender,Retired,,#31 retired by Canadiens and Avalanche
+magic-johnson,Magic Johnson,Basketball,NBA,Point Guard,Retired,,#32 sacred at Lakers
+sandy-koufax,Sandy Koufax,Baseball,MLB,Pitcher,Retired,,#32 sacred at Dodgers
+larry-bird,Larry Bird,Basketball,NBA,Small Forward,Retired,,#33 sacred at Celtics
+patrick-ewing,Patrick Ewing,Basketball,NBA,Center,Retired,,#33 retired by Knicks
+jose-canseco,Jose Canseco,Baseball,MLB,Outfielder,Retired,"Havana, Cuba",
+shaquille-o-neal,Shaquille O'Neal,Basketball,NBA,Center,Retired,,
+charles-barkley,Charles Barkley,Basketball,NBA,Power Forward,Retired,"Leeds, Alabama, USA",
+david-ortiz,David Ortiz,Baseball,MLB,Designated Hitter,Retired,"Santo Domingo, Dominican Republic",
+giannis-antetokounmpo,Giannis Antetokounmpo,Basketball,NBA,Forward,Active,"Athens, Greece",
+paul-pierce,Paul Pierce,Basketball,NBA,Small Forward,Retired,,
+walter-payton,Walter Payton,Football,NFL,Running Back,Retired,,#34 sacred at Bears
+kevin-durant,Kevin Durant,Basketball,NBA,Small Forward,Active,"Washington, D.C., USA",One of the greatest pure scorers in NBA history
+dominik-ha-ek,Dominik Hašek,Hockey,NHL,Goaltender,Retired,"Pardubice, Czech Republic",Widely considered one of the greatest goaltenders in NHL history
+gale-sayers,Gale Sayers,Football,NFL,Running Back,Retired,,#40 sacred at Bears
+dirk-nowitzki,Dirk Nowitzki,Basketball,NBA,Power Forward,Retired,,
+tom-seaver,Tom Seaver,Baseball,MLB,Pitcher,Retired,,
+jackie-robinson,Jackie Robinson,Baseball,MLB,Second Base,Retired,,SACRED - retired across all MLB
+mariano-rivera,Mariano Rivera,Baseball,MLB,Closer,Retired,"Panama City, Panama",LEGEND — greatest closer of all time; wore #42 as last grandfathered player before MLB retirement for Robinson
+troy-polamalu,Troy Polamalu,Football,NFL,Safety,Retired,,
+hank-aaron,Hank Aaron,Baseball,MLB,Right Field,Retired,,#44 retired by Braves
+jerry-west,Jerry West,Basketball,NBA,Guard,Retired,,
+pedro-martinez,Pedro Martinez,Baseball,MLB,Pitcher,Retired,,
+david-robinson,David Robinson,Basketball,NBA,Center,Retired,,
+ichiro-suzuki,Ichiro Suzuki,Baseball,MLB,Right Field,Retired,,
+bernie-williams,Bernie Williams,Baseball,MLB,Center Field,Retired,,
+randy-johnson,Randy Johnson,Baseball,MLB,Pitcher,Retired,,
+ray-lewis,Ray Lewis,Football,NFL,Linebacker,Retired,,#52 sacred at Ravens
+brian-urlacher,Brian Urlacher,Football,NFL,Linebacker,Retired,,
+junior-seau,Junior Seau,Football,NFL,Linebacker,Retired,,
+lawrence-taylor,Lawrence Taylor,Football,NFL,Linebacker,Retired,"Williamsburg, Virginia, USA",Widely considered the greatest defensive player in NFL history
+jack-lambert,Jack Lambert,Football,NFL,Linebacker,Retired,"Mantua, Ohio, USA",The face of the Steelers' Steel Curtain defense
+chuck-bednarik,Chuck Bednarik,Football,NFL,Center/Linebacker,Retired,,
+mario-lemieux,Mario Lemieux,Hockey,NHL,Center,Retired,,#66 retired by Penguins - played on same line as Jagr #68
+jaromir-jagr,Jaromir Jagr,Hockey,NHL,Right Wing,Retired,,"Adjacent to Lemieux #66 - two linemates, two Legends"
+mean-joe-greene,Mean Joe Greene,Football,NFL,Defensive Tackle,Retired,,
+p-k-subban,P.K. Subban,Hockey,NHL,Defenseman,Retired,"Toronto, Ontario, Canada",CONDITIONAL — not yet HOF-inducted. Cross-generational name test building. Review at induction.
+ray-bourque,Ray Bourque,Hockey,NHL,Defenseman,Retired,,#77 retired by Bruins
+jerry-rice,Jerry Rice,Football,NFL,Wide Receiver,Retired,,
+terrell-owens,Terrell Owens,Football,NFL,Wide Receiver,Retired,,
+randy-moss,Randy Moss,Football,NFL,Wide Receiver,Retired,,"Note: wore #84 in Minnesota, #81 in New England"
+jack-hughes,Jack Hughes,Hockey,NHL,Center,Active,"Orlando, Florida",CONDITIONAL — Olympic golden goal clears permanence and global floor tests. Cross-generational name test still building. Review July 2026. Verify exact game details.
+sidney-crosby,Sidney Crosby,Hockey,NHL,Center,Active,,ACTIVE - review annually Active legend — review annually.
+travis-kelce,Travis Kelce,Football,NFL,Tight End,Active,,ACTIVE - review annually - may move to Legend on retirement Active legend — review annually.
+patrick-kane,Patrick Kane,Hockey,NHL,Right Wing,Active,"Buffalo, New York, USA",CONDITIONAL — cross-generational name test building. ACTIVE - review annually.
+eric-lindros,Eric Lindros,Hockey,NHL,Center,Retired,,
+tony-gonzalez,Tony Gonzalez,Football,NFL,Tight End,Retired,,#88 is most HOF-crowded number in NFL history per tier list
+mike-ditka,Mike Ditka,Football,NFL,Tight End,Retired,,
+sergei-fedorov,Sergei Fedorov,Hockey,NHL,Center,Retired,"Pskov, Russia",One of the greatest two-way forwards in NHL history
+michael-strahan,Michael Strahan,Football,NFL,Defensive End,Retired,,
+reggie-white,Reggie White,Football,NFL,Defensive End,Retired,,
+pavel-bure,Pavel Bure,Hockey,NHL,Right Wing,Retired,,
+connor-mcdavid,Connor McDavid,Hockey,NHL,Center,Active,,ACTIVE - review annually Active legend — review annually.
+wayne-gretzky,Wayne Gretzky,Hockey,NHL,Center,Retired,,SACRED - retired across all NHL
+aaron-judge,Aaron Judge,Baseball,MLB,Right Fielder,Active,,LEGEND — AL single-season HR record holder; face of the Yankees
+jayson-tatum,Jayson Tatum,Basketball,NBA,Small Forward,Active,,
+bobby-doerr,Bobby Doerr,Baseball,MLB,Second Base,Retired,,
+gerry-cheevers,Gerry Cheevers,Hockey,NHL,Goaltender,Retired,,
+red-auerbach,Red Auerbach,Basketball,NBA,Head Coach,Retired,,
+eddie-shore,Eddie Shore,Hockey,NHL,Defenseman,Retired,"Fort Qu'Appelle, Saskatchewan, Canada",
+dennis-johnson,Dennis Johnson,Basketball,NBA,Point Guard,Retired,,Died at 52 - Hall of Fame case pending
+jimmie-foxx,Jimmie Foxx,Baseball,MLB,First Base,Retired,,
+joe-cronin,Joe Cronin,Baseball,MLB,Shortstop,Retired,,
+kevin-garnett,Kevin Garnett,Basketball,NBA,Power Forward,Retired,,
+nomar-garciaparra,Nomar Garciaparra,Baseball,MLB,Shortstop,Retired,,
+johnny-pesky,Johnny Pesky,Baseball,MLB,Shortstop,Retired,,
+jaylen-brown,Jaylen Brown,Basketball,NBA,Shooting Guard,Active,,
+cam-neely,Cam Neely,Hockey,NHL,Right Wing,Retired,,
+carl-yastrzemski,Carl Yastrzemski,Baseball,MLB,Left Field,Retired,,
+johnny-bucyk,Johnny Bucyk,Hockey,NHL,Left Wing,Retired,,
+jo-jo-white,Jo Jo White,Basketball,NBA,Guard,Retired,,
+julian-edelman,Julian Edelman,Football,NFL,Wide Receiver,Retired,,Confidence 3 - Legend tier debated
+bob-cousy,Bob Cousy,Basketball,NBA,Point Guard,Retired,,
+jim-rice,Jim Rice,Baseball,MLB,Left Field,Retired,,
+steve-grogan,Steve Grogan,Football,NFL,Quarterback,Retired,,
+dustin-pedroia,Dustin Pedroia,Baseball,MLB,Second Base,Retired,,The Laser Show
+milt-schmidt,Milt Schmidt,Hockey,NHL,Center,Retired,,
+tom-heinsohn,Tom Heinsohn,Basketball,NBA,Forward,Retired,,
+derek-sanderson,Derek Sanderson,Hockey,NHL,Center,Retired,,Turk
+dwight-evans,Dwight Evans,Baseball,MLB,Right Field,Retired,,
+john-havlicek,John Havlicek,Basketball,NBA,Small Forward,Retired,,
+milan-lucic,Milan Lucic,Hockey,NHL,Left Wing,Retired,,
+dave-cowens,Dave Cowens,Basketball,NBA,Center,Retired,,
+johnny-damon,Johnny Damon,Baseball,MLB,Center Field,Retired,,Broke hearts going to the Yankees after
+don-nelson,Don Nelson,Basketball,NBA,Forward,Retired,,
+fred-lynn,Fred Lynn,Baseball,MLB,Center Field,Retired,,
+gino-cappelletti,Gino Cappelletti,Football,NFL,Wide Receiver/Kicker,Retired,,
+kevin-youkilis,Kevin Youkilis,Baseball,MLB,First/Third Base,Retired,,"Cultural Legend: City Icon — The Greek God of Walks. Stat suppressed; his legend lives in the roar of Fenway, not a line in a box score."
+ray-allen,Ray Allen,Basketball,NBA,Shooting Guard,Retired,,
+ed-macauley,Ed Macauley,Basketball,NBA,Center,Retired,,
+roger-clemens,Roger Clemens,Baseball,MLB,Pitcher,Retired,,Complex legacy but undeniable Boston impact
+willie-o-ree,Willie O'Ree,Hockey,NHL,Left Wing,Retired,,Cultural Legend: Barrier Breaker — First Black player in NHL history (1958). Stat suppressed; the barrier he broke can't be measured.
+frank-ramsey,Frank Ramsey,Basketball,NBA,Guard/Forward,Retired,,
+luis-tiant,Luis Tiant,Baseball,MLB,Pitcher,Retired,,The windup was performance art
+manny-ramirez,Manny Ramirez,Baseball,MLB,Left Field,Retired,,Manny Being Manny
+sam-jones,Sam Jones,Basketball,NBA,Guard,Retired,,The Bank Shot
+terry-o-reilly,Terry O'Reilly,Hockey,NHL,Right Wing,Retired,,
+ty-law,Ty Law,Football,NFL,Cornerback,Retired,,Hall of Famer
+k-c-jones,K.C. Jones,Basketball,NBA,Guard,Retired,,
+tony-conigliaro,Tony Conigliaro,Baseball,MLB,Right Field,Retired,,
+wade-boggs,Wade Boggs,Baseball,MLB,Third Base,Retired,,
+carlton-fisk,Carlton Fisk,Baseball,MLB,Catcher,Retired,,
+corey-dillon,Corey Dillon,Football,NFL,Running Back,Retired,,
+tim-thomas,Tim Thomas,Hockey,NHL,Goalie,Retired,"Flint, Michigan, USA",
+cedric-maxwell,Cedric Maxwell,Basketball,NBA,Forward,Retired,,
+kevin-mchale,Kevin McHale,Basketball,NBA,Power Forward,Retired,,
+zdeno-chara,Zdeno Chara,Hockey,NHL,Defenseman,Retired,,
+reggie-lewis,Reggie Lewis,Basketball,NBA,Small Forward,Retired,,One of the great Boston tragedies
+patrice-bergeron,Patrice Bergeron,Hockey,NHL,Center,Retired,,
+curt-schilling,Curt Schilling,Baseball,MLB,Pitcher,Retired,,
+tuukka-rask,Tuukka Rask,Hockey,NHL,Goaltender,Retired,,
+danny-ainge,Danny Ainge,Basketball,NBA,Guard,Retired,,
+david-krejci,David Krejci,Hockey,NHL,Center,Retired,,
+mike-vrabel,Mike Vrabel,Football,NFL,Linebacker,Retired,,
+tedy-bruschi,Tedy Bruschi,Football,NFL,Linebacker,Retired,,
+willie-mcginest,Willie McGinest,Football,NFL,Linebacker/DE,Retired,,
+andre-tippett,Andre Tippett,Football,NFL,Linebacker,Retired,,
+brad-marchand,Brad Marchand,Hockey,NHL,Left Wing,Active,,"Moved to Florida Panthers 2025 — legacy belongs to Boston. Keep on legends wall, review annually."
+matt-light,Matt Light,Football,NFL,Offensive Tackle,Retired,,
+john-hannah,John Hannah,Football,NFL,Offensive Guard,Retired,,
+vince-wilfork,Vince Wilfork,Football,NFL,Defensive Tackle,Retired,,
+wes-welker,Wes Welker,Football,NFL,Slot Receiver,Retired,,Dropped the crucial pass in Super Bowl XLVI
+rob-gronkowski,Rob Gronkowski,Football,NFL,Tight End,Retired,,Gronk
+david-pastrnak,David Pastrnak,Hockey,NHL,Right Wing,Active,,Active - update annually
+richard-seymour,Richard Seymour,Football,NFL,Defensive End,Retired,,Hall of Famer
+christian-gonzalez,Christian Gonzalez,Football,NFL,CB,Active,,
+jeremy-swayman,Jeremy Swayman,Hockey,NHL,G,Active,,
+harold-landry-iii,Harold Landry III,Football,NFL,LB,Active,,
+i-kiner-falefa,I. Kiner-Falefa,Baseball,MLB,SS,Active,,
+c-rafaela,C. Rafaela,Baseball,MLB,CF,Active,,
+demario-douglas,DeMario Douglas,Football,NFL,WR,Active,,
+nikola-vucevic,Nikola Vucevic,Basketball,NBA,C,Active,,
+mason-lohrei,Mason Lohrei,Hockey,NHL,D,Active,,
+carlton-davis-iii,Carlton Davis III,Football,NFL,CB,Active,,
+m-yoshida,M. Yoshida,Baseball,MLB,LF,Active,,
+john-tonje,John Tonje,Basketball,NBA,G,Active,,
+stefon-diggs,Stefon Diggs,Football,NFL,WR,Active,,
+derrick-white,Derrick White,Basketball,NBA,G,Active,,
+kayshon-boutte,Kayshon Boutte,Football,NFL,WR,Active,,
+drake-maye,Drake Maye,Football,NFL,QB,Active,,
+t-story,T. Story,Baseball,MLB,SS,Active,,
+casey-mittelstadt,Casey Mittelstadt,Hockey,NHL,C,Active,,
+joshua-dobbs,Joshua Dobbs,Football,NFL,QB,Active,,
+m-mayer,M. Mayer,Baseball,MLB,3B,Active,,
+payton-pritchard,Payton Pritchard,Basketball,NBA,G,Active,,
+c-wong,C. Wong,Baseball,MLB,C,Active,,
+mack-hollins,Mack Hollins,Football,NFL,WR,Active,,
+ron-harper-jr,Ron Harper Jr.,Basketball,NBA,G,Active,,
+robert-spillane,Robert Spillane,Football,NFL,LB,Active,,
+marte-mapu,Marte Mapu,Football,NFL,LB,Active,,
+j-duran,J. Duran,Baseball,MLB,LF,Active,,
+tommy-devito,Tommy DeVito,Football,NFL,QB,Active,,
+bryce-baringer,Bryce Baringer,Football,NFL,P,Active,,
+c-durbin,C. Durbin,Baseball,MLB,3B,Active,,
+kyle-williams,Kyle Williams,Football,NFL,WR,Active,,
+n-eaton,N. Eaton,Baseball,MLB,3B,Active,,
+pavel-zacha,Pavel Zacha,Hockey,NHL,C,Active,,
+kobee-minor,Kobee Minor,Football,NFL,DB,Active,,
+r-anthony,R. Anthony,Baseball,MLB,RF,Active,,
+henri-jokiharju,Henri Jokiharju,Hockey,NHL,D,Active,,
+n-sogard,N. Sogard,Baseball,MLB,1B,Active,,
+alex-steeves,Alex Steeves,Hockey,NHL,C,Active,,
+jaylinn-hawkins,Jaylinn Hawkins,Football,NFL,S,Active,,
+charles-woods,Charles Woods,Football,NFL,CB,Active,,
+g-whitlock,G. Whitlock,Baseball,MLB,RP,Active,,
+r-gonzalez,R. Gonzalez,Baseball,MLB,1B,Active,,
+dell-pettus,Dell Pettus,Football,NFL,S,Active,,
+marcus-jones,Marcus Jones,Football,NFL,CB,Active,,
+andrew-peeke,Andrew Peeke,Hockey,NHL,D,Active,,
+hampus-lindholm,Hampus Lindholm,Hockey,NHL,D,Active,,
+jordan-walsh,Jordan Walsh,Basketball,NBA,G,Active,,
+alex-austin,Alex Austin,Football,NFL,CB,Active,,
+elias-lindholm,Elias Lindholm,Hockey,NHL,C,Active,,
+hugo-gonzalez,Hugo Gonzalez,Basketball,NBA,G,Active,,
+k-campbell,K. Campbell,Baseball,MLB,2B,Active,,
+j-oviedo,J. Oviedo,Baseball,MLB,SP,Active,,
+victor-soderstrom,Victor Soderstrom,Hockey,NHL,D,Active,,
+m-gasper,M. Gasper,Baseball,MLB,2B,Active,,
+sam-hauser,Sam Hauser,Basketball,NBA,F,Active,,
+craig-woodson,Craig Woodson,Football,NFL,S,Active,,
+a-monasterio,A. Monasterio,Baseball,MLB,SS,Active,,
+treveyon-henderson,TreVeyon Henderson,Football,NFL,RB,Active,,
+anfernee-jennings,Anfernee Jennings,Football,NFL,LB,Active,,
+g-crochet,G. Crochet,Baseball,MLB,SP,Active,,
+andy-borregales,Andy Borregales,Football,NFL,K,Active,,
+t-casas,T. Casas,Baseball,MLB,1B,Active,,
+jack-westover,Jack Westover,Football,NFL,FB,Active,,
+rhamondre-stevenson,Rhamondre Stevenson,Football,NFL,RB,Active,,
+morgan-geekie,Morgan Geekie,Hockey,NHL,C,Active,,
+t-cheng,T. Cheng,Baseball,MLB,SS,Active,,
+w-contreras,W. Contreras,Baseball,MLB,1B,Active,,
+brenden-schooler,Brenden Schooler,Football,NFL,S,Active,,
+bradyn-swinson,Bradyn Swinson,Football,NFL,LB,Active,,
+jordan-harris,Jordan Harris,Hockey,NHL,D,Active,,
+p-sandoval,P. Sandoval,Baseball,MLB,SP,Active,,
+a-chapman,A. Chapman,Baseball,MLB,RP,Active,,
+k-lavon-chaisson,K'Lavon Chaisson,Football,NFL,LB,Active,,
+max-shulga,Max Shulga,Basketball,NBA,G,Active,,
+jonathan-aspirot,Jonathan Aspirot,Hockey,NHL,D,Active,,
+j-moran,J. Moran,Baseball,MLB,RP,Active,,
+julian-ashby,Julian Ashby,Football,NFL,LS,Active,,
+mark-kastelic,Mark Kastelic,Hockey,NHL,C,Active,,
+a-seigler,A. Seigler,Baseball,MLB,2B,Active,,
+jahlani-tavai,Jahlani Tavai,Football,NFL,LB,Active,,
+chad-muma,Chad Muma,Football,NFL,LB,Active,,
+k-crawford,K. Crawford,Baseball,MLB,SP,Active,,
+jack-gibbens,Jack Gibbens,Football,NFL,LB,Active,,
+matthew-poitras,Matthew Poitras,Hockey,NHL,C,Active,,
+luka-garza,Luka Garza,Basketball,NBA,C,Active,,
+marcus-bryant,Marcus Bryant,Football,NFL,OT,Active,,
+sean-kuraly,Sean Kuraly,Hockey,NHL,C,Active,,
+w-abreu,W. Abreu,Baseball,MLB,RF,Active,,
+christian-elliss,Christian Elliss,Football,NFL,LB,Active,,
+s-gray,S. Gray,Baseball,MLB,SP,Active,,
+baylor-scheierman,Baylor Scheierman,Basketball,NBA,G,Active,,
+r-suarez,R. Suarez,Baseball,MLB,SP,Active,,
+r-watson,R. Watson,Baseball,MLB,RP,Active,,
+g-weissert,G. Weissert,Baseball,MLB,RP,Active,,
+jared-wilson,Jared Wilson,Football,NFL,OL,Active,,
+vederian-lowe,Vederian Lowe,Football,NFL,OT,Active,,
+j-slaten,J. Slaten,Baseball,MLB,RP,Active,,
+garrett-bradbury,Garrett Bradbury,Football,NFL,C,Active,,
+b-bello,B. Bello,Baseball,MLB,SP,Active,,
+will-campbell,Will Campbell,Football,NFL,OT,Active,,
+caedan-wallace,Caedan Wallace,Football,NFL,OT,Active,,
+joonas-korpisalo,Joonas Korpisalo,Hockey,NHL,G,Active,,
+p-tolle,P. Tolle,Baseball,MLB,SP,Active,,
+c-early,C. Early,Baseball,MLB,SP,Active,,
+mike-onwenu,Mike Onwenu,Football,NFL,OL,Active,,
+viktor-arvidsson,Viktor Arvidsson,Hockey,NHL,LW,Active,,
+charlie-mcavoy,Charlie McAvoy,Hockey,NHL,D,Active,,
+thayer-munford-jr,Thayer Munford Jr.,Football,NFL,OT,Active,,
+c-narv-ez,C. Narváez,Baseball,MLB,C,Active,,
+morgan-moses,Morgan Moses,Football,NFL,OT,Active,,
+z-kelly,Z. Kelly,Baseball,MLB,RP,Active,,
+amari-williams,Amari Williams,Basketball,NBA,F,Active,,
+ben-brown,Ben Brown,Football,NFL,C,Active,,
+t-samaniego,T. Samaniego,Baseball,MLB,SP,Active,,
+t-uberstine,T. Uberstine,Baseball,MLB,SP,Active,,
+austin-hooper,Austin Hooper,Football,NFL,TE,Active,,
+michael-eyssimont,Michael Eyssimont,Hockey,NHL,C,Active,,
+cj-dippre,CJ Dippre,Football,NFL,TE,Active,,
+tanner-jeannot,Tanner Jeannot,Hockey,NHL,LW,Active,,
+hunter-henry,Hunter Henry,Football,NFL,TE,Active,,
+efton-chism-iii,Efton Chism III,Football,NFL,WR,Active,,
+neemias-queta,Neemias Queta,Basketball,NBA,C,Active,,
+t-houck,T. Houck,Baseball,MLB,SP,Active,,
+christian-barmore,Christian Barmore,Football,NFL,DT,Active,,
+elijah-ponder,Elijah Ponder,Football,NFL,LB,Active,,
+nikita-zadorov,Nikita Zadorov,Hockey,NHL,D,Active,,
+marat-khusnutdinov,Marat Khusnutdinov,Hockey,NHL,C,Active,,
+fraser-minten,Fraser Minten,Hockey,NHL,C,Active,,
+cory-durden,Cory Durden,Football,NFL,DL,Active,,
+khyiris-tonga,Khyiris Tonga,Football,NFL,DL,Active,,
+milton-williams,Milton Williams,Football,NFL,DT,Active,,

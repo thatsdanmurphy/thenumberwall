@@ -8,13 +8,16 @@
     "Status": "Retired",
     "Era": "Celtics Dynasty",
     "Team": "Boston Celtics",
-    "Hometown": "Shreveport, Louisiana",
+    "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Championship Rings (with Celtics)",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Center",
     "Fun Fact": "The Chief. Played 21 seasons, nine with the Celtics, winning three championships alongside Bird and McHale. His #00 is retired by the Celtics.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "0",
@@ -28,10 +31,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Championship",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Small Forward",
     "Fun Fact": "2024 Finals MVP, the face of the new dynasty. Still writing it.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "1",
@@ -45,10 +51,13 @@
     "Hometown": "",
     "Signature Stat": "223",
     "Stat Label": "Career Home Runs",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Second Base",
     "Fun Fact": "One of the best second basemen of his era. Played his entire 14-season career with the Red Sox. Batted .325 in the 1946 World Series. Hall of Famer who played alongside Ted Williams.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "1",
@@ -62,10 +71,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "Stanley Cup Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Goaltender",
     "Fun Fact": "He used to draw stitches on his mask every time a puck hit it. By the end of his career it looked like Frankenstein.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "2",
@@ -79,10 +91,13 @@
     "Hometown": "",
     "Signature Stat": "9",
     "Stat Label": "Championships as Head Coach (including 8 consecutive 1959-1966)",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Head Coach",
     "Fun Fact": "Nine NBA championships as head coach, including eight consecutive titles from 1959 to 1966. He lit a victory cigar before the final buzzer as his signature move to celebrate.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "2",
@@ -96,10 +111,13 @@
     "Hometown": "Fort Qu'Appelle, Saskatchewan, Canada",
     "Signature Stat": "4",
     "Stat Label": "Hart Trophy Wins",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Defenseman",
     "Fun Fact": "He won four MVP awards in the 1930s and was considered the greatest defenseman in hockey history until Bobby Orr arrived decades later",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "3",
@@ -113,10 +131,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Championship",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Point Guard",
     "Fun Fact": "Larry Bird called him the best teammate he ever had. High praise from the greatest Celtic.",
-    "Notes": "Died at 52 - Hall of Fame case pending"
+    "Notes": "Died at 52 - Hall of Fame case pending",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "3",
@@ -130,10 +151,13 @@
     "Hometown": "",
     "Signature Stat": "534",
     "Stat Label": "Career Home Runs",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "First Base",
     "Fun Fact": "He hit 50 home runs in 1938 and batted .349 in his first year in Boston. The Beast was terrifying.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "4",
@@ -147,10 +171,13 @@
     "Hometown": "",
     "Signature Stat": "102",
     "Stat Label": "Career Goals (D record)",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Defenseman",
     "Fun Fact": "He flew through the air after scoring the 1970 Cup winner, arms out horizontal, the most iconic photo in Boston sports.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "4",
@@ -164,10 +191,13 @@
     "Hometown": "",
     "Signature Stat": "1071",
     "Stat Label": "Career RBI",
-    "Stat Weight": "1",
+    "Stat Weight": 1,
     "Role": "Shortstop",
     "Fun Fact": "He was a player-manager, hitting and running the team at the same time, and later became AL President.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "5",
@@ -181,10 +211,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Championship",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Power Forward",
     "Fun Fact": "After winning the 2008 title he screamed ANYTHING IS POSSIBLE into the camera. The city felt every word.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "5",
@@ -198,10 +231,13 @@
     "Hometown": "",
     "Signature Stat": "0.372",
     "Stat Label": "Peak Season AVG",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Shortstop",
     "Fun Fact": "He had a full batting ritual before every single pitch, gloves tightened exactly the same way. Fenway loved every second of it.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "6",
@@ -215,10 +251,13 @@
     "Hometown": "",
     "Signature Stat": "11",
     "Stat Label": "Championships",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Center",
     "Fun Fact": "The NBA retired his number across all 30 teams in 2022, 55 years after his last championship, because some things take time to understand.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "6",
@@ -232,10 +271,13 @@
     "Hometown": "",
     "Signature Stat": "1455",
     "Stat Label": "Career Hits",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Shortstop",
     "Fun Fact": "The right field foul pole at Fenway is officially named the Pesky Pole after him. He hit a few key homers around it.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "7",
@@ -249,10 +291,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Championship",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Shooting Guard",
     "Fun Fact": "2024 NBA Finals MVP alongside Jayson Tatum. The first Celtics player to win Finals MVP since Paul Pierce in 2008. Built a new dynasty with Tatum.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "7",
@@ -266,10 +311,13 @@
     "Hometown": "",
     "Signature Stat": "459",
     "Stat Label": "Goals as a Bruin",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Center",
     "Fun Fact": "When he was traded to the Rangers in 1975, fans held a protest at the Garden. That's how much Boston loved him.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "8",
@@ -283,10 +331,13 @@
     "Hometown": "",
     "Signature Stat": "395",
     "Stat Label": "Career Goals",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Right Wing",
-    "Fun Fact": "He invented the power forward position before anyone called it that. Goals, hits, fights \u2014 and a body that took the beating so the team did not have to.",
-    "Notes": ""
+    "Fun Fact": "He invented the power forward position before anyone called it that. Goals, hits, fights — and a body that took the beating so the team did not have to.",
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "8",
@@ -300,10 +351,13 @@
     "Hometown": "",
     "Signature Stat": "3419",
     "Stat Label": "Career Hits",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Left Field",
     "Fun Fact": "In 1967 he won the Triple Crown and carried the Red Sox to the pennant almost single-handedly. One man willing a team to greatness.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "9",
@@ -317,10 +371,13 @@
     "Hometown": "",
     "Signature Stat": "545",
     "Stat Label": "Career Goals",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Left Wing",
     "Fun Fact": "He played 21 seasons in Boston, all of them in a Bruins jersey. The definition of a franchise lifer.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "9",
@@ -334,10 +391,13 @@
     "Hometown": "",
     "Signature Stat": "0.406",
     "Stat Label": "Season Batting AVG",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Left Field",
     "Fun Fact": "He hit .406 in 1941 and nobody has done it since. He also lost five prime years serving in WWII and Korea and came back and was still the best hitter alive.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "10",
@@ -351,10 +411,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Guard",
     "Fun Fact": "He was the 1976 Finals MVP, the engine of the Celtics dynasty between Russell and Bird that most people forget about.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "11",
@@ -368,10 +431,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Wide Receiver",
     "Fun Fact": "Super Bowl LIII MVP with 141 receiving yards in the lowest-scoring Super Bowl ever. A former college quarterback who converted to receiver. Brady's most reliable weapon.",
-    "Notes": "Confidence 3 - Legend tier debated"
+    "Notes": "Confidence 3 - Legend tier debated",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "12",
@@ -382,13 +448,16 @@
     "Status": "Retired",
     "Era": "Patriots Dynasty",
     "Team": "New England Patriots",
-    "Hometown": "",
+    "Hometown": "San Mateo, California, USA",
     "Signature Stat": "6",
     "Stat Label": "Super Bowl Wins as Patriot",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Quarterback",
     "Fun Fact": "He was the 199th pick in the 2000 draft. Nobody wanted him. He went on to win six Super Bowls in New England.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "14",
@@ -402,10 +471,13 @@
     "Hometown": "",
     "Signature Stat": "13",
     "Stat Label": "All-Star Selections + 6x All-Star Game MVP",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Point Guard",
     "Fun Fact": "He invented what modern point guards do, behind-the-back passes and no-look feeds, in the 1950s when nobody had seen it before. The Celtics tried to trade him and Boston fans threatened a citywide boycott.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "14",
@@ -419,10 +491,13 @@
     "Hometown": "",
     "Signature Stat": "382",
     "Stat Label": "Career Home Runs",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Left Field",
     "Fun Fact": "He was so feared that AL managers would walk him to face someone less dangerous. The 1978 MVP was unanimous.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "14",
@@ -436,10 +511,13 @@
     "Hometown": "",
     "Signature Stat": "182",
     "Stat Label": "Career TD Passes",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Quarterback",
     "Fun Fact": "The toughest quarterback of his era. Started every game he could, engineered comebacks nobody else would have attempted, and carried a franchise that had nothing else to sell.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "15",
@@ -453,10 +531,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "World Series Rings",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Second Base",
     "Fun Fact": "He won Rookie of Year, MVP, and two World Series rings in Boston, and played most of his career hurt because he refused to quit.",
-    "Notes": "The Laser Show"
+    "Notes": "The Laser Show",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "15",
@@ -470,10 +551,13 @@
     "Hometown": "",
     "Signature Stat": "229",
     "Stat Label": "Career Goals",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Center",
     "Fun Fact": "He served in WWII during his prime years, gave up three seasons to the war, and came back to win the Cup.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "15",
@@ -487,10 +571,13 @@
     "Hometown": "",
     "Signature Stat": "8",
     "Stat Label": "Championships as Player (+ 2 More as Head Coach)",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Forward",
     "Fun Fact": "He won eight rings as a player, then coached the Celtics to two more, and called every game on TV for decades. No one touched this franchise more times across more roles.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "16",
@@ -504,10 +591,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "Stanley Cup Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Center",
     "Fun Fact": "He was the coolest player in the NHL in the early 70s. Faceoff wizard, two Cups, and the biggest contract in hockey history at the time.",
-    "Notes": "Turk"
+    "Notes": "Turk",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "16",
@@ -521,10 +611,13 @@
     "Hometown": "",
     "Signature Stat": "385",
     "Stat Label": "Career Home Runs",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Right Field",
     "Fun Fact": "He won eight Gold Gloves in right field at Fenway. The wall is brutal to play and he made it look easy for two decades.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "17",
@@ -538,10 +631,13 @@
     "Hometown": "",
     "Signature Stat": "8",
     "Stat Label": "Championships + 1974 Finals MVP Bridged Both Dynasties",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Small Forward",
     "Fun Fact": "Havlicek stole the ball. Those four words from the 1965 Eastern Conference Finals are the most famous call in NBA history. He won eight championships, the original sixth man who became a starter.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "17",
@@ -555,10 +651,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Stanley Cup Ring",
-    "Stat Weight": "1",
+    "Stat Weight": 1,
     "Role": "Left Wing",
     "Fun Fact": "He was the enforcer of the 2011 Cup team, the guy who made sure nobody touched Bergeron. Bruins fans loved him deeply.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "18",
@@ -572,10 +671,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Center",
     "Fun Fact": "He was undersized for a center and it didn't matter. He out-hustled everyone and willed two championships through pure fury.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "18",
@@ -589,10 +691,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "World Series Ring",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Center Field",
     "Fun Fact": "He called himself and his teammates The Idiots, and then in the 2004 ALCS he hit a grand slam that helped complete the comeback from 3-0.",
-    "Notes": "Broke hearts going to the Yankees after"
+    "Notes": "Broke hearts going to the Yankees after",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "19",
@@ -606,10 +711,13 @@
     "Hometown": "",
     "Signature Stat": "5",
     "Stat Label": "Championships as a Celtics player",
-    "Stat Weight": "1",
+    "Stat Weight": 1,
     "Role": "Forward",
     "Fun Fact": "Won five rings as a Celtic player. Became one of the greatest offensive coaching minds in NBA history, coaching the Milwaukee Bucks, Golden State Warriors, Dallas Mavericks, and New York Knicks. Revolutionized the game with small-ball and Nellie Ball offense.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "19",
@@ -623,10 +731,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Rookie of Year + MVP",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Center Field",
     "Fun Fact": "In 1975 he became the only player in baseball history to win Rookie of Year and MVP in the same season. Still the only one.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "20",
@@ -640,10 +751,13 @@
     "Hometown": "",
     "Signature Stat": "1130",
     "Stat Label": "Career Points",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Wide Receiver/Kicker",
     "Fun Fact": "He was both a wide receiver and a kicker at the same time in the 1960s AFL and won the scoring title five times.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "20",
@@ -657,10 +771,13 @@
     "Hometown": "",
     "Signature Stat": "",
     "Stat Label": "",
-    "Stat Weight": "0",
+    "Stat Weight": 0,
     "Role": "First/Third Base",
     "Fun Fact": "Bill James called him The Greek God of Walks before he played a single MLB game. Boston loved him for it. Two rings, a .382 career OBP, and a nickname that said everything about how he approached every at-bat.",
-    "Notes": "Cultural Legend: City Icon \u2014 The Greek God of Walks. Stat suppressed; his legend lives in the roar of Fenway, not a line in a box score."
+    "Notes": "Cultural Legend: City Icon — The Greek God of Walks. Stat suppressed; his legend lives in the roar of Fenway, not a line in a box score.",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "20",
@@ -674,10 +791,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Championship",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Shooting Guard",
     "Fun Fact": "Made the most important three-pointer in Finals history in Game 6 of the 2013 NBA Finals. His legend was built in Boston, where he helped end a 22-year championship drought in 2008.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "22",
@@ -691,10 +811,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "All-Star selections",
-    "Stat Weight": "1",
+    "Stat Weight": 1,
     "Role": "Center",
     "Fun Fact": "Macauley and Cliff Hagan were traded to St. Louis in 1956 for the rights to Bill Russell. One of the most lopsided trades in NBA history. The Celtics got Russell and built a dynasty.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "22",
@@ -708,10 +831,13 @@
     "Hometown": "",
     "Signature Stat": "192",
     "Stat Label": "Wins as a Red Sox pitcher",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Pitcher",
     "Fun Fact": "He struck out 20 batters in a single game in 1986. Still one of the most dominant pitching performances ever.",
-    "Notes": "Complex legacy but undeniable Boston impact"
+    "Notes": "Complex legacy but undeniable Boston impact",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "22",
@@ -725,10 +851,13 @@
     "Hometown": "",
     "Signature Stat": "",
     "Stat Label": "",
-    "Stat Weight": "0",
+    "Stat Weight": 0,
     "Role": "Left Wing",
     "Fun Fact": "He became the first Black player in NHL history in 1958, breaking the color barrier 11 years after Jackie Robinson did the same in baseball. He was legally blind in one eye the entire time. Nobody knew until decades later.",
-    "Notes": "Cultural Legend: Barrier Breaker \u2014 First Black player in NHL history (1958). Stat suppressed; the barrier he broke can't be measured."
+    "Notes": "Cultural Legend: Barrier Breaker — First Black player in NHL history (1958). Stat suppressed; the barrier he broke can't be measured.",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "23",
@@ -741,11 +870,14 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "7",
-    "Stat Label": "Championships \u2014 Invented the Sixth Man Role Before It Had a Name",
-    "Stat Weight": "3",
+    "Stat Label": "Championships — Invented the Sixth Man Role Before It Had a Name",
+    "Stat Weight": 3,
     "Role": "Guard/Forward",
     "Fun Fact": "He invented the sixth man role. Red Auerbach started him off the bench because he was better as a weapon than a starter, and Boston rings started following him around.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "23",
@@ -759,10 +891,13 @@
     "Hometown": "",
     "Signature Stat": "122",
     "Stat Label": "Wins as Red Sox",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Pitcher",
     "Fun Fact": "His windup was unlike anything in baseball. He turned his back completely to the hitter before delivering. Fenway loved the theater of it.",
-    "Notes": "The windup was performance art"
+    "Notes": "The windup was performance art",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "24",
@@ -776,10 +911,13 @@
     "Hometown": "",
     "Signature Stat": "274",
     "Stat Label": "Home Runs as Red Sox",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Left Field",
     "Fun Fact": "He was the most naturally gifted right-handed hitter of his generation, and he did everything on his own schedule. That's why they say Manny Being Manny.",
-    "Notes": "Manny Being Manny"
+    "Notes": "Manny Being Manny",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "24",
@@ -793,10 +931,13 @@
     "Hometown": "",
     "Signature Stat": "10",
     "Stat Label": "Championships 10 in 12 Seasons",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Guard",
     "Fun Fact": "Ten NBA championships, the most by any player at the time. Known for bank shots. A key piece of 10 Celtics championships. The greatest role player in the history of dynasty basketball.",
-    "Notes": "The Bank Shot"
+    "Notes": "The Bank Shot",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "24",
@@ -810,10 +951,13 @@
     "Hometown": "",
     "Signature Stat": "204",
     "Stat Label": "Career Goals",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Right Wing",
     "Fun Fact": "Called Taz because he played like a Tasmanian devil. The toughest player on the Bruins in the late 1970s and early 1980s. A fan favorite who embodied blue-collar hockey and gave everything every night.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "24",
@@ -827,10 +971,13 @@
     "Hometown": "",
     "Signature Stat": "53",
     "Stat Label": "Career Interceptions",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Cornerback",
     "Fun Fact": "He jumped Kurt Warner's pass and took it back for a pick-six in Super Bowl XXXVI, the play that helped announce the Patriots dynasty to the world.",
-    "Notes": "Hall of Famer"
+    "Notes": "Hall of Famer",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "25",
@@ -843,11 +990,14 @@
     "Team": "Boston Celtics",
     "Hometown": "",
     "Signature Stat": "10",
-    "Stat Label": "Boston Championships \u2014 8 as Player, 2 More Coaching Bird's Celtics",
-    "Stat Weight": "3",
+    "Stat Label": "Boston Championships — 8 as Player, 2 More Coaching Bird's Celtics",
+    "Stat Weight": 3,
     "Role": "Guard",
     "Fun Fact": "He won eight rings as a Celtic player and then came back to coach Larry Bird and Kevin McHale to two more. A Celtic for two dynasties across three decades.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "25",
@@ -861,10 +1011,13 @@
     "Hometown": "",
     "Signature Stat": "162",
     "Stat Label": "Career Home Runs",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Right Field",
     "Fun Fact": "At age 20 he led the AL in home runs, youngest ever. At 22 he was among the game's brightest stars. Then Jack Hamilton's pitch hit him in the face in 1967, nearly costing him his eye. He came back two years later and hit 36 home runs in 1970. Vision problems forced his retirement, but his courage stands forever.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "26",
@@ -878,10 +1031,13 @@
     "Hometown": "",
     "Signature Stat": "5",
     "Stat Label": "AL Batting Titles",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Third Base",
     "Fun Fact": "He won five batting titles in Boston and ate chicken before every game as a ritual and was one of the purest hitters who ever lived",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "27",
@@ -895,10 +1051,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Home Run Game 6 1975 WS",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Catcher",
     "Fun Fact": "He waved it fair with his whole body as the ball drifted toward the left field foul pole. The most iconic moment in Red Sox history.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "28",
@@ -912,10 +1071,13 @@
     "Hometown": "",
     "Signature Stat": "1635",
     "Stat Label": "Rushing Yards in 2004",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Running Back",
     "Fun Fact": "He set the Patriots single-season rushing record in the same year they won the Super Bowl. The forgotten dynasty piece.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "30",
@@ -929,10 +1091,13 @@
     "Hometown": "Flint, Michigan, USA",
     "Signature Stat": ".940",
     "Stat Label": "2011 Playoff Save %",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Goalie",
     "Fun Fact": "His .940 save percentage during the 2011 Stanley Cup run is one of the greatest playoff performances by a goalie in NHL history",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "31",
@@ -946,10 +1111,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "Championships",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Forward",
     "Fun Fact": "He told his teammates to get on his back in the 1984 Finals when they were struggling, then went out and won Finals MVP.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "32",
@@ -963,10 +1131,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Championships",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Power Forward",
     "Fun Fact": "He had the Dream Shake before Hakeem had a name for it. His low post footwork was so good they literally changed the rules to try to stop it.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "33",
@@ -980,10 +1151,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Championships",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Small Forward",
     "Fun Fact": "He once told the other team exactly where he was going to shoot from, then did it. They still couldn't stop him.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "33",
@@ -997,10 +1171,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Stanley Cup Ring",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Defenseman",
     "Fun Fact": "At 6-foot-9 he was the tallest player in NHL history and captained the Bruins to the Stanley Cup like it was what tall people do.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "34",
@@ -1011,13 +1188,16 @@
     "Status": "Retired",
     "Era": "Red Sox Revival",
     "Team": "Boston Red Sox",
-    "Hometown": "",
+    "Hometown": "Santo Domingo, Dominican Republic",
     "Signature Stat": "541",
     "Stat Label": "Career Home Runs",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Designated Hitter",
     "Fun Fact": "In 2004 he hit a grand slam off Joe Nathan to help complete the greatest comeback in baseball history. In 2013 he stood at Fenway after the marathon bombing and told the city this is our f***ing city.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "34",
@@ -1031,10 +1211,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Championship",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Small Forward",
     "Fun Fact": "He carried the Celtics through the dark years when they were terrible and it would have been easy to leave. Then he brought them back to glory.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "35",
@@ -1048,10 +1231,13 @@
     "Hometown": "",
     "Signature Stat": "20.8",
     "Stat Label": "Career PPG",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Small Forward",
     "Fun Fact": "He died on a practice court at 27. The city still wonders what he would have become. The career scoring average alone shows what was lost.",
-    "Notes": "One of the great Boston tragedies"
+    "Notes": "One of the great Boston tragedies",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "37",
@@ -1065,10 +1251,13 @@
     "Hometown": "",
     "Signature Stat": "6",
     "Stat Label": "Selke Trophies",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Center",
     "Fun Fact": "He won six Selke Trophies as the best defensive forward in hockey, from the same team, over 19 seasons. A standard of excellence that may never be matched.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "38",
@@ -1082,10 +1271,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "World Series Ring",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Pitcher",
     "Fun Fact": "He pitched the 2004 ALCS with a torn tendon in his ankle. The stitches holding his tendon in place bled through his sock on national television.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "40",
@@ -1099,10 +1291,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Stanley Cup Ring",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Goaltender",
     "Fun Fact": "He left the bubble during COVID to be with his family, then came back the next season to give the team one last run because he wasn't done yet.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "42",
@@ -1116,10 +1311,13 @@
     "Hometown": "",
     "Signature Stat": "6",
     "Stat Label": "Stolen Base Titles",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Second Base",
     "Fun Fact": "His number is retired across all of baseball, not just one team. Every April 15th every single player wears 42 because what he did was bigger than baseball.",
-    "Notes": "Played for Brooklyn Dodgers - included because #42 is honored at Fenway every April 15"
+    "Notes": "Played for Brooklyn Dodgers - included because #42 is honored at Fenway every April 15",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "44",
@@ -1133,10 +1331,13 @@
     "Hometown": "",
     "Signature Stat": "2",
     "Stat Label": "Championships",
-    "Stat Weight": "1",
+    "Stat Weight": 1,
     "Role": "Guard",
     "Fun Fact": "He won two rings as a Celtic player and then came back as GM to build the team that won in 2008. Two different dynasties.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "45",
@@ -1150,10 +1351,13 @@
     "Hometown": "",
     "Signature Stat": "2.26",
     "Stat Label": "ERA as Red Sox",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Pitcher",
     "Fun Fact": "In 1999 he was so dominant that he left a game early and the Red Sox still won on offense alone. He was that far ahead of his era.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "46",
@@ -1167,10 +1371,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Stanley Cup Ring",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Center",
     "Fun Fact": "He led the playoffs in scoring in 2011 when the Bruins won the Cup, the most underrated Bruin of the championship era. He came back from the Czech league because he wasn't done.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "50",
@@ -1184,10 +1391,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Linebacker",
     "Fun Fact": "He was a linebacker who somehow caught a touchdown pass in three different Super Bowls. Physically this should not be possible.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "54",
@@ -1201,10 +1411,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Linebacker",
     "Fun Fact": "He had a stroke in February 2005 and by October he was back on the field for the Patriots. The soul of the dynasty.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "55",
@@ -1218,10 +1431,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Linebacker/DE",
     "Fun Fact": "He holds the NFL record for most sacks in a single playoff game. In a must-win situation he took over games.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "59",
@@ -1235,10 +1451,13 @@
     "Hometown": "",
     "Signature Stat": "100",
     "Stat Label": "Career Sacks",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Linebacker",
     "Fun Fact": "He was a Hall of Fame pass rusher who also practiced martial arts and became a martial arts master. The most underrated great Patriot.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "63",
@@ -1252,10 +1471,13 @@
     "Hometown": "",
     "Signature Stat": "1",
     "Stat Label": "Stanley Cup Ring",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Left Wing",
     "Fun Fact": "He's the Bruins all-time points leader, won the Cup in 2011, and plays like a guy who was told he was too small to make it. Because he was told that. Now with the Florida Panthers, but the Boston legend stays.",
-    "Notes": "Moved to Florida Panthers 2025 \u2014 legacy belongs to Boston. Keep on legends wall, review annually."
+    "Notes": "Moved to Florida Panthers 2025 — legacy belongs to Boston. Keep on legends wall, review annually.",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "72",
@@ -1269,10 +1491,13 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Offensive Tackle",
     "Fun Fact": "He protected Tom Brady's blind side for 11 years and three Super Bowls. The most important Patriot nobody talks about.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "73",
@@ -1286,10 +1511,13 @@
     "Hometown": "",
     "Signature Stat": "9",
     "Stat Label": "Pro Bowl Selections",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Offensive Guard",
     "Fun Fact": "Sports Illustrated called him the best offensive lineman who ever played, not the best of his era but the best ever.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "75",
@@ -1303,10 +1531,13 @@
     "Hometown": "",
     "Signature Stat": "5",
     "Stat Label": "Pro Bowl Selections",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Defensive Tackle",
     "Fun Fact": "He was a 325-pound nose tackle who ran down a ball carrier from behind on an interception return, and people think of him as just a run stopper.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "77",
@@ -1320,10 +1551,13 @@
     "Hometown": "",
     "Signature Stat": "1169",
     "Stat Label": "Career Points (D record)",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Defenseman",
     "Fun Fact": "He gave up his #7 so Phil Esposito could retire it, wore #77 for the rest of his career. The most selfless act in Boston sports history.",
-    "Notes": ""
+    "Notes": "",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "81",
@@ -1336,11 +1570,14 @@
     "Team": "New England Patriots",
     "Hometown": "",
     "Signature Stat": "23",
-    "Stat Label": "Single Season TDs (2007 \u2014 NFL Record)",
-    "Stat Weight": "3",
+    "Stat Label": "Single Season TDs (2007 — NFL Record)",
+    "Stat Weight": 3,
     "Role": "Wide Receiver",
     "Fun Fact": "He was a Patriot for exactly one season, 2007, and caught 23 touchdown passes, still the record, on the 16-0 team. One year. One record. That's the whole Boston story.",
-    "Notes": "One season on the Boston wall \u2014 the stat earns it"
+    "Notes": "One season on the Boston wall — the stat earns it",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "83",
@@ -1354,10 +1591,13 @@
     "Hometown": "",
     "Signature Stat": "672",
     "Stat Label": "Receptions as Patriot",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Slot Receiver",
     "Fun Fact": "He caught 672 passes in five seasons, the most reliable hands Brady ever had, and then dropped the one that would have beaten the Giants in Super Bowl XLVI.",
-    "Notes": "Dropped the crucial pass in Super Bowl XLVI"
+    "Notes": "Dropped the crucial pass in Super Bowl XLVI",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "87",
@@ -1371,10 +1611,13 @@
     "Hometown": "",
     "Signature Stat": "4",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Tight End",
     "Fun Fact": "He is the greatest tight end in NFL history and he made it look fun. Nobody has ever combined size, speed, blocking, and pure force at that position.",
-    "Notes": "Gronk"
+    "Notes": "Gronk",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "88",
@@ -1388,10 +1631,13 @@
     "Hometown": "",
     "Signature Stat": "61",
     "Stat Label": "Goals in 2022-23",
-    "Stat Weight": "3",
+    "Stat Weight": 3,
     "Role": "Right Wing",
     "Fun Fact": "He tied for the NHL goal scoring title in 2022-23 with 61 goals and plays with a joy that makes you want to watch every shift.",
-    "Notes": "Active - update annually"
+    "Notes": "Active - update annually",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   },
   {
     "Number": "93",
@@ -1405,9 +1651,12 @@
     "Hometown": "",
     "Signature Stat": "3",
     "Stat Label": "Super Bowl Rings",
-    "Stat Weight": "2",
+    "Stat Weight": 2,
     "Role": "Defensive End",
     "Fun Fact": "He was the quiet anchor of the early dynasty. Three rings. Does not get mentioned enough considering how dominant he was.",
-    "Notes": "Hall of Famer"
+    "Notes": "Hall of Famer",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   }
 ]

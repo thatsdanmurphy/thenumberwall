@@ -4,4 +4,4 @@ dist
 .env
 .env.local
 preview.html
-preview-latest.html
+preview-latest.htmldata/__pycache__/

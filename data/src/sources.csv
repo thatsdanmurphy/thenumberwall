@@ -1,0 +1,16 @@
+source_id,source_name,url,trust_level,category
+bbref,Baseball Reference,https://www.baseball-reference.com,primary,stats_database
+bkref,Basketball Reference,https://www.basketball-reference.com,primary,stats_database
+pfref,Pro Football Reference,https://www.pro-football-reference.com,primary,stats_database
+hkref,Hockey Reference,https://www.hockey-reference.com,primary,stats_database
+fbref,FBref (Soccer),https://fbref.com,primary,stats_database
+nba,NBA.com,https://www.nba.com,primary,league_official
+mlb,MLB.com,https://www.mlb.com,primary,league_official
+nfl,NFL.com,https://www.nfl.com,primary,league_official
+nhl,NHL.com,https://www.nhl.com,primary,league_official
+wnba,WNBA.com,https://www.wnba.com,primary,league_official
+fifa,FIFA.com,https://www.fifa.com,primary,league_official
+hof_bb,Baseball Hall of Fame,https://baseballhall.org,primary,historical_archive
+hof_bk,Basketball Hall of Fame,https://www.hoophall.com,primary,historical_archive
+hof_fb,Pro Football Hall of Fame,https://www.profootballhof.com,primary,historical_archive
+hof_hk,Hockey Hall of Fame,https://www.hhof.com,primary,historical_archive
