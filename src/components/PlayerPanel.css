@@ -686,3 +686,23 @@
 .player-panel__add-legend:hover {
   color: rgba(232, 124, 42, 0.70);
 }
+
+/* ── BC Player Card — meta row (years · position · hometown) ──────────── */
+
+.player-card__bc-meta {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.6875rem;
+  line-height:    1.4;
+  color:          rgba(255, 255, 255, 0.40);
+  margin-top:     var(--space-1);
+  letter-spacing: 0.04em;
+}
+
+.player-card__bc-position {
+  color:       rgba(255, 255, 255, 0.58);
+  font-weight: 600;
+}
+
+.player-card__bc-dot {
+  color: rgba(255, 255, 255, 0.22);
+}

@@ -28,7 +28,7 @@ function buildAssocNumbers(wallId) {
  *   Enter / Space    — select tile (native button behaviour)
  *   Arrow keys       — move focus directionally within the grid
  */
-export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global' }) {
+export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global', numbers = TILE_NUMBERS }) {
   const gridRef = useRef(null)
   const assocNumbers = useMemo(() => buildAssocNumbers(wallId), [wallId])
 
@@ -71,7 +71,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
       ref={gridRef}
       onKeyDown={handleKeyDown}
     >
-      {TILE_NUMBERS.map(num => {
+      {numbers.map(num => {
         const entries      = index.get(num) || []
         const visibleCount = entries.filter(e => e.tier !== 'UNWRITTEN').length
         const debating     = assocNumbers.has(String(num)) && visibleCount >= 2

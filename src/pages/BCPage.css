@@ -1,0 +1,105 @@
+/* BCPage — Boston College retired jersey wall */
+
+/* ── BC accent overrides ────────────────────────────────────────────────── */
+/* BC maroon: #8B1538 | BC gold: #C5A028                                     */
+
+.bc-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Sport filter bar ───────────────────────────────────────────────────── */
+
+.bc-page__filter {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         var(--space-1);
+  padding-bottom: var(--space-3);
+  border-bottom:  1px solid var(--color-border);
+}
+
+.bc-page__pill {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5625rem;
+  letter-spacing: 0.16em;
+  color:          rgba(255, 255, 255, 0.35);
+  background:     transparent;
+  border:         1px solid rgba(255, 255, 255, 0.10);
+  border-radius:  2px;
+  padding:        4px 10px;
+  cursor:         pointer;
+  transition:     color 180ms ease-out, border-color 180ms ease-out, background 180ms ease-out;
+  white-space:    nowrap;
+}
+
+.bc-page__pill:hover {
+  color:         rgba(255, 255, 255, 0.70);
+  border-color:  rgba(255, 255, 255, 0.25);
+}
+
+/* Active pill: BC maroon background, gold text */
+.bc-page__pill--active {
+  color:         #C5A028;
+  background:    rgba(139, 21, 56, 0.35);
+  border-color:  rgba(139, 21, 56, 0.65);
+}
+
+.bc-page__pill--active:hover {
+  color:         #D4AF30;
+  background:    rgba(139, 21, 56, 0.50);
+  border-color:  rgba(197, 160, 40, 0.55);
+}
+
+/* ── Body: grid col + panel ─────────────────────────────────────────────── */
+
+.bc-page__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.bc-page__grid-col {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .bc-page__body {
+    flex-direction: row;
+    align-items:    stretch;
+    gap:            var(--space-4);
+  }
+
+  .bc-page__grid-col {
+    flex: 0 0 61.8%;
+  }
+
+  .bc-page__body .player-panel {
+    flex:      1;
+    max-width: var(--panel-max-width);
+  }
+}
+
+/* ── Mobile backdrop ────────────────────────────────────────────────────── */
+
+.bc-page__backdrop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .bc-page__backdrop {
+    display:    block;
+    position:   fixed;
+    inset:      0;
+    background: rgba(8, 12, 16, 0.65);
+    z-index:    199;
+    animation:  backdropIn 200ms ease-out;
+  }
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

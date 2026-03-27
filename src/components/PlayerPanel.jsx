@@ -70,6 +70,14 @@ const SPORT_ICON = {
   Soccer:     '⚽',
 }
 
+const BC_SPORT_ICON = {
+  football:         { emoji: '🏈', label: 'Football' },
+  mens_hockey:      { emoji: '🏒', label: "Men's Hockey" },
+  womens_hockey:    { emoji: '🏒', label: "Women's Hockey" },
+  mens_basketball:  { emoji: '🏀', label: "Men's Basketball" },
+  womens_basketball:{ emoji: '🏀', label: "Women's Basketball" },
+}
+
 // ─── Share helper ─────────────────────────────────────────────────────────────
 function shareNumber(number) {
   const url = `${window.location.origin}${window.location.pathname}#${number}`
@@ -78,6 +86,57 @@ function shareNumber(number) {
   } else {
     navigator.clipboard.writeText(url).catch(() => {})
   }
+}
+
+// ─── BCPlayerCard ─────────────────────────────────────────────────────────────
+// BC-specific card: years · position · hometown meta row instead of team/role badges.
+function BCPlayerCard({ entry, isTop = false }) {
+  const sportMeta  = BC_SPORT_ICON[entry.sport] ?? { emoji: '🏅', label: entry.sport }
+  const showStat   = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'ICON')
+
+  // Build mono meta row: "1981–1984 · QB · Natick, MA"
+  const metaParts = [entry.yearsPlayed, entry.position, entry.hometown].filter(Boolean)
+
+  return (
+    <div className={`player-card${isTop ? ' player-card--top' : ''}`}>
+      <div className="player-card__row">
+
+        <div className="player-card__info">
+          <div className="player-card__name-row">
+            <span className="player-card__name">
+              {entry.name}{' '}
+              <span className="player-card__sport-icon" aria-label={sportMeta.label}>
+                {sportMeta.emoji}
+              </span>
+            </span>
+          </div>
+
+          {metaParts.length > 0 && (
+            <div className="player-card__bc-meta">
+              {metaParts.map((part, i) => (
+                <span key={i}>
+                  {i > 0 && <span className="player-card__bc-dot"> · </span>}
+                  <span className={i === 1 ? 'player-card__bc-position' : ''}>{part}</span>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {showStat && (
+          <div className="player-card__stat">
+            <div className="player-card__stat-value">{entry.stat}</div>
+            <div className="player-card__stat-label">{entry.statLabel}</div>
+          </div>
+        )}
+
+      </div>
+
+      {entry.funFact && (
+        <div className="player-card__fact">{entry.funFact}</div>
+      )}
+    </div>
+  )
 }
 
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
@@ -339,7 +398,7 @@ function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global' }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global', wall = 'global' }) {
   const [copied, setCopied] = useState(false)
 
   const hasSelection = Boolean(selected)
@@ -458,7 +517,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
             {legendCount > 0 && (
               <div className="player-panel__cards">
                 {legends.map((entry, i) => (
-                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
+                  wall === 'bc'
+                    ? <BCPlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
+                    : <PlayerCard   key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
                 ))}
                 <a
                   className="player-panel__add-legend"

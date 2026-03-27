@@ -5,15 +5,17 @@
  * Source of truth: 03_Data/dist/ (compiled from relational CSVs).
  * Re-run compile_wall_data.py to regenerate, then re-export to JSON.
  *
- * Three datasets:
- *   wallData       — 171 entries, numbers 0, 00, 1–99 (global wall)
- *   bostonLegends  — 82 entries (Boston legend wall)
+ * Four datasets:
+ *   wallData       — 179 entries, numbers 0, 00, 1–99 (global wall)
+ *   bostonLegends  — 83 entries (Boston legend wall)
  *   bostonCurrent  — 133 entries (Boston current season rosters)
+ *   bcLegends      — 10 entries (Boston College retired jerseys)
  */
 
 import wallDataRaw      from './wallData.json'
 import bostonLegendsRaw from './bostonLegends.json'
 import bostonCurrentRaw from './bostonCurrent.json'
+import bcLegendsRaw     from './bcLegends.json'
 
 // ─── Normalise ─────────────────────────────────────────────────────────────
 // Clean and type-cast raw CSV rows into consistent JS objects.
@@ -46,6 +48,30 @@ export const wallData      = wallDataRaw.map(normalise)
 export const bostonLegends = bostonLegendsRaw.map(normalise)
 export const bostonCurrent = bostonCurrentRaw.map(normalise)
 
+// ─── BC Normalise ──────────────────────────────────────────────────────────
+// BC entries carry player metadata directly (no players.csv join).
+// Schema differs from global: yearsPlayed/position/hometown instead of era/team/role.
+
+function normaliseBC(row) {
+  return {
+    number:        row.Number          ?? '',
+    tier:          row.Tier            ?? '',
+    name:          row.Name            ?? '',
+    sport:         row.Sport           ?? '',
+    yearsPlayed:   row.YearsPlayed     ?? '',
+    position:      row.Position        ?? '',
+    hometown:      row.Hometown        ?? '',
+    stat:          row['Signature Stat'] ?? '',
+    statLabel:     row['Stat Label']     ?? '',
+    statWeight:    Number(row['Stat Weight']) || 0,
+    funFact:       row['Fun Fact']     ?? '',
+    retiredJersey: row['Retired Jersey'] === true || row['Retired Jersey'] === 'true',
+    notes:         row.Notes           ?? '',
+  }
+}
+
+export const bcLegends = bcLegendsRaw.map(normaliseBC)
+
 // ─── Wall index ────────────────────────────────────────────────────────────
 // Groups entries by number for fast tile lookup.
 // Returns a Map: number string → array of player entries.
@@ -63,6 +89,14 @@ function buildIndex(entries) {
 
 export const globalIndex  = buildIndex(wallData)
 export const bostonIndex  = buildIndex([...bostonLegends, ...bostonCurrent])
+export const bcIndex      = buildIndex(bcLegends)
+
+// Ordered tile numbers for the BC wall — only numbers with retired jerseys.
+// Sorted numerically (special-casing '00' < '0' < 1...).
+export const BC_TILE_NUMBERS = Array.from(bcIndex.keys()).sort((a, b) => {
+  const n = x => x === '00' ? -1 : x === '0' ? 0 : Number(x)
+  return n(a) - n(b)
+})
 
 // ─── Filtered index ────────────────────────────────────────────────────────
 // Returns a new Map with entries filtered to the given sport IDs.
