@@ -1,7 +1,7 @@
 [
   {
     "Number": "22",
-    "Tier": "LEGEND",
+    "Tier": "SACRED",
     "Name": "Doug Flutie",
     "Sport": "football",
     "YearsPlayed": "1981–1984",
@@ -148,5 +148,35 @@
     "Fun Fact": "Scored 2,632 career points — still BC's all-time record by more than 200 points. The Memphis native was a three-time Big East scoring leader and was selected 16th overall by the Celtics in the 2003 NBA Draft. Every BC scoring record still runs through him.",
     "Retired Jersey": true,
     "Notes": "#2 retired by BC."
+  },
+  {
+    "Number": "54",
+    "Tier": "LEGEND",
+    "Name": "John Bagley",
+    "Sport": "mens_basketball",
+    "YearsPlayed": "1979–1982",
+    "Position": "PG",
+    "Hometown": "Bridgeport, CT",
+    "Signature Stat": "1",
+    "Stat Label": "First-Round NBA Draft Pick",
+    "Stat Weight": 2,
+    "Fun Fact": "A blur with the ball — Bagley was one of the most electrifying guards to come through Chestnut Hill before the Eagles ever made the NCAA Tournament as a regular. The Cavaliers took him 12th overall in 1982. BC retired #54 at the same ceremony as Barros in 2017, two guards finally getting their due.",
+    "Retired Jersey": true,
+    "Notes": "#54 retired by BC. Jersey retirement ceremony February 25 2017 alongside Dana Barros."
+  },
+  {
+    "Number": "33",
+    "Tier": "LEGEND",
+    "Name": "Sarah Behn",
+    "Sport": "womens_basketball",
+    "YearsPlayed": "2001–2005",
+    "Position": "F",
+    "Hometown": "unknown",
+    "Signature Stat": "33",
+    "Stat Label": "Jersey Number (Retired)",
+    "Stat Weight": 1,
+    "Fun Fact": "One of the most decorated players in BC women's basketball history. BC retired her #33 — the program's first or one of its first retired numbers on the women's side. Verify stats and hometown before finalizing.",
+    "Retired Jersey": true,
+    "Notes": "#33 retired by BC women's basketball. Hometown and exact career stats need verification."
   }
 ]

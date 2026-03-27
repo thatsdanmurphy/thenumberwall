@@ -13,8 +13,12 @@ export const SPORTS = [
  * SportsFilter — exclusive single-select.
  * Clicking a sport shows only that sport.
  * Clicking the active sport (or ALL) resets to all.
+ *
+ * `sports` — optional custom sports list (defaults to global SPORTS).
+ *            Each item: { id, label, icon }.
+ * `trackEvent` — optional analytics event name (defaults to 'sport_filter').
  */
-export default function SportsFilter({ active, onChange }) {
+export default function SportsFilter({ active, onChange, sports = SPORTS, trackEvent = 'sport_filter' }) {
   const allActive = !active || active.size === 0
 
   function handleClick(sportId) {
@@ -24,7 +28,7 @@ export default function SportsFilter({ active, onChange }) {
       return
     }
     // Otherwise isolate this sport
-    track('sport_filter', { sport: sportId })
+    track(trackEvent, { sport: sportId })
     onChange(new Set([sportId]))
   }
 
@@ -38,7 +42,7 @@ export default function SportsFilter({ active, onChange }) {
         ALL
       </button>
 
-      {SPORTS.map(sport => {
+      {sports.map(sport => {
         const isOn = !allActive && active.has(sport.id)
         return (
           <button
