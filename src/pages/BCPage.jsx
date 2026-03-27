@@ -92,6 +92,7 @@ export default function BCPage() {
               activeNumber={selected?.number ?? null}
               onSelect={setSelected}
               wallId="none"
+              theme="bc"
             />
           </div>
 

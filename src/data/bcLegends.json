@@ -178,5 +178,20 @@
     "Fun Fact": "One of the most decorated players in BC women's basketball history. BC retired her #33 — the program's first or one of its first retired numbers on the women's side. Verify stats and hometown before finalizing.",
     "Retired Jersey": true,
     "Notes": "#33 retired by BC women's basketball. Hometown and exact career stats need verification."
+  },
+  {
+    "Number": "40",
+    "Tier": "LEGEND",
+    "Name": "Gerry Ward",
+    "Sport": "mens_basketball",
+    "YearsPlayed": "1960–1963",
+    "Position": "G",
+    "Hometown": "Hartford, CT",
+    "Signature Stat": "5",
+    "Stat Label": "NBA Draft Pick (5th Overall — 1963)",
+    "Stat Weight": 2,
+    "Fun Fact": "A 6'4 guard who was an All-American and Academic All-American in his senior year — rare combination. The St. Louis Hawks took him 5th overall in the 1963 draft, one of the highest BC players ever taken. His #40 hangs in Conte Forum alongside his name.",
+    "Retired Jersey": true,
+    "Notes": "#40 retired by BC men's basketball. Same number as Kuechly in football — different sport. 2013 ACC Tournament Legend honoree."
   }
 ]
