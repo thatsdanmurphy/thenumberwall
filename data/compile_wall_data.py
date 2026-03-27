@@ -1,7 +1,7 @@
 """
 compile_wall_data.py — The Number Wall data compiler.
 
-Reads the relational CSV source files in data/src/ and outputs the four
+Reads the relational CSV source files in data/src/ and outputs the five
 JSON files the React app consumes in src/data/.
 
 Run this every time you edit a CSV:
@@ -14,6 +14,7 @@ Output files:
     src/data/wallData.json          ← global wall legends
     src/data/bostonLegends.json     ← Boston legend wall
     src/data/bostonCurrent.json     ← Boston current roster
+    src/data/bcLegends.json         ← Boston College legend wall
     src/data/associations.json      ← debates
 """
 
@@ -135,6 +136,32 @@ current_rows = read_csv('wall_entries_boston_current.csv')
 boston_current = [compile_current_entry(row, players_map) for row in current_rows]
 write_json('bostonCurrent.json', boston_current)
 
+# ── Compile bcLegends.json ────────────────────────────────────────────────
+# BC entries carry player metadata directly on the entry row (sport, years_played,
+# position, hometown) rather than joining from players.csv. The schema also swaps
+# era/team/league_wide_retired for years_played/position/retired_jersey.
+
+def compile_bc_entry(row):
+    return {
+        'Number':        row['number'],
+        'Tier':          row['tier'],
+        'Name':          row.get('player_id', '').replace('-', ' ').title(),
+        'Sport':         row.get('sport', ''),
+        'YearsPlayed':   row.get('years_played', ''),
+        'Position':      row.get('position', ''),
+        'Hometown':      row.get('hometown', ''),
+        'Signature Stat': row.get('signature_stat', ''),
+        'Stat Label':    row.get('stat_label', ''),
+        'Stat Weight':   num_str(row.get('stat_weight', '')),
+        'Fun Fact':      row.get('fun_fact', ''),
+        'Retired Jersey': row.get('retired_jersey', '') in ('true', 'True', True, '1'),
+        'Notes':         row.get('notes', ''),
+    }
+
+bc_legend_rows = read_csv('wall_entries_bc_legends.csv')
+bc_legends = [compile_bc_entry(row) for row in bc_legend_rows]
+write_json('bcLegends.json', bc_legends)
+
 # ── Compile associations.json ──────────────────────────────────────────────
 
 def compile_association(row):
@@ -165,13 +192,14 @@ write_json('associations.json', associations)
 # ── Summary ────────────────────────────────────────────────────────────────
 
 print('\nCompile complete.')
+all_row_sets = [global_rows, boston_legend_rows, current_rows, bc_legend_rows]
 unverified = sum(
-    1 for rows in [global_rows, boston_legend_rows, current_rows]
+    1 for rows in all_row_sets
     for r in rows if r.get('verification_status') == 'needs_review'
 )
-total = sum(len(rows) for rows in [global_rows, boston_legend_rows, current_rows])
+total = sum(len(rows) for rows in all_row_sets)
 verified = sum(
-    1 for rows in [global_rows, boston_legend_rows, current_rows]
+    1 for rows in all_row_sets
     for r in rows if r.get('verification_status') in ('verified', 'multi_source_verified')
 )
 print(f'  {total} total entries | {verified} verified | {unverified} needs_review')

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BC Player Card — Design Test</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --night:    #080C10;
+      --surface:  #0D1117;
+      --paper:    #F5F7FA;
+      --muted:    #9BA7B4;
+      --heat:     #E87C2A;
+      --blaze:    #F5C135;
+      --border:   rgba(255,255,255,0.08);
+
+      --font-banner: 'Archivo Black', sans-serif;
+      --font-program:'Inter', sans-serif;
+      --font-mono:   'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--night);
+      color: var(--paper);
+      font-family: var(--font-program);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .test-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-align: center;
+    }
+    .test-label strong { color: var(--heat); }
+
+    /* ── Panel shell ───────────────────────────────────────────── */
+    .player-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .player-panel__inner {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    .player-panel__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .player-panel__number {
+      font-family: var(--font-banner);
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--heat);
+      text-shadow: 0 0 28px rgba(232,124,42,0.5);
+    }
+    .player-panel__subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .player-panel__close {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 6px 10px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ── Debate pick (condensed) ───────────────────────────────── */
+    .your-pick {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .your-pick__label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+    .your-pick__chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .your-pick__chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      color: var(--paper);
+      font-family: var(--font-banner);
+      font-size: 0.8125rem;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    .your-pick__chip--top {
+      border-color: rgba(232,124,42,0.5);
+      color: var(--heat);
+    }
+
+    /* ── Cards ─────────────────────────────────────────────────── */
+    .player-panel__cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .player-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .player-card--top {
+      border-color: rgba(232,124,42,0.22);
+      background: rgba(232,124,42,0.03);
+    }
+
+    .player-card__row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .player-card__info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+
+    /* name + icon */
+    .player-card__name {
+      font-family: var(--font-banner);
+      font-size: 0.9375rem;
+      line-height: 1.2;
+      color: var(--paper);
+    }
+    .player-card__sport-icon {
+      font-size: 0.85rem;
+      margin-left: 3px;
+    }
+
+    /* ── meta row: years · position · hometown ─────────────────── */
+    /* No pills, no badges — pure typographic, mono register.
+       Years anchors left. Position is mid. Hometown trails right-ish.
+       All in muted — they're context, not content.                   */
+    .player-card__meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+      column-gap: 0;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .player-card__meta-years {
+      letter-spacing: 0.03em;
+    }
+    /* position gets a slightly brighter treatment — it's the only
+       field that's a proper label, not just metadata */
+    .player-card__meta-pos {
+      color: var(--paper);
+      opacity: 0.55;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      font-size: 0.63rem;
+    }
+    .player-card__meta-sep {
+      margin: 0 5px;
+      opacity: 0.3;
+    }
+    .player-card__meta-hometown {
+      letter-spacing: 0.02em;
+    }
+
+    /* stat */
+    .player-card__stat {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .player-card__stat-value {
+      font-family: var(--font-banner);
+      font-size: 1.25rem;
+      color: var(--heat);
+      line-height: 1;
+    }
+    .player-card__stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-top: 3px;
+      max-width: 90px;
+      text-align: right;
+      line-height: 1.35;
+    }
+
+    /* fun fact */
+    .player-card__fact {
+      font-size: 0.8125rem;
+      line-height: 1.55;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    /* ── divider label ─────────────────────────────────────────── */
+    .divider {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--blaze);
+      text-align: center;
+      padding: 5px 12px;
+      border: 1px solid rgba(245,193,53,0.18);
+      border-radius: 4px;
+      background: rgba(245,193,53,0.04);
+      width: 100%;
+      max-width: 440px;
+    }
+    .note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      max-width: 440px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-label">THE NUMBER WALL · <strong>BC CARD TEST</strong> · NO WALL BADGE · NO SPORT PILL</div>
+
+  <!-- ─── VARIANT A: years · pos · hometown ───────────────────── -->
+  <div class="divider">VARIANT A — years · position · hometown</div>
+  <div class="note">Position as brighter mono weight, not a badge. Icon carries the sport.</div>
+
+  <div class="player-panel">
+    <div class="player-panel__inner">
+
+      <div class="player-panel__header">
+        <div>
+          <div class="player-panel__number">#22</div>
+          <div class="player-panel__subtitle">3 LEGENDS WORE THIS</div>
+        </div>
+        <button class="player-panel__close">✕ CLOSE</button>
+      </div>
+
+      <div class="your-pick">
+        <span class="your-pick__label">WHO REALLY OWNS THIS NUMBER?</span>
+        <div class="your-pick__chips">
+          <button class="your-pick__chip your-pick__chip--top">Flutie</button>
+          <button class="your-pick__chip">Gionta</button>
+        </div>
+      </div>
+
+      <div class="player-panel__cards">
+
+        <!-- Top card: football, has hometown -->
+        <div class="player-card player-card--top">
+          <div class="player-card__row">
+            <div class="player-card__info">
+              <span class="player-card__name">Doug Flutie <span class="player-card__sport-icon" aria-label="Football">🏈</span></span>
+              <div class="player-card__meta">
+                <span class="player-card__meta-years">1981–1984</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-pos">QB</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-hometown">Natick, MA</span>
+              </div>
+            </div>
+            <div class="player-card__stat">
+              <div class="player-card__stat-value">1984</div>
+              <div class="player-card__stat-label">Heisman Trophy</div>
+            </div>
+          </div>
+          <div class="player-card__fact">
+            With six seconds left, trailing Miami by a point, he threw a 64-yard touchdown pass into a rainstorm that the whole country watched. The Hail Mary that defined everything.
+          </div>
+        </div>
+
+        <!-- Men's hockey -->
+        <div class="player-card">
+          <div class="player-card__row">
+            <div class="player-card__info">
+              <span class="player-card__name">Brian Gionta <span class="player-card__sport-icon" aria-label="Hockey">🏒</span></span>
+              <div class="player-card__meta">
+                <span class="player-card__meta-years">1999–2003</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-pos">RW</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-hometown">Rochester, NY</span>
+              </div>
+            </div>
+            <div class="player-card__stat">
+              <div class="player-card__stat-value">123</div>
+              <div class="player-card__stat-label">Career Points at BC</div>
+            </div>
+          </div>
+          <div class="player-card__fact">
+            Left BC as one of the most decorated forwards in program history. Won the Stanley Cup with the Devils in 2003. BC hockey's bridge to the pros.
+          </div>
+        </div>
+
+        <!-- Women's hockey — icon does the sport work, no pill needed -->
+        <div class="player-card">
+          <div class="player-card__row">
+            <div class="player-card__info">
+              <span class="player-card__name">Megan Keller <span class="player-card__sport-icon" aria-label="Hockey">🏒</span></span>
+              <div class="player-card__meta">
+                <span class="player-card__meta-years">2015–2019</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-pos">D</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-hometown">Farmington Hills, MI</span>
+              </div>
+            </div>
+            <div class="player-card__stat">
+              <div class="player-card__stat-value">2</div>
+              <div class="player-card__stat-label">Olympic Silver Medals</div>
+            </div>
+          </div>
+          <div class="player-card__fact">
+            The best defenseman in BC women's hockey history. Two Olympic silvers, four straight Frozen Four appearances. The program anchor of her era.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── VARIANT B: years · hometown only (no position) ─────── -->
+  <div class="divider">VARIANT B — years · hometown only</div>
+  <div class="note">Position dropped entirely. Cleaner if position feels like noise for non-superfans.</div>
+
+  <div class="player-panel">
+    <div class="player-panel__inner">
+
+      <div class="player-panel__header">
+        <div>
+          <div class="player-panel__number">#22</div>
+          <div class="player-panel__subtitle">3 LEGENDS WORE THIS</div>
+        </div>
+        <button class="player-panel__close">✕ CLOSE</button>
+      </div>
+
+      <div class="player-panel__cards">
+
+        <div class="player-card player-card--top">
+          <div class="player-card__row">
+            <div class="player-card__info">
+              <span class="player-card__name">Doug Flutie <span class="player-card__sport-icon" aria-label="Football">🏈</span></span>
+              <div class="player-card__meta">
+                <span class="player-card__meta-years">1981–1984</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-hometown">Natick, MA</span>
+              </div>
+            </div>
+            <div class="player-card__stat">
+              <div class="player-card__stat-value">1984</div>
+              <div class="player-card__stat-label">Heisman Trophy</div>
+            </div>
+          </div>
+          <div class="player-card__fact">
+            With six seconds left, trailing Miami by a point, he threw a 64-yard touchdown pass into a rainstorm that the whole country watched. The Hail Mary that defined everything.
+          </div>
+        </div>
+
+        <div class="player-card">
+          <div class="player-card__row">
+            <div class="player-card__info">
+              <span class="player-card__name">Brian Gionta <span class="player-card__sport-icon" aria-label="Hockey">🏒</span></span>
+              <div class="player-card__meta">
+                <span class="player-card__meta-years">1999–2003</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-hometown">Rochester, NY</span>
+              </div>
+            </div>
+            <div class="player-card__stat">
+              <div class="player-card__stat-value">123</div>
+              <div class="player-card__stat-label">Career Points at BC</div>
+            </div>
+          </div>
+          <div class="player-card__fact">
+            Left BC as one of the most decorated forwards in program history. Won the Stanley Cup with the Devils in 2003.
+          </div>
+        </div>
+
+        <div class="player-card">
+          <div class="player-card__row">
+            <div class="player-card__info">
+              <span class="player-card__name">Megan Keller <span class="player-card__sport-icon" aria-label="Hockey">🏒</span></span>
+              <div class="player-card__meta">
+                <span class="player-card__meta-years">2015–2019</span>
+                <span class="player-card__meta-sep">·</span>
+                <span class="player-card__meta-hometown">Farmington Hills, MI</span>
+              </div>
+            </div>
+            <div class="player-card__stat">
+              <div class="player-card__stat-value">2</div>
+              <div class="player-card__stat-label">Olympic Silver Medals</div>
+            </div>
+          </div>
+          <div class="player-card__fact">
+            The best defenseman in BC women's hockey history. Two Olympic silvers, four straight Frozen Four appearances.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="test-label" style="padding-bottom: 20px;">
+    DATA IS ILLUSTRATIVE — verify before seeding CSV &nbsp;·&nbsp; accessibility: sport icons have aria-label
+  </div>
+
+</body>
+</html>
