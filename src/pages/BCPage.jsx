@@ -17,12 +17,14 @@ const BC_SPORTS = [
   { id: 'football',   label: 'Football',   icon: '🏈' },
   { id: 'hockey',     label: 'Hockey',     icon: '🏒' },
   { id: 'basketball', label: 'Basketball', icon: '🏀' },
+  { id: 'soccer',     label: 'Soccer',     icon: '⚽' },
 ]
 
 const BC_SPORT_MAP = {
   football:   new Set(['football']),
   hockey:     new Set(['mens_hockey', 'womens_hockey']),
   basketball: new Set(['mens_basketball', 'womens_basketball']),
+  soccer:     new Set(['soccer']),
 }
 
 export default function BCPage() {

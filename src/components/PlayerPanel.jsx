@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics'
-import { getHeatStyle, getTileTextColor } from '../data/index.js'
+import { getHeatStyle, getTileTextColor, getHeatStyleBC, getTileTextColorBC } from '../data/index.js'
 import associationsData from '../data/associations.json'
 import './PlayerPanel.css'
 
@@ -417,8 +417,11 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const legends = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
 
   const isSacred    = legends.some(e => e.tier === 'SACRED')
-  const heat        = getHeatStyle(legends, isSacred)
-  const numberColor = getTileTextColor(legends, isSacred)
+  // BC wall uses maroon→gold palette; global wall uses orange/red
+  const heatFn      = wall === 'bc' ? getHeatStyleBC     : getHeatStyle
+  const textColorFn = wall === 'bc' ? getTileTextColorBC : getTileTextColor
+  const heat        = heatFn(legends, isSacred)
+  const numberColor = textColorFn(legends, isSacred)
   const numberGlow  = `0 0 28px ${heat.border}`
 
   const legendCount = legends.length
@@ -437,7 +440,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   }
 
   return (
-    <aside className={`player-panel${!hasSelection ? ' player-panel--idle' : ''}`}>
+    <aside className={['player-panel', !hasSelection && 'player-panel--idle', wall === 'bc' && 'player-panel--bc'].filter(Boolean).join(' ')}>
 
       <div className="player-panel__handle" aria-hidden="true" />
 

@@ -318,6 +318,12 @@
   border-color:  rgba(232, 124, 42, 0.30);
 }
 
+/* BC wall top slot — maroon tint, BC gold border instead of amber */
+.player-panel--bc .player-card--top {
+  background:   rgba(139, 21, 56, 0.12);
+  border-color: rgba(197, 160, 40, 0.42);
+}
+
 .player-card--top .player-card__name {
   font-size: 1.125rem;
 }

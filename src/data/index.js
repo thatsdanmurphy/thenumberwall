@@ -223,10 +223,10 @@ export function getTileTextColor(entries, isSacred = false) {
 const BC_HEAT_TILES = [
   // 0 — unwritten
   { bg: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.05)', glow: 'none',                                                                                              text: 'rgba(255,255,255,0.38)' },
-  // 1 — ember (faint maroon)
-  { bg: 'rgba(139,21,56,0.28)',   border: 'rgba(139,21,56,0.42)',   glow: '0 0 8px rgba(139,21,56,0.32)',                                                                      text: 'rgba(190,90,110,0.85)' },
-  // 2 — warm (maroon)
-  { bg: 'rgba(139,21,56,0.42)',   border: 'rgba(160,30,68,0.58)',   glow: '0 0 12px rgba(139,21,56,0.48), 0 0 24px rgba(139,21,56,0.20)',                                      text: 'rgba(215,115,135,1)' },
+  // 1 — ember (maroon tile, BC gold number — legend present, dimmed)
+  { bg: 'rgba(139,21,56,0.28)',   border: 'rgba(139,21,56,0.42)',   glow: '0 0 8px rgba(139,21,56,0.32)',                                                                      text: 'rgba(197,160,40,0.70)' },
+  // 2 — warm (maroon tile, BC gold number — clearer)
+  { bg: 'rgba(139,21,56,0.42)',   border: 'rgba(160,30,68,0.58)',   glow: '0 0 12px rgba(139,21,56,0.48), 0 0 24px rgba(139,21,56,0.20)',                                      text: 'rgba(197,160,40,0.88)' },
   // 3 — hot (maroon → gold transition)
   { bg: 'rgba(148,60,28,0.55)',   border: 'rgba(185,115,20,0.68)',  glow: '0 0 16px rgba(185,115,20,0.52), 0 0 32px rgba(139,21,56,0.28)',                                     text: 'rgba(228,165,55,1)' },
   // 4 — blazing (gold dominant)
