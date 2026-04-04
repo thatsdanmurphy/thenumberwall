@@ -1,0 +1,826 @@
+import { useState, useEffect, useCallback } from 'react'
+import { useParams, useNavigate, Navigate } from 'react-router-dom'
+import AppShell      from '../components/AppShell.jsx'
+import AppHeader     from '../components/AppHeader.jsx'
+import AppFooter     from '../components/AppFooter.jsx'
+import PlayerSearch  from '../components/PlayerSearch.jsx'
+import { TILE_NUMBERS, getHeatStyle, getTileTextColor, SELECTED_TILE, wallData, bostonLegends } from '../data/index.js'
+import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, updateWall, isSlugAvailable } from '../lib/myWallStore.js'
+import { checkProfanity } from '../lib/profanityFilter.js'
+import { track } from '@vercel/analytics'
+import './MyWallPage.css'
+
+// ─── Build "who else wore this?" index from TNW data ─────────────────────────
+
+function buildWhoElseIndex() {
+  const index = {}  // number → [{ name, sport, team, tier, stat, statLabel, funFact }]
+  for (const entry of [...wallData, ...bostonLegends]) {
+    if (entry.tier === 'UNWRITTEN' || !entry.name) continue
+    const num = String(entry.number)
+    if (!index[num]) index[num] = []
+    // Dedupe by name
+    if (index[num].some(e => e.name === entry.name)) continue
+    index[num].push({
+      name:      entry.name,
+      sport:     entry.sport,
+      team:      entry.team,
+      tier:      entry.tier,
+      stat:      entry.stat,
+      statLabel: entry.statLabel,
+      funFact:   entry.funFact,
+    })
+  }
+  return index
+}
+
+const WHO_ELSE = buildWhoElseIndex()
+
+// ─── Onboarding: 2 steps — "What's your number?" → name ────────────────────
+
+function Onboarding({ onComplete }) {
+  const [step, setStep]           = useState('number')  // 'number' → 'name'
+  const [myNumber, setMyNumber]   = useState('')
+  const [ownerName, setOwnerName] = useState('')
+  const [resolvedSlug, setResolvedSlug] = useState('')
+  const [slugStatus, setSlugStatus]     = useState('idle')  // 'idle' | 'checking' | 'ok' | 'exhausted'
+  const [loading, setLoading]     = useState(false)
+
+  // Auto-generate slug from name and resolve availability
+  const derivedSlug = ownerName.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+
+  // Profanity check
+  const profanityResult = checkProfanity(ownerName)
+  const nameBlocked = !profanityResult.clean
+
+  useEffect(() => {
+    // Don't check slug availability if name is blocked
+    if (nameBlocked) {
+      setSlugStatus('idle')
+      setResolvedSlug('')
+      return
+    }
+    if (!derivedSlug || derivedSlug.length < 2) {
+      setSlugStatus('idle')
+      setResolvedSlug('')
+      return
+    }
+
+    let cancelled = false
+    setSlugStatus('checking')
+
+    const timer = setTimeout(async () => {
+      // Try base slug first
+      const baseOk = await isSlugAvailable(derivedSlug)
+      if (cancelled) return
+      if (baseOk) {
+        setResolvedSlug(derivedSlug)
+        setSlugStatus('ok')
+        return
+      }
+      // Base taken — try suffixed variants
+      for (let i = 2; i <= 20; i++) {
+        if (cancelled) return
+        const candidate = `${derivedSlug}-${i}`
+        const ok = await isSlugAvailable(candidate)
+        if (ok && !cancelled) {
+          setResolvedSlug(candidate)
+          setSlugStatus('ok')
+          return
+        }
+      }
+      if (!cancelled) {
+        setResolvedSlug('')
+        setSlugStatus('exhausted')
+      }
+    }, 400)
+
+    return () => { cancelled = true; clearTimeout(timer) }
+  }, [derivedSlug, nameBlocked])
+
+  async function handleCreate() {
+    if (!ownerName.trim() || !resolvedSlug || slugStatus !== 'ok' || nameBlocked) return
+    setLoading(true)
+    try {
+      const wall = await createWall({
+        slug: resolvedSlug,
+        ownerName: ownerName.trim(),
+        myNumber: myNumber || null,
+      })
+      onComplete(wall)
+    } catch (err) {
+      console.error('Failed to create wall:', err)
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="my-wall-onboard">
+      <div className="my-wall-onboard__card">
+
+        {step === 'number' && (
+          <>
+            <div className="my-wall-onboard__top">
+              <span className="my-wall-onboard__new-badge">NEW</span>
+              <h2 className="my-wall-onboard__headline">Build Your Wall</h2>
+            </div>
+            <p className="my-wall-onboard__intro">
+              Your corner of The Number Wall. Pick the athletes and numbers that mean something to you, and share it with the people who get it.
+            </p>
+            <div className="my-wall-onboard__section">
+              <label className="my-wall-onboard__label">What's your number?</label>
+              <input
+                className="my-wall-onboard__number-input"
+                type="text"
+                inputMode="numeric"
+                maxLength={2}
+                value={myNumber}
+                onChange={e => setMyNumber(e.target.value.replace(/[^0-9]/g, ''))}
+                placeholder="00"
+                autoFocus
+                onKeyDown={e => {
+                  if (e.key === 'Enter') setStep('name')
+                }}
+              />
+            </div>
+            <div className="my-wall-onboard__actions">
+              <button
+                className="btn-primary"
+                disabled={!myNumber}
+                onClick={() => { track('wall_number_chosen', { number: myNumber }); setStep('name') }}
+              >
+                That's my number →
+              </button>
+              <button
+                className="btn-text"
+                onClick={() => setStep('name')}
+              >
+                Skip for now
+              </button>
+            </div>
+          </>
+        )}
+
+        {step === 'name' && (
+          <>
+            <div className="my-wall-onboard__top">
+              <h2 className="my-wall-onboard__headline">Name Your Wall</h2>
+            </div>
+            <p className="my-wall-onboard__intro">
+              This becomes your link. Share it with friends, coaches, or anyone who gets it.
+            </p>
+            <h2 className="my-wall-onboard__headline my-wall-onboard__headline--name">
+              <input
+                className="my-wall-onboard__name-inline"
+                type="text"
+                value={ownerName}
+                onChange={e => setOwnerName(e.target.value)}
+                placeholder="____"
+                autoFocus
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') handleCreate()
+                }}
+              />
+              <span>'s Wall</span>
+            </h2>
+            {resolvedSlug && slugStatus === 'ok' && (
+              <p className="my-wall-onboard__url-preview">
+                thenumberwall.com/wall/<strong>{resolvedSlug}</strong>
+              </p>
+            )}
+            {slugStatus === 'checking' && ownerName.trim().length >= 2 && (
+              <p className="my-wall-onboard__url-preview">Checking...</p>
+            )}
+            {nameBlocked && ownerName.trim().length >= 2 && (
+              <p className="my-wall-onboard__slug-taken">
+                {profanityResult.reason}
+              </p>
+            )}
+            {slugStatus === 'exhausted' && !nameBlocked && (
+              <p className="my-wall-onboard__slug-taken">
+                That name's popular — try a different one.
+              </p>
+            )}
+            <button
+              className="btn-primary"
+              disabled={!ownerName.trim() || slugStatus !== 'ok' || loading || nameBlocked}
+              onClick={handleCreate}
+            >
+              {loading ? 'Building...' : 'Build my wall →'}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── My Wall Tile ───────────────────────────────────────────────────────────
+// Clean tile: just the number + star for your number. No names in cells.
+
+function MyWallTile({ number, picks, isMyNumber, isSearching, justPlaced, onClick }) {
+  const hasPlayer  = picks.length > 0
+  const count      = picks.length
+
+  // Use actual tier from TNW data for heat styling
+  const fakeEntries = hasPlayer
+    ? picks.map(p => ({ tier: p.tier || (p.source === 'tnw' ? 'LEGEND' : 'ACTIVE'), name: p.player_name }))
+    : [{ tier: 'UNWRITTEN' }]
+
+  // Detect if any pick is SACRED — pass that through to getHeatStyle
+  const hasSacred = hasPlayer && picks.some(p => p.tier === 'SACRED')
+  const heat      = getHeatStyle(fakeEntries, hasSacred)
+  const textColor = isSearching
+    ? SELECTED_TILE.text
+    : hasPlayer
+      ? getTileTextColor(fakeEntries, hasSacred)
+      : 'rgba(255,255,255,0.38)'
+
+  // "My number" — electric blue
+  const MY_BLUE = {
+    bg:     hasPlayer ? heat.bg : 'rgba(60, 130, 255, 0.10)',
+    border: 'rgba(60, 130, 255, 0.50)',
+    glow:   '0 0 14px 4px rgba(60, 130, 255, 0.35), 0 0 28px 8px rgba(60, 130, 255, 0.15)',
+    text:   hasPlayer ? textColor : 'rgba(100, 170, 255, 0.90)',
+  }
+
+  const isMyTile = isMyNumber && !isSearching
+
+  const selectedGlow = heat.glow !== 'none'
+    ? `0 0 0 2px rgba(255,255,255,0.45), ${heat.glow}`
+    : '0 0 0 2px rgba(255,255,255,0.45)'
+
+  const tileStyle = isSearching
+    ? { background: heat.bg, border: '1px solid rgba(255,255,255,0.82)', borderRadius: '4px', boxShadow: selectedGlow }
+    : isMyTile
+      ? { background: MY_BLUE.bg, border: `1px solid ${MY_BLUE.border}`, borderRadius: '4px', boxShadow: MY_BLUE.glow }
+      : { background: heat.bg, border: `1px solid ${heat.border}`, borderRadius: '4px', boxShadow: heat.glow }
+
+  const finalTextColor = isSearching
+    ? SELECTED_TILE.text
+    : isMyTile
+      ? MY_BLUE.text
+      : textColor
+
+  return (
+    <button
+      className={[
+        'wall-tile my-wall-tile',
+        hasPlayer ? 'my-wall-tile--filled' : '',
+        isSearching ? 'wall-tile--active' : '',
+        isMyTile ? 'my-wall-tile--mine' : '',
+        justPlaced ? 'my-wall-tile--just-placed' : '',
+      ].join(' ')}
+      style={tileStyle}
+      onClick={onClick}
+      aria-label={`Number ${number}${isMyNumber ? ' — your number' : ''}${hasPlayer ? ` — ${picks[0].player_name}${count > 1 ? ` +${count - 1}` : ''}` : ''}`}
+    >
+      <span className="wall-tile__number" style={{ color: finalTextColor }}>{number}</span>
+      {count > 1 && <span className="my-wall-tile__count">{count}</span>}
+    </button>
+  )
+}
+
+// ─── Placed Card — shows info for a player already on the wall ──────────────
+
+function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove, isOwner, onUnclaimNumber, onClaimNumber }) {
+  const isMyNumber = myNumber != null && String(number) === String(myNumber)
+  const placedNames = new Set(picks.map(p => p.player_name))
+
+  const filtered = whoElse.filter(p => !placedNames.has(p.name))
+
+  return (
+    <div className="placed-panel">
+      <div className="placed-panel__header">
+        <div className="placed-panel__header-left">
+          <span className="placed-panel__number">#{number}</span>
+        </div>
+      </div>
+
+      {/* Celebratory note for the user's number */}
+      {isMyNumber && (
+        <p className="placed-panel__my-number-note">This one's yours. Light it up.</p>
+      )}
+
+      {/* Unclaim / claim number */}
+      {onUnclaimNumber && (
+        <button className="btn-text" onClick={onUnclaimNumber}>Unclaim this number</button>
+      )}
+      {onClaimNumber && (
+        <button className="btn-micro btn-micro--heat" onClick={onClaimNumber}>CLAIM AS MY NUMBER</button>
+      )}
+
+      {/* All placed picks for this number */}
+      {picks.map((entry, i) => {
+        const hasFact = entry.info_fun_fact && !entry.info_fallback
+        return (
+          <div key={entry.id || i} className={`placed-card ${i > 0 ? 'placed-card--stacked' : ''}`}>
+            <div className="placed-card__row">
+              <div className="placed-card__info">
+                <h3 className="placed-card__name">{entry.player_name}</h3>
+                {entry.sport && (
+                  <span className="placed-card__sport">{entry.sport}</span>
+                )}
+              </div>
+              {entry.info_stat && (
+                <div className="placed-card__stat">
+                  <span className="placed-card__stat-number">{entry.info_stat}</span>
+                  <span className="placed-card__stat-label">{entry.info_stat_label}</span>
+                </div>
+              )}
+            </div>
+            {hasFact && (
+              <p className="placed-card__fact">{entry.info_fun_fact}</p>
+            )}
+            {entry.info_fallback && (
+              <p className="placed-card__fallback">
+                This one's yours. No stats on file — but they made your wall, so they made their mark.
+              </p>
+            )}
+            {isOwner && picks.length > 1 && (
+              <button
+                className="btn-text btn-text--danger"
+                onClick={() => onRemove(entry.id)}
+                aria-label={`Remove ${entry.player_name}`}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        )
+      })}
+
+      {/* Who else wore this number? */}
+      {filtered.length > 0 && (
+        <div className="placed-panel__who-else">
+          <span className="placed-panel__who-else-label">Who else wore this number?</span>
+          <ul className="placed-panel__who-else-list">
+            {filtered.map((p, i) => (
+              <li
+                key={i}
+                className={`placed-panel__who-else-item ${isOwner && onAddWhoElse ? 'placed-panel__who-else-item--tappable' : ''}`}
+                onClick={isOwner && onAddWhoElse ? () => onAddWhoElse(p) : undefined}
+                role={isOwner && onAddWhoElse ? 'button' : undefined}
+                tabIndex={isOwner && onAddWhoElse ? 0 : undefined}
+                onKeyDown={isOwner && onAddWhoElse ? (e) => { if (e.key === 'Enter') onAddWhoElse(p) } : undefined}
+              >
+                <span className="placed-panel__who-else-name">{p.name}</span>
+                <span className="placed-panel__who-else-meta">{p.sport}</span>
+                {isOwner && onAddWhoElse && (
+                  <span className="placed-panel__who-else-action">+ Add</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── My Wall Page ───────────────────────────────────────────────────────────
+
+export default function MyWallPage() {
+  const { slug }    = useParams()
+  const navigate     = useNavigate()
+
+  // All hooks must be called before any early return (rules of hooks)
+  const [wall, setWall]                 = useState(null)
+  const [entries, setEntries]           = useState(new Map())  // number → entry[]
+  const [searchingNumber, setSearching] = useState(null)
+  const [loading, setLoading]           = useState(!!slug)
+  const [notFound, setNotFound]         = useState(false)
+  const [justPlaced, setJustPlaced]     = useState(null)
+  const [toast, setToast]               = useState(null)       // { message, type }
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
+
+  // Synchronous redirect: if no slug but user has a saved wall, redirect immediately
+  const savedSlug = !slug && typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_slug') : null
+  if (!slug && savedSlug) {
+    return <Navigate to={`/wall/${savedSlug}`} replace />
+  }
+
+  useEffect(() => {
+    document.title = wall
+      ? `${wall.owner_name}'s Wall — The Number Wall`
+      : 'My Wall — The Number Wall'
+  }, [wall])
+
+  // Load existing wall if slug is in URL
+  useEffect(() => {
+    if (!slug) return
+    setLoading(true)
+    loadWall(slug).then(result => {
+      if (!result) {
+        setNotFound(true)
+        setLoading(false)
+        return
+      }
+      setWall(result)
+      // Track visitor (non-owner) wall views
+      const token = localStorage.getItem('tnw_my_wall_token')
+      if (!token || token !== result.owner_token) {
+        track('wall_visited', { slug, entries: result.entries.length })
+      }
+      // Group entries by number → array
+      const map = new Map()
+      for (const e of result.entries) {
+        const arr = map.get(e.number) || []
+        arr.push(e)
+        map.set(e.number, arr)
+      }
+      setEntries(map)
+      setLoading(false)
+    })
+  }, [slug, navigate])
+
+  function handleOnboardComplete(newWall) {
+    track('wall_created', { slug: newWall.slug })
+    setWall(newWall)
+    setEntries(new Map())
+    localStorage.setItem('tnw_my_wall_id', newWall.id)
+    localStorage.setItem('tnw_my_wall_slug', newWall.slug)
+    localStorage.setItem('tnw_my_wall_token', newWall.owner_token)
+    navigate(`/wall/${newWall.slug}`, { replace: true })
+  }
+
+  // ─── Toast helper ─────────────────────────────────────────────────────────
+  const showToast = useCallback((message, type = 'error') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3500)
+  }, [])
+
+  // ─── Owner check helper ──────────────────────────────────────────────────
+  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_token') : null
+
+  // ─── Place a player — with dedupe check ──────────────────────────────────
+  const handlePlace = useCallback(async (entryData) => {
+    if (!wall) return
+    // Dedupe: don't add the same player to the same number twice
+    const existing = entries.get(entryData.number) || []
+    if (existing.some(e => e.player_name === entryData.playerName)) {
+      showToast(`${entryData.playerName} is already on #${entryData.number}.`)
+      return
+    }
+    try {
+      const saved = await placeEntry(wall.id, entryData, ownerToken)
+      setEntries(prev => {
+        const next = new Map(prev)
+        const arr = [...(next.get(entryData.number) || []), saved]
+        next.set(entryData.number, arr)
+        return next
+      })
+      track('wall_entry_placed', { number: entryData.number, player: entryData.playerName, source: entryData.source })
+      setSearching(null)
+      setJustPlaced(entryData.number)
+      setTimeout(() => setJustPlaced(null), 1200)
+    } catch (err) {
+      console.error('Failed to place entry:', err)
+      showToast('Something went wrong. Try again.')
+    }
+  }, [wall, entries, ownerToken, showToast])
+
+  // ─── Remove a specific entry ─────────────────────────────────────────────
+  const handleRemove = useCallback(async (entryId, number) => {
+    if (!wall) return
+    try {
+      await removeEntry(wall.id, number, entryId, ownerToken)
+      setEntries(prev => {
+        const next = new Map(prev)
+        const arr = (next.get(number) || []).filter(e => e.id !== entryId)
+        if (arr.length === 0) next.delete(number)
+        else next.set(number, arr)
+        return next
+      })
+    } catch (err) {
+      console.error('Failed to remove entry:', err)
+      showToast('Couldn\'t remove that entry. Try again.')
+    }
+  }, [wall, ownerToken, showToast])
+
+  // ─── Add from who-else list ──────────────────────────────────────────────
+  const handleAddWhoElse = useCallback((number, player) => {
+    handlePlace({
+      number,
+      playerName: player.name,
+      playerId:   null,
+      sport:      player.sport,
+      source:     'tnw',
+      tier:       player.tier,
+      infoSnap: {
+        stat:      player.stat,
+        statLabel: player.statLabel,
+        funFact:   player.funFact,
+        fallback:  false,
+      },
+    })
+  }, [handlePlace])
+
+  // ─── Share wall (copy link) ──────────────────────────────────────────────
+  const handleShare = useCallback(() => {
+    const url = `${window.location.origin}/wall/${wall?.slug}`
+    navigator.clipboard.writeText(url).then(() => {
+      track('wall_shared', { slug: wall?.slug })
+      showToast('Link copied — share your wall!', 'success')
+    }).catch(() => {
+      showToast('Couldn\'t copy link. Try again.')
+    })
+  }, [wall, showToast])
+
+  // ─── Clear wall (delete all entries) ─────────────────────────────────────
+  const handleClearWall = useCallback(async () => {
+    if (!wall) return
+    try {
+      await clearAllEntries(wall.id, ownerToken)
+      setEntries(new Map())
+      setSearching(null)
+      setShowClearConfirm(false)
+      showToast('Wall cleared. Fresh start.', 'success')
+    } catch (err) {
+      console.error('Failed to clear wall:', err)
+      showToast('Couldn\'t clear wall. Try again.')
+    }
+  }, [wall, ownerToken, showToast])
+
+  // ─── Claim / unclaim number ──────────────────────────────────────────────
+  const handleClaimNumber = useCallback(async (number) => {
+    if (!wall) return
+    try {
+      const updated = await updateWall(wall.id, { my_number: number }, ownerToken)
+      setWall(prev => ({ ...prev, my_number: updated.my_number }))
+      showToast(`#${number} is yours now.`, 'success')
+    } catch (err) {
+      console.error('Failed to claim number:', err)
+      showToast('Couldn\'t claim that number. Try again.')
+    }
+  }, [wall, ownerToken, showToast])
+
+  const handleUnclaimNumber = useCallback(async () => {
+    if (!wall) return
+    try {
+      const updated = await updateWall(wall.id, { my_number: null }, ownerToken)
+      setWall(prev => ({ ...prev, my_number: updated.my_number }))
+      showToast('Number unclaimed.', 'success')
+    } catch (err) {
+      console.error('Failed to unclaim number:', err)
+      showToast('Couldn\'t unclaim. Try again.')
+    }
+  }, [wall, ownerToken, showToast])
+
+  function handleTileClick(number) {
+    // Single entry point: tap tile → panel opens
+    if (searchingNumber === number) {
+      setSearching(null)
+    } else {
+      setSearching(number)
+    }
+  }
+
+  // Close search on Escape
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') setSearching(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // ─── Not found ────────────────────────────────────────────────────────────
+  if (notFound) {
+    return (
+      <AppShell>
+        <AppHeader back={{ label: 'The Wall', onClick: () => navigate('/') }} title="MY WALL" />
+        <main className="my-wall-page">
+          <div className="my-wall-page__not-found">
+            <h2>Wall not found.</h2>
+            <p>No wall lives at this URL yet.</p>
+            <button className="btn-primary" onClick={() => navigate('/my-wall')}>
+              Build yours →
+            </button>
+          </div>
+        </main>
+        <AppFooter />
+      </AppShell>
+    )
+  }
+
+  // ─── Loading ──────────────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <AppShell>
+        <AppHeader title="MY WALL" />
+        <main className="my-wall-page">
+          <p className="my-wall-page__loading">Loading wall...</p>
+        </main>
+      </AppShell>
+    )
+  }
+
+  // ─── Onboarding (no wall yet, no slug in URL) ────────────────────────────
+  if (!wall && !slug) {
+    return (
+      <AppShell>
+        <AppHeader title="MY WALL" />
+        <main className="my-wall-page">
+          <Onboarding onComplete={handleOnboardComplete} />
+        </main>
+        <AppFooter />
+      </AppShell>
+    )
+  }
+
+  // ─── The Wall ─────────────────────────────────────────────────────────────
+
+  const isOwner = ownerToken && wall?.owner_token === ownerToken
+
+  const selectedPicks = searchingNumber ? (entries.get(searchingNumber) || []) : []
+  const hasPicks = selectedPicks.length > 0
+
+  // Clean number (strip -add suffix for "add another" mode)
+  const cleanNumber = searchingNumber ? searchingNumber.toString().replace('-add', '') : null
+  const whoElse = cleanNumber && WHO_ELSE[cleanNumber]
+    ? WHO_ELSE[cleanNumber]
+    : []
+
+  // Null guard
+  if (!wall) return null
+
+  const wallName = wall.owner_name || 'My'
+  const isMyNumber = (num) => wall.my_number != null && String(wall.my_number) === String(num)
+
+  return (
+    <AppShell>
+      <AppHeader
+        back={{ label: 'The Wall', onClick: () => navigate('/') }}
+        title={`${wallName.toUpperCase()}'S WALL`}
+        tagline={isOwner ? 'Your numbers. Your legends.' : 'Every number tells a story.'}
+      />
+      <main className="my-wall-page">
+        {/* Owner action bar: share + clear */}
+        {isOwner && (
+          <div className="my-wall-page__actions">
+            <button className="btn-micro" onClick={handleShare}>SHARE WALL</button>
+            <button className="btn-micro" onClick={() => setShowClearConfirm(true)}>CLEAR WALL</button>
+          </div>
+        )}
+
+        <div className="my-wall-page__body">
+          {/* Grid */}
+          <div className="my-wall-page__grid-col">
+            <div className="wall-grid" role="grid" aria-label="My wall">
+              {TILE_NUMBERS.map(num => (
+                <MyWallTile
+                  key={num}
+                  number={num}
+                  picks={entries.get(num) || []}
+                  isMyNumber={isMyNumber(num)}
+                  isSearching={searchingNumber === num}
+                  justPlaced={justPlaced === num}
+                  onClick={() => handleTileClick(num)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Side panel */}
+          <div className="my-wall-page__panel">
+            {/* Tapped a filled tile → show all picks + who else + option to add more */}
+            {searchingNumber && hasPicks ? (
+              <>
+                <PlacedPanel
+                  picks={selectedPicks}
+                  number={searchingNumber}
+                  myNumber={wall.my_number}
+                  whoElse={whoElse}
+                  onAddWhoElse={isOwner ? (p) => handleAddWhoElse(searchingNumber, p) : null}
+                  onRemove={isOwner ? (id) => handleRemove(id, searchingNumber) : null}
+                  isOwner={isOwner}
+                  onUnclaimNumber={isOwner && isMyNumber(searchingNumber) ? handleUnclaimNumber : null}
+                  onClaimNumber={isOwner && !wall.my_number && !isMyNumber(searchingNumber) ? () => handleClaimNumber(searchingNumber) : null}
+                />
+                {isOwner && (
+                  <div className="my-wall-page__add-another">
+                    <button
+                      className="my-wall-page__add-btn"
+                      onClick={() => {
+                        setSearching(`${searchingNumber}-add`)
+                      }}
+                    >
+                      + Add another
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : searchingNumber && isOwner ? (
+              /* Owner tapped empty tile or clicked "add another" */
+              <div className="my-wall-page__search-panel">
+                {/* Big number header — always show for empty tiles */}
+                <div className="placed-panel">
+                  <div className="placed-panel__header">
+                    <div className="placed-panel__header-left">
+                      <span className="placed-panel__number">#{cleanNumber}</span>
+                    </div>
+                  </div>
+                  {isMyNumber(cleanNumber) && (
+                    <p className="placed-panel__my-number-note">This one's yours. Light it up.</p>
+                  )}
+                  {/* Claim as my number — if no number claimed yet */}
+                  {!wall.my_number && (
+                    <button className="btn-micro btn-micro--heat" onClick={() => handleClaimNumber(cleanNumber)}>
+                      CLAIM AS MY NUMBER
+                    </button>
+                  )}
+                  {/* Who else wears this number? — show even before placing */}
+                  {whoElse.length > 0 && (
+                    <div className="placed-panel__who-else">
+                      <span className="placed-panel__who-else-label">Who else wore this number?</span>
+                      <ul className="placed-panel__who-else-list">
+                        {whoElse.map((p, i) => (
+                          <li
+                            key={i}
+                            className="placed-panel__who-else-item placed-panel__who-else-item--tappable"
+                            onClick={() => handleAddWhoElse(cleanNumber, p)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleAddWhoElse(cleanNumber, p) }}
+                          >
+                            <span className="placed-panel__who-else-name">{p.name}</span>
+                            <span className="placed-panel__who-else-meta">{p.sport}</span>
+                            <span className="placed-panel__who-else-action">+ Add</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+                <PlayerSearch
+                  number={cleanNumber}
+                  onPlace={handlePlace}
+                  onCancel={() => setSearching(null)}
+                  hideHeader
+                />
+              </div>
+            ) : searchingNumber && !isOwner ? (
+              /* Visitor tapped a tile — read-only panel */
+              <div className="placed-panel">
+                <div className="placed-panel__header">
+                  <div className="placed-panel__header-left">
+                    <span className="placed-panel__number">#{cleanNumber}</span>
+                  </div>
+                </div>
+                {whoElse.length > 0 && (
+                  <div className="placed-panel__who-else">
+                    <span className="placed-panel__who-else-label">Who else wore this number?</span>
+                    <ul className="placed-panel__who-else-list">
+                      {whoElse.map((p, i) => (
+                        <li key={i} className="placed-panel__who-else-item">
+                          <span className="placed-panel__who-else-name">{p.name}</span>
+                          <span className="placed-panel__who-else-meta">{p.sport}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="my-wall-page__idle">
+                <svg className="my-wall-page__idle-jersey" viewBox="0 0 496 359" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M265.686 351H141.686C137.268 351 133.686 347.418 133.686 343V162.314C133.686 155.186 125.069 151.617 120.029 156.657L77.8431 198.843C74.7189 201.967 69.6536 201.967 66.5294 198.843L10.3431 142.657C7.21894 139.533 7.21894 134.467 10.3431 131.343L131.343 10.3431C132.843 8.84285 134.878 8 137 8H194.873C196.994 8 199.029 8.84286 200.529 10.3431L239.029 48.8431C242.154 51.9673 247.219 51.9673 250.343 48.8431L288.843 10.3431C290.343 8.84285 292.378 8 294.5 8H358.873C360.994 8 363.029 8.84285 364.529 10.3431L485.529 131.343C488.654 134.467 488.654 139.533 485.529 142.657L429.343 198.843C426.219 201.967 421.154 201.967 418.029 198.843L375.843 156.657C370.803 151.617 362.186 155.186 362.186 162.314V343C362.186 347.418 358.605 351 354.186 351H307.186" stroke="currentColor" strokeWidth="16" strokeLinecap="round"/>
+                  <path d="M137.186 317H324.686" stroke="currentColor" strokeWidth="16" strokeLinecap="round"/>
+                </svg>
+                <div className="my-wall-page__idle-headline">
+                  {isOwner ? 'YOUR WALL. YOUR CALL.' : `${wallName.toUpperCase()}'S WALL.`}
+                </div>
+                <p className="my-wall-page__idle-text">
+                  {isOwner
+                    ? 'Tap any number to place your legend.'
+                    : 'Tap a lit tile to see who they picked.'
+                  }
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Clear wall confirmation modal */}
+        {showClearConfirm && (
+          <div className="my-wall-modal__overlay" onClick={() => setShowClearConfirm(false)}>
+            <div className="my-wall-modal" onClick={e => e.stopPropagation()}>
+              <h3 className="my-wall-modal__title">Clear your wall?</h3>
+              <p className="my-wall-modal__text">This removes every pick from your wall. Your wall name and URL stay the same.</p>
+              <div className="my-wall-modal__actions">
+                <button className="btn-ghost" onClick={() => setShowClearConfirm(false)}>Keep it</button>
+                <button className="btn-primary" style={{ background: '#E8182E', borderColor: '#E8182E' }} onClick={handleClearWall}>Clear everything</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Toast notification */}
+        {toast && (
+          <div className={`my-wall-toast ${toast.type === 'success' ? 'my-wall-toast--success' : 'my-wall-toast--error'}`}>
+            {toast.message}
+          </div>
+        )}
+      </main>
+      <AppFooter />
+    </AppShell>
+  )
+}

@@ -69,6 +69,51 @@
   border-radius:  2px;
 }
 
+/* Nav links — right side of back row */
+.app-header__nav {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.app-header__nav-link {
+  font-family:     var(--font-program);
+  font-size:       0.75rem;
+  font-weight:     500;
+  color:           var(--color-muted);
+  letter-spacing:  0.04em;
+  background:      none;
+  border:          none;
+  padding:         0;
+  cursor:          pointer;
+  transition:      color var(--motion-hover);
+}
+
+.app-header__nav-link:hover {
+  color: var(--color-paper);
+}
+
+.app-header__nav-link:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 4px;
+  border-radius:  2px;
+}
+
+/* NEW badge — inline next to "My Wall" nav link */
+.app-header__new-badge {
+  font-family: var(--font-scoreboard);
+  font-size: 0.4rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-night);
+  background: var(--color-heat);
+  padding: 2px 5px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-left: 4px;
+  box-shadow: 0 0 8px rgba(232, 124, 42, 0.35);
+}
+
 /* Back button — left slot */
 .app-header__back {
   font-family:    var(--font-program);

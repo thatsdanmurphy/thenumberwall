@@ -5,3 +5,4 @@ dist
 .env.local
 preview.html
 preview-latest.htmldata/__pycache__/
+vite.config.js.timestamp-*

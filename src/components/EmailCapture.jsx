@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { track } from '@vercel/analytics'
 import './EmailCapture.css'
 
-const KIT_FORM_ID  = '9221625'
-const KIT_API_KEY  = 'zfPkBvNBibG980b3l7TFJw'
+const KIT_FORM_ID  = import.meta.env.VITE_KIT_FORM_ID  || '9221625'
+const KIT_API_KEY  = import.meta.env.VITE_KIT_API_KEY  || 'zfPkBvNBibG980b3l7TFJw'
 const KIT_ENDPOINT = `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`
 
 /**
@@ -27,6 +28,7 @@ export default function EmailCapture({ variant = 'footer' }) {
         body:    JSON.stringify({ api_key: KIT_API_KEY, email: email.trim() }),
       })
       if (!res.ok) throw new Error(`Kit ${res.status}`)
+      track('email_captured', { variant })
       setStatus('success')
     } catch {
       setStatus('error')

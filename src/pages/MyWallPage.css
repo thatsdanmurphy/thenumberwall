@@ -1,0 +1,794 @@
+/* MyWallPage — personal wall builder.
+   Reuses wall-grid from WallGrid.css.
+   Same golden-ratio layout as WallPage on desktop.
+
+   BUTTON SYSTEM (3 patterns — no new styles without a reason):
+   ─────────────────────────────────────────────────────────────
+   1. .btn-primary    — orange fill, dark text. The one CTA per screen.
+   2. .btn-ghost      — border, no fill. Secondary actions.
+   3. .btn-text       — no border, no fill. Tertiary / inline links.
+   4. .btn-micro      — scoreboard mono pill. Panel inline actions.
+   ───────────────────────────────────────────────────────────── */
+
+/* ─── Button system ─────────────────────────────────────────────────────── */
+
+.btn-primary {
+  padding: 10px 28px;
+  background: var(--color-heat);
+  border: 1px solid var(--color-heat);
+  border-radius: 6px;
+  color: var(--color-night);
+  font-family: var(--font-program);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-blaze);
+  border-color: var(--color-blaze);
+}
+
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.btn-ghost {
+  padding: 10px 28px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: var(--color-paper);
+  font-family: var(--font-program);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(232, 124, 42, 0.12);
+  border-color: rgba(232, 124, 42, 0.4);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  color: var(--color-muted);
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: color var(--motion-hover);
+}
+
+.btn-text:hover {
+  color: var(--color-paper);
+}
+
+.btn-text--danger:hover {
+  color: #E8182E;
+}
+
+.btn-micro {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 4px;
+  padding: 5px 10px;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: color var(--motion-hover), border-color var(--motion-hover), background var(--motion-hover);
+  white-space: nowrap;
+}
+
+.btn-micro:hover {
+  color: var(--color-paper);
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.btn-micro--heat {
+  border-color: rgba(232, 124, 42, 0.3);
+  color: var(--color-heat);
+}
+
+.btn-micro--heat:hover {
+  background: rgba(232, 124, 42, 0.12);
+  border-color: var(--color-heat);
+}
+
+/* ─── Page container ────────────────────────────────────────────────────── */
+
+.my-wall-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.my-wall-page__loading {
+  font-family: var(--font-scoreboard);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: var(--space-7) 0;
+}
+
+.my-wall-page__not-found {
+  text-align: center;
+  padding: var(--space-7) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.my-wall-page__not-found h2 {
+  font-family: var(--font-banner);
+  font-size: 1.25rem;
+  color: var(--color-paper);
+}
+
+.my-wall-page__not-found p {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+/* ─── Body: grid + panel side by side ───────────────────────────────────── */
+
+.my-wall-page__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.my-wall-page__grid-col {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .my-wall-page__body {
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--space-4);
+  }
+
+  .my-wall-page__grid-col {
+    flex: 0 0 61.8%;
+  }
+
+  .my-wall-page__panel {
+    flex: 1;
+    max-width: var(--panel-max-width);
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* ─── Idle state — jersey + prompt (matches global PlayerPanel idle) ───── */
+
+.my-wall-page__idle {
+  padding: var(--space-5) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  text-align: center;
+  flex: 1;
+  min-height: 360px;
+}
+
+.my-wall-page__idle-jersey {
+  width: 128px;
+  height: 93px;
+  opacity: 0.18;
+  margin-bottom: var(--space-3);
+}
+
+.my-wall-page__idle-headline {
+  font-family: var(--font-banner);
+  font-size: 1.375rem;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.my-wall-page__idle-text {
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* ─── My Wall Tile overrides ────────────────────────────────────────────── */
+
+.my-wall-tile {
+  position: relative;
+}
+
+/* "My number" tile — electric blue glow */
+.my-wall-tile--mine {
+  animation: my-number-breathe 3.0s ease-in-out infinite;
+}
+
+@keyframes my-number-breathe {
+  0%, 100% {
+    box-shadow: 0 0 10px 3px rgba(60, 130, 255, 0.25),
+                0 0 20px 6px rgba(60, 130, 255, 0.10) !important;
+  }
+  50% {
+    box-shadow: 0 0 18px 5px rgba(60, 130, 255, 0.45),
+                0 0 36px 10px rgba(60, 130, 255, 0.18) !important;
+  }
+}
+
+/* Multi-pick count badge on tile */
+.my-wall-tile__count {
+  position: absolute;
+  bottom: 1px;
+  right: 2px;
+  font-family: var(--font-scoreboard);
+  font-size: 0.4rem;
+  color: var(--color-heat);
+  line-height: 1;
+  opacity: 0.7;
+}
+
+/* Placement glow animation */
+@keyframes place-glow {
+  0%   { box-shadow: 0 0 0 0 rgba(232, 124, 42, 0); }
+  20%  { box-shadow: 0 0 18px 6px rgba(232, 124, 42, 0.7), 0 0 40px 12px rgba(232, 124, 42, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 124, 42, 0); }
+}
+
+.my-wall-tile--just-placed {
+  animation: place-glow 1.2s ease-out forwards;
+  z-index: 4;
+}
+
+/* ─── Onboarding ────────────────────────────────────────────────────────── */
+
+.my-wall-onboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-7) 0;
+}
+
+.my-wall-onboard__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 400px;
+  width: 100%;
+  padding: var(--space-5) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+/* Top row — NEW badge + headline together */
+.my-wall-onboard__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.my-wall-onboard__new-badge {
+  font-family: var(--font-scoreboard);
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-night);
+  background: var(--color-heat);
+  padding: 2px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(232, 124, 42, 0.35);
+}
+
+/* Intro text — muted, secondary to the headline */
+.my-wall-onboard__intro {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  text-align: center;
+  line-height: 1.55;
+  max-width: 300px;
+}
+
+.my-wall-onboard__headline {
+  font-family: var(--font-banner);
+  font-size: 1.25rem;
+  color: var(--color-paper);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Section — groups label + input */
+.my-wall-onboard__section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.my-wall-onboard__label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+/* Big number input */
+.my-wall-onboard__number-input {
+  width: 120px;
+  padding: var(--space-3) var(--space-2);
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: var(--color-heat);
+  font-family: var(--font-banner);
+  font-size: 3rem;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--motion-hover);
+  caret-color: var(--color-heat);
+}
+
+.my-wall-onboard__number-input:focus {
+  border-color: var(--color-heat);
+  box-shadow: 0 0 20px rgba(232, 124, 42, 0.15);
+}
+
+.my-wall-onboard__number-input::placeholder {
+  color: rgba(232, 124, 42, 0.2);
+}
+
+.my-wall-onboard__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Inline name input — "____'s Wall" headline */
+.my-wall-onboard__headline--name {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.my-wall-onboard__name-inline {
+  background: none;
+  border: none;
+  border-bottom: 2px solid rgba(232, 124, 42, 0.4);
+  color: var(--color-heat);
+  font-family: var(--font-banner);
+  font-size: 1.375rem;
+  text-align: center;
+  width: 160px;
+  outline: none;
+  padding: 0 2px 2px;
+  caret-color: var(--color-heat);
+  transition: border-color var(--motion-hover);
+}
+
+.my-wall-onboard__name-inline:focus {
+  border-bottom-color: var(--color-heat);
+}
+
+.my-wall-onboard__name-inline::placeholder {
+  color: rgba(232, 124, 42, 0.2);
+}
+
+.my-wall-onboard__url-preview {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+}
+
+.my-wall-onboard__url-preview strong {
+  color: var(--color-heat);
+  font-weight: 600;
+}
+
+.my-wall-onboard__slug-taken {
+  font-family: var(--font-scoreboard);
+  font-size: 0.75rem;
+  color: #E8182E;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Panel — matches global PlayerPanel structure ──────────────────────── */
+
+.placed-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Big number header — same as player-panel__number (2.5rem / 3rem) */
+.placed-panel__number {
+  font-family: var(--font-banner);
+  font-size: 2.5rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--color-heat);
+  text-shadow: 0 0 24px rgba(232, 124, 42, 0.45), 0 0 48px rgba(232, 124, 42, 0.15);
+}
+
+@media (min-width: 1024px) {
+  .placed-panel__number { font-size: 3rem; }
+}
+
+.placed-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.placed-panel__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.placed-panel__your-number {
+  font-family: var(--font-banner);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  color: rgba(100, 170, 255, 0.95);
+  text-shadow: 0 0 14px rgba(60, 130, 255, 0.5), 0 0 32px rgba(60, 130, 255, 0.2);
+}
+
+/* "This one's yours" note */
+.placed-panel__my-number-note {
+  font-family: var(--font-handwritten);
+  font-size: 0.75rem;
+  color: rgba(100, 170, 255, 0.95);
+  text-shadow: 0 0 14px rgba(60, 130, 255, 0.5), 0 0 28px rgba(60, 130, 255, 0.2);
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+/* ─── Player card inside panel — matches global player-card treatment ──── */
+
+.placed-card {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: var(--space-3);
+}
+
+.placed-card:first-of-type {
+  background: rgba(232, 124, 42, 0.07);
+  border-color: rgba(232, 124, 42, 0.30);
+}
+
+.placed-card__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.placed-card__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Name — matches player-card__name */
+.placed-card__name {
+  font-family: var(--font-banner);
+  font-size: 1.0625rem;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: var(--color-paper);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.placed-card:first-of-type .placed-card__name {
+  font-size: 1.125rem;
+}
+
+.placed-card__sport {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+
+/* Stat — right-aligned column, matches player-card__stat */
+.placed-card__stat {
+  text-align: right;
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 80px;
+  width: 80px;
+  margin-left: var(--space-2);
+}
+
+.placed-card__stat-number {
+  font-family: var(--font-banner);
+  font-size: 1.3rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--color-paper);
+  overflow: hidden;
+  text-overflow: clip;
+  word-break: break-all;
+}
+
+.placed-card__stat-label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.62);
+  text-align: right;
+  line-height: 1.4;
+  margin-top: 3px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Fun fact — matches player-card__fact */
+.placed-card__fact {
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin-top: var(--space-2);
+}
+
+.placed-card__fallback {
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin-top: var(--space-2);
+  font-style: italic;
+}
+
+/* Stacked cards divider */
+.placed-card--stacked {
+  margin-top: var(--space-2);
+}
+
+/* ─── Who else wore this? — chunkier rows ───────────────────────────────── */
+
+.placed-panel__who-else {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.placed-panel__who-else-label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.62);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.placed-panel__who-else-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.placed-panel__who-else-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  transition: background var(--motion-hover);
+}
+
+.placed-panel__who-else-item--tappable {
+  cursor: pointer;
+}
+
+.placed-panel__who-else-item--tappable:hover {
+  background: rgba(232, 124, 42, 0.08);
+  border-color: rgba(232, 124, 42, 0.25);
+}
+
+.placed-panel__who-else-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* "+ Add" label — muted until row hover */
+.placed-panel__who-else-action {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.18);
+  white-space: nowrap;
+  transition: color var(--motion-hover);
+}
+
+.placed-panel__who-else-item--tappable:hover .placed-panel__who-else-action {
+  color: var(--color-heat);
+}
+
+.placed-panel__who-else-name {
+  font-family: var(--font-banner);
+  font-size: 0.9375rem;
+  letter-spacing: 0.03em;
+  color: var(--color-paper);
+  flex: 1;
+}
+
+.placed-panel__who-else-meta {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ─── Add another (dashed) ──────────────────────────────────────────────── */
+
+.my-wall-page__add-another {
+  margin-top: var(--space-2);
+}
+
+.my-wall-page__add-btn {
+  background: none;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: var(--space-2) var(--space-3);
+  width: 100%;
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: border-color var(--motion-hover), color var(--motion-hover);
+}
+
+.my-wall-page__add-btn:hover {
+  border-color: rgba(232, 124, 42, 0.4);
+  color: rgba(232, 124, 42, 0.70);
+}
+
+/* ─── Search panel wrapper ──────────────────────────────────────────────── */
+
+.my-wall-page__search-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ─── Owner action bar ─────────────────────────────────────────────────── */
+
+.my-wall-page__actions {
+  display: flex;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ─── Toast notification ───────────────────────────────────────────────── */
+
+.my-wall-toast {
+  position: fixed;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 6px;
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  z-index: 100;
+  animation: toast-in 0.3s ease-out;
+  white-space: nowrap;
+}
+
+.my-wall-toast--error {
+  background: #E8182E;
+  color: white;
+  box-shadow: 0 4px 20px rgba(232, 24, 46, 0.4);
+}
+
+.my-wall-toast--success {
+  background: var(--color-heat);
+  color: var(--color-night);
+  box-shadow: 0 4px 20px rgba(232, 124, 42, 0.4);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ─── Confirmation modal ───────────────────────────────────────────────── */
+
+.my-wall-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.70);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  animation: modal-fade 0.2s ease-out;
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.my-wall-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: var(--space-5);
+  max-width: 380px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.my-wall-modal__title {
+  font-family: var(--font-banner);
+  font-size: 1.125rem;
+  color: var(--color-paper);
+}
+
+.my-wall-modal__text {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.my-wall-modal__actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}

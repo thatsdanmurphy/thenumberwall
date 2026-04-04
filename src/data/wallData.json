@@ -1360,6 +1360,23 @@
     "Notes": ""
   },
   {
+    "Number": "24",
+    "Tier": "LEGEND",
+    "Name": "Willie Mays",
+    "Sport": "Baseball",
+    "League": "MLB",
+    "Status": "Retired",
+    "Era": "MLB Golden Era",
+    "Team": "San Francisco Giants",
+    "Hometown": "Westfield, AL",
+    "Signature Stat": "660",
+    "Stat Label": "Career Home Runs",
+    "Stat Weight": "3",
+    "Role": "Center Fielder",
+    "Fun Fact": "The Say Hey Kid made The Catch in the 1954 World Series - an over-the-shoulder grab at full sprint in dead center that changed what people thought was possible in the outfield",
+    "Notes": ""
+  },
+  {
     "Number": "25",
     "Tier": "LEGEND",
     "Name": "Barry Bonds",
@@ -1630,6 +1647,23 @@
     "Role": "Center",
     "Fun Fact": "He carried the Knicks on his back for 15 seasons and never won a title - the greatest player to never win a ring alongside Barkley and Stockton",
     "Notes": "#33 retired by Knicks"
+  },
+  {
+    "Number": "33",
+    "Tier": "LEGEND",
+    "Name": "Kareem Abdul-Jabbar",
+    "Sport": "Basketball",
+    "League": "NBA",
+    "Status": "Retired",
+    "Era": "NBA Dynasty",
+    "Team": "Milwaukee Bucks",
+    "Hometown": "New York, NY",
+    "Signature Stat": "38387",
+    "Stat Label": "Career Points",
+    "Stat Weight": "3",
+    "Role": "Center",
+    "Fun Fact": "The skyhook was basketball's most unstoppable weapon - six rings, six MVPs, and the all-time scoring record that stood for nearly four decades until LeBron passed it in 2023",
+    "Notes": "#33 retired by Bucks"
   },
   {
     "Number": "34",
@@ -1936,6 +1970,23 @@
     "Role": "Guard",
     "Fun Fact": "His silhouette is the NBA logo — and he's the only player to win Finals MVP on the losing team (1969) — a title the league quietly retired afterward because no one should have to win it that way again",
     "Notes": ""
+  },
+  {
+    "Number": "44",
+    "Tier": "LEGEND",
+    "Name": "Reggie Jackson",
+    "Sport": "Baseball",
+    "League": "MLB",
+    "Status": "Retired",
+    "Era": "MLB Modern",
+    "Team": "New York Yankees",
+    "Hometown": "Wyncote, PA",
+    "Signature Stat": "563",
+    "Stat Label": "Career Home Runs",
+    "Stat Weight": "3",
+    "Role": "Right Field",
+    "Fun Fact": "Mr. October hit three home runs on three consecutive pitches in Game 6 of the 1977 World Series - each one off a different pitcher - and the Bronx lost its mind",
+    "Notes": "#44 retired by Yankees"
   },
   {
     "Number": "45",
