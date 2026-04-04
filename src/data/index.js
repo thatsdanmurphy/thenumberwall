@@ -5,15 +5,17 @@
  * Source of truth: 03_Data/dist/ (compiled from relational CSVs).
  * Re-run compile_wall_data.py to regenerate, then re-export to JSON.
  *
- * Three datasets:
+ * Four datasets:
  *   wallData       — 171 entries, numbers 0, 00, 1–99 (global wall)
  *   bostonLegends  — 82 entries (Boston legend wall)
  *   bostonCurrent  — 133 entries (Boston current season rosters)
+ *   bcLegends      — 24 entries (Boston College retired jerseys)
  */
 
 import wallDataRaw      from './wallData.json'
 import bostonLegendsRaw from './bostonLegends.json'
 import bostonCurrentRaw from './bostonCurrent.json'
+import bcLegendsRaw     from './bcLegends.json'
 
 // ─── Normalise ─────────────────────────────────────────────────────────────
 // Clean and type-cast raw CSV rows into consistent JS objects.
@@ -46,6 +48,30 @@ export const wallData      = wallDataRaw.map(normalise)
 export const bostonLegends = bostonLegendsRaw.map(normalise)
 export const bostonCurrent = bostonCurrentRaw.map(normalise)
 
+// ─── BC Normalise ──────────────────────────────────────────────────────────
+// BC entries carry player metadata directly (no players.csv join).
+// Schema differs from global: yearsPlayed/position/hometown instead of era/team/role.
+
+function normaliseBC(row) {
+  return {
+    number:        row.Number          ?? '',
+    tier:          row.Tier            ?? '',
+    name:          row.Name            ?? '',
+    sport:         row.Sport           ?? '',
+    yearsPlayed:   row.YearsPlayed     ?? '',
+    position:      row.Position        ?? '',
+    hometown:      row.Hometown        ?? '',
+    stat:          row['Signature Stat'] ?? '',
+    statLabel:     row['Stat Label']     ?? '',
+    statWeight:    Number(row['Stat Weight']) || 0,
+    funFact:       row['Fun Fact']     ?? '',
+    retiredJersey: row['Retired Jersey'] === true || row['Retired Jersey'] === 'true',
+    notes:         row.Notes           ?? '',
+  }
+}
+
+export const bcLegends = bcLegendsRaw.map(normaliseBC)
+
 // ─── Wall index ────────────────────────────────────────────────────────────
 // Groups entries by number for fast tile lookup.
 // Returns a Map: number string → array of player entries.
@@ -63,6 +89,14 @@ function buildIndex(entries) {
 
 export const globalIndex  = buildIndex(wallData)
 export const bostonIndex  = buildIndex([...bostonLegends, ...bostonCurrent])
+export const bcIndex      = buildIndex(bcLegends)
+
+// Ordered tile numbers for the BC wall — only numbers with retired jerseys.
+// Sorted numerically (special-casing '00' < '0' < 1...).
+export const BC_TILE_NUMBERS = Array.from(bcIndex.keys()).sort((a, b) => {
+  const n = x => x === '00' ? -1 : x === '0' ? 0 : Number(x)
+  return n(a) - n(b)
+})
 
 // ─── Filtered index ────────────────────────────────────────────────────────
 // Returns a new Map with entries filtered to the given sport IDs.
@@ -87,7 +121,7 @@ export const TILE_NUMBERS = ['0', '00', ...Array.from({ length: 99 }, (_, i) => 
 // Tier weights: SACRED=5, LEGEND=3, ACTIVE=2, UNWRITTEN=0.
 // Total weight maps to a heat step.
 
-const TIER_WEIGHT = { SACRED: 5, LEGEND: 3, ACTIVE: 2, UNWRITTEN: 0 }
+const TIER_WEIGHT = { SACRED: 5, LEGEND: 3, ICON: 2, ACTIVE: 2, UNWRITTEN: 0 }
 
 export function getHeatLevel(entries) {
   if (!entries || entries.length === 0) return 0
@@ -174,4 +208,48 @@ export function getTileTextColor(entries, isSacred = false) {
   if (isSacred) return SACRED_TILE.text
   const level = getHeatLevelByCount(entries)
   return HEAT_TILES[level].text
+}
+
+// ─── BC heat palette ───────────────────────────────────────────────────────
+// Same level structure as the global wall but in BC maroon → gold.
+// Level 0: dark baseline (same as global — no colour until there's a legend)
+// Level 1: faint maroon ember — one legend, one note
+// Level 2: maroon — a recognised name
+// Level 3: maroon warming toward gold — heat building (multi-sport number)
+// Level 4: gold dominant — blazing
+// Level 5: BC gold inferno — the defining numbers (Flutie)
+// SACRED: pure BC gold at full burn
+
+const BC_HEAT_TILES = [
+  // 0 — unwritten
+  { bg: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.05)', glow: 'none',                                                                                              text: 'rgba(255,255,255,0.38)' },
+  // 1 — ember (maroon tile, BC gold number — legend present, dimmed)
+  { bg: 'rgba(139,21,56,0.28)',   border: 'rgba(139,21,56,0.42)',   glow: '0 0 8px rgba(139,21,56,0.32)',                                                                      text: 'rgba(197,160,40,0.70)' },
+  // 2 — warm (maroon tile, BC gold number — clearer)
+  { bg: 'rgba(139,21,56,0.42)',   border: 'rgba(160,30,68,0.58)',   glow: '0 0 12px rgba(139,21,56,0.48), 0 0 24px rgba(139,21,56,0.20)',                                      text: 'rgba(197,160,40,0.88)' },
+  // 3 — hot (maroon → gold transition)
+  { bg: 'rgba(148,60,28,0.55)',   border: 'rgba(185,115,20,0.68)',  glow: '0 0 16px rgba(185,115,20,0.52), 0 0 32px rgba(139,21,56,0.28)',                                     text: 'rgba(228,165,55,1)' },
+  // 4 — blazing (gold dominant)
+  { bg: 'rgba(162,118,12,0.62)',  border: 'rgba(197,160,40,0.78)',  glow: '0 0 20px rgba(197,160,40,0.68), 0 0 40px rgba(197,160,40,0.32)',                                    text: 'rgba(232,190,75,1)' },
+  // 5 — inferno (BC gold at full burn)
+  { bg: 'rgba(178,142,18,0.75)',  border: 'rgba(197,160,40,0.92)',  glow: '0 0 24px rgba(197,160,40,0.88), 0 0 48px rgba(180,130,18,0.48), 0 0 64px rgba(139,21,56,0.22)',   text: 'rgba(240,210,95,1)' },
+]
+
+const BC_SACRED_TILE = {
+  bg:     'rgba(197,160,40,0.22)',
+  border: 'rgba(197,160,40,0.72)',
+  glow:   '0 0 22px rgba(197,160,40,0.88), 0 0 44px rgba(197,160,40,0.42), 0 0 66px rgba(139,21,56,0.22)',
+  text:   'rgba(242,215,95,0.98)',
+}
+
+export function getHeatStyleBC(entries, isSacred = false) {
+  if (isSacred) return BC_SACRED_TILE
+  const level = getHeatLevelByCount(entries)
+  return BC_HEAT_TILES[level]
+}
+
+export function getTileTextColorBC(entries, isSacred = false) {
+  if (isSacred) return BC_SACRED_TILE.text
+  const level = getHeatLevelByCount(entries)
+  return BC_HEAT_TILES[level].text
 }
