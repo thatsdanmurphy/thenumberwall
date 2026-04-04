@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, useNavigate, Navigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import AppShell      from '../components/AppShell.jsx'
 import AppHeader     from '../components/AppHeader.jsx'
 import AppFooter     from '../components/AppFooter.jsx'
@@ -349,10 +349,10 @@ function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove,
         )
       })}
 
-      {/* Who else wore this number? */}
+      {/* Legends who wore this number */}
       {filtered.length > 0 && (
         <div className="placed-panel__who-else">
-          <span className="placed-panel__who-else-label">Who else wore this number?</span>
+          <span className="placed-panel__who-else-label">Legends who wore this number</span>
           <ul className="placed-panel__who-else-list">
             {filtered.map((p, i) => (
               <li
@@ -383,21 +383,26 @@ export default function MyWallPage() {
   const { slug }    = useParams()
   const navigate     = useNavigate()
 
+  // If no slug in URL but user has a saved wall, use it directly (no redirect flash)
+  const savedSlug = !slug && typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_slug') : null
+  const effectiveSlug = slug || savedSlug
+
   // All hooks must be called before any early return (rules of hooks)
   const [wall, setWall]                 = useState(null)
   const [entries, setEntries]           = useState(new Map())  // number → entry[]
   const [searchingNumber, setSearching] = useState(null)
-  const [loading, setLoading]           = useState(!!slug)
+  const [loading, setLoading]           = useState(!!effectiveSlug)
   const [notFound, setNotFound]         = useState(false)
   const [justPlaced, setJustPlaced]     = useState(null)
   const [toast, setToast]               = useState(null)       // { message, type }
   const [showClearConfirm, setShowClearConfirm] = useState(false)
 
-  // Synchronous redirect: if no slug but user has a saved wall, redirect immediately
-  const savedSlug = !slug && typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_slug') : null
-  if (!slug && savedSlug) {
-    return <Navigate to={`/wall/${savedSlug}`} replace />
-  }
+  // Silently update URL to /wall/slug if using saved slug (no remount)
+  useEffect(() => {
+    if (!slug && savedSlug) {
+      navigate(`/wall/${savedSlug}`, { replace: true })
+    }
+  }, [slug, savedSlug, navigate])
 
   useEffect(() => {
     document.title = wall
@@ -405,11 +410,11 @@ export default function MyWallPage() {
       : 'My Wall — The Number Wall'
   }, [wall])
 
-  // Load existing wall if slug is in URL
+  // Load existing wall
   useEffect(() => {
-    if (!slug) return
+    if (!effectiveSlug) return
     setLoading(true)
-    loadWall(slug).then(result => {
+    loadWall(effectiveSlug).then(result => {
       if (!result) {
         setNotFound(true)
         setLoading(false)
@@ -431,7 +436,7 @@ export default function MyWallPage() {
       setEntries(map)
       setLoading(false)
     })
-  }, [slug, navigate])
+  }, [effectiveSlug])
 
   function handleOnboardComplete(newWall) {
     track('wall_created', { slug: newWall.slug })
@@ -635,7 +640,7 @@ export default function MyWallPage() {
   }
 
   // ─── Onboarding (no wall yet, no slug in URL) ────────────────────────────
-  if (!wall && !slug) {
+  if (!wall && !effectiveSlug) {
     return (
       <AppShell>
         <AppHeader title="MY WALL" />
@@ -766,7 +771,7 @@ export default function MyWallPage() {
                   {/* Who else wears this number? — show even before placing */}
                   {whoElse.length > 0 && (
                     <div className="placed-panel__who-else">
-                      <span className="placed-panel__who-else-label">Who else wore this number?</span>
+                      <span className="placed-panel__who-else-label">Legends who wore this number</span>
                       <ul className="placed-panel__who-else-list">
                         {whoElse.map((p, i) => (
                           <li
@@ -803,7 +808,7 @@ export default function MyWallPage() {
                 </div>
                 {whoElse.length > 0 && (
                   <div className="placed-panel__who-else">
-                    <span className="placed-panel__who-else-label">Who else wore this number?</span>
+                    <span className="placed-panel__who-else-label">Legends who wore this number</span>
                     <ul className="placed-panel__who-else-list">
                       {whoElse.map((p, i) => (
                         <li key={i} className="placed-panel__who-else-item">

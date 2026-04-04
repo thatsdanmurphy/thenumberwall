@@ -120,7 +120,7 @@ export default function PlayerSearch({ number, onPlace, onCancel, hideHeader = f
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Search or type a name..."
+          placeholder="Someone else? Search or type a name..."
           onKeyDown={e => {
             if (e.key === 'Escape') onCancel()
             if (e.key === 'Enter' && results.length === 0 && query.length >= 2) {
