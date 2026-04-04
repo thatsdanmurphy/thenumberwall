@@ -45,9 +45,11 @@ export default function PlayerSearch({ number, onPlace, onCancel, hideHeader = f
 
   const searchIndex = useMemo(() => buildSearchIndex(), [])
 
-  // Focus input on mount
+  // Focus input on mount — desktop only, skip on touch devices to avoid keyboard pop
   useEffect(() => {
-    inputRef.current?.focus()
+    if (window.matchMedia('(min-width: 768px)').matches) {
+      inputRef.current?.focus()
+    }
   }, [])
 
   // Search as user types
