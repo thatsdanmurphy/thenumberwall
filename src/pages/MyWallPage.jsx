@@ -582,6 +582,27 @@ export default function MyWallPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  // ─── Mobile body scroll lock when panel is open ──────────────────────────
+  useEffect(() => {
+    if (searchingNumber) {
+      const scrollY = window.scrollY
+      document.body.classList.add('my-wall-sheet-open')
+      document.body.style.top = `-${scrollY}px`
+      document.body.dataset.scrollY = scrollY
+    } else {
+      const savedY = parseInt(document.body.dataset.scrollY || '0', 10)
+      document.body.classList.remove('my-wall-sheet-open')
+      document.body.style.top = ''
+      window.scrollTo(0, savedY)
+    }
+    return () => {
+      const savedY = parseInt(document.body.dataset.scrollY || '0', 10)
+      document.body.classList.remove('my-wall-sheet-open')
+      document.body.style.top = ''
+      window.scrollTo(0, savedY)
+    }
+  }, [searchingNumber])
+
   // ─── Not found ────────────────────────────────────────────────────────────
   if (notFound) {
     return (
@@ -679,8 +700,23 @@ export default function MyWallPage() {
             </div>
           </div>
 
-          {/* Side panel */}
-          <div className="my-wall-page__panel">
+          {/* Mobile backdrop — tap to close */}
+          {searchingNumber && (
+            <div
+              className="my-wall-page__backdrop"
+              onClick={() => setSearching(null)}
+              aria-hidden="true"
+            />
+          )}
+
+          {/* Side panel — bottom sheet on mobile */}
+          <div className={`my-wall-page__panel ${searchingNumber ? 'my-wall-page__panel--open' : ''}`}>
+            {/* Mobile drag handle */}
+            <div className="my-wall-page__sheet-handle" onClick={() => setSearching(null)}>
+              <div className="my-wall-page__sheet-handle-bar" />
+            </div>
+
+            <div className="my-wall-page__panel-scroll">
             {/* Tapped a filled tile → show all picks + who else + option to add more */}
             {searchingNumber && hasPicks ? (
               <>
@@ -796,6 +832,7 @@ export default function MyWallPage() {
                 </p>
               </div>
             )}
+            </div>{/* end panel-scroll */}
           </div>
         </div>
 
