@@ -6,10 +6,10 @@
  * Re-run compile_wall_data.py to regenerate, then re-export to JSON.
  *
  * Four datasets:
- *   wallData       — 179 entries, numbers 0, 00, 1–99 (global wall)
- *   bostonLegends  — 83 entries (Boston legend wall)
+ *   wallData       — 171 entries, numbers 0, 00, 1–99 (global wall)
+ *   bostonLegends  — 82 entries (Boston legend wall)
  *   bostonCurrent  — 133 entries (Boston current season rosters)
- *   bcLegends      — 10 entries (Boston College retired jerseys)
+ *   bcLegends      — 24 entries (Boston College retired jerseys)
  */
 
 import wallDataRaw      from './wallData.json'

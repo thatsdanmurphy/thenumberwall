@@ -72,6 +72,16 @@ export default function WallPage() {
                 <span className="wall-page__city-soon">COMING SOON</span>
               </div>
             </div>
+
+            {/* Collegiate walls — where legends begin */}
+            <div className="wall-page__cities">
+              <p className="wall-page__cities-label">SCHOOL COLORS</p>
+              <Link to="/bc" className="wall-page__city-card" onClick={() => track('college_board_open', { school: 'bc' })}>
+                <span className="wall-page__city-name">Boston College</span>
+                <span className="wall-page__city-teams">Football · Hockey · Basketball · Soccer</span>
+                <span className="wall-page__city-arrow" aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
 
           <PlayerPanel

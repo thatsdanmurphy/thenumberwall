@@ -71,6 +71,7 @@ export default function BCPage() {
     <AppShell>
       <AppHeader
         title="BOSTON COLLEGE"
+        tagline="For Boston."
         back={{ label: 'Main Wall', onClick: () => navigate('/') }}
       />
 

@@ -1,6 +1,6 @@
 import './AppHeader.css'
 
-export default function AppHeader({ back = null, title = 'THE NUMBER WALL' }) {
+export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagline = 'Legends live here.' }) {
   return (
     <header className="app-header">
       <div className="app-header__back-row">
@@ -16,7 +16,7 @@ export default function AppHeader({ back = null, title = 'THE NUMBER WALL' }) {
       </div>
       <div className="app-header__brand">
         <span className="app-header__wordmark">{title}</span>
-        <span className="app-header__tagline">Legends live here.</span>
+        <span className="app-header__tagline">{tagline}</span>
       </div>
     </header>
   )
