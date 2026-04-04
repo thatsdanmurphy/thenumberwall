@@ -1515,6 +1515,23 @@
   {
     "Number": "31",
     "Tier": "LEGEND",
+    "Name": "Greg Maddux",
+    "Sport": "Baseball",
+    "League": "MLB",
+    "Status": "Retired",
+    "Era": "MLB Modern",
+    "Team": "Atlanta Braves",
+    "Hometown": "",
+    "Signature Stat": "4",
+    "Stat Label": "Consecutive Cy Young Awards (1992–1995 — Only Pitcher Ever)",
+    "Stat Weight": "3",
+    "Role": "Pitcher",
+    "Fun Fact": "He won four straight Cy Youngs throwing 78 mph when he could throw 92 — outsmarting lineups so completely that hitters said facing him felt like taking a final exam they hadn't studied for. The Professor earned every syllable.",
+    "Notes": "#31 retired by Cubs and Braves. 355 career wins (8th all-time). 3371 strikeouts."
+  },
+  {
+    "Number": "31",
+    "Tier": "LEGEND",
     "Name": "Patrick Roy",
     "Sport": "Hockey",
     "League": "NHL",
