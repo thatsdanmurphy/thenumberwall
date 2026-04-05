@@ -27,11 +27,11 @@ export const SEASONAL_PROMPTS = [
     category: 'seasonal',
   },
   {
-    id: 'march-madness',
-    name: 'March Madness Wall',
-    description: 'The tournament runs that live rent-free in your head.',
-    icon: '🏀',
-    months: [3, 4],  // March–April
+    id: 'playoff-legends',
+    name: 'Playoff Legends',
+    description: 'The players who showed up when it mattered most.',
+    icon: '🏆',
+    months: [4, 5, 6],  // April–June (NBA & NHL playoffs)
     category: 'seasonal',
   },
   {
@@ -53,10 +53,10 @@ export const SEASONAL_PROMPTS = [
 
   // ─── Evergreen ─────────────────────────────────────────────────────────────
   {
-    id: 'coach-legends',
-    name: 'Coach Legends',
-    description: 'Build a wall of the greats your team should know.',
-    icon: '📋',
+    id: 'for-your-players',
+    name: 'For Your Players',
+    description: 'The wall you build for your locker room.',
+    icon: '🧑‍🏫',
     months: null,
     category: 'coach',
   },
@@ -73,6 +73,14 @@ export const SEASONAL_PROMPTS = [
     name: 'Road Trip Wall',
     description: 'Everyone picks. One wall. Settle it on the drive.',
     icon: '🚗',
+    months: null,
+    category: 'friends',
+  },
+  {
+    id: 'rival-city',
+    name: 'Rival City',
+    description: 'Got a friend in another sports town? Settle it.',
+    icon: '⚔️',
     months: null,
     category: 'friends',
   },
