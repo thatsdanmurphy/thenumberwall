@@ -12,10 +12,19 @@ import { supabase } from './supabase.js'
 
 // ─── Create a new wall ──────────────────────────────────────────────────────
 
-export async function createWall({ slug, ownerName, myNumber }) {
+export async function createWall({ slug, ownerName, myNumber, theme, themeDescription, allowContributions }) {
+  const row = {
+    slug,
+    owner_name: ownerName,
+    my_number: myNumber,
+  }
+  if (theme) row.theme = theme
+  if (themeDescription) row.theme_description = themeDescription
+  if (allowContributions) row.allow_contributions = true
+
   const { data, error } = await supabase
     .from('walls')
-    .insert({ slug, owner_name: ownerName, my_number: myNumber })
+    .insert(row)
     .select()
     .single()
 
@@ -60,16 +69,18 @@ export async function isSlugAvailable(slug) {
 // ─── Place a player on a wall ───────────────────────────────────────────────
 
 export async function placeEntry(wallId, entry, ownerToken) {
-  // Verify ownership before mutation
-  if (ownerToken) {
-    const { data: wall } = await supabase
-      .from('walls')
-      .select('owner_token')
-      .eq('id', wallId)
-      .single()
-    if (!wall || wall.owner_token !== ownerToken) {
-      throw new Error('Not authorized to modify this wall')
-    }
+  // Verify authorization: owner by token, or collaborative wall allows anyone
+  const { data: wall } = await supabase
+    .from('walls')
+    .select('owner_token, allow_contributions')
+    .eq('id', wallId)
+    .single()
+
+  const isOwner = ownerToken && wall?.owner_token === ownerToken
+  const isCollaborative = wall?.allow_contributions === true
+
+  if (!isOwner && !isCollaborative) {
+    throw new Error('Not authorized to modify this wall')
   }
 
   const row = {
@@ -84,6 +95,7 @@ export async function placeEntry(wallId, entry, ownerToken) {
     info_stat_label: entry.infoSnap?.statLabel || null,
     info_fun_fact:   entry.infoSnap?.funFact || null,
     info_fallback:   entry.infoSnap?.fallback || false,
+    contributed_by:  entry.contributedBy || null,
   }
 
   const { data, error } = await supabase

@@ -1,0 +1,5 @@
+.timeline-page {
+  min-height: 100vh;
+  background: var(--color-night);
+  padding: var(--space-6) 0;
+}

@@ -1,0 +1,404 @@
+/* ─── Legend Timeline ────────────────────────────────────────────────────────
+   A career waveform that glows from darkness to sacred gold.
+   Uses TNW design tokens throughout.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.legend-timeline {
+  width: 100%;
+  max-width: var(--grid-max-width, 1280px);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4);
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.legend-timeline__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.legend-timeline__number {
+  font-family: var(--font-banner);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--color-blaze);
+  opacity: 0.25;
+  flex-shrink: 0;
+}
+
+.legend-timeline__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.legend-timeline__name {
+  font-family: var(--font-banner);
+  font-size: 1.75rem;
+  line-height: 1.1;
+  color: var(--color-paper);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.legend-timeline__meta {
+  font-family: var(--font-scoreboard);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: 0.02em;
+}
+
+.legend-timeline__voice {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  color: var(--color-paper);
+  opacity: 0.75;
+  margin: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.legend-timeline__draft {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.legend-timeline__draft-pick {
+  font-family: var(--font-banner);
+  font-size: 1.5rem;
+  color: var(--color-muted);
+  opacity: 0.4;
+}
+
+.legend-timeline__draft-label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+  opacity: 0.6;
+  margin-top: var(--space-1);
+}
+
+/* ─── Waveform Container ─────────────────────────────────────────────────── */
+
+.legend-timeline__waveform-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: var(--space-7);  /* Space for milestones */
+  padding-bottom: var(--space-4); /* Space for season labels */
+}
+
+/* ─── The Bar ────────────────────────────────────────────────────────────── */
+
+.legend-timeline__bar {
+  position: relative;
+  width: 100%;
+  height: 64px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #060810;
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(232, 124, 42, 0.04),
+    0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+.legend-timeline__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* ─── Milestone Markers ──────────────────────────────────────────────────── */
+
+.legend-timeline__milestones {
+  position: relative;
+  height: 52px;
+  margin-bottom: var(--space-1);
+}
+
+.timeline-milestone {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-milestone__line {
+  width: 1px;
+  height: 12px;
+  background: var(--color-muted);
+  opacity: 0.3;
+}
+
+.timeline-milestone--sacred .timeline-milestone__line {
+  background: var(--color-blaze);
+  opacity: 0.6;
+  box-shadow: 0 0 6px rgba(245, 193, 53, 0.4);
+}
+
+.timeline-milestone__label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  color: var(--color-muted);
+  opacity: 0.7;
+  white-space: nowrap;
+  transform: rotate(-45deg);
+  transform-origin: bottom left;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+.timeline-milestone--sacred .timeline-milestone__label {
+  color: var(--color-blaze);
+  opacity: 0.9;
+}
+
+/* ─── Season Labels ──────────────────────────────────────────────────────── */
+
+.legend-timeline__seasons {
+  position: relative;
+  height: 20px;
+  margin-top: var(--space-1);
+}
+
+.timeline-season-label {
+  position: absolute;
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  color: var(--color-muted);
+  opacity: 0.4;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+/* ─── Tooltip ────────────────────────────────────────────────────────────── */
+
+.timeline-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: var(--space-2) var(--space-3);
+  pointer-events: none;
+  z-index: 10;
+  min-width: 180px;
+  max-width: 260px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-tooltip__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.timeline-tooltip__week {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+}
+
+.timeline-tooltip__type {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: var(--color-blaze);
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.timeline-tooltip__matchup {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  color: var(--color-paper);
+  margin-bottom: 4px;
+}
+
+.timeline-tooltip__result {
+  font-family: var(--font-banner);
+  font-size: 0.8125rem;
+}
+
+.timeline-tooltip__result--w {
+  color: var(--color-blaze);
+}
+
+.timeline-tooltip__result--l {
+  color: #E8182E;
+}
+
+.timeline-tooltip__opponent {
+  color: var(--color-paper);
+  opacity: 0.8;
+}
+
+.timeline-tooltip__stats {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+.timeline-tooltip__moment {
+  font-family: var(--font-banner);
+  font-size: 0.75rem;
+  color: var(--color-blaze);
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-border);
+}
+
+.timeline-tooltip__sacred {
+  color: #FFE878;
+}
+
+.timeline-tooltip__notes {
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.timeline-tooltip__glow {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: var(--color-muted);
+  opacity: 0.5;
+  margin-top: 4px;
+}
+
+.timeline-tooltip__bye {
+  font-family: var(--font-scoreboard);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.timeline-tooltip__dnp {
+  font-family: var(--font-banner);
+  font-size: 0.75rem;
+  color: #E8182E;
+}
+
+.timeline-tooltip__reason {
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+/* ─── Color Key ──────────────────────────────────────────────────────────── */
+
+.legend-timeline__key {
+  margin-top: var(--space-5);
+  display: flex;
+  justify-content: center;
+}
+
+.legend-timeline__key-gradient {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend-timeline__key-bar {
+  width: 200px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    #080C10,
+    #1A1510,
+    #3D2510,
+    #7A4A1A,
+    #C06820,
+    #E87C2A,
+    #F5C135,
+    #FFD84A,
+    #FFE878
+  );
+}
+
+.legend-timeline__key-label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: var(--color-muted);
+  opacity: 0.5;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .legend-timeline {
+    padding: var(--space-3) var(--space-3);
+  }
+
+  .legend-timeline__header {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .legend-timeline__number {
+    font-size: 2.5rem;
+  }
+
+  .legend-timeline__name {
+    font-size: 1.25rem;
+  }
+
+  .legend-timeline__draft {
+    order: -1;
+    text-align: left;
+    width: 100%;
+  }
+
+  .legend-timeline__bar {
+    height: 48px;
+  }
+
+  .legend-timeline__waveform-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: var(--space-5);
+  }
+
+  /* On mobile, make the waveform scrollable if needed */
+  .legend-timeline__bar,
+  .legend-timeline__milestones,
+  .legend-timeline__seasons {
+    min-width: 600px;
+  }
+
+  .timeline-milestone__label {
+    font-size: 0.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .legend-timeline__bar {
+    height: 80px;
+  }
+
+  .legend-timeline__number {
+    font-size: 5rem;
+  }
+
+  .legend-timeline__name {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .legend-timeline__bar {
+    height: 96px;
+  }
+}

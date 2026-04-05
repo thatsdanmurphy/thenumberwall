@@ -4,6 +4,7 @@ import WallPage       from './pages/WallPage.jsx'
 import BostonPage     from './pages/BostonPage.jsx'
 import AboutPage      from './pages/AboutPage.jsx'
 import MyWallPage     from './pages/MyWallPage.jsx'
+import TimelinePage   from './pages/TimelinePage.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
 export default function App() {
@@ -15,6 +16,8 @@ export default function App() {
         <Route path="/about"     element={<AboutPage />} />
         <Route path="/my-wall"   element={<MyWallPage />} />
         <Route path="/wall/:slug" element={<MyWallPage />} />
+        <Route path="/timeline/:playerId" element={<TimelinePage />} />
+        <Route path="/timeline"  element={<TimelinePage />} />
         <Route path="*"          element={<NotFoundPage />} />
       </Routes>
     </ErrorBoundary>

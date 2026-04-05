@@ -7,6 +7,7 @@ import PlayerSearch  from '../components/PlayerSearch.jsx'
 import { TILE_NUMBERS, getHeatStyle, getTileTextColor, SELECTED_TILE, wallData, bostonLegends } from '../data/index.js'
 import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, updateWall, isSlugAvailable } from '../lib/myWallStore.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
+import { getActivePrompts } from '../data/seasonalPrompts.js'
 import { track } from '@vercel/analytics'
 import './MyWallPage.css'
 
@@ -35,15 +36,18 @@ function buildWhoElseIndex() {
 
 const WHO_ELSE = buildWhoElseIndex()
 
-// ─── Onboarding: 2 steps — "What's your number?" → name ────────────────────
+// ─── Onboarding: 3 steps — number → name → theme (optional) ────────────────
 
 function Onboarding({ onComplete }) {
-  const [step, setStep]           = useState('number')  // 'number' → 'name'
+  const [step, setStep]           = useState('number')  // 'number' → 'name' → 'theme'
   const [myNumber, setMyNumber]   = useState('')
   const [ownerName, setOwnerName] = useState('')
   const [resolvedSlug, setResolvedSlug] = useState('')
   const [slugStatus, setSlugStatus]     = useState('idle')  // 'idle' | 'checking' | 'ok' | 'exhausted'
   const [loading, setLoading]     = useState(false)
+  const [selectedPrompt, setSelectedPrompt] = useState(null)
+  const [customTheme, setCustomTheme]       = useState('')
+  const [allowContribs, setAllowContribs]   = useState(false)
 
   // Auto-generate slug from name and resolve availability
   const derivedSlug = ownerName.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
@@ -97,14 +101,20 @@ function Onboarding({ onComplete }) {
     return () => { cancelled = true; clearTimeout(timer) }
   }, [derivedSlug, nameBlocked])
 
-  async function handleCreate() {
+  async function handleCreate({ skipTheme = false } = {}) {
     if (!ownerName.trim() || !resolvedSlug || slugStatus !== 'ok' || nameBlocked) return
     setLoading(true)
     try {
+      const themeLabel = skipTheme ? null : (selectedPrompt?.name || customTheme.trim() || null)
+      const themeDesc  = skipTheme ? null : (selectedPrompt?.description || (customTheme.trim() ? customTheme.trim() : null))
+      const contribs   = skipTheme ? false : allowContribs
       const wall = await createWall({
         slug: resolvedSlug,
         ownerName: ownerName.trim(),
         myNumber: myNumber || null,
+        theme: themeLabel,
+        themeDescription: themeDesc,
+        allowContributions: contribs,
       })
       onComplete(wall)
     } catch (err) {
@@ -177,7 +187,7 @@ function Onboarding({ onComplete }) {
                 placeholder="____"
                 autoFocus
                 onKeyDown={e => {
-                  if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') handleCreate()
+                  if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') setStep('theme')
                 }}
               />
               <span>'s Wall</span>
@@ -202,13 +212,113 @@ function Onboarding({ onComplete }) {
             )}
             <button
               className="btn-primary"
-              disabled={!ownerName.trim() || slugStatus !== 'ok' || loading || nameBlocked}
-              onClick={handleCreate}
+              disabled={!ownerName.trim() || slugStatus !== 'ok' || nameBlocked}
+              onClick={() => setStep('theme')}
             >
-              {loading ? 'Building...' : 'Build my wall →'}
+              Next →
             </button>
           </>
         )}
+
+        {step === 'theme' && (() => {
+          const activePrompts = getActivePrompts()
+          const seasonal = activePrompts.filter(p => p.months !== null)
+          const evergreen = activePrompts.filter(p => p.months === null)
+          return (
+            <>
+              <div className="my-wall-onboard__top">
+                <h2 className="my-wall-onboard__headline">Give It a Theme</h2>
+              </div>
+              <p className="my-wall-onboard__intro">
+                A theme gives your wall a reason to exist — and a reason to share it.
+              </p>
+
+              {/* Seasonal prompts */}
+              {seasonal.length > 0 && (
+                <div className="my-wall-onboard__prompt-section">
+                  <span className="my-wall-onboard__prompt-section-label">In season now</span>
+                  <div className="my-wall-onboard__prompt-grid">
+                    {seasonal.map(p => (
+                      <button
+                        key={p.id}
+                        className={`my-wall-onboard__prompt-card ${selectedPrompt?.id === p.id ? 'my-wall-onboard__prompt-card--selected' : ''}`}
+                        onClick={() => { setSelectedPrompt(selectedPrompt?.id === p.id ? null : p); setCustomTheme('') }}
+                      >
+                        <span className="my-wall-onboard__prompt-icon">{p.icon}</span>
+                        <span className="my-wall-onboard__prompt-name">{p.name}</span>
+                        <span className="my-wall-onboard__prompt-desc">{p.description}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Evergreen prompts */}
+              {evergreen.length > 0 && (
+                <div className="my-wall-onboard__prompt-section">
+                  <span className="my-wall-onboard__prompt-section-label">Anytime</span>
+                  <div className="my-wall-onboard__prompt-grid">
+                    {evergreen.map(p => (
+                      <button
+                        key={p.id}
+                        className={`my-wall-onboard__prompt-card ${selectedPrompt?.id === p.id ? 'my-wall-onboard__prompt-card--selected' : ''}`}
+                        onClick={() => { setSelectedPrompt(selectedPrompt?.id === p.id ? null : p); setCustomTheme('') }}
+                      >
+                        <span className="my-wall-onboard__prompt-icon">{p.icon}</span>
+                        <span className="my-wall-onboard__prompt-name">{p.name}</span>
+                        <span className="my-wall-onboard__prompt-desc">{p.description}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Custom theme */}
+              <div className="my-wall-onboard__custom-theme">
+                <label className="my-wall-onboard__label">Or write your own</label>
+                <input
+                  className="my-wall-onboard__theme-input"
+                  type="text"
+                  maxLength={80}
+                  value={customTheme}
+                  onChange={e => { setCustomTheme(e.target.value); setSelectedPrompt(null) }}
+                  placeholder="e.g. Greatest lefties ever"
+                />
+              </div>
+
+              {/* Let others contribute toggle */}
+              <label className="my-wall-onboard__toggle-row">
+                <span className="my-wall-onboard__toggle-label">Let others add picks</span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={allowContribs}
+                  className={`my-wall-onboard__toggle ${allowContribs ? 'my-wall-onboard__toggle--on' : ''}`}
+                  onClick={() => setAllowContribs(!allowContribs)}
+                >
+                  <span className="my-wall-onboard__toggle-thumb" />
+                </button>
+              </label>
+
+              <div className="my-wall-onboard__actions">
+                <button
+                  className="btn-primary"
+                  disabled={loading}
+                  onClick={() => handleCreate()}
+                >
+                  {loading ? 'Building...' : 'Build my wall →'}
+                </button>
+                <button
+                  className="btn-text"
+                  disabled={loading}
+                  onClick={() => handleCreate({ skipTheme: true })}
+                >
+                  Skip — just for me
+                </button>
+              </div>
+            </>
+          )
+        })()}
       </div>
     </div>
   )
@@ -336,6 +446,9 @@ function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove,
                 This one's yours. No stats on file — but they made your wall, so they made their mark.
               </p>
             )}
+            {entry.contributed_by && (
+              <span className="placed-card__contributed-by">Added by {entry.contributed_by}</span>
+            )}
             {isOwner && picks.length > 1 && (
               <button
                 className="btn-text btn-text--danger"
@@ -396,6 +509,7 @@ export default function MyWallPage() {
   const [justPlaced, setJustPlaced]     = useState(null)
   const [toast, setToast]               = useState(null)       // { message, type }
   const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const [contributorName, setContributorName]   = useState('')  // for collaborative walls
 
   // Silently update URL to /wall/slug if using saved slug (no remount)
   useEffect(() => {
@@ -466,6 +580,11 @@ export default function MyWallPage() {
       showToast(`${entryData.playerName} is already on #${entryData.number}.`)
       return
     }
+    // Tag contributions from non-owners
+    const isOwnerUser = ownerToken && wall.owner_token === ownerToken
+    if (!isOwnerUser && contributorName.trim()) {
+      entryData.contributedBy = contributorName.trim()
+    }
     try {
       const saved = await placeEntry(wall.id, entryData, ownerToken)
       setEntries(prev => {
@@ -482,7 +601,7 @@ export default function MyWallPage() {
       console.error('Failed to place entry:', err)
       showToast('Something went wrong. Try again.')
     }
-  }, [wall, entries, ownerToken, showToast])
+  }, [wall, entries, ownerToken, contributorName, showToast])
 
   // ─── Remove a specific entry ─────────────────────────────────────────────
   const handleRemove = useCallback(async (entryId, number) => {
@@ -655,6 +774,7 @@ export default function MyWallPage() {
   // ─── The Wall ─────────────────────────────────────────────────────────────
 
   const isOwner = ownerToken && wall?.owner_token === ownerToken
+  const canEdit = isOwner || (wall?.allow_contributions === true)
 
   const selectedPicks = searchingNumber ? (entries.get(searchingNumber) || []) : []
   const hasPicks = selectedPicks.length > 0
@@ -684,6 +804,19 @@ export default function MyWallPage() {
           <div className="my-wall-page__actions">
             <button className="btn-micro" onClick={handleShare}>SHARE WALL</button>
             <button className="btn-micro" onClick={() => setShowClearConfirm(true)}>CLEAR WALL</button>
+          </div>
+        )}
+
+        {/* Theme subtitle */}
+        {wall.theme && (
+          <div className="my-wall-page__theme-bar">
+            <span className="my-wall-page__theme-name">{wall.theme}</span>
+            {wall.theme_description && wall.theme_description !== wall.theme && (
+              <p className="my-wall-page__theme-desc">{wall.theme_description}</p>
+            )}
+            {wall.allow_contributions && (
+              <span className="my-wall-page__collab-badge">OPEN WALL</span>
+            )}
           </div>
         )}
 
@@ -722,6 +855,21 @@ export default function MyWallPage() {
             </div>
 
             <div className="my-wall-page__panel-scroll">
+            {/* Contributor name bar — for non-owners on collaborative walls */}
+            {!isOwner && canEdit && (
+              <div className="my-wall-page__contrib-bar">
+                <span className="my-wall-page__contrib-label">YOUR NAME</span>
+                <input
+                  className="my-wall-page__contrib-input"
+                  type="text"
+                  maxLength={30}
+                  value={contributorName}
+                  onChange={e => setContributorName(e.target.value)}
+                  placeholder="Who's adding picks?"
+                />
+              </div>
+            )}
+
             {/* Tapped a filled tile → show all picks + who else + option to add more */}
             {searchingNumber && hasPicks ? (
               <>
@@ -730,13 +878,13 @@ export default function MyWallPage() {
                   number={searchingNumber}
                   myNumber={wall.my_number}
                   whoElse={whoElse}
-                  onAddWhoElse={isOwner ? (p) => handleAddWhoElse(searchingNumber, p) : null}
+                  onAddWhoElse={canEdit ? (p) => handleAddWhoElse(searchingNumber, p) : null}
                   onRemove={isOwner ? (id) => handleRemove(id, searchingNumber) : null}
-                  isOwner={isOwner}
+                  isOwner={canEdit}
                   onUnclaimNumber={isOwner && isMyNumber(searchingNumber) ? handleUnclaimNumber : null}
                   onClaimNumber={isOwner && !wall.my_number && !isMyNumber(searchingNumber) ? () => handleClaimNumber(searchingNumber) : null}
                 />
-                {isOwner && (
+                {canEdit && (
                   <div className="my-wall-page__add-another">
                     <button
                       className="my-wall-page__add-btn"
@@ -749,8 +897,8 @@ export default function MyWallPage() {
                   </div>
                 )}
               </>
-            ) : searchingNumber && isOwner ? (
-              /* Owner tapped empty tile or clicked "add another" */
+            ) : searchingNumber && canEdit ? (
+              /* Editor tapped empty tile or clicked "add another" */
               <div className="my-wall-page__search-panel">
                 {/* Big number header — always show for empty tiles */}
                 <div className="placed-panel">
@@ -762,8 +910,8 @@ export default function MyWallPage() {
                   {isMyNumber(cleanNumber) && (
                     <p className="placed-panel__my-number-note">This one's yours. Light it up.</p>
                   )}
-                  {/* Claim as my number — if no number claimed yet */}
-                  {!wall.my_number && (
+                  {/* Claim as my number — owner only */}
+                  {isOwner && !wall.my_number && (
                     <button className="btn-micro btn-micro--heat" onClick={() => handleClaimNumber(cleanNumber)}>
                       CLAIM AS MY NUMBER
                     </button>
@@ -798,7 +946,7 @@ export default function MyWallPage() {
                   hideHeader
                 />
               </div>
-            ) : searchingNumber && !isOwner ? (
+            ) : searchingNumber && !canEdit ? (
               /* Visitor tapped a tile — read-only panel */
               <div className="placed-panel">
                 <div className="placed-panel__header">
