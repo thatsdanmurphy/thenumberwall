@@ -1,12 +1,22 @@
 import { track } from '@vercel/analytics'
+import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
 import './SportsFilter.css'
 
+// Sport icon map — Font Awesome sport icons via react-icons
+const SPORT_ICONS = {
+  Basketball: FaBasketballBall,
+  Football:   FaFootballBall,
+  Baseball:   FaBaseballBall,
+  Hockey:     FaHockeyPuck,
+  Soccer:     FaFutbol,
+}
+
 export const SPORTS = [
-  { id: 'Basketball', label: 'Basketball', icon: '🏀' },
-  { id: 'Football',   label: 'Football',   icon: '🏈' },
-  { id: 'Baseball',   label: 'Baseball',   icon: '⚾' },
-  { id: 'Hockey',     label: 'Hockey',     icon: '🏒' },
-  { id: 'Soccer',     label: 'Soccer',     icon: '⚽' },
+  { id: 'Basketball', label: 'Basketball' },
+  { id: 'Football',   label: 'Football' },
+  { id: 'Baseball',   label: 'Baseball' },
+  { id: 'Hockey',     label: 'Hockey' },
+  { id: 'Soccer',     label: 'Soccer' },
 ]
 
 /**
@@ -14,17 +24,16 @@ export const SPORTS = [
  * Clicking a sport shows only that sport.
  * Clicking the active sport (or ALL) resets to all.
  */
-export default function SportsFilter({ active, onChange }) {
+export default function SportsFilter({ active, onChange, sports, trackEvent }) {
   const allActive = !active || active.size === 0
+  const sportsList = sports || SPORTS
 
   function handleClick(sportId) {
-    // If this sport is already the only active one — reset
     if (!allActive && active.has(sportId) && active.size === 1) {
       onChange(null)
       return
     }
-    // Otherwise isolate this sport
-    track('sport_filter', { sport: sportId })
+    track(trackEvent || 'sport_filter', { sport: sportId })
     onChange(new Set([sportId]))
   }
 
@@ -38,8 +47,9 @@ export default function SportsFilter({ active, onChange }) {
         ALL
       </button>
 
-      {SPORTS.map(sport => {
+      {sportsList.map(sport => {
         const isOn = !allActive && active.has(sport.id)
+        const Icon = SPORT_ICONS[sport.id]
         return (
           <button
             key={sport.id}
@@ -48,7 +58,7 @@ export default function SportsFilter({ active, onChange }) {
             aria-pressed={isOn}
             aria-label={`Filter: ${sport.label}`}
           >
-            <span className="sports-filter__icon">{sport.icon}</span>
+            {Icon && <Icon size={13} className="sports-filter__icon" />}
             {sport.label}
           </button>
         )

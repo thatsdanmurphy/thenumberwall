@@ -32,6 +32,45 @@ export async function createWall({ slug, ownerName, myNumber, theme, themeDescri
   return data  // includes owner_token from DB default
 }
 
+// ─── List all walls owned by the current user ─────────────────────────────
+
+export async function listMyWalls(ownerToken) {
+  if (!ownerToken) return []
+
+  // Get walls with entry counts
+  const { data: walls, error } = await supabase
+    .from('walls')
+    .select('id, slug, owner_name, my_number, theme, theme_description, allow_contributions, created_at, updated_at, owner_token')
+    .eq('owner_token', ownerToken)
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  if (!walls || walls.length === 0) return []
+
+  // Fetch entry counts + distinct contributors for each wall
+  const wallIds = walls.map(w => w.id)
+  const { data: entries } = await supabase
+    .from('wall_entries')
+    .select('wall_id, contributed_by')
+    .in('wall_id', wallIds)
+
+  const entriesByWall = {}
+  const contribsByWall = {}
+  for (const e of (entries || [])) {
+    entriesByWall[e.wall_id] = (entriesByWall[e.wall_id] || 0) + 1
+    if (e.contributed_by) {
+      if (!contribsByWall[e.wall_id]) contribsByWall[e.wall_id] = new Set()
+      contribsByWall[e.wall_id].add(e.contributed_by)
+    }
+  }
+
+  return walls.map(w => ({
+    ...w,
+    entryCount: entriesByWall[w.id] || 0,
+    contributors: contribsByWall[w.id] ? [...contribsByWall[w.id]] : [],
+  }))
+}
+
 // ─── Load a wall by slug ────────────────────────────────────────────────────
 
 export async function loadWall(slug) {

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { track } from '@vercel/analytics'
+import { Award, Check, ExternalLink, X } from 'lucide-react'
+import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import associationsData from '../data/associations.json'
 import './PlayerPanel.css'
@@ -63,11 +65,11 @@ const TEAM_ACCENT = {
 }
 
 const SPORT_ICON = {
-  Basketball: '🏀',
-  Football:   '🏈',
-  Baseball:   '⚾',
-  Hockey:     '🏒',
-  Soccer:     '⚽',
+  Basketball: FaBasketballBall,
+  Football:   FaFootballBall,
+  Baseball:   FaBaseballBall,
+  Hockey:     FaHockeyPuck,
+  Soccer:     FaFutbol,
 }
 
 // ─── Share helper ─────────────────────────────────────────────────────────────
@@ -82,7 +84,7 @@ function shareNumber(number) {
 
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
 function PlayerCard({ entry, isTop = false }) {
-  const icon           = SPORT_ICON[entry.sport] || '🏅'
+  const SportIcon      = SPORT_ICON[entry.sport] || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
   const teamAccent     = TEAM_ACCENT[entry.team] ?? null
   const teamBadgeStyle = teamAccent
@@ -95,7 +97,7 @@ function PlayerCard({ entry, isTop = false }) {
 
         <div className="player-card__info">
           <div className="player-card__name-row">
-            <span className="player-card__name">{entry.name} <span className="player-card__sport-icon" aria-label={entry.sport}>{icon}</span></span>
+            <span className="player-card__name">{entry.name} <SportIcon size={12} className="player-card__sport-icon" aria-label={entry.sport} /></span>
           </div>
 
           <div className="player-card__badges">
@@ -422,10 +424,10 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   onClick={handleShare}
                   aria-label={`Share #${number}`}
                 >
-                  {copied ? '✓ COPIED' : '↗ SHARE'}
+                  {copied ? <><Check size={11} /> COPIED</> : <><ExternalLink size={11} /> SHARE</>}
                 </button>
                 <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
-                  ✕ CLOSE
+                  <X size={11} /> CLOSE
                 </button>
               </div>
             </div>

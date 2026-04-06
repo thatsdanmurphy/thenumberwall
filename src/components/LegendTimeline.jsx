@@ -1,101 +1,72 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import './LegendTimeline.css'
 
-// ─── Brady Career Eras ──────────────────────────────────────────────────────
-// Narrative chapters that give the timeline structure and story.
+// ─── Brady Career Eras (overlaid chapter labels, not hard boundaries) ───────
 
 const BRADY_ERAS = [
-  { id: 'origin',    label: 'The Origin',       seasons: [2000],             tagline: '6th round. 199th pick.' },
-  { id: 'upset',     label: 'The Upset',        seasons: [2001],             tagline: 'Nobody believed.' },
-  { id: 'dynasty',   label: 'Dynasty',          seasons: [2002, 2003, 2004], tagline: '3 rings in 4 years.' },
-  { id: 'hunt',      label: 'The Hunt',         seasons: [2005, 2006, 2007], tagline: 'Chasing perfection.' },
-  { id: 'dark',      label: 'The Void',         seasons: [2008, 2009, 2010], tagline: 'ACL. Torn down. Built back.' },
-  { id: 'rise',      label: 'The Second Rise',  seasons: [2011, 2012, 2013], tagline: 'Back to the mountaintop.' },
-  { id: 'defiance',  label: 'Defiance',         seasons: [2014, 2015, 2016], tagline: 'Suspended. Doubted. 28-3.' },
-  { id: 'twilight',  label: 'Twilight',         seasons: [2017, 2018, 2019], tagline: 'The last Patriot years.' },
-  { id: 'tampa',     label: 'Tampa',            seasons: [2020, 2021, 2022], tagline: 'Ring seven. New coast.' },
+  { id: 'origin',   label: 'The Origin',      seasons: [2000],             tagline: '6th round. 199th pick.' },
+  { id: 'upset',    label: 'The Upset',       seasons: [2001],             tagline: 'Nobody believed.' },
+  { id: 'dynasty',  label: 'Dynasty',         seasons: [2002, 2003, 2004], tagline: '3 rings in 4 years.' },
+  { id: 'hunt',     label: 'The Hunt',        seasons: [2005, 2006, 2007], tagline: 'Chasing perfection.' },
+  { id: 'dark',     label: 'The Void',        seasons: [2008, 2009, 2010], tagline: 'ACL. Torn down. Built back.' },
+  { id: 'rise',     label: 'Second Rise',     seasons: [2011, 2012, 2013], tagline: 'Back to the mountaintop.' },
+  { id: 'defiance', label: 'Defiance',        seasons: [2014, 2015, 2016], tagline: 'Suspended. Doubted. 28-3.' },
+  { id: 'twilight', label: 'Twilight',        seasons: [2017, 2018, 2019], tagline: 'The last Patriot years.' },
+  { id: 'tampa',    label: 'Tampa',           seasons: [2020, 2021, 2022], tagline: 'Ring seven. New coast.' },
 ]
 
-function getErasForGames(games) {
+function buildEras(games) {
+  let offset = 0
   return BRADY_ERAS.map(era => {
     const eraGames = games.filter(g => era.seasons.includes(g.season))
     if (eraGames.length === 0) return null
-
-    const playedGames = eraGames.filter(g => !g.is_bye && !g.is_dnp)
-    const avgGlow = playedGames.length > 0
-      ? playedGames.reduce((s, g) => s + (g.glow_score || 0), 0) / playedGames.length
-      : 0
-    const maxGlow = playedGames.length > 0
-      ? Math.max(...playedGames.map(g => g.glow_score || 0))
-      : 0
-    const hasSacred = eraGames.some(g => g.moments?.some(m => m.use_sacred_color))
-    const wins = playedGames.filter(g => g.result === 'W').length
-    const losses = playedGames.filter(g => g.result === 'L').length
-    const moments = eraGames.flatMap(g => (g.moments || []).map(m => ({ ...m, game: g })))
-    const seasonRange = era.seasons.length === 1
-      ? String(era.seasons[0])
-      : `${era.seasons[0]}–${era.seasons[era.seasons.length - 1]}`
-
-    return {
-      ...era,
-      games: eraGames,
-      avgGlow,
-      maxGlow,
-      hasSacred,
-      wins,
-      losses,
-      moments,
-      seasonRange,
-      gameCount: playedGames.length,
-    }
+    const start = offset
+    offset += eraGames.length
+    return { ...era, startIdx: start, endIdx: offset, gameCount: eraGames.length }
   }).filter(Boolean)
 }
 
 
-// ─── Gem Color Palette ──────────────────────────────────────────────────────
-// Cool sapphire base → warm amber → sacred gold.
-// Like a gemstone in shadow catching light.
+// ─── Gem Palette — extreme contrast ─────────────────────────────────────────
+// Deep indigo void → rich sapphire → warm amber → blazing white-gold.
+// The dark end is DEEP. The bright end BURNS.
 
 function glowToColor(score) {
   const linear = (score + 10) / 20
-  const t = Math.pow(linear, 1.6)
+  const t = Math.pow(linear, 1.8)
 
-  // Gem palette: deep indigo base → teal → amber → gold
   const stops = [
-    { t: 0.00, r: 8,   g: 10,  b: 20  },  // void indigo
-    { t: 0.10, r: 14,  g: 16,  b: 32  },  // deep sapphire
-    { t: 0.22, r: 20,  g: 28,  b: 48  },  // midnight blue
-    { t: 0.34, r: 30,  g: 40,  b: 58  },  // slate blue
-    { t: 0.46, r: 52,  g: 50,  b: 55  },  // cool grey — transition
-    { t: 0.56, r: 90,  g: 60,  b: 35  },  // first warmth
-    { t: 0.66, r: 145, g: 82,  b: 28  },  // amber
-    { t: 0.76, r: 200, g: 120, b: 40  },  // warm amber
-    { t: 0.85, r: 232, g: 164, b: 50  },  // golden
-    { t: 0.93, r: 250, g: 210, b: 80  },  // bright gold
-    { t: 1.00, r: 255, g: 235, b: 140 },  // sacred gold
+    { t: 0.00, r: 3,   g: 3,   b: 12  },  // absolute void
+    { t: 0.06, r: 6,   g: 8,   b: 22  },  // near-black
+    { t: 0.14, r: 10,  g: 16,  b: 38  },  // deep indigo
+    { t: 0.24, r: 16,  g: 24,  b: 52  },  // midnight sapphire
+    { t: 0.34, r: 24,  g: 32,  b: 56  },  // slate
+    { t: 0.44, r: 48,  g: 38,  b: 42  },  // crossing point
+    { t: 0.54, r: 100, g: 55,  b: 18  },  // first ember
+    { t: 0.64, r: 170, g: 90,  b: 15  },  // amber
+    { t: 0.74, r: 230, g: 140, b: 25  },  // hot gold
+    { t: 0.83, r: 255, g: 195, b: 45  },  // blazing
+    { t: 0.91, r: 255, g: 230, b: 100 },  // bright gold
+    { t: 0.96, r: 255, g: 245, b: 160 },  // sacred
+    { t: 1.00, r: 255, g: 252, b: 220 },  // white-gold
   ]
 
   let lo = stops[0], hi = stops[stops.length - 1]
   for (let i = 0; i < stops.length - 1; i++) {
     if (t >= stops[i].t && t <= stops[i + 1].t) {
-      lo = stops[i]
-      hi = stops[i + 1]
-      break
+      lo = stops[i]; hi = stops[i + 1]; break
     }
   }
-
   const range = hi.t - lo.t || 1
   const f = (t - lo.t) / range
-  const r = Math.round(lo.r + (hi.r - lo.r) * f)
-  const g = Math.round(lo.g + (hi.g - lo.g) * f)
-  const b = Math.round(lo.b + (hi.b - lo.b) * f)
-
-  return { r, g, b }
+  return {
+    r: Math.round(lo.r + (hi.r - lo.r) * f),
+    g: Math.round(lo.g + (hi.g - lo.g) * f),
+    b: Math.round(lo.b + (hi.b - lo.b) * f),
+  }
 }
 
-function colorToCSS({ r, g, b }) {
-  return `rgb(${r}, ${g}, ${b})`
-}
+function colorToCSS({ r, g, b }) { return `rgb(${r}, ${g}, ${b})` }
 
 
 // ─── Gaussian Smoothing ─────────────────────────────────────────────────────
@@ -104,211 +75,301 @@ function smoothGlowScores(games, radius = 3) {
   const n = games.length
   const raw = games.map(g => g.glow_score || 0)
   const smoothed = new Float64Array(n)
-
   const sigma = radius / 2
   const kernel = []
   for (let k = -radius; k <= radius; k++) {
     kernel.push(Math.exp(-(k * k) / (2 * sigma * sigma)))
   }
-
   for (let i = 0; i < n; i++) {
     if (games[i].is_dnp) { smoothed[i] = raw[i]; continue }
-
     let sum = 0, wSum = 0
     for (let k = -radius; k <= radius; k++) {
       const j = i + k
-      if (j < 0 || j >= n) continue
-      if (games[j].is_dnp && k !== 0) continue
-      const w = kernel[k + radius]
-      sum += raw[j] * w
-      wSum += w
+      if (j < 0 || j >= n || (games[j].is_dnp && k !== 0)) continue
+      sum += raw[j] * kernel[k + radius]
+      wSum += kernel[k + radius]
     }
-    let value = wSum > 0 ? sum / wSum : raw[i]
-    if (games[i].moments?.length > 0) {
-      value = value * 0.4 + raw[i] * 0.6  // moments resist smoothing more
-    }
-    smoothed[i] = value
+    let v = wSum > 0 ? sum / wSum : raw[i]
+    // Moments resist smoothing heavily — they should spike
+    if (games[i].moments?.length > 0) v = v * 0.25 + raw[i] * 0.75
+    smoothed[i] = v
   }
   return smoothed
 }
 
 
-// ─── Era Canvas Renderer ────────────────────────────────────────────────────
-// Draws the waveform for a single era's games into a canvas.
+// ─── The One Bar — Canvas Renderer ──────────────────────────────────────────
 
-function drawEraWaveform(canvas, games, hoveredIndex, breathPhase = 0, isExpanded = false) {
+// Returns gameX positions array for icon overlay positioning
+function drawTimeline(canvas, games, hoveredIndex, breathPhase, shimmerPhase) {
   const ctx = canvas.getContext('2d')
   const dpr = window.devicePixelRatio || 1
   const rect = canvas.getBoundingClientRect()
-
   canvas.width = rect.width * dpr
   canvas.height = rect.height * dpr
   ctx.scale(dpr, dpr)
 
-  const w = rect.width
-  const h = rect.height
-  const n = games.length
+  const w = rect.width, h = rect.height, n = games.length
   if (n === 0 || w === 0) return
 
-  // Clear
-  ctx.clearRect(0, 0, w, h)
+  // Deep void background
+  ctx.fillStyle = 'rgb(3, 3, 12)'
+  ctx.fillRect(0, 0, w, h)
 
-  const smoothed = smoothGlowScores(games, isExpanded ? 2 : 3)
-
-  const minAmp = 0.15
-  const maxAmp = 1.0
+  const smoothed = smoothGlowScores(games, 3)
   const midY = h / 2
+  const minAmp = 0.08  // really thin for void games
+  const maxAmp = 1.0
 
-  // ── Dock magnification (only when expanded) ──
-  const magRadius = Math.min(20, Math.floor(n * 0.3))
-  const magStrength = isExpanded ? 1.6 : 1.0
-  const ampBoost = isExpanded ? 0.2 : 0
-
+  // ── Gravitational weight: moments are physically wider in the bar ──
+  // Sacred moments get 5x width. Strong negative moments get 3x.
+  // This creates a visual "pull" — they take up more space.
+  const magRadius = Math.min(25, Math.floor(n * 0.08))
+  const magStrength = 1.6
   const scales = new Float64Array(n)
   let totalScale = 0
   for (let i = 0; i < n; i++) {
     let s = 1.0
-    if (hoveredIndex !== null && magStrength > 1) {
-      const dist = Math.abs(i - hoveredIndex)
-      if (dist < magRadius) {
-        const t = dist / magRadius
-        s = 1.0 + (magStrength - 1.0) * 0.5 * (1 + Math.cos(Math.PI * t))
+    // Permanent gravitational weight for moments
+    const mom = games[i].moments
+    if (mom?.length > 0) {
+      const isSacred = mom.some(m => m.use_sacred_color)
+      const maxAbs = Math.max(...mom.map(m => Math.abs(m.intensity || 0)))
+      if (isSacred) {
+        s = 5.0  // sacred moments are massive
+      } else if (maxAbs >= 7) {
+        s = 3.5  // big heartbreaks/injuries
+      } else if (maxAbs >= 3) {
+        s = 2.0  // notable moments
       }
     }
-    scales[i] = s
-    totalScale += s
+    // Dock magnification on hover (additive)
+    if (hoveredIndex !== null) {
+      const dist = Math.abs(i - hoveredIndex)
+      if (dist < magRadius) {
+        s += (magStrength - 1.0) * 0.5 * (1 + Math.cos(Math.PI * dist / magRadius))
+      }
+    }
+    scales[i] = s; totalScale += s
   }
   const gameX = new Float64Array(n + 1)
   gameX[0] = 0
-  for (let i = 0; i < n; i++) {
-    gameX[i + 1] = gameX[i] + (scales[i] / totalScale) * w
-  }
+  for (let i = 0; i < n; i++) gameX[i + 1] = gameX[i] + (scales[i] / totalScale) * w
 
-  function getVisuals(gameFloat) {
-    const i0 = Math.min(Math.max(Math.floor(gameFloat), 0), n - 1)
+  // ── Helper: get visuals for fractional game position ──
+  function vis(gf) {
+    const i0 = Math.min(Math.max(Math.floor(gf), 0), n - 1)
     const i1 = Math.min(i0 + 1, n - 1)
-    const frac = gameFloat - i0
+    const frac = gf - i0
     const glow = smoothed[i0] * (1 - frac) + smoothed[i1] * frac
     const color = glowToColor(glow)
-    const normGlow = (glow + 10) / 20
-    let amp = minAmp + (maxAmp - minAmp) * Math.pow(normGlow, 0.65)
-    if (hoveredIndex !== null && ampBoost > 0) {
-      const dist = Math.abs(gameFloat - hoveredIndex)
+    const norm = (glow + 10) / 20
+    let amp = minAmp + (maxAmp - minAmp) * Math.pow(norm, 0.55)
+    // Dock amp boost
+    if (hoveredIndex !== null) {
+      const dist = Math.abs(gf - hoveredIndex)
       if (dist < magRadius) {
-        const t = dist / magRadius
-        amp = Math.min(1.0, amp + ampBoost * 0.5 * (1 + Math.cos(Math.PI * t)))
+        amp = Math.min(1.0, amp + 0.18 * 0.5 * (1 + Math.cos(Math.PI * dist / magRadius)))
       }
     }
     return { glow, color, amp }
   }
 
-  // ── Draw waveform columns ──
+  // ── Pass 1: Main waveform ──
   const pixelW = Math.ceil(w)
   for (let px = 0; px < pixelW; px++) {
+    // Binary search pixel → game
     let lo = 0, hi = n - 1
-    while (lo < hi) {
-      const mid = (lo + hi) >> 1
-      if (gameX[mid + 1] <= px) lo = mid + 1
-      else hi = mid
-    }
-    const idx = lo
-    const gs = gameX[idx], ge = gameX[idx + 1]
-    const gw = ge - gs
-    const frac = gw > 0 ? (px - gs) / gw : 0
-    const gf = idx + frac
+    while (lo < hi) { const m = (lo + hi) >> 1; if (gameX[m + 1] <= px) lo = m + 1; else hi = m }
+    const idx = lo, gs = gameX[idx], ge = gameX[idx + 1], gw = ge - gs
+    const gf = idx + (gw > 0 ? (px - gs) / gw : 0)
 
-    const { color, amp } = getVisuals(gf)
+    const { color, amp } = vis(gf)
     const barH = h * amp
     const y0 = midY - barH / 2
 
-    ctx.fillStyle = colorToCSS(color)
+    // Vertical gradient within each column — brighter center, darker edges
+    const grad = ctx.createLinearGradient(0, y0, 0, y0 + barH)
+    const { r, g, b } = color
+    grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.5)`)
+    grad.addColorStop(0.35, `rgba(${Math.min(255, r + 20)}, ${Math.min(255, g + 15)}, ${Math.min(255, b + 10)}, 1)`)
+    grad.addColorStop(0.5, `rgba(${Math.min(255, r + 30)}, ${Math.min(255, g + 20)}, ${Math.min(255, b + 10)}, 1)`)
+    grad.addColorStop(0.65, `rgba(${Math.min(255, r + 20)}, ${Math.min(255, g + 15)}, ${Math.min(255, b + 10)}, 1)`)
+    grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.5)`)
+    ctx.fillStyle = grad
     ctx.fillRect(px, y0, 1.5, barH)
   }
 
-  // ── Bloom layer ──
+  // ── Pass 2: Bloom (additive glow for bright games) ──
   ctx.globalCompositeOperation = 'screen'
   for (let px = 0; px < pixelW; px += 2) {
     let lo = 0, hi = n - 1
-    while (lo < hi) {
-      const mid = (lo + hi) >> 1
-      if (gameX[mid + 1] <= px) lo = mid + 1
-      else hi = mid
-    }
-    const idx = lo
-    const gs = gameX[idx], ge = gameX[idx + 1]
-    const gw = ge - gs
-    const frac = gw > 0 ? (px - gs) / gw : 0
-    const gf = idx + frac
-
-    const { glow, color, amp } = getVisuals(gf)
-    if (glow < 3) continue
-    const strength = ((glow - 3) / 7) * 0.25
-    const barH = h * amp * 1.3
-    const y0 = midY - barH / 2
-    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${strength})`
-    ctx.fillRect(px - 1, y0, 4, barH)
+    while (lo < hi) { const m = (lo + hi) >> 1; if (gameX[m + 1] <= px) lo = m + 1; else hi = m }
+    const idx = lo, gs = gameX[idx], ge = gameX[idx + 1], gw = ge - gs
+    const gf = idx + (gw > 0 ? (px - gs) / gw : 0)
+    const { glow, color, amp } = vis(gf)
+    if (glow < 2) continue
+    const str = ((glow - 2) / 8) * 0.3
+    const barH = h * amp * 1.4
+    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${str})`
+    ctx.fillRect(px - 2, midY - barH / 2, 5, barH)
   }
   ctx.globalCompositeOperation = 'source-over'
 
-  // ── Sacred glow halos with breathing ──
+  // ── Pass 3: Sacred moment SUNBURSTS ──
+  // These should be unmistakable. Super Bowl wins BURN.
   for (let i = 0; i < n; i++) {
-    const game = games[i]
-    if (!game.moments?.some(m => m.use_sacred_color)) continue
+    if (!games[i].moments?.some(m => m.use_sacred_color)) continue
     const cx = (gameX[i] + gameX[i + 1]) / 2
-    const radius = Math.max(w * 0.15, 40)
-    const breath = 0.82 + 0.18 * Math.sin(breathPhase + i * 0.5)
-    const grad = ctx.createRadialGradient(cx, midY, 0, cx, midY, radius)
-    grad.addColorStop(0, `rgba(255, 235, 140, ${0.5 * breath})`)
-    grad.addColorStop(0.2, `rgba(250, 210, 80, ${0.25 * breath})`)
-    grad.addColorStop(0.5, `rgba(200, 120, 40, ${0.08 * breath})`)
-    grad.addColorStop(1, 'rgba(200, 120, 40, 0)')
-    ctx.fillStyle = grad
-    ctx.fillRect(Math.max(0, cx - radius), 0, radius * 2, h)
+    const breath = 0.7 + 0.3 * Math.sin(breathPhase + i * 0.5)
+
+    // Layer 1: Massive outer glow — floods surrounding area with warmth
+    const floodR = Math.max(w * 0.14, 90)
+    const flood = ctx.createRadialGradient(cx, midY, 0, cx, midY, floodR)
+    flood.addColorStop(0, `rgba(255, 245, 180, ${0.55 * breath})`)
+    flood.addColorStop(0.1, `rgba(255, 230, 100, ${0.45 * breath})`)
+    flood.addColorStop(0.25, `rgba(255, 195, 45, ${0.25 * breath})`)
+    flood.addColorStop(0.5, `rgba(230, 140, 25, ${0.1 * breath})`)
+    flood.addColorStop(0.75, `rgba(170, 90, 15, ${0.03 * breath})`)
+    flood.addColorStop(1, 'rgba(100, 55, 10, 0)')
+    ctx.fillStyle = flood
+    ctx.fillRect(Math.max(0, cx - floodR), 0, floodR * 2, h)
+
+    // Layer 2: Hot core — near-white center
+    const coreR = Math.max(w * 0.025, 14)
+    const core = ctx.createRadialGradient(cx, midY, 0, cx, midY, coreR)
+    core.addColorStop(0, `rgba(255, 255, 250, ${0.9 * breath})`)
+    core.addColorStop(0.3, `rgba(255, 250, 200, ${0.7 * breath})`)
+    core.addColorStop(0.6, `rgba(255, 230, 100, ${0.4 * breath})`)
+    core.addColorStop(1, 'rgba(255, 195, 45, 0)')
+    ctx.fillStyle = core
+    ctx.fillRect(cx - coreR, midY - coreR, coreR * 2, coreR * 2)
+
+    // Layer 3: Vertical light rays — sacred moments pierce the bar top to bottom
+    ctx.globalCompositeOperation = 'screen'
+    const rayW = 6
+    const rayGrad = ctx.createLinearGradient(0, 0, 0, h)
+    rayGrad.addColorStop(0, `rgba(255, 248, 200, ${0.35 * breath})`)
+    rayGrad.addColorStop(0.15, `rgba(255, 240, 160, ${0.15 * breath})`)
+    rayGrad.addColorStop(0.4, `rgba(255, 240, 160, ${0.05 * breath})`)
+    rayGrad.addColorStop(0.5, `rgba(255, 255, 240, ${0.5 * breath})`)
+    rayGrad.addColorStop(0.6, `rgba(255, 240, 160, ${0.05 * breath})`)
+    rayGrad.addColorStop(0.85, `rgba(255, 240, 160, ${0.15 * breath})`)
+    rayGrad.addColorStop(1, `rgba(255, 248, 200, ${0.35 * breath})`)
+    ctx.fillStyle = rayGrad
+    ctx.fillRect(cx - rayW / 2, 0, rayW, h)
+
+    // Layer 4: Secondary thin rays for sparkle
+    const rayW2 = 2
+    ctx.fillRect(cx - rayW2 / 2 - 4, 0, rayW2, h)
+    ctx.fillRect(cx - rayW2 / 2 + 4, 0, rayW2, h)
+    ctx.globalCompositeOperation = 'source-over'
   }
+
+  // ── Pass 3b: Positive (non-sacred) moment highlights ──
+  for (let i = 0; i < n; i++) {
+    if (!games[i].moments?.length) continue
+    if (games[i].moments.some(m => m.use_sacred_color)) continue  // handled above
+    const maxInt = Math.max(...games[i].moments.map(m => m.intensity || 0))
+    if (maxInt <= 0) continue
+    const cx = (gameX[i] + gameX[i + 1]) / 2
+    const glowR = Math.max(w * 0.04, 25)
+    const alpha = (maxInt / 10) * 0.35
+    const grad = ctx.createRadialGradient(cx, midY, 0, cx, midY, glowR)
+    grad.addColorStop(0, `rgba(255, 230, 100, ${alpha})`)
+    grad.addColorStop(0.5, `rgba(230, 140, 25, ${alpha * 0.3})`)
+    grad.addColorStop(1, 'rgba(170, 90, 15, 0)')
+    ctx.fillStyle = grad
+    ctx.fillRect(cx - glowR, 0, glowR * 2, h)
+  }
+
+  // ── Pass 4: Negative moment CRATERS ──
+  // Heartbreak and injury should punch genuine holes in the bar.
+  for (let i = 0; i < n; i++) {
+    if (!games[i].moments?.length) continue
+    const minInt = Math.min(...games[i].moments.map(m => m.intensity || 0))
+    if (minInt >= 0) continue
+    const cx = (gameX[i] + gameX[i + 1]) / 2
+    const severity = Math.abs(minInt) / 10  // 0..1
+
+    // Wide void wash — eats surrounding light
+    const voidR = Math.max(w * 0.06 * severity, 30)
+    const voidGrad = ctx.createRadialGradient(cx, midY, 0, cx, midY, voidR)
+    voidGrad.addColorStop(0, `rgba(0, 0, 4, ${0.9 * severity})`)
+    voidGrad.addColorStop(0.3, `rgba(2, 2, 10, ${0.6 * severity})`)
+    voidGrad.addColorStop(0.6, `rgba(3, 3, 12, ${0.3 * severity})`)
+    voidGrad.addColorStop(1, 'rgba(3, 3, 12, 0)')
+    ctx.fillStyle = voidGrad
+    ctx.fillRect(cx - voidR, 0, voidR * 2, h)
+
+    // Dark vertical crack for severe moments (Helmet Catch, ACL)
+    if (severity > 0.7) {
+      const crackW = 3
+      const crackGrad = ctx.createLinearGradient(0, 0, 0, h)
+      crackGrad.addColorStop(0, `rgba(0, 0, 4, ${0.5 * severity})`)
+      crackGrad.addColorStop(0.3, `rgba(0, 0, 4, ${0.15 * severity})`)
+      crackGrad.addColorStop(0.5, `rgba(0, 0, 4, ${0.7 * severity})`)
+      crackGrad.addColorStop(0.7, `rgba(0, 0, 4, ${0.15 * severity})`)
+      crackGrad.addColorStop(1, `rgba(0, 0, 4, ${0.5 * severity})`)
+      ctx.fillStyle = crackGrad
+      ctx.fillRect(cx - crackW / 2, 0, crackW, h)
+    }
+  }
+
+  // ── Pass 5: Ambient shimmer — slow light scan across the bar ──
+  const shimmerX = ((shimmerPhase % 1) * (w + 200)) - 100
+  const shimmerW = 120
+  const shimmerGrad = ctx.createLinearGradient(shimmerX, 0, shimmerX + shimmerW, 0)
+  shimmerGrad.addColorStop(0, 'rgba(255, 255, 255, 0)')
+  shimmerGrad.addColorStop(0.4, 'rgba(255, 245, 200, 0.02)')
+  shimmerGrad.addColorStop(0.5, 'rgba(255, 245, 200, 0.04)')
+  shimmerGrad.addColorStop(0.6, 'rgba(255, 245, 200, 0.02)')
+  shimmerGrad.addColorStop(1, 'rgba(255, 255, 255, 0)')
+  ctx.fillStyle = shimmerGrad
+  ctx.fillRect(shimmerX, 0, shimmerW, h)
 
   // ── Vignette ──
   const vg = ctx.createLinearGradient(0, 0, 0, h)
-  vg.addColorStop(0, 'rgba(8, 10, 20, 0.45)')
-  vg.addColorStop(0.25, 'rgba(8, 10, 20, 0)')
-  vg.addColorStop(0.75, 'rgba(8, 10, 20, 0)')
-  vg.addColorStop(1, 'rgba(8, 10, 20, 0.45)')
+  vg.addColorStop(0, 'rgba(3, 3, 12, 0.55)')
+  vg.addColorStop(0.2, 'rgba(3, 3, 12, 0)')
+  vg.addColorStop(0.8, 'rgba(3, 3, 12, 0)')
+  vg.addColorStop(1, 'rgba(3, 3, 12, 0.55)')
   ctx.fillStyle = vg
   ctx.fillRect(0, 0, w, h)
 
   // ── Soft blur pass ──
-  ctx.filter = 'blur(1.5px)'
-  ctx.globalAlpha = 0.3
+  ctx.filter = 'blur(1px)'
+  ctx.globalAlpha = 0.2
   ctx.drawImage(canvas, 0, 0, w, h)
   ctx.filter = 'none'
   ctx.globalAlpha = 1.0
 
-  // ── Hover highlight ──
+  // ── Hover glow ──
   if (hoveredIndex !== null && hoveredIndex >= 0 && hoveredIndex < n) {
-    const x0 = gameX[hoveredIndex]
-    const x1 = gameX[hoveredIndex + 1]
-    const grad = ctx.createLinearGradient(x0, 0, x1, 0)
-    grad.addColorStop(0, 'rgba(255, 255, 255, 0)')
-    grad.addColorStop(0.3, 'rgba(255, 255, 255, 0.15)')
-    grad.addColorStop(0.7, 'rgba(255, 255, 255, 0.15)')
-    grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
-    ctx.fillStyle = grad
-    ctx.fillRect(x0 - 1, 0, (x1 - x0) + 2, h)
+    const x0 = gameX[hoveredIndex], x1 = gameX[hoveredIndex + 1]
+    const gw = x1 - x0
+    // Soft white glow
+    const hg = ctx.createRadialGradient(x0 + gw / 2, midY, 0, x0 + gw / 2, midY, Math.max(gw * 2, 12))
+    hg.addColorStop(0, 'rgba(255, 255, 255, 0.12)')
+    hg.addColorStop(0.5, 'rgba(255, 255, 255, 0.04)')
+    hg.addColorStop(1, 'rgba(255, 255, 255, 0)')
+    ctx.fillStyle = hg
+    ctx.fillRect(x0 - gw * 2, 0, gw * 5, h)
   }
+
+  return gameX
 }
 
 
-// ─── Game Tooltip ───────────────────────────────────────────────────────────
+// ─── Tooltip ────────────────────────────────────────────────────────────────
 
 function TimelineTooltip({ game, x, y }) {
   if (!game) return null
-  const isBye = game.is_bye
-  const isDNP = game.is_dnp
-
   return (
     <div className="timeline-tooltip" style={{ left: `${x}px`, top: `${y}px` }}>
-      {isBye ? (
+      {game.is_bye ? (
         <div className="timeline-tooltip__bye">Bye Week</div>
-      ) : isDNP ? (
+      ) : game.is_dnp ? (
         <>
           <div className="timeline-tooltip__dnp">DID NOT PLAY</div>
           {game.dnp_reason && <div className="timeline-tooltip__reason">{game.dnp_reason}</div>}
@@ -348,17 +409,68 @@ function TimelineTooltip({ game, x, y }) {
 }
 
 
-// ─── Era Card Component ─────────────────────────────────────────────────────
+// ─── Main Component ─────────────────────────────────────────────────────────
 
-function EraCard({ era, isExpanded, onToggle, breathPhase }) {
+// ─── Moment icon mapping ────────────────────────────────────────────────────
+
+function getMomentIcon(moment) {
+  if (moment.use_sacred_color) return '🏆'
+  switch (moment.moment_type) {
+    case 'injury': return '🩹'
+    case 'heartbreak': return '💔'
+    case 'controversy': return '⚡'
+    case 'origin': return '⭐'
+    default: return moment.intensity > 0 ? '✦' : '▼'
+  }
+}
+
+
+export default function LegendTimeline({ timeline }) {
   const canvasRef = useRef(null)
   const containerRef = useRef(null)
+  const rafRef = useRef(null)
+
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [containerWidth, setContainerWidth] = useState(0)
+  const [breathPhase, setBreathPhase] = useState(0)
+  const [shimmerPhase, setShimmerPhase] = useState(0)
+  const [gamePositions, setGamePositions] = useState(null)
 
-  const games = era.games
-  const hoveredGame = hoveredIndex !== null ? games[hoveredIndex] : null
+  const games = timeline?.games || []
+  const eras = useMemo(() => buildEras(games), [games])
+
+  // Build moment markers list
+  const momentMarkers = useMemo(() => {
+    const markers = []
+    games.forEach((g, i) => {
+      if (g.moments?.length > 0) {
+        const primary = g.moments[0]
+        markers.push({
+          gameIdx: i,
+          icon: getMomentIcon(primary),
+          label: primary.moment_name,
+          isSacred: !!primary.use_sacred_color,
+          isNegative: primary.intensity < 0,
+          intensity: primary.intensity,
+        })
+      }
+    })
+    return markers
+  }, [games])
+
+  // Animation loop
+  useEffect(() => {
+    let running = true
+    function tick(time) {
+      if (!running) return
+      setBreathPhase((time / 2200) % (Math.PI * 2))
+      setShimmerPhase((time / 12000) % 1)
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+    return () => { running = false; cancelAnimationFrame(rafRef.current) }
+  }, [])
 
   // Resize
   useEffect(() => {
@@ -371,125 +483,42 @@ function EraCard({ era, isExpanded, onToggle, breathPhase }) {
     return () => obs.disconnect()
   }, [])
 
-  // Draw
+  // Draw — captures gameX positions for icon overlay
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || !containerWidth) return
-    drawEraWaveform(canvas, games, hoveredIndex, breathPhase, isExpanded)
-  }, [games, hoveredIndex, containerWidth, breathPhase, isExpanded])
+    const gx = drawTimeline(canvas, games, hoveredIndex, breathPhase, shimmerPhase)
+    if (gx) setGamePositions(gx)
+  }, [games, hoveredIndex, containerWidth, breathPhase, shimmerPhase])
 
+  // Mouse
   const handleMouseMove = useCallback((e) => {
     const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect) return
+    if (!rect || !gamePositions) return
     const x = e.clientX - rect.left
-    const idx = Math.floor((x / rect.width) * games.length)
-    if (idx >= 0 && idx < games.length) {
-      setHoveredIndex(idx)
-      setTooltipPos({ x: Math.min(Math.max(x, 80), rect.width - 80), y: -8 })
+    // Binary search through warped gameX positions for accurate hover
+    const n = games.length
+    let lo = 0, hi = n - 1
+    while (lo < hi) {
+      const m = (lo + hi) >> 1
+      if (gamePositions[m + 1] <= x) lo = m + 1; else hi = m
     }
-  }, [games.length])
+    const idx = lo
+    if (idx >= 0 && idx < n) {
+      setHoveredIndex(idx)
+      setTooltipPos({ x: Math.min(Math.max(x, 100), rect.width - 100), y: -10 })
+    }
+  }, [games.length, gamePositions])
 
   const handleMouseLeave = useCallback(() => setHoveredIndex(null), [])
 
-  // Era glow intensity for the container border
-  const glowIntensity = (era.avgGlow + 10) / 20
-  const eraColor = glowToColor(era.maxGlow)
-  const borderAlpha = 0.15 + glowIntensity * 0.35
-
-  return (
-    <div
-      className={`era-card ${isExpanded ? 'era-card--expanded' : ''} ${era.hasSacred ? 'era-card--sacred' : ''}`}
-      style={{
-        '--era-glow-r': eraColor.r,
-        '--era-glow-g': eraColor.g,
-        '--era-glow-b': eraColor.b,
-        '--era-border-alpha': borderAlpha,
-      }}
-    >
-      {/* Era header — always visible, clickable */}
-      <button className="era-card__header" onClick={onToggle}>
-        <div className="era-card__title-row">
-          <h3 className="era-card__label">{era.label}</h3>
-          <span className="era-card__years">{era.seasonRange}</span>
-        </div>
-        <p className="era-card__tagline">{era.tagline}</p>
-        <div className="era-card__stats">
-          <span className="era-card__record">{era.wins}–{era.losses}</span>
-          <span className="era-card__games">{era.gameCount} games</span>
-          {era.moments.length > 0 && (
-            <span className="era-card__moment-count">
-              {era.moments.length} moment{era.moments.length > 1 ? 's' : ''}
-            </span>
-          )}
-        </div>
-      </button>
-
-      {/* Waveform bar — compact or expanded */}
-      <div className="era-card__waveform" ref={containerRef}>
-        <canvas
-          ref={canvasRef}
-          className="era-card__canvas"
-          onMouseMove={isExpanded ? handleMouseMove : undefined}
-          onMouseLeave={isExpanded ? handleMouseLeave : undefined}
-        />
-
-        {/* Tooltip only in expanded view */}
-        {isExpanded && hoveredGame && (
-          <TimelineTooltip game={hoveredGame} x={tooltipPos.x} y={tooltipPos.y} />
-        )}
-      </div>
-
-      {/* Moment badges — show in expanded view */}
-      {isExpanded && era.moments.length > 0 && (
-        <div className="era-card__moments">
-          {era.moments.map((m, i) => (
-            <span
-              key={i}
-              className={`era-card__moment-badge ${m.use_sacred_color ? 'era-card__moment-badge--sacred' : ''}`}
-            >
-              {m.moment_name}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Expand indicator */}
-      <div className="era-card__expand-hint">
-        {isExpanded ? '▾ collapse' : '▸ game by game'}
-      </div>
-    </div>
-  )
-}
-
-
-// ─── Main Component ─────────────────────────────────────────────────────────
-
-export default function LegendTimeline({ timeline }) {
-  const [expandedEra, setExpandedEra] = useState(null)
-  const [breathPhase, setBreathPhase] = useState(0)
-  const rafRef = useRef(null)
-
-  const games = timeline?.games || []
-  const eras = useMemo(() => getErasForGames(games), [games])
-
-  // Global breathing animation
-  useEffect(() => {
-    let running = true
-    function tick(time) {
-      if (!running) return
-      setBreathPhase((time / 2000) % (Math.PI * 2))
-      rafRef.current = requestAnimationFrame(tick)
-    }
-    rafRef.current = requestAnimationFrame(tick)
-    return () => { running = false; cancelAnimationFrame(rafRef.current) }
-  }, [])
-
-  const handleToggle = useCallback((eraId) => {
-    setExpandedEra(prev => prev === eraId ? null : eraId)
-  }, [])
-
   if (!timeline) return null
   const draft = timeline.draft || {}
+  const hoveredGame = hoveredIndex !== null ? games[hoveredIndex] : null
+
+  const hoveredEra = hoveredIndex !== null
+    ? eras.find(e => hoveredIndex >= e.startIdx && hoveredIndex < e.endIdx)
+    : null
 
   return (
     <div className="legend-timeline">
@@ -511,26 +540,86 @@ export default function LegendTimeline({ timeline }) {
         </div>
       </div>
 
-      {/* Era containers */}
-      <div className="legend-timeline__eras">
-        {eras.map(era => (
-          <EraCard
-            key={era.id}
-            era={era}
-            isExpanded={expandedEra === era.id}
-            onToggle={() => handleToggle(era.id)}
-            breathPhase={breathPhase}
+      {/* The Bar */}
+      <div className="legend-timeline__bar-wrap" ref={containerRef}>
+
+        {/* Moment icon markers — positioned above the bar */}
+        <div className="legend-timeline__markers">
+          {gamePositions && momentMarkers.map((m, i) => {
+            const x0 = gamePositions[m.gameIdx]
+            const x1 = gamePositions[m.gameIdx + 1]
+            if (x0 === undefined || x1 === undefined) return null
+            const cx = (x0 + x1) / 2
+            return (
+              <div
+                key={i}
+                className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''}`}
+                style={{ left: `${cx}px` }}
+              >
+                <span className="moment-marker__icon">{m.icon}</span>
+                <span className="moment-marker__label">{m.label}</span>
+                <div className="moment-marker__line" />
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Era labels */}
+        <div className="legend-timeline__era-labels">
+          {eras.map(era => {
+            const left = (era.startIdx / games.length) * 100
+            const width = (era.gameCount / games.length) * 100
+            const isHovered = hoveredEra?.id === era.id
+            return (
+              <div
+                key={era.id}
+                className={`era-label ${isHovered ? 'era-label--active' : ''}`}
+                style={{ left: `${left}%`, width: `${width}%` }}
+              >
+                <span className="era-label__name">{era.label}</span>
+                {isHovered && <span className="era-label__tagline">{era.tagline}</span>}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Canvas */}
+        <div className="legend-timeline__bar">
+          <canvas
+            ref={canvasRef}
+            className="legend-timeline__canvas"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           />
-        ))}
+        </div>
+
+        {/* Full year labels below */}
+        <div className="legend-timeline__years">
+          {eras.map(era => {
+            const left = (era.startIdx / games.length) * 100
+            const width = (era.gameCount / games.length) * 100
+            const yr = era.seasons.length === 1
+              ? String(era.seasons[0])
+              : `${era.seasons[0]}–${era.seasons[era.seasons.length - 1]}`
+            return (
+              <div key={era.id} className="year-tick" style={{ left: `${left}%`, width: `${width}%` }}>
+                {yr}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Tooltip */}
+        {hoveredGame && (
+          <TimelineTooltip game={hoveredGame} x={tooltipPos.x} y={tooltipPos.y} />
+        )}
       </div>
 
-      {/* Color key */}
+      {/* Key */}
       <div className="legend-timeline__key">
-        <div className="legend-timeline__key-gradient">
-          <span className="legend-timeline__key-label">Darkness</span>
-          <div className="legend-timeline__key-bar" />
-          <span className="legend-timeline__key-label">Sacred Gold</span>
-        </div>
+        <span className="legend-timeline__key-label">Darkness</span>
+        <div className="legend-timeline__key-bar" />
+        <span className="legend-timeline__key-label">Sacred Gold</span>
       </div>
     </div>
   )

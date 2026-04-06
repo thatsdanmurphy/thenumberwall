@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
+import { X } from 'lucide-react'
 import { wallData, bostonLegends } from '../data/index.js'
 import './PlayerSearch.css'
 
@@ -128,7 +129,7 @@ export default function PlayerSearch({ number, onPlace, onCancel, hideHeader = f
             }
           }}
         />
-        <button className="player-search__cancel" onClick={onCancel}>✕</button>
+        <button className="player-search__cancel" onClick={onCancel}><X size={16} /></button>
       </div>
 
       {/* TNW results */}

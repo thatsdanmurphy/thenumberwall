@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import AppShell from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -11,7 +12,7 @@ export default function NotFoundPage() {
       <main className="not-found-page">
         <div className="not-found-page__number">404</div>
         <div className="not-found-page__label">PAGE NOT FOUND</div>
-        <Link to="/" className="not-found-page__cta">← BACK TO THE WALL</Link>
+        <Link to="/" className="not-found-page__cta"><ArrowLeft size={14} /> BACK TO THE WALL</Link>
       </main>
       <AppFooter />
     </AppShell>

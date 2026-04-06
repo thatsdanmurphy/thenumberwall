@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import './AppHeader.css'
 
 export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagline = 'Legends live here.' }) {
@@ -13,12 +14,12 @@ export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagl
             onClick={back.onClick}
             aria-label="Go back"
           >
-            ← {back.label}
+            <ArrowLeft size={14} /> {back.label}
           </button>
         ) : <span />}
         <nav className="app-header__nav">
           <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
-            My Wall <span className="app-header__new-badge">NEW</span>
+            My Walls
           </button>
           <button className="app-header__nav-link" onClick={() => navigate('/about')}>
             About

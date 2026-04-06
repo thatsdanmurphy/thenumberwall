@@ -46,6 +46,12 @@
 }
 
 .sports-filter__icon {
-  font-size:   0.875rem;
-  line-height: 1;
+  width: 13px;
+  height: 13px;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.sports-filter__pill--active .sports-filter__icon {
+  opacity: 0.85;
 }

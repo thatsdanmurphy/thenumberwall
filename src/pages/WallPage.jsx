@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { ChevronRight } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import AppShell    from '../components/AppShell.jsx'
 import AppHeader   from '../components/AppHeader.jsx'
@@ -59,7 +60,7 @@ export default function WallPage() {
               <Link to="/boston" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'boston' })}>
                 <span className="wall-page__city-name">Boston</span>
                 <span className="wall-page__city-teams">Red Sox · Patriots · Celtics · Bruins</span>
-                <span className="wall-page__city-arrow" aria-hidden="true">→</span>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <div className="wall-page__city-card wall-page__city-card--soon" aria-hidden="true">
                 <span className="wall-page__city-name">New York</span>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { ChevronRight } from 'lucide-react'
 import AppShell      from '../components/AppShell.jsx'
 import AppHeader     from '../components/AppHeader.jsx'
 import AppFooter     from '../components/AppFooter.jsx'
@@ -49,7 +50,7 @@ export default function AboutPage() {
           <Link to="/boston" className="about-page__city-cta">
             <span className="about-page__city-cta-name">THE BOSTON WALL</span>
             <span className="about-page__city-cta-teams">Red Sox · Patriots · Celtics · Bruins</span>
-            <span className="about-page__city-cta-arrow" aria-hidden="true">→</span>
+            <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
           </Link>
         </section>
 

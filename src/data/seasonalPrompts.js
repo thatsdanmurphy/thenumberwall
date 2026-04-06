@@ -6,15 +6,33 @@
  *
  * `months` — array of 1-indexed months when this prompt is active.
  *            null = always active (evergreen prompts).
+ *
+ * `lucideIcon` — icon name from lucide-react, used in the hub modal.
  */
 
 export const SEASONAL_PROMPTS = [
   // ─── Seasonal ──────────────────────────────────────────────────────────────
   {
+    id: 'playoff-legends',
+    name: 'Playoff Legends',
+    description: 'The players who showed up when it mattered most.',
+    lucideIcon: 'trophy',
+    months: [4, 5, 6],  // April–June (NBA & NHL playoffs)
+    category: 'seasonal',
+  },
+  {
     id: 'nba-finals',
     name: 'Finals Wall',
     description: 'The legends who defined the Finals for you.',
-    icon: '🏆',
+    lucideIcon: 'flame',
+    months: [5, 6],  // May–June
+    category: 'seasonal',
+  },
+  {
+    id: 'stanley-cup',
+    name: 'Stanley Cup Wall',
+    description: 'Playoff beards and overtime legends.',
+    lucideIcon: 'shield',
     months: [5, 6],  // May–June
     category: 'seasonal',
   },
@@ -22,65 +40,49 @@ export const SEASONAL_PROMPTS = [
     id: 'world-series',
     name: 'World Series Wall',
     description: 'The heroes of October baseball.',
-    icon: '⚾',
+    lucideIcon: 'diamond',
     months: [10],  // October
-    category: 'seasonal',
-  },
-  {
-    id: 'playoff-legends',
-    name: 'Playoff Legends',
-    description: 'The players who showed up when it mattered most.',
-    icon: '🏆',
-    months: [4, 5, 6],  // April–June (NBA & NHL playoffs)
     category: 'seasonal',
   },
   {
     id: 'super-bowl',
     name: 'Super Bowl Wall',
     description: 'The plays. The players. The numbers that won it.',
-    icon: '🏈',
+    lucideIcon: 'zap',
     months: [1, 2],  // January–February
-    category: 'seasonal',
-  },
-  {
-    id: 'stanley-cup',
-    name: 'Stanley Cup Wall',
-    description: 'Playoff beards and overtime legends.',
-    icon: '🏒',
-    months: [5, 6],  // May–June
     category: 'seasonal',
   },
 
   // ─── Evergreen ─────────────────────────────────────────────────────────────
   {
-    id: 'for-your-players',
-    name: 'For Your Players',
-    description: 'The wall you build for your locker room.',
-    icon: '🧑‍🏫',
+    id: 'locker-room',
+    name: 'Locker Room',
+    description: 'Build a wall for your team. The legends your players should know.',
+    lucideIcon: 'clipboard-list',
     months: null,
     category: 'coach',
   },
   {
     id: 'family-wall',
     name: 'Family Wall',
-    description: 'The players your family grew up watching.',
-    icon: '🏠',
+    description: 'Everyone picks their legends. See who agrees.',
+    lucideIcon: 'users',
     months: null,
     category: 'family',
-  },
-  {
-    id: 'road-trip',
-    name: 'Road Trip Wall',
-    description: 'Everyone picks. One wall. Settle it on the drive.',
-    icon: '🚗',
-    months: null,
-    category: 'friends',
   },
   {
     id: 'rival-city',
     name: 'Rival City',
     description: 'Got a friend in another sports town? Settle it.',
-    icon: '⚔️',
+    lucideIcon: 'swords',
+    months: null,
+    category: 'friends',
+  },
+  {
+    id: 'road-trip',
+    name: 'Road Trip Wall',
+    description: 'Pick \'em on the drive. Each person gets a lane.',
+    lucideIcon: 'map',
     months: null,
     category: 'friends',
   },

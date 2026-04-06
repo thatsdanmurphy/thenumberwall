@@ -70,7 +70,7 @@
       "game_type": "regular",
       "result": "W",
       "score": "44-13",
-      "glow_score": 4.0,
+      "glow_score": 3.3,
       "stats": {
         "pass_yards": 168,
         "passer_rating": 79.6,
@@ -79,7 +79,18 @@
         "completions": 13,
         "attempts": 23
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_01",
+          "moment_name": "The First Start",
+          "moment_type": "origin",
+          "intensity": 3.0,
+          "description": "Drew Bledsoe goes down. A 6th-round pick nobody has heard of trots onto the field. He never gives the job back.",
+          "quarter": "Q1",
+          "use_sacred_color": false,
+          "voice_line": "Nobody knew. He never gave it back."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "First career start"
@@ -450,7 +461,7 @@
       "game_type": "superbowl",
       "result": "W",
       "score": "20-17",
-      "glow_score": 1.6,
+      "glow_score": 7.5,
       "stats": {
         "pass_yards": 145,
         "pass_td": 1,
@@ -462,7 +473,18 @@
         "game_winning_drives": 1,
         "largest_lead": 3
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_02",
+          "moment_name": "Super Bowl XXXVI",
+          "moment_type": "triumph",
+          "intensity": 10.0,
+          "description": "The Rams were 14-point favorites. The Greatest Show on Turf. Brady drove the Pats into field goal range with 1:21 left. Vinatieri kicked it through. Dynasty born.",
+          "quarter": "Q4",
+          "use_sacred_color": true,
+          "voice_line": "Youngest QB to win a Super Bowl. The impossible beginning."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "Super Bowl XXXVI MVP. Youngest SB-winning QB"
@@ -3234,7 +3256,7 @@
       "game_type": "superbowl",
       "result": "L",
       "score": "14-17",
-      "glow_score": -4.5,
+      "glow_score": -8.3,
       "stats": {
         "pass_yards": 266,
         "pass_td": 1,
@@ -3245,7 +3267,18 @@
         "attempts": 48,
         "fumbles": 1
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_03",
+          "moment_name": "The Helmet Catch",
+          "moment_type": "heartbreak",
+          "intensity": -10.0,
+          "description": "18-0. One game from perfection. David Tyree pins a ball against his helmet with Rodney Harrison draped on him. The perfect season dies on one play.",
+          "quarter": "Q4",
+          "use_sacred_color": false,
+          "voice_line": "18-1. The one that got away."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "Super Bowl XLII. Helmet Catch. 18-1"
@@ -3260,14 +3293,25 @@
       "game_type": "regular",
       "result": "L",
       "score": "10-17",
-      "glow_score": -3.4,
+      "glow_score": -7.3,
       "stats": {
         "pass_yards": 76,
         "passer_rating": 55.4,
         "completions": 7,
         "attempts": 11
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_04",
+          "moment_name": "The ACL",
+          "moment_type": "injury",
+          "intensity": -9.0,
+          "description": "First quarter. Week 1. Bernard Pollard rolls into Brady's left knee. ACL torn. The 2008 season — his age-31 prime — just vanishes.",
+          "quarter": "Q1",
+          "use_sacred_color": false,
+          "voice_line": "Gone in the first quarter of the first game."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "injury": "ACL tear - left knee. Season over",
@@ -6271,7 +6315,7 @@
       "game_type": "conference",
       "result": "W",
       "score": "45-7",
-      "glow_score": 9.8,
+      "glow_score": 0.1,
       "stats": {
         "pass_yards": 226,
         "pass_td": 3,
@@ -6281,7 +6325,18 @@
         "completions": 23,
         "attempts": 35
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_06",
+          "moment_name": "Deflategate",
+          "moment_type": "controversy",
+          "intensity": -4.0,
+          "description": "After a 45-7 AFC Championship demolition of the Colts, the NFL investigates ball pressure. What follows is a two-year legal saga, a 4-game suspension, and the most scrutinized footballs in history.",
+          "quarter": "Q4",
+          "use_sacred_color": false,
+          "voice_line": "45-7 and somehow they were the story."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "AFC Championship. Deflategate begins"
@@ -6296,7 +6351,7 @@
       "game_type": "superbowl",
       "result": "W",
       "score": "28-24",
-      "glow_score": 5.4,
+      "glow_score": 8.6,
       "stats": {
         "pass_yards": 328,
         "pass_td": 4,
@@ -6311,7 +6366,18 @@
         "largest_deficit": 10,
         "largest_lead": 4
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_05",
+          "moment_name": "Malcolm Butler Pick",
+          "moment_type": "triumph",
+          "intensity": 10.0,
+          "description": "Down 10 in the third quarter. Brady rallies the Patriots. Then on the goal line with 20 seconds left — Seattle passes. Malcolm Butler jumps the route. Interception. Fourth ring.",
+          "quarter": "Q4",
+          "use_sacred_color": true,
+          "voice_line": "They should have run it. They didn't."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "Super Bowl XLIX. Malcolm Butler pick. Fourth ring"
@@ -7201,7 +7267,7 @@
       "game_type": "superbowl",
       "result": "W",
       "score": "34-28",
-      "glow_score": 4.3,
+      "glow_score": 8.3,
       "stats": {
         "pass_yards": 466,
         "pass_td": 2,
@@ -7215,7 +7281,18 @@
         "game_winning_drives": 1,
         "largest_deficit": 25
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_07",
+          "moment_name": "28-3",
+          "moment_type": "triumph",
+          "intensity": 10.0,
+          "description": "Down 28-3 with 17:28 left in the third quarter. No team had ever come back from more than 10 points in a Super Bowl. Brady threw for 466 yards. The Patriots scored 31 unanswered. Won in overtime. The single greatest performance in the history of team sports.",
+          "quarter": "Q3",
+          "use_sacred_color": true,
+          "voice_line": "Down 28-3 with 17 minutes left. Won anyway."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "Super Bowl LI. 28-3 comeback. OT. 5th ring. SB MVP"
@@ -7680,7 +7757,7 @@
       "game_type": "superbowl",
       "result": "L",
       "score": "33-41",
-      "glow_score": -1.5,
+      "glow_score": -5.3,
       "stats": {
         "pass_yards": 505,
         "pass_td": 3,
@@ -7691,7 +7768,18 @@
         "attempts": 48,
         "fumbles": 2
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_08",
+          "moment_name": "The Philly Special",
+          "moment_type": "heartbreak",
+          "intensity": -7.0,
+          "description": "505 passing yards. 3 TDs. The greatest statistical Super Bowl performance by a quarterback. And he lost. Nick Foles caught a touchdown. Brady's Hail Mary fell through his fingers.",
+          "quarter": "Q4",
+          "use_sacred_color": false,
+          "voice_line": "505 yards. 3 touchdowns. And it wasn't enough."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "Super Bowl LII. Philly Special. 505 yards in a loss"
@@ -9099,7 +9187,18 @@
         "completions": 21,
         "attempts": 29
       },
-      "moments": [],
+      "moments": [
+        {
+          "moment_id": "brady_tom_moment_09",
+          "moment_name": "Ring Seven",
+          "moment_type": "triumph",
+          "intensity": 10.0,
+          "description": "First year in Tampa Bay. Everyone said he was done. Beat Patrick Mahomes — the heir apparent — in the Super Bowl. At his home stadium. Seventh championship. Most in history by any player in any sport.",
+          "quarter": "Q4",
+          "use_sacred_color": true,
+          "voice_line": "They said he was done. Seven rings."
+        }
+      ],
       "is_dnp": false,
       "is_bye": false,
       "notes": "Super Bowl LV. Seventh ring. Home stadium"
