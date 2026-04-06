@@ -192,6 +192,34 @@ export async function clearAllEntries(wallId, ownerToken) {
   if (error) throw error
 }
 
+// ─── Delete a wall and all its entries ──────────────────────────────────────
+
+export async function deleteWall(wallId, ownerToken) {
+  if (ownerToken) {
+    const { data: wall } = await supabase
+      .from('walls')
+      .select('owner_token')
+      .eq('id', wallId)
+      .single()
+    if (!wall || wall.owner_token !== ownerToken) {
+      throw new Error('Not authorized to delete this wall')
+    }
+  }
+
+  // Delete entries first (foreign key)
+  await supabase
+    .from('wall_entries')
+    .delete()
+    .eq('wall_id', wallId)
+
+  const { error } = await supabase
+    .from('walls')
+    .delete()
+    .eq('id', wallId)
+
+  if (error) throw error
+}
+
 // ─── Update wall metadata ───────────────────────────────────────────────────
 
 export async function updateWall(wallId, updates, ownerToken) {

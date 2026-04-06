@@ -530,6 +530,33 @@
   color: rgba(232, 124, 42, 0.2);
 }
 
+/* Full-width name input — replaces the inline ____'s Wall pattern */
+.my-wall-onboard__name-input {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 8px;
+  color: var(--color-paper);
+  font-family: var(--font-banner);
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  outline: none;
+  padding: 14px 16px;
+  caret-color: var(--color-heat);
+  transition: border-color var(--motion-hover);
+  box-sizing: border-box;
+}
+
+.my-wall-onboard__name-input:focus {
+  border-color: rgba(232, 124, 42, 0.45);
+}
+
+.my-wall-onboard__name-input::placeholder {
+  color: rgba(255,255,255,0.18);
+  font-weight: 400;
+}
+
 .my-wall-onboard__url-preview {
   font-family: var(--font-scoreboard);
   font-size: 0.6875rem;
@@ -1211,8 +1238,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  min-height: 62px;  /* Fixed height — no shift between states */
+  padding: 14px 14px;
+  height: 74px;  /* Fixed height — no shift between states */
   cursor: pointer;
   transition: background 0.2s;
   border-bottom: 2px solid transparent;
@@ -1221,6 +1248,7 @@
   border-top: none;
   border-left: none;
   border-right: none;
+  box-sizing: border-box;
 }
 
 .id-chip:hover {
@@ -1259,10 +1287,11 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1.1;
+  font-size: 1.1rem;  /* Baseline — overridden per field */
 }
 
 .id-chip__value--number {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: rgba(80, 150, 255, 0.95);
   text-shadow:
     0 0 8px rgba(60, 130, 255, 0.50),
@@ -1271,7 +1300,7 @@
 }
 
 .id-chip__value--city {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: rgba(232, 160, 80, 0.95);
   text-shadow:
     0 0 8px rgba(232, 124, 42, 0.45),
@@ -1279,47 +1308,73 @@
 }
 
 .id-chip__value--hero {
-  font-size: 1.15rem;
-  color: rgba(255, 225, 100, 0.90);
-  text-shadow:
-    0 0 8px rgba(255, 215, 0, 0.40),
-    0 0 20px rgba(255, 215, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Empty prompt */
+.id-chip__hero-name {
+  font-family: var(--font-banner);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 225, 100, 0.90);
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.40),
+    0 0 20px rgba(255, 215, 0, 0.18);
+  line-height: 1.15;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.id-chip__hero-num {
+  font-family: var(--font-banner);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255, 225, 100, 0.70);
+  text-shadow:
+    0 0 8px rgba(255, 215, 0, 0.30),
+    0 0 20px rgba(255, 215, 0, 0.12);
+  line-height: 1.1;
+}
+
+/* Empty prompt — same line-height as filled so no jump */
 .id-chip__prompt {
   font-family: var(--font-banner);
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.12);
   letter-spacing: 0.03em;
+  line-height: 1.1;
 }
 
 .id-chip--empty:hover .id-chip__prompt {
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.22);
 }
 
-/* Editing state */
+/* Editing state — same font sizes as filled */
 .id-chip__input {
   background: none;
   border: none;
   border-bottom: 2px solid rgba(255,255,255,0.15);
   font-family: var(--font-banner);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: var(--color-paper);
   outline: none;
   width: 80px;
   padding: 0 0 2px;
   caret-color: var(--color-heat);
+  line-height: 1.1;
 }
 
-.id-chip__input--number { color: rgba(80, 150, 255, 0.95); width: 50px; font-size: 1.4rem; }
+.id-chip__input--number { color: rgba(80, 150, 255, 0.95); width: 50px; font-size: 1.3rem; }
 .id-chip__input--city   { color: rgba(232, 160, 80, 0.95); }
-.id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); width: 90px; }
+.id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); width: 100%; }
 
 /* Hero autocomplete suggestions */
 .id-chip__suggestions {
@@ -1634,11 +1689,11 @@
 }
 
 .nw-modal__title {
-  font-family: var(--font-scoreboard);
-  font-size: 0.65rem;
-  letter-spacing: 0.10em;
-  color: rgba(255,255,255,0.50);
-  font-weight: 600;
+  font-family: var(--font-banner);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.85);
+  font-weight: 700;
 }
 
 .nw-modal__close {
@@ -1663,11 +1718,12 @@
 
 .nw-modal__section-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.45rem;
+  font-size: 0.5rem;
   letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.22);
-  margin-top: 8px;
-  margin-bottom: 2px;
+  color: rgba(232, 124, 42, 0.55);
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
 /* Prompt rows */
@@ -1737,16 +1793,16 @@
 
 .nw-modal__prompt-name {
   font-family: var(--font-banner);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
   letter-spacing: 0.03em;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.80);
 }
 
 .nw-modal__prompt-desc {
   font-family: var(--font-program);
-  font-size: 0.6rem;
-  color: rgba(255,255,255,0.28);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.40);
   line-height: 1.35;
 }
 

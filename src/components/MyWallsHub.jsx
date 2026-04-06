@@ -150,20 +150,22 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
 
   // Filled state
   if (value) {
-    const displayValue = field === 'number' ? `#${value}`
-      : field === 'hero' ? (() => {
-          const num = findHeroNumber(value)
-          return num ? `#${num}` : value
-        })()
-      : value
+    const heroNum = field === 'hero' ? findHeroNumber(value) : null
 
     return (
       <div className={`id-chip id-chip--filled id-chip--${field}`} onClick={() => { setDraft(value); setEditing(true) }}>
         <div className="id-chip__text">
           <span className="id-chip__label">{label}</span>
-          <span className={`id-chip__value id-chip__value--${field}`}>
-            {displayValue}
-          </span>
+          {field === 'hero' && heroNum ? (
+            <span className="id-chip__value id-chip__value--hero">
+              <span className="id-chip__hero-name">{value}</span>
+              <span className="id-chip__hero-num">#{heroNum}</span>
+            </span>
+          ) : (
+            <span className={`id-chip__value id-chip__value--${field}`}>
+              {field === 'number' ? `#${value}` : value}
+            </span>
+          )}
         </div>
       </div>
     )

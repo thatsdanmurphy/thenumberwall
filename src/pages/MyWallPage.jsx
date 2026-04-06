@@ -5,7 +5,7 @@ import AppHeader     from '../components/AppHeader.jsx'
 import AppFooter     from '../components/AppFooter.jsx'
 import PlayerSearch  from '../components/PlayerSearch.jsx'
 import { TILE_NUMBERS, getHeatStyle, getTileTextColor, SELECTED_TILE, wallData, bostonLegends } from '../data/index.js'
-import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, updateWall, isSlugAvailable } from '../lib/myWallStore.js'
+import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, deleteWall, updateWall, isSlugAvailable } from '../lib/myWallStore.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
 import { track } from '@vercel/analytics'
@@ -177,22 +177,19 @@ function Onboarding({ onComplete }) {
               <h2 className="my-wall-onboard__headline">Name Your Wall</h2>
             </div>
             <p className="my-wall-onboard__intro">
-              This becomes your link. Share it with friends, coaches, or anyone who gets it.
+              Give it a name. This becomes your link.
             </p>
-            <h2 className="my-wall-onboard__headline my-wall-onboard__headline--name">
-              <input
-                className="my-wall-onboard__name-inline"
-                type="text"
-                value={ownerName}
-                onChange={e => setOwnerName(e.target.value)}
-                placeholder="____"
-                autoFocus
-                onKeyDown={e => {
-                  if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') setStep('theme')
-                }}
-              />
-              <span>'s Wall</span>
-            </h2>
+            <input
+              className="my-wall-onboard__name-input"
+              type="text"
+              value={ownerName}
+              onChange={e => setOwnerName(e.target.value)}
+              placeholder="Wall name"
+              autoFocus
+              onKeyDown={e => {
+                if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') setStep('theme')
+              }}
+            />
             {resolvedSlug && slugStatus === 'ok' && (
               <p className="my-wall-onboard__url-preview">
                 thenumberwall.com/wall/<strong>{resolvedSlug}</strong>
@@ -393,7 +390,7 @@ function MyWallTile({ number, picks, isMyNumber, isSearching, justPlaced, onClic
 
 // ─── Placed Card — shows info for a player already on the wall ──────────────
 
-function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove, isOwner, onUnclaimNumber, onClaimNumber }) {
+function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove, isOwner }) {
   const isMyNumber = myNumber != null && String(number) === String(myNumber)
   const placedNames = new Set(picks.map(p => p.player_name))
 
@@ -406,19 +403,6 @@ function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove,
           <span className={`placed-panel__number${isMyNumber ? ' placed-panel__number--mine' : ''}`}>#{number}</span>
         </div>
       </div>
-
-      {/* Celebratory note for the user's number */}
-      {isMyNumber && (
-        <p className="placed-panel__my-number-note">This one's yours. Light it up.</p>
-      )}
-
-      {/* Unclaim / claim number */}
-      {onUnclaimNumber && (
-        <button className="btn-text" onClick={onUnclaimNumber}>Unclaim this number</button>
-      )}
-      {onClaimNumber && (
-        <button className="btn-micro btn-micro--heat" onClick={onClaimNumber}>CLAIM AS MY NUMBER</button>
-      )}
 
       {/* All placed picks for this number */}
       {picks.map((entry, i) => {
@@ -651,20 +635,22 @@ export default function MyWallPage() {
     })
   }, [wall, showToast])
 
-  // ─── Clear wall (delete all entries) ─────────────────────────────────────
-  const handleClearWall = useCallback(async () => {
+  // ─── Delete wall ─────────────────────────────────────────────────────────
+  const handleDeleteWall = useCallback(async () => {
     if (!wall) return
     try {
-      await clearAllEntries(wall.id, ownerToken)
-      setEntries(new Map())
-      setSearching(null)
+      await deleteWall(wall.id, ownerToken)
+      // Clear local state
+      localStorage.removeItem('tnw_my_wall_id')
+      localStorage.removeItem('tnw_my_wall_slug')
       setShowClearConfirm(false)
-      showToast('Wall cleared. Fresh start.', 'success')
+      showToast('Wall deleted.', 'success')
+      navigate('/my-wall', { replace: true })
     } catch (err) {
-      console.error('Failed to clear wall:', err)
-      showToast('Couldn\'t clear wall. Try again.')
+      console.error('Failed to delete wall:', err)
+      showToast('Couldn\'t delete wall. Try again.')
     }
-  }, [wall, ownerToken, showToast])
+  }, [wall, ownerToken, showToast, navigate])
 
   // ─── Claim / unclaim number ──────────────────────────────────────────────
   const handleClaimNumber = useCallback(async (number) => {
@@ -815,7 +801,7 @@ export default function MyWallPage() {
         {isOwner && (
           <div className="my-wall-page__actions">
             <button className="btn-micro" onClick={handleShare}>SHARE WALL</button>
-            <button className="btn-micro" onClick={() => setShowClearConfirm(true)}>CLEAR WALL</button>
+            <button className="btn-micro" onClick={() => setShowClearConfirm(true)}>DELETE WALL</button>
           </div>
         )}
 
@@ -880,8 +866,6 @@ export default function MyWallPage() {
                   onAddWhoElse={canEdit ? (p) => handleAddWhoElse(searchingNumber, p) : null}
                   onRemove={isOwner ? (id) => handleRemove(id, searchingNumber) : null}
                   isOwner={canEdit}
-                  onUnclaimNumber={isOwner && isMyNumber(searchingNumber) ? handleUnclaimNumber : null}
-                  onClaimNumber={isOwner && !wall.my_number && !isMyNumber(searchingNumber) ? () => handleClaimNumber(searchingNumber) : null}
                 />
                 {canEdit && (
                   <div className="my-wall-page__add-another">
@@ -906,15 +890,6 @@ export default function MyWallPage() {
                       <span className="placed-panel__number">#{cleanNumber}</span>
                     </div>
                   </div>
-                  {isMyNumber(cleanNumber) && (
-                    <p className="placed-panel__my-number-note">This one's yours. Light it up.</p>
-                  )}
-                  {/* Claim as my number — owner only */}
-                  {isOwner && !wall.my_number && (
-                    <button className="btn-micro btn-micro--heat" onClick={() => handleClaimNumber(cleanNumber)}>
-                      CLAIM AS MY NUMBER
-                    </button>
-                  )}
                   {/* Who else wears this number? — show even before placing */}
                   {whoElse.length > 0 && (
                     <div className="placed-panel__who-else">
@@ -992,11 +967,11 @@ export default function MyWallPage() {
         {showClearConfirm && (
           <div className="my-wall-modal__overlay" onClick={() => setShowClearConfirm(false)}>
             <div className="my-wall-modal" onClick={e => e.stopPropagation()}>
-              <h3 className="my-wall-modal__title">Clear your wall?</h3>
-              <p className="my-wall-modal__text">This removes every pick from your wall. Your wall name and URL stay the same.</p>
+              <h3 className="my-wall-modal__title">Delete this wall?</h3>
+              <p className="my-wall-modal__text">This permanently deletes the wall and all its picks. This can't be undone.</p>
               <div className="my-wall-modal__actions">
                 <button className="btn-ghost" onClick={() => setShowClearConfirm(false)}>Keep it</button>
-                <button className="btn-primary" style={{ background: '#E8182E', borderColor: '#E8182E' }} onClick={handleClearWall}>Clear everything</button>
+                <button className="btn-primary" style={{ background: '#E8182E', borderColor: '#E8182E' }} onClick={handleDeleteWall}>Delete wall</button>
               </div>
             </div>
           </div>

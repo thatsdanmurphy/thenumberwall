@@ -57,7 +57,7 @@ export const SEASONAL_PROMPTS = [
   {
     id: 'locker-room',
     name: 'Locker Room',
-    description: 'Build a wall for your team. The legends your players should know.',
+    description: 'The legends your players should know.',
     lucideIcon: 'clipboard-list',
     months: null,
     category: 'coach',

@@ -96,25 +96,22 @@ function Onboarding({ onComplete, preselectedPrompt }) {
             <p className="my-wall-onboard__intro">
               {selectedPrompt
                 ? selectedPrompt.description
-                : 'This becomes your link. Share it with friends, coaches, or anyone who gets it.'
+                : 'Give it a name. This becomes your link.'
               }
             </p>
-            <h2 className="my-wall-onboard__headline my-wall-onboard__headline--name">
-              <input
-                className="my-wall-onboard__name-inline"
-                type="text"
-                value={ownerName}
-                onChange={e => setOwnerName(e.target.value)}
-                placeholder="____"
-                autoFocus
-                onKeyDown={e => {
-                  if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') {
-                    selectedPrompt ? handleCreate() : setStep('theme')
-                  }
-                }}
-              />
-              <span>'s Wall</span>
-            </h2>
+            <input
+              className="my-wall-onboard__name-input"
+              type="text"
+              value={ownerName}
+              onChange={e => setOwnerName(e.target.value)}
+              placeholder="Wall name"
+              autoFocus
+              onKeyDown={e => {
+                if (e.key === 'Enter' && ownerName.trim() && slugStatus === 'ok') {
+                  selectedPrompt ? handleCreate() : setStep('theme')
+                }
+              }}
+            />
             {resolvedSlug && slugStatus === 'ok' && (
               <p className="my-wall-onboard__url-preview">
                 thenumberwall.com/wall/<strong>{resolvedSlug}</strong>
