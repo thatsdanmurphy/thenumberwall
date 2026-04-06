@@ -9,6 +9,7 @@ import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, updateW
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
 import { track } from '@vercel/analytics'
+import '../components/WallGrid.css'
 import './MyWallPage.css'
 
 // ─── Build "who else wore this?" index from TNW data ─────────────────────────
@@ -402,7 +403,7 @@ function PlacedPanel({ picks, number, myNumber, whoElse, onAddWhoElse, onRemove,
     <div className="placed-panel">
       <div className="placed-panel__header">
         <div className="placed-panel__header-left">
-          <span className="placed-panel__number">#{number}</span>
+          <span className={`placed-panel__number${isMyNumber ? ' placed-panel__number--mine' : ''}`}>#{number}</span>
         </div>
       </div>
 
@@ -791,12 +792,23 @@ export default function MyWallPage() {
   const wallName = wall.owner_name || 'My'
   const isMyNumber = (num) => wall.my_number != null && String(wall.my_number) === String(num)
 
+  // Build tagline: theme description if themed, otherwise default
+  const tagline = wall.theme
+    ? (wall.theme_description && wall.theme_description !== wall.theme ? wall.theme_description : wall.theme)
+    : (isOwner ? 'Your numbers. Your legends.' : 'Every number tells a story.')
+
+  // Title: for themed walls, show "OWNER'S WALL — THEME" to keep hierarchy clear
+  const headerTitle = wall.theme
+    ? `${wallName.toUpperCase()}'S WALL`
+    : `${wallName.toUpperCase()}'S WALL`
+
   return (
     <AppShell>
       <AppHeader
-        back={{ label: 'The Wall', onClick: () => navigate('/') }}
-        title={`${wallName.toUpperCase()}'S WALL`}
-        tagline={isOwner ? 'Your numbers. Your legends.' : 'Every number tells a story.'}
+        back={{ label: 'My Walls', onClick: () => navigate('/my-wall') }}
+        title={headerTitle}
+        tagline={tagline}
+        badge={wall.theme || null}
       />
       <main className="my-wall-page">
         {/* Owner action bar: share + clear */}
@@ -804,19 +816,6 @@ export default function MyWallPage() {
           <div className="my-wall-page__actions">
             <button className="btn-micro" onClick={handleShare}>SHARE WALL</button>
             <button className="btn-micro" onClick={() => setShowClearConfirm(true)}>CLEAR WALL</button>
-          </div>
-        )}
-
-        {/* Theme subtitle */}
-        {wall.theme && (
-          <div className="my-wall-page__theme-bar">
-            <span className="my-wall-page__theme-name">{wall.theme}</span>
-            {wall.theme_description && wall.theme_description !== wall.theme && (
-              <p className="my-wall-page__theme-desc">{wall.theme_description}</p>
-            )}
-            {wall.allow_contributions && (
-              <span className="my-wall-page__collab-badge">OPEN WALL</span>
-            )}
           </div>
         )}
 

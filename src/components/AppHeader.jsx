@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import './AppHeader.css'
 
-export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagline = 'Legends live here.' }) {
+export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagline = 'Legends live here.', badge = null }) {
   const navigate = useNavigate()
 
   return (
@@ -28,6 +28,7 @@ export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagl
       </div>
       <div className="app-header__brand">
         <span className="app-header__wordmark">{title}</span>
+        {badge && <span className="app-header__badge">{badge}</span>}
         <span className="app-header__tagline">{tagline}</span>
       </div>
     </header>

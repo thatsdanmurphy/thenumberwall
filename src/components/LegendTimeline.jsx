@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import { Trophy, Star, Zap, HeartCrack, Cross, Circle } from 'lucide-react'
 import './LegendTimeline.css'
 
 // ─── Brady Career Eras (overlaid chapter labels, not hard boundaries) ───────
@@ -363,10 +364,10 @@ function drawTimeline(canvas, games, hoveredIndex, breathPhase, shimmerPhase) {
 
 // ─── Tooltip ────────────────────────────────────────────────────────────────
 
-function TimelineTooltip({ game, x, y }) {
+function TimelineTooltip({ game, x, y, pinned }) {
   if (!game) return null
   return (
-    <div className="timeline-tooltip" style={{ left: `${x}px`, top: `${y}px` }}>
+    <div className={`timeline-tooltip ${pinned ? 'timeline-tooltip--pinned' : ''}`} style={{ left: `${x}px`, top: `${y}px` }}>
       {game.is_bye ? (
         <div className="timeline-tooltip__bye">Bye Week</div>
       ) : game.is_dnp ? (
@@ -414,13 +415,17 @@ function TimelineTooltip({ game, x, y }) {
 // ─── Moment icon mapping ────────────────────────────────────────────────────
 
 function getMomentIcon(moment) {
-  if (moment.use_sacred_color) return '🏆'
+  const size = 14
+  const strokeWidth = 1.5
+  if (moment.use_sacred_color) return <Trophy size={size} strokeWidth={strokeWidth} />
   switch (moment.moment_type) {
-    case 'injury': return '🩹'
-    case 'heartbreak': return '💔'
-    case 'controversy': return '⚡'
-    case 'origin': return '⭐'
-    default: return moment.intensity > 0 ? '✦' : '▼'
+    case 'injury': return <Cross size={size} strokeWidth={strokeWidth} />
+    case 'heartbreak': return <HeartCrack size={size} strokeWidth={strokeWidth} />
+    case 'controversy': return <Zap size={size} strokeWidth={strokeWidth} />
+    case 'origin': return <Star size={size} strokeWidth={strokeWidth} />
+    default: return moment.intensity > 0
+      ? <Star size={size} strokeWidth={strokeWidth} />
+      : <Circle size={size} strokeWidth={strokeWidth} />
   }
 }
 
@@ -431,6 +436,7 @@ export default function LegendTimeline({ timeline }) {
   const rafRef = useRef(null)
 
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  const [pinnedIndex, setPinnedIndex] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [containerWidth, setContainerWidth] = useState(0)
   const [breathPhase, setBreathPhase] = useState(0)
@@ -440,7 +446,7 @@ export default function LegendTimeline({ timeline }) {
   const games = timeline?.games || []
   const eras = useMemo(() => buildEras(games), [games])
 
-  // Build moment markers list
+  // Build moment markers list with collision-avoidance tiers
   const momentMarkers = useMemo(() => {
     const markers = []
     games.forEach((g, i) => {
@@ -453,11 +459,32 @@ export default function LegendTimeline({ timeline }) {
           isSacred: !!primary.use_sacred_color,
           isNegative: primary.intensity < 0,
           intensity: primary.intensity,
+          tier: 0,
         })
       }
     })
     return markers
   }, [games])
+
+  // Assign tiers once we know pixel positions — avoids label overlap
+  const tieredMarkers = useMemo(() => {
+    if (!gamePositions || momentMarkers.length === 0) return momentMarkers
+    const MIN_GAP = 100 // px minimum horizontal distance before staggering
+    const placed = []
+    return momentMarkers.map(m => {
+      const cx = (gamePositions[m.gameIdx] + gamePositions[m.gameIdx + 1]) / 2
+      // Find lowest tier that doesn't collide with already-placed markers
+      let tier = 0
+      for (let t = 0; t < 3; t++) {
+        const conflict = placed.some(p => p.tier === t && Math.abs(p.cx - cx) < MIN_GAP)
+        if (!conflict) { tier = t; break }
+        tier = t + 1
+      }
+      const entry = { ...m, tier, cx }
+      placed.push(entry)
+      return entry
+    })
+  }, [momentMarkers, gamePositions])
 
   // Animation loop
   useEffect(() => {
@@ -483,20 +510,23 @@ export default function LegendTimeline({ timeline }) {
     return () => obs.disconnect()
   }, [])
 
+  // The "active" index is pinned if set, otherwise hovered
+  const activeIndex = pinnedIndex !== null ? pinnedIndex : hoveredIndex
+
   // Draw — captures gameX positions for icon overlay
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || !containerWidth) return
-    const gx = drawTimeline(canvas, games, hoveredIndex, breathPhase, shimmerPhase)
+    const gx = drawTimeline(canvas, games, activeIndex, breathPhase, shimmerPhase)
     if (gx) setGamePositions(gx)
-  }, [games, hoveredIndex, containerWidth, breathPhase, shimmerPhase])
+  }, [games, activeIndex, containerWidth, breathPhase, shimmerPhase])
 
-  // Mouse
+  // Mouse hover on canvas — only updates if nothing is pinned
   const handleMouseMove = useCallback((e) => {
+    if (pinnedIndex !== null) return  // pinned tooltip takes priority
     const rect = canvasRef.current?.getBoundingClientRect()
     if (!rect || !gamePositions) return
     const x = e.clientX - rect.left
-    // Binary search through warped gameX positions for accurate hover
     const n = games.length
     let lo = 0, hi = n - 1
     while (lo < hi) {
@@ -508,16 +538,62 @@ export default function LegendTimeline({ timeline }) {
       setHoveredIndex(idx)
       setTooltipPos({ x: Math.min(Math.max(x, 100), rect.width - 100), y: -10 })
     }
-  }, [games.length, gamePositions])
+  }, [games.length, gamePositions, pinnedIndex])
 
-  const handleMouseLeave = useCallback(() => setHoveredIndex(null), [])
+  const handleMouseLeave = useCallback(() => {
+    if (pinnedIndex === null) setHoveredIndex(null)
+  }, [pinnedIndex])
+
+  // Click on canvas dismisses pin
+  const handleCanvasClick = useCallback(() => {
+    if (pinnedIndex !== null) setPinnedIndex(null)
+  }, [pinnedIndex])
+
+  // Click on a moment marker — pin tooltip to that game
+  const handleMomentClick = useCallback((gameIdx) => {
+    if (pinnedIndex === gameIdx) {
+      setPinnedIndex(null)
+    } else {
+      setPinnedIndex(gameIdx)
+      setHoveredIndex(gameIdx)
+      if (gamePositions) {
+        const cx = (gamePositions[gameIdx] + gamePositions[gameIdx + 1]) / 2
+        const barRect = canvasRef.current?.getBoundingClientRect()
+        const w = barRect?.width || 800
+        setTooltipPos({ x: Math.min(Math.max(cx, 100), w - 100), y: -10 })
+      }
+    }
+  }, [pinnedIndex, gamePositions])
+
+  // Click on an era label — pin to the best game in that era (highest glow)
+  const handleEraClick = useCallback((era) => {
+    // Find the peak game in this era
+    let bestIdx = era.startIdx
+    let bestGlow = -Infinity
+    for (let i = era.startIdx; i < era.endIdx; i++) {
+      const g = games[i]?.glow_score ?? 0
+      if (g > bestGlow) { bestGlow = g; bestIdx = i }
+    }
+    if (pinnedIndex === bestIdx) {
+      setPinnedIndex(null)
+    } else {
+      setPinnedIndex(bestIdx)
+      setHoveredIndex(bestIdx)
+      if (gamePositions) {
+        const cx = (gamePositions[bestIdx] + gamePositions[bestIdx + 1]) / 2
+        const barRect = canvasRef.current?.getBoundingClientRect()
+        const w = barRect?.width || 800
+        setTooltipPos({ x: Math.min(Math.max(cx, 100), w - 100), y: -10 })
+      }
+    }
+  }, [games, pinnedIndex, gamePositions])
 
   if (!timeline) return null
   const draft = timeline.draft || {}
-  const hoveredGame = hoveredIndex !== null ? games[hoveredIndex] : null
+  const activeGame = activeIndex !== null ? games[activeIndex] : null
 
-  const hoveredEra = hoveredIndex !== null
-    ? eras.find(e => hoveredIndex >= e.startIdx && hoveredIndex < e.endIdx)
+  const activeEra = activeIndex !== null
+    ? eras.find(e => activeIndex >= e.startIdx && activeIndex < e.endIdx)
     : null
 
   return (
@@ -543,41 +619,20 @@ export default function LegendTimeline({ timeline }) {
       {/* The Bar */}
       <div className="legend-timeline__bar-wrap" ref={containerRef}>
 
-        {/* Moment icon markers — positioned above the bar */}
-        <div className="legend-timeline__markers">
-          {gamePositions && momentMarkers.map((m, i) => {
-            const x0 = gamePositions[m.gameIdx]
-            const x1 = gamePositions[m.gameIdx + 1]
-            if (x0 === undefined || x1 === undefined) return null
-            const cx = (x0 + x1) / 2
-            return (
-              <div
-                key={i}
-                className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''}`}
-                style={{ left: `${cx}px` }}
-              >
-                <span className="moment-marker__icon">{m.icon}</span>
-                <span className="moment-marker__label">{m.label}</span>
-                <div className="moment-marker__line" />
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Era labels */}
+        {/* Era labels — above the bar */}
         <div className="legend-timeline__era-labels">
           {eras.map(era => {
             const left = (era.startIdx / games.length) * 100
             const width = (era.gameCount / games.length) * 100
-            const isHovered = hoveredEra?.id === era.id
+            const isActive = activeEra?.id === era.id
             return (
               <div
                 key={era.id}
-                className={`era-label ${isHovered ? 'era-label--active' : ''}`}
+                className={`era-label ${isActive ? 'era-label--active' : ''}`}
                 style={{ left: `${left}%`, width: `${width}%` }}
+                onClick={() => handleEraClick(era)}
               >
                 <span className="era-label__name">{era.label}</span>
-                {isHovered && <span className="era-label__tagline">{era.tagline}</span>}
               </div>
             )
           })}
@@ -590,36 +645,73 @@ export default function LegendTimeline({ timeline }) {
             className="legend-timeline__canvas"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onClick={handleCanvasClick}
           />
         </div>
 
-        {/* Full year labels below */}
-        <div className="legend-timeline__years">
-          {eras.map(era => {
-            const left = (era.startIdx / games.length) * 100
-            const width = (era.gameCount / games.length) * 100
-            const yr = era.seasons.length === 1
-              ? String(era.seasons[0])
-              : `${era.seasons[0]}–${era.seasons[era.seasons.length - 1]}`
+        {/* Moment icon markers — below the bar, icons only, labels on hover/click */}
+        <div className="legend-timeline__markers">
+          {gamePositions && tieredMarkers.map((m, i) => {
+            if (m.cx === undefined) return null
+            const isPinned = pinnedIndex === m.gameIdx
             return (
-              <div key={era.id} className="year-tick" style={{ left: `${left}%`, width: `${width}%` }}>
-                {yr}
+              <div
+                key={i}
+                className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''} ${isPinned ? 'moment-marker--pinned' : ''}`}
+                style={{ left: `${m.cx}px` }}
+                onClick={() => handleMomentClick(m.gameIdx)}
+              >
+                <div className="moment-marker__line" />
+                <span className="moment-marker__icon">{m.icon}</span>
+                <span className="moment-marker__label">{m.label}</span>
               </div>
             )
           })}
         </div>
 
-        {/* Tooltip */}
-        {hoveredGame && (
-          <TimelineTooltip game={hoveredGame} x={tooltipPos.x} y={tooltipPos.y} />
+        {/* Year labels — consolidated so narrow eras don't cram */}
+        <div className="legend-timeline__years">
+          {(() => {
+            // Merge adjacent single-season eras into combined year ranges
+            const groups = []
+            let current = null
+            for (const era of eras) {
+              const isNarrow = era.seasons.length <= 1
+              if (isNarrow && current?.isNarrow) {
+                // Merge into existing group
+                current.endIdx = era.endIdx
+                current.seasons = [...current.seasons, ...era.seasons]
+              } else {
+                current = { startIdx: era.startIdx, endIdx: era.endIdx, seasons: [...era.seasons], isNarrow, id: era.id }
+                groups.push(current)
+              }
+            }
+            return groups.map(g => {
+              const left = (g.startIdx / games.length) * 100
+              const width = ((g.endIdx - g.startIdx) / games.length) * 100
+              const yr = g.seasons.length === 1
+                ? String(g.seasons[0])
+                : `${g.seasons[0]}–${g.seasons[g.seasons.length - 1]}`
+              return (
+                <div key={g.id} className="year-tick" style={{ left: `${left}%`, width: `${width}%` }}>
+                  {yr}
+                </div>
+              )
+            })
+          })()}
+        </div>
+
+        {/* Tooltip — stays visible when pinned */}
+        {activeGame && (
+          <TimelineTooltip game={activeGame} x={tooltipPos.x} y={tooltipPos.y} pinned={pinnedIndex !== null} />
         )}
       </div>
 
       {/* Key */}
       <div className="legend-timeline__key">
-        <span className="legend-timeline__key-label">Darkness</span>
+        <span className="legend-timeline__key-label">Quiet games</span>
         <div className="legend-timeline__key-bar" />
-        <span className="legend-timeline__key-label">Sacred Gold</span>
+        <span className="legend-timeline__key-label">Greatest moments</span>
       </div>
     </div>
   )

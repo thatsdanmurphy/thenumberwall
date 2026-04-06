@@ -114,6 +114,19 @@
   box-shadow: 0 0 8px rgba(232, 124, 42, 0.35);
 }
 
+/* Theme badge — inline beneath wordmark */
+.app-header__badge {
+  display: inline-block;
+  font-family: var(--font-scoreboard);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-heat);
+  text-transform: uppercase;
+  padding: 2px 0;
+  opacity: 0.70;
+}
+
 /* Back button — left slot */
 .app-header__back {
   font-family:    var(--font-program);

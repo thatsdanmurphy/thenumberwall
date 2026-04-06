@@ -794,6 +794,16 @@
   white-space: nowrap;
   color: var(--color-heat);
   text-shadow: 0 0 24px rgba(232, 124, 42, 0.45), 0 0 48px rgba(232, 124, 42, 0.15);
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+/* Claimed number — electric blue glow */
+.placed-panel__number--mine {
+  color: rgba(80, 150, 255, 0.95);
+  text-shadow:
+    0 0 14px rgba(60, 130, 255, 0.55),
+    0 0 32px rgba(60, 130, 255, 0.30),
+    0 0 64px rgba(60, 130, 255, 0.12);
 }
 
 @media (min-width: 1024px) {
@@ -1119,6 +1129,75 @@
   margin: 0 auto;
 }
 
+/* ─── Welcome placemat (first visit) ──────────────────────────────────── */
+
+.hub-welcome {
+  padding: 32px 0 24px;
+  text-align: center;
+  animation: welcome-in 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes welcome-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hub-welcome__content {
+  padding: 28px 24px;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+}
+
+.hub-welcome__heading {
+  font-family: var(--font-banner);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-paper);
+  margin: 0 0 12px;
+}
+
+.hub-welcome__body {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.50);
+  margin: 0 0 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hub-welcome__features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  max-width: 320px;
+  margin: 0 auto 24px;
+}
+
+.hub-welcome__feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.40);
+  line-height: 1.4;
+}
+
+.hub-welcome__feature-icon {
+  flex: 0 0 14px;
+  color: rgba(232, 124, 42, 0.55);
+}
+
+.hub-welcome__cta {
+  margin: 0 auto;
+  min-width: 140px;
+}
+
 /* ─── Identity row — 3-across ──────────────────────────────────────────── */
 
 .hub-identity-row {
@@ -1133,6 +1212,7 @@
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
+  min-height: 62px;  /* Fixed height — no shift between states */
   cursor: pointer;
   transition: background 0.2s;
   border-bottom: 2px solid transparent;
@@ -1239,7 +1319,54 @@
 
 .id-chip__input--number { color: rgba(80, 150, 255, 0.95); width: 50px; font-size: 1.4rem; }
 .id-chip__input--city   { color: rgba(232, 160, 80, 0.95); }
-.id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); width: 50px; }
+.id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); width: 90px; }
+
+/* Hero autocomplete suggestions */
+.id-chip__suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--color-surface);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.50);
+  overflow: hidden;
+}
+
+.id-chip__suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: var(--font-program);
+}
+
+.id-chip__suggestion:first-child { border-top: none; }
+
+.id-chip__suggestion:hover {
+  background: rgba(255, 215, 0, 0.06);
+}
+
+.id-chip__suggestion-name {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.70);
+  text-transform: capitalize;
+}
+
+.id-chip__suggestion-num {
+  font-family: var(--font-banner);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 225, 100, 0.70);
+}
 
 /* Subtle bottom glow on filled */
 .id-chip--filled.id-chip--number { border-bottom-color: rgba(60, 130, 255, 0.20); }
