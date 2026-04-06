@@ -778,15 +778,15 @@ export default function MyWallPage() {
   const wallName = wall.owner_name || 'My'
   const isMyNumber = (num) => wall.my_number != null && String(wall.my_number) === String(num)
 
-  // Build tagline: theme description if themed, otherwise default
-  const tagline = wall.theme
-    ? (wall.theme_description && wall.theme_description !== wall.theme ? wall.theme_description : wall.theme)
-    : (isOwner ? 'Your numbers. Your legends.' : 'Every number tells a story.')
-
-  // Title: for themed walls, show "OWNER'S WALL — THEME" to keep hierarchy clear
+  // Themed walls: theme is the headline, "by Owner" as tagline
+  // Personal walls: owner's name is the headline, short tagline
   const headerTitle = wall.theme
-    ? `${wallName.toUpperCase()}'S WALL`
+    ? wall.theme.toUpperCase()
     : `${wallName.toUpperCase()}'S WALL`
+
+  const tagline = wall.theme
+    ? null
+    : (isOwner ? 'Your numbers. Your legends.' : null)
 
   return (
     <AppShell>
@@ -794,7 +794,6 @@ export default function MyWallPage() {
         back={{ label: 'My Walls', onClick: () => navigate('/my-wall') }}
         title={headerTitle}
         tagline={tagline}
-        badge={wall.theme || null}
       />
       <main className="my-wall-page">
         {/* Owner action bar: share + clear */}
