@@ -272,7 +272,7 @@ export default function MyWallsPage() {
   if (hasWalls === null) {
     return (
       <AppShell>
-        <AppHeader title="MY WALLS" />
+        <AppHeader back={{ label: 'The Wall', onClick: () => navigate('/') }} title="MY WALLS" />
         <main className="my-wall-page">
           <p className="my-wall-page__loading">Loading...</p>
         </main>
@@ -280,20 +280,8 @@ export default function MyWallsPage() {
     )
   }
 
-  // First time — no walls, show onboarding
-  if (!hasWalls) {
-    return (
-      <AppShell>
-        <AppHeader title="MY WALLS" />
-        <main className="my-wall-page">
-          <Onboarding onComplete={handleOnboardComplete} preselectedPrompt={null} />
-        </main>
-        <AppFooter />
-      </AppShell>
-    )
-  }
-
-  // Has walls → hub
+  // Always show the hub — whether you have walls or not.
+  // First-time users see the welcome placemat + empty identity row + build CTA.
   return (
     <AppShell>
       <AppHeader back={{ label: 'The Wall', onClick: () => navigate('/') }} title="MY WALLS" />
