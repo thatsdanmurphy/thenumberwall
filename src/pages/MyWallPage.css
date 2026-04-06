@@ -1238,8 +1238,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 14px;
-  height: 74px;  /* Fixed height — no shift between states */
+  padding: 16px 14px;
+  height: 80px;  /* Fixed height — no shift between states */
   cursor: pointer;
   transition: background 0.2s;
   border-bottom: 2px solid transparent;
@@ -1281,17 +1281,17 @@
   text-transform: uppercase;
 }
 
-/* Filled values — bright + glowy */
+/* Filled values — bright + glowy.
+   ALL states (filled, empty, editing) use 1.2rem so nothing jumps. */
 .id-chip__value {
   font-family: var(--font-banner);
   font-weight: 700;
+  font-size: 1.2rem;
   letter-spacing: 0.02em;
-  line-height: 1.1;
-  font-size: 1.1rem;  /* Baseline — overridden per field */
+  line-height: 1.15;
 }
 
 .id-chip__value--number {
-  font-size: 1.3rem;
   color: rgba(80, 150, 255, 0.95);
   text-shadow:
     0 0 8px rgba(60, 130, 255, 0.50),
@@ -1300,7 +1300,6 @@
 }
 
 .id-chip__value--city {
-  font-size: 1.1rem;
   color: rgba(232, 160, 80, 0.95);
   text-shadow:
     0 0 8px rgba(232, 124, 42, 0.45),
@@ -1311,20 +1310,14 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .id-chip__hero-name {
-  font-family: var(--font-banner);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: rgba(255, 225, 100, 0.90);
-  text-shadow:
-    0 0 8px rgba(255, 215, 0, 0.40),
-    0 0 20px rgba(255, 215, 0, 0.18);
-  line-height: 1.15;
+  font-family: var(--font-program);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(255, 225, 100, 0.60);
+  line-height: 1.2;
   text-transform: capitalize;
   white-space: nowrap;
   overflow: hidden;
@@ -1333,48 +1326,49 @@
 
 .id-chip__hero-num {
   font-family: var(--font-banner);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: rgba(255, 225, 100, 0.70);
+  color: rgba(255, 225, 100, 0.90);
   text-shadow:
-    0 0 8px rgba(255, 215, 0, 0.30),
-    0 0 20px rgba(255, 215, 0, 0.12);
-  line-height: 1.1;
+    0 0 8px rgba(255, 215, 0, 0.40),
+    0 0 20px rgba(255, 215, 0, 0.18);
+  line-height: 1.15;
 }
 
-/* Empty prompt — same line-height as filled so no jump */
+/* Empty prompt — exact same size as filled value */
 .id-chip__prompt {
   font-family: var(--font-banner);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.10);
   letter-spacing: 0.03em;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .id-chip--empty:hover .id-chip__prompt {
-  color: rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.18);
 }
 
-/* Editing state — same font sizes as filled */
+/* Editing input — exact same size as filled value */
 .id-chip__input {
   background: none;
   border: none;
   border-bottom: 2px solid rgba(255,255,255,0.15);
   font-family: var(--font-banner);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: var(--color-paper);
   outline: none;
-  width: 80px;
+  width: 100%;
+  max-width: 120px;
   padding: 0 0 2px;
   caret-color: var(--color-heat);
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
-.id-chip__input--number { color: rgba(80, 150, 255, 0.95); width: 50px; font-size: 1.3rem; }
-.id-chip__input--city   { color: rgba(232, 160, 80, 0.95); }
-.id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); width: 100%; }
+.id-chip__input--number { color: rgba(80, 150, 255, 0.95); max-width: 50px; }
+.id-chip__input--city   { color: rgba(232, 160, 80, 0.95); max-width: 120px; }
+.id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); max-width: 100%; }
 
 /* Hero autocomplete suggestions */
 .id-chip__suggestions {
@@ -1526,6 +1520,10 @@
 .prev-cell--lit { background: rgba(232, 124, 42, 0.25); }
 .prev-cell--sacred { background: rgba(255, 215, 0, 0.22); }
 .prev-cell--hot { background: rgba(232, 124, 42, 0.45); }
+.prev-cell--blue {
+  background: rgba(60, 130, 255, 0.35);
+  box-shadow: 0 0 6px rgba(60, 130, 255, 0.30);
+}
 
 .hub-wall-row__info {
   flex: 1;

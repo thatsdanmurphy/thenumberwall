@@ -272,7 +272,7 @@ export default function MyWallsPage() {
   if (hasWalls === null) {
     return (
       <AppShell>
-        <AppHeader back={{ label: 'The Wall', onClick: () => navigate('/') }} title="MY WALLS" />
+        <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} title="MY WALLS" tagline="Track your numbers." />
         <main className="my-wall-page">
           <p className="my-wall-page__loading">Loading...</p>
         </main>
@@ -284,7 +284,7 @@ export default function MyWallsPage() {
   // First-time users see the welcome placemat + empty identity row + build CTA.
   return (
     <AppShell>
-      <AppHeader back={{ label: 'The Wall', onClick: () => navigate('/') }} title="MY WALLS" />
+      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} title="MY WALLS" tagline="Track your numbers." />
       <main className="my-wall-page">
         <MyWallsHub />
       </main>

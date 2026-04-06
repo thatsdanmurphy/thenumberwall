@@ -778,14 +778,13 @@ export default function MyWallPage() {
   const wallName = wall.owner_name || 'My'
   const isMyNumber = (num) => wall.my_number != null && String(wall.my_number) === String(num)
 
-  // Themed walls: theme is the headline, "by Owner" as tagline
-  // Personal walls: owner's name is the headline, short tagline
-  const headerTitle = wall.theme
-    ? wall.theme.toUpperCase()
-    : `${wallName.toUpperCase()}'S WALL`
+  // All walls: owner's name as headline
+  // Themed walls: theme name in the orange tagline
+  // Personal walls: short tagline for owner, nothing for visitors
+  const headerTitle = `${wallName.toUpperCase()}'S WALL`
 
   const tagline = wall.theme
-    ? null
+    ? wall.theme
     : (isOwner ? 'Your numbers. Your legends.' : null)
 
   return (

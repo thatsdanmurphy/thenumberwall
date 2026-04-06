@@ -298,22 +298,34 @@ export default function MyWallsHub() {
                   className="hub-wall-row"
                   onClick={() => navigate(`/wall/${w.slug}`)}
                 >
-                  {/* Preview: your number for personal wall, mini grid for themed */}
-                  {isPersonal && w.my_number ? (
-                    <span className="hub-wall-row__number-preview">#{w.my_number}</span>
-                  ) : (
-                    <span className="hub-wall-row__theme-preview">
-                      <span className="prev-cell prev-cell--lit" />
-                      <span className="prev-cell" />
-                      <span className="prev-cell prev-cell--hot" />
-                      <span className="prev-cell" />
-                      <span className="prev-cell prev-cell--lit" />
-                      <span className="prev-cell" />
-                      <span className="prev-cell prev-cell--sacred" />
-                      <span className="prev-cell prev-cell--lit" />
-                      <span className="prev-cell" />
-                    </span>
-                  )}
+                  {/* Preview: mini 3x3 grid for all walls */}
+                  <span className="hub-wall-row__theme-preview">
+                    {isPersonal ? (
+                      <>
+                        <span className="prev-cell" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell prev-cell--blue" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell" />
+                      </>
+                    ) : (
+                      <>
+                        <span className="prev-cell prev-cell--lit" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell prev-cell--hot" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell prev-cell--lit" />
+                        <span className="prev-cell" />
+                        <span className="prev-cell prev-cell--sacred" />
+                        <span className="prev-cell prev-cell--lit" />
+                        <span className="prev-cell" />
+                      </>
+                    )}
+                  </span>
 
                   <span className="hub-wall-row__info">
                     <span className="hub-wall-row__name">
