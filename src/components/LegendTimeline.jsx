@@ -633,6 +633,7 @@ export default function LegendTimeline({ timeline }) {
                 onClick={() => handleEraClick(era)}
               >
                 <span className="era-label__name">{era.label}</span>
+                {isActive && <span className="era-label__tagline">{era.tagline}</span>}
               </div>
             )
           })}
@@ -709,9 +710,9 @@ export default function LegendTimeline({ timeline }) {
 
       {/* Key */}
       <div className="legend-timeline__key">
-        <span className="legend-timeline__key-label">Quiet games</span>
+        <span className="legend-timeline__key-label">The quiet weeks</span>
         <div className="legend-timeline__key-bar" />
-        <span className="legend-timeline__key-label">Greatest moments</span>
+        <span className="legend-timeline__key-label">The moments that mattered</span>
       </div>
     </div>
   )

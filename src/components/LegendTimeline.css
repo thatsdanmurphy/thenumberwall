@@ -21,10 +21,10 @@
 
 .legend-timeline__number {
   font-family: var(--font-banner);
-  font-size: 4rem;
+  font-size: 4.5rem;
   line-height: 1;
-  color: var(--color-blaze);
-  opacity: 0.2;
+  color: var(--color-paper);
+  opacity: 0.4;
   flex-shrink: 0;
 }
 
@@ -32,7 +32,7 @@
 
 .legend-timeline__name {
   font-family: var(--font-banner);
-  font-size: 1.75rem;
+  font-size: 2rem;
   line-height: 1.1;
   color: var(--color-paper);
   margin: 0 0 var(--space-1) 0;
@@ -40,17 +40,17 @@
 
 .legend-timeline__meta {
   font-family: var(--font-scoreboard);
-  font-size: 0.8125rem;
-  color: var(--color-muted);
+  font-size: 0.875rem;
+  color: rgba(200, 195, 185, 0.8);
   margin: 0 0 var(--space-2) 0;
   letter-spacing: 0.02em;
 }
 
 .legend-timeline__voice {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--color-paper);
-  opacity: 0.7;
+  opacity: 0.8;
   margin: 0;
   line-height: 1.5;
   font-style: italic;
@@ -60,16 +60,14 @@
 
 .legend-timeline__draft-pick {
   font-family: var(--font-banner);
-  font-size: 1.5rem;
-  color: var(--color-muted);
-  opacity: 0.35;
+  font-size: 1.75rem;
+  color: rgba(200, 195, 185, 0.55);
 }
 
 .legend-timeline__draft-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: var(--color-muted);
-  opacity: 0.5;
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.6);
   margin-top: var(--space-1);
 }
 
@@ -84,7 +82,7 @@
 
 .legend-timeline__era-labels {
   position: relative;
-  height: 22px;
+  height: 38px;
   margin-bottom: 8px;
   overflow: visible;
 }
@@ -94,8 +92,9 @@
   top: 0;
   height: 100%;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   overflow: visible;
   box-sizing: border-box;
   padding: 0 0 2px;
@@ -104,14 +103,13 @@
 }
 
 .era-label:hover .era-label__name {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .era-label__name {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: var(--color-muted);
-  opacity: 0.3;
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.5);
   white-space: nowrap;
   overflow: visible;
   letter-spacing: 0.04em;
@@ -120,11 +118,27 @@
 
 .era-label--active .era-label__name {
   opacity: 1;
-  color: rgba(255, 230, 120, 0.95);
+  color: rgba(255, 230, 120, 1);
 }
 
 .era-label__tagline {
-  display: none;
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  color: rgba(200, 195, 185, 0.55);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: visible;
+  margin-top: 1px;
+  animation: tagline-in 200ms ease-out;
+}
+
+.era-label--active .era-label__tagline {
+  color: rgba(255, 230, 120, 0.65);
+}
+
+@keyframes tagline-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ─── The Bar ────────────────────────────────────────────────────────────── */
@@ -153,7 +167,7 @@
 
 .legend-timeline__years {
   position: relative;
-  height: 22px;
+  height: 24px;
   margin-top: 6px;
 }
 
@@ -164,9 +178,8 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: var(--color-muted);
-  opacity: 0.35;
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.45);
   letter-spacing: 0.05em;
   box-sizing: border-box;
 }
@@ -183,7 +196,7 @@
   pointer-events: none;
   z-index: 10;
   min-width: 180px;
-  max-width: 260px;
+  max-width: 280px;
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.6),
     0 0 40px rgba(0, 0, 0, 0.3),
@@ -200,40 +213,40 @@
 
 .timeline-tooltip__week {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: var(--color-muted);
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.75);
 }
 
 .timeline-tooltip__type {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
-  color: rgba(255, 220, 100, 0.8);
+  font-size: 0.6875rem;
+  color: rgba(255, 220, 100, 0.9);
   letter-spacing: 0.06em;
   font-weight: 600;
 }
 
 .timeline-tooltip__matchup {
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--color-paper);
   margin-bottom: 4px;
 }
 
-.timeline-tooltip__result { font-family: var(--font-banner); font-size: 0.875rem; }
+.timeline-tooltip__result { font-family: var(--font-banner); font-size: 0.9375rem; }
 .timeline-tooltip__result--w { color: rgba(255, 230, 100, 0.95); }
-.timeline-tooltip__result--l { color: #E8182E; }
-.timeline-tooltip__opponent { color: var(--color-paper); opacity: 0.8; }
+.timeline-tooltip__result--l { color: #FF4D5E; }
+.timeline-tooltip__opponent { color: var(--color-paper); opacity: 0.85; }
 
 .timeline-tooltip__stats {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: var(--color-muted);
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.75);
   margin-bottom: 4px;
 }
 
 .timeline-tooltip__moment {
   font-family: var(--font-banner);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: rgba(255, 230, 100, 0.95);
   margin-top: 4px;
   padding-top: 4px;
@@ -244,15 +257,14 @@
 
 .timeline-tooltip__glow {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
-  color: var(--color-muted);
-  opacity: 0.35;
+  font-size: 0.6875rem;
+  color: rgba(200, 195, 185, 0.45);
   margin-top: 4px;
 }
 
-.timeline-tooltip__bye { font-family: var(--font-scoreboard); font-size: 0.75rem; color: var(--color-muted); }
-.timeline-tooltip__dnp { font-family: var(--font-banner); font-size: 0.75rem; color: #E8182E; }
-.timeline-tooltip__reason { font-family: var(--font-program); font-size: 0.6875rem; color: var(--color-muted); margin-top: 2px; }
+.timeline-tooltip__bye { font-family: var(--font-scoreboard); font-size: 0.8125rem; color: rgba(200, 195, 185, 0.7); }
+.timeline-tooltip__dnp { font-family: var(--font-banner); font-size: 0.8125rem; color: #FF4D5E; }
+.timeline-tooltip__reason { font-family: var(--font-program); font-size: 0.75rem; color: rgba(200, 195, 185, 0.7); margin-top: 2px; }
 
 /* ─── Moment Markers (icons + labels below the bar) ─────────────────────── */
 
@@ -278,8 +290,8 @@
 /* Label hidden by default — icon only */
 .moment-marker__label {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
-  color: var(--color-muted);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.8);
   white-space: nowrap;
   letter-spacing: 0.02em;
   text-align: center;
@@ -292,7 +304,7 @@
 
 /* Reveal label on hover */
 .moment-marker:hover .moment-marker__label {
-  opacity: 0.85;
+  opacity: 1;
   max-height: 20px;
   color: var(--color-paper);
 }
@@ -305,34 +317,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(160, 140, 110, 0.45);
+  color: rgba(180, 165, 140, 0.55);
   margin-top: 2px;
   margin-bottom: 1px;
   transition: transform 150ms ease-out, color 150ms ease-out;
 }
 
 .moment-marker--sacred .moment-marker__icon {
-  color: rgba(255, 220, 80, 0.8);
-  filter: drop-shadow(0 0 4px rgba(255, 210, 60, 0.4));
+  color: rgba(255, 220, 80, 0.9);
+  filter: drop-shadow(0 0 5px rgba(255, 210, 60, 0.5));
 }
 
 .moment-marker--negative .moment-marker__icon {
-  color: rgba(200, 50, 60, 0.55);
+  color: rgba(255, 75, 90, 0.75);
 }
 
 .moment-marker__line {
   width: 1px;
   height: 8px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+  background: linear-gradient(to bottom, rgba(200, 195, 185, 0.2), rgba(200, 195, 185, 0));
 }
 
 .moment-marker--sacred .moment-marker__line {
   height: 12px;
-  background: linear-gradient(to bottom, rgba(255, 220, 80, 0.35), rgba(255, 220, 80, 0));
+  background: linear-gradient(to bottom, rgba(255, 220, 80, 0.45), rgba(255, 220, 80, 0));
 }
 
 .moment-marker--negative .moment-marker__line {
-  background: linear-gradient(to bottom, rgba(200, 50, 60, 0.25), rgba(200, 50, 60, 0));
+  background: linear-gradient(to bottom, rgba(255, 75, 90, 0.35), rgba(255, 75, 90, 0));
 }
 
 /* Pinned state — label visible, icon bright */
@@ -355,7 +367,7 @@
 }
 
 .moment-marker--pinned.moment-marker--negative .moment-marker__label {
-  color: rgba(220, 60, 70, 0.85);
+  color: rgba(255, 75, 90, 0.95);
 }
 
 /* Pinned tooltip — solid border, pointer-events for reading */
@@ -395,9 +407,8 @@
 
 .legend-timeline__key-label {
   font-family: var(--font-program);
-  font-size: 0.625rem;
-  color: var(--color-muted);
-  opacity: 0.35;
+  font-size: 0.6875rem;
+  color: rgba(200, 195, 185, 0.5);
   letter-spacing: 0.02em;
   font-style: italic;
 }
@@ -408,13 +419,13 @@
   .legend-timeline { padding: var(--space-3); }
   .legend-timeline__header { flex-wrap: wrap; gap: var(--space-2); }
   .legend-timeline__number { font-size: 2.5rem; }
-  .legend-timeline__name { font-size: 1.25rem; }
+  .legend-timeline__name { font-size: 1.5rem; }
   .legend-timeline__draft { order: -1; text-align: left; width: 100%; }
   .legend-timeline__bar { height: 64px; }
-  .era-label__name { font-size: 0.5625rem; }
+  .era-label__name { font-size: 0.625rem; }
   .legend-timeline__markers { height: 30px; }
-  .moment-marker__label { font-size: 0.5rem; max-width: 56px; }
-  .moment-marker__icon svg { width: 11px; height: 11px; }
+  .moment-marker__label { font-size: 0.5625rem; }
+  .moment-marker__icon svg { width: 12px; height: 12px; }
 
   .legend-timeline__bar-wrap {
     overflow-x: auto;
@@ -427,8 +438,8 @@
 }
 
 @media (min-width: 1024px) {
-  .legend-timeline__number { font-size: 5rem; }
-  .legend-timeline__name { font-size: 2rem; }
+  .legend-timeline__number { font-size: 5.5rem; }
+  .legend-timeline__name { font-size: 2.25rem; }
   .legend-timeline__bar { height: 120px; }
 }
 
