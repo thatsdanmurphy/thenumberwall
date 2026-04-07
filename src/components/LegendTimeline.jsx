@@ -710,11 +710,14 @@ export default function LegendTimeline({ timeline }) {
               const isSacred = g.moments?.some(m => m.use_sacred_color)
               const isNeg = g.moments?.some(m => m.intensity < 0)
               const isActive = activeIndex === i
+              // Gravitational width: extreme scores (bright or dark) get wider
+              const absScore = Math.abs(score)
+              const weight = absScore >= 8 ? 4 : absScore >= 5 ? 2.5 : absScore >= 3 ? 1.5 : 1
               return (
                 <div
                   key={i}
                   className={`seg-game ${hasMoment ? 'seg-game--moment' : ''} ${isSacred ? 'seg-game--sacred' : ''} ${isNeg ? 'seg-game--negative' : ''} ${isActive ? 'seg-game--active' : ''}`}
-                  style={{ backgroundColor: colorToCSS(color) }}
+                  style={{ backgroundColor: colorToCSS(color), flex: weight }}
                   onMouseEnter={() => {
                     if (pinnedIndex !== null) return
                     setHoveredIndex(i)

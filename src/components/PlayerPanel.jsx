@@ -109,14 +109,6 @@ function PlayerCard({ entry, isTop = false }) {
           </div>
 
           <div className="player-card__badges">
-            {entry.tier && entry.tier !== 'UNWRITTEN' && (
-              <span
-                className={`player-card__badge player-card__badge--tier player-card__badge--tier-${entry.tier.toLowerCase()}`}
-                title={TIER_DESC[entry.tier] ?? ''}
-              >
-                {entry.tier === 'CONDITIONAL' ? 'LEGEND' : entry.tier}
-              </span>
-            )}
             {entry.team && (
               <span className="player-card__badge" style={teamBadgeStyle}>{entry.team}</span>
             )}
