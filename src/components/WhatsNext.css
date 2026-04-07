@@ -1,0 +1,118 @@
+/* WhatsNext — feature voting cards */
+
+.whats-next__options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.whats-next__option {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  overflow: hidden;
+}
+
+.whats-next__option:hover:not(:disabled) {
+  background: rgba(232, 124, 42, 0.04);
+  border-color: rgba(232, 124, 42, 0.22);
+}
+
+.whats-next__option:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.whats-next__option--voted {
+  border-color: rgba(232, 124, 42, 0.18);
+  cursor: default;
+}
+
+.whats-next__option--pop {
+  animation: vote-pop 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes vote-pop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+/* Background bar — vote proportion visualization */
+.whats-next__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(232, 124, 42, 0.06);
+  border-radius: 8px 0 0 8px;
+  transition: width 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+}
+
+.whats-next__option--voted .whats-next__bar {
+  background: rgba(232, 124, 42, 0.10);
+}
+
+/* Content layer — above the bar */
+.whats-next__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.whats-next__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.whats-next__label {
+  font-family: var(--font-banner);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--color-paper);
+}
+
+.whats-next__count {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: rgba(232, 124, 42, 0.65);
+  white-space: nowrap;
+}
+
+.whats-next__check {
+  color: rgba(232, 124, 42, 0.80);
+}
+
+.whats-next__desc {
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.40);
+}
+
+.whats-next__option--voted .whats-next__desc {
+  color: rgba(255,255,255,0.50);
+}
+
+.whats-next__footnote {
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  color: rgba(255,255,255,0.25);
+  margin-top: 12px;
+}

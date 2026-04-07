@@ -5,6 +5,7 @@ import AppShell      from '../components/AppShell.jsx'
 import AppHeader     from '../components/AppHeader.jsx'
 import AppFooter     from '../components/AppFooter.jsx'
 import EmailCapture  from '../components/EmailCapture.jsx'
+import WhatsNext     from '../components/WhatsNext.jsx'
 import './AboutPage.css'
 
 export default function AboutPage() {
@@ -61,6 +62,16 @@ export default function AboutPage() {
           <p className="about-page__body">
             Stats sourced from Basketball-Reference, Baseball-Reference, Hockey-Reference, and Pro-Football-Reference. International soccer from FBref and Transfermarkt. Hall of Fame status from each league's official records. Every player verified against at least one primary source. If you spot an error, tell us.
           </p>
+        </section>
+
+        <hr className="about-page__rule" />
+
+        <section className="about-page__section">
+          <h2 className="about-page__subheading">WHAT'S NEXT</h2>
+          <p className="about-page__body">
+            The wall is growing. Vote on what gets built next.
+          </p>
+          <WhatsNext />
         </section>
 
         <hr className="about-page__rule" />
