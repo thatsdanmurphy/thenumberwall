@@ -5,25 +5,30 @@
 .wall-tile {
   position: relative;
   aspect-ratio: 1 / 1;
-  min-width: 32px;
+  min-width: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   overflow: visible; /* glow bleeds out */
   transition:
-    background   var(--motion-heat),
-    box-shadow   var(--motion-heat),
-    border-color var(--motion-hover),
-    transform    160ms ease,
-    filter       160ms ease;
+    background     var(--motion-heat),
+    box-shadow     350ms ease-in-out,
+    border-color   var(--motion-hover),
+    transform      200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter         200ms ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .wall-tile:hover {
   z-index:   1;
-  transform: scale(1.08);
-  filter:    brightness(1.2);
+  transform: scale(1.10);
+  filter:    brightness(1.18);
+}
+
+.wall-tile:active {
+  transform: scale(0.96);
+  transition: transform 80ms ease;
 }
 
 .wall-tile:focus-visible {
@@ -32,9 +37,15 @@
   z-index: 2;
 }
 
-/* Active — white ring + elevated z. Background/border/glow handled inline. */
+/* Active — white ring + elevated z. Background/border/glow handled inline.
+   Smooth ring appearance via box-shadow transition above. */
 .wall-tile--active {
   z-index: 3;
+  transform: scale(1.06);
+}
+
+.wall-tile--active:hover {
+  transform: scale(1.10);
 }
 
 /* Unwritten — number opacity handled via rgba text color in data layer */
@@ -314,26 +325,31 @@
   z-index:        0;
 }
 
-/* The number */
+/* The number — bold, legible, scaled to fill the tile */
 .wall-tile__number {
   font-family: var(--font-banner);
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1;
   position: relative;
   z-index: 1;
-  transition: color var(--motion-color);
+  transition: color var(--motion-color), transform 160ms ease;
   user-select: none;
   letter-spacing: -0.01em;
 }
 
-@media (min-width: 768px) {
-  .wall-tile__number { font-size: 1rem; }
+/* Active state — number pops slightly */
+.wall-tile--active .wall-tile__number {
+  transform: scale(1.05);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .wall-tile__number { font-size: 1.125rem; }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1024px) {
   .wall-tile__number { font-size: 1.25rem; }
+}
+
+@media (min-width: 1280px) {
+  .wall-tile__number { font-size: 1.375rem; }
 }

@@ -1,0 +1,127 @@
+/* FirstVisitModal — welcome overlay for new visitors.
+   Dark backdrop, centered card, TNW design language. */
+
+.fv-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 16, 0.82);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: fvBackdropIn 300ms ease-out;
+}
+
+@keyframes fvBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fv-modal {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  background: #12161C;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
+  box-shadow:
+    0 0 40px rgba(232, 124, 42, 0.12),
+    0 24px 64px rgba(0, 0, 0, 0.55);
+  animation: fvModalIn 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fvModalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.fv-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-muted);
+  transition: background var(--motion-hover), color var(--motion-hover);
+}
+
+.fv-modal__close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-paper);
+}
+
+.fv-modal__content {
+  padding: var(--space-5) var(--space-4) var(--space-4);
+}
+
+.fv-modal__title {
+  font-family: var(--font-banner);
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  line-height: 1.2;
+  margin: 0 0 var(--space-2);
+}
+
+.fv-modal__body {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 0 var(--space-4);
+}
+
+/* Hint rows */
+.fv-modal__hints {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.fv-modal__hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.fv-modal__hint-icon {
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+/* CTA button */
+.fv-modal__cta {
+  width: 100%;
+  padding: 11px 0;
+  background: var(--color-heat);
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-scoreboard);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--color-night);
+  cursor: pointer;
+  transition: background var(--motion-hover), box-shadow var(--motion-hover);
+}
+
+.fv-modal__cta:hover {
+  background: #F09030;
+  box-shadow: 0 0 18px rgba(232, 124, 42, 0.45);
+}
+
+.fv-modal__cta:active {
+  transform: scale(0.98);
+}

@@ -39,6 +39,7 @@ export default function SportsFilter({ active, onChange, sports, trackEvent }) {
 
   return (
     <div className="sports-filter" role="group" aria-label="Filter by sport">
+      <span className="sports-filter__label">Filter:</span>
       <button
         className={`sports-filter__pill${allActive ? ' sports-filter__pill--active' : ''}`}
         onClick={() => onChange(null)}

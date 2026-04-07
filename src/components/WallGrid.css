@@ -5,7 +5,7 @@
 .wall-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 4px;
+  gap: 5px;
   padding: 0 0 var(--space-4);
   width: 100%;
 }

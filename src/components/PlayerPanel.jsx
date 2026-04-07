@@ -370,7 +370,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
     ? 'UNWRITTEN'
     : mode === 'current'
       ? null
-      : `${legendCount} LEGEND${legendCount !== 1 ? 'S' : ''} WORE THIS`
+      : legendCount === 1
+        ? '1 LEGEND WORE THIS NUMBER'
+        : `${legendCount} LEGENDS WORE #${number}`
 
   function handleShare() {
     track('player_share', { number })

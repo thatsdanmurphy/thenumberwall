@@ -1,0 +1,176 @@
+/* HeroSearch — unified number + name search in the hero area.
+   Sits between header and sport filter. Anchored to the brand block. */
+
+.hero-search {
+  position: relative;
+  max-width: 380px;
+  margin: var(--space-1) 0 var(--space-1);
+}
+
+/* Input wrap — pill shape, subtle border, glows on focus */
+.hero-search__input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+  transition: border-color var(--motion-hover), box-shadow var(--motion-hover), background var(--motion-hover);
+}
+
+.hero-search__input-wrap:focus-within {
+  border-color: rgba(232, 124, 42, 0.45);
+  box-shadow: 0 0 12px rgba(232, 124, 42, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero-search__icon {
+  color: var(--color-muted);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.hero-search__input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-paper);
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+  caret-color: var(--color-heat);
+}
+
+.hero-search__input::placeholder {
+  color: var(--color-muted);
+  opacity: 0.55;
+}
+
+.hero-search__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-muted);
+  flex-shrink: 0;
+  transition: background var(--motion-hover), color var(--motion-hover);
+}
+
+.hero-search__clear:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-paper);
+}
+
+/* Dropdown */
+.hero-search__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #12161C;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  z-index: 300;
+  list-style: none;
+  padding: 4px;
+  margin: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  animation: heroDropIn 150ms ease-out;
+}
+
+@keyframes heroDropIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Result rows */
+.hero-search__result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 4px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--color-paper);
+  cursor: pointer;
+  transition: background var(--motion-hover);
+}
+
+.hero-search__result:hover,
+.hero-search__result--active {
+  background: rgba(232, 124, 42, 0.10);
+}
+
+/* Number result pieces */
+.hero-search__result-number {
+  font-family: var(--font-scoreboard);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-heat);
+  min-width: 32px;
+}
+
+.hero-search__result-legends {
+  flex: 1;
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-search__result-count {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+}
+
+/* Player result pieces */
+.hero-search__result-sport {
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.hero-search__result-name {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-paper);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-search__result-meta {
+  font-family: var(--font-program);
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.40);
+  white-space: nowrap;
+}
+
+/* Mobile tweaks */
+@media (max-width: 767px) {
+  .hero-search {
+    max-width: 100%;
+  }
+
+  .hero-search__dropdown {
+    max-height: 260px;
+  }
+}

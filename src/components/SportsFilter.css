@@ -4,7 +4,16 @@
   display:     flex;
   flex-wrap:   wrap;
   gap:         6px;
+  align-items: center;
   padding:     0 0 var(--space-3);
+}
+
+.sports-filter__label {
+  font-family:    var(--font-program);
+  font-size:      0.6875rem;
+  color:          rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.02em;
+  margin-right:   2px;
 }
 
 .sports-filter__pill {

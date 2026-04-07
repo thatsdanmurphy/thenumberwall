@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
 import { track } from '@vercel/analytics'
@@ -8,12 +8,15 @@ import AppFooter   from '../components/AppFooter.jsx'
 import WallGrid    from '../components/WallGrid.jsx'
 import PlayerPanel from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
+import HeroSearch       from '../components/HeroSearch.jsx'
+import FirstVisitModal  from '../components/FirstVisitModal.jsx'
 import { wallData, buildFilteredIndex } from '../data/index.js'
 import './WallPage.css'
 
 export default function WallPage() {
   const [selected,     setSelected]     = useState(null)  // { number, entries } | null
   const [sportFilter,  setSportFilter]  = useState(null)  // Set of sport IDs | null = all
+  const gridRef = useRef(null)
 
   useEffect(() => { document.title = 'The Number Wall' }, [])
 
@@ -45,10 +48,19 @@ export default function WallPage() {
       <AppHeader />
       <main className="wall-page">
 
+        <HeroSearch
+          onSelect={(sel) => {
+            setSelected(sel)
+            // Scroll grid into view on mobile after search
+            gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }}
+          index={filteredIndex}
+        />
+
         <SportsFilter active={sportFilter} onChange={handleFilterChange} />
 
         <div className="wall-page__body">
-          <div className="wall-page__grid-col">
+          <div className="wall-page__grid-col" ref={gridRef}>
             <WallGrid
               index={filteredIndex}
               activeNumber={selected?.number ?? null}
@@ -93,6 +105,7 @@ export default function WallPage() {
           aria-hidden="true"
         />
       )}
+      <FirstVisitModal />
     </AppShell>
   )
 }
