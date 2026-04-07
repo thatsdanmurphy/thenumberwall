@@ -75,11 +75,11 @@ export default function WallPage() {
                 <span className="wall-page__city-teams">Red Sox · Patriots · Celtics · Bruins</span>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
-              <Link to="/newyork" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'newyork' })}>
+              <div className="wall-page__city-card wall-page__city-card--soon" aria-hidden="true">
                 <span className="wall-page__city-name">New York</span>
-                <span className="wall-page__city-teams">Yankees · Mets · Knicks · Nets · Giants · Jets · Rangers · Islanders</span>
-                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
-              </Link>
+                <span className="wall-page__city-teams"></span>
+                <span className="wall-page__city-soon">COMING SOON</span>
+              </div>
               <div className="wall-page__city-card wall-page__city-card--soon" aria-hidden="true">
                 <span className="wall-page__city-name">Chicago</span>
                 <span className="wall-page__city-teams"></span>
