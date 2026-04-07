@@ -526,12 +526,20 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
               </div>
             )}
 
-            {/* ── Who owns this number? — debate or crowd pick ──
-                 Curated debates always show. Open crowd picks only
-                 appear when no SACRED entry dominates the number —
-                 SACRED means the wall considers it already settled. */}
-            {(assoc || (!isSacred && legendCount >= 2)) && (
+            {/* ── Who owns this number? ──
+                 Sport filter active + debate exists → full vote mechanic.
+                 Sport filter active + no debate but 2+ legends → crowd pick.
+                 ALL view + contested → light "contested" nudge, no vote. */}
+            {sportFilter && sportFilter.size > 0 && (assoc || (!isSacred && legendCount >= 2)) && (
               <YourNumberPick number={number} legends={legends} assoc={assoc} leadIdx={panelLeadIdx} />
+            )}
+            {(!sportFilter || sportFilter.size === 0) && !isSacred && legendCount >= 2 && (
+              <div className="player-panel__contested">
+                <span className="player-panel__contested-label">CONTESTED</span>
+                <span className="player-panel__contested-hint">
+                  {legendCount} legends wore #{number}. Filter by sport to debate who owns it.
+                </span>
+              </div>
             )}
 
             {/* ── Legend cards ─────────────────────────────────── */}

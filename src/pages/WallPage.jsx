@@ -65,6 +65,7 @@ export default function WallPage() {
               index={filteredIndex}
               activeNumber={selected?.number ?? null}
               onSelect={setSelected}
+              sportFilter={sportFilter}
             />
             {/* City boards — discoverable below the global grid */}
             <div className="wall-page__cities">

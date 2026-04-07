@@ -5,32 +5,39 @@ import associationsData from '../data/associations.json'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
 
-// Build the set of pulsing numbers scoped to a given wall.
-// Derives directly from associations.json wall field — single source of truth.
-// wallId 'none' → no pulses (current roster view)
-function buildAssocNumbers(wallId) {
-  if (wallId === 'none') return new Set()
+// Build the set of debate numbers scoped to a wall + sport.
+// Only returns numbers that have a curated debate for this specific sport.
+function buildSportDebateNumbers(wallId, sport) {
+  if (!sport) return new Set()
   return new Set(
     associationsData
-      .filter(a => a.wall === wallId)
+      .filter(a => a.wall === wallId && a.sport === sport)
       .map(a => String(a.number))
   )
 }
 
 /**
  * WallGrid — 101-tile number grid.
- * Controlled: active tile is driven by parent via `activeNumber`.
- * Accepts an optional `index` prop so Boston and global wall
- * both use the same grid with different data.
+ *
+ * Pulse logic (two modes):
+ *   ALL view (no sport filter) → pulse = "contested" — 2+ non-UNWRITTEN legends,
+ *     no SACRED tier. Ambient signal: "this number has a story."
+ *   Sport filter active → pulse = curated debate from associations.json.
+ *     Specific, sport-scoped matchup (e.g. Jordan vs LeBron on Basketball #23).
  *
  * Keyboard nav:
- *   Tab / Shift-Tab  — move between tiles (native button focus)
- *   Enter / Space    — select tile (native button behaviour)
- *   Arrow keys       — move focus directionally within the grid
+ *   Arrow keys — move focus directionally within the grid
  */
-export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global' }) {
+export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global', sportFilter = null }) {
   const gridRef = useRef(null)
-  const assocNumbers = useMemo(() => buildAssocNumbers(wallId), [wallId])
+
+  const activeSport = sportFilter ? [...sportFilter][0] : null
+
+  // Sport-scoped debate numbers (only when a sport is active)
+  const sportDebateNumbers = useMemo(
+    () => buildSportDebateNumbers(wallId, activeSport),
+    [wallId, activeSport]
+  )
 
   function handleTileClick(number) {
     const entries = index.get(number) || []
@@ -73,8 +80,16 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
     >
       {TILE_NUMBERS.map(num => {
         const entries      = index.get(num) || []
-        const visibleCount = entries.filter(e => e.tier !== 'UNWRITTEN').length
-        const debating     = assocNumbers.has(String(num)) && visibleCount >= 2
+        const legends      = entries.filter(e => e.tier !== 'UNWRITTEN')
+        const hasSacred    = legends.some(e => e.tier === 'SACRED')
+
+        // Pulse decision:
+        //   Sport active → pulse if curated debate exists for this sport
+        //   ALL view     → pulse if contested (2+ legends, no SACRED)
+        const debating = activeSport
+          ? sportDebateNumbers.has(String(num)) && legends.length >= 2
+          : legends.length >= 2 && !hasSacred
+
         return (
           <WallTile
             key={num}
