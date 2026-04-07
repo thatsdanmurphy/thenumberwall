@@ -1275,35 +1275,35 @@
 .hub-identity-heading {
   display: block;
   font-family: var(--font-scoreboard);
-  font-size: 0.45rem;
+  font-size: 0.5rem;
   letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.20);
-  padding: 20px 14px 0;
+  color: rgba(255,255,255,0.30);
+  padding: 20px 0 4px;
+  text-align: center;
 }
 
-/* ─── Identity row — 3-across ──────────────────────────────────────────── */
+/* ─── Identity row — 3-across, equal columns ─────────────────────────── */
 
 .hub-identity-row {
-  display: flex;
-  gap: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: stretch;
 }
 
 .id-chip {
-  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 18px 14px;
-  height: 90px;  /* Taller — more visual weight */
+  justify-content: center;
+  text-align: center;
+  padding: 20px 10px;
+  min-height: 90px;
   cursor: pointer;
   transition: background 0.2s;
   border-bottom: 2px solid transparent;
   position: relative;
   background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border: none;
   box-sizing: border-box;
 }
 
@@ -1325,15 +1325,17 @@
 .id-chip__text {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  align-items: center;
+  gap: 3px;
   min-width: 0;
+  width: 100%;
 }
 
 .id-chip__label {
   font-family: var(--font-scoreboard);
-  font-size: 0.45rem;
+  font-size: 0.55rem;
   letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.40);
   text-transform: uppercase;
 }
 
@@ -1365,6 +1367,7 @@
 .id-chip__value--hero {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0;
 }
 
@@ -1432,6 +1435,7 @@
   padding: 0 0 2px;
   caret-color: var(--color-heat);
   line-height: 1.15;
+  text-align: center;
 }
 
 .id-chip__input--number { color: rgba(80, 150, 255, 0.95); max-width: 50px; }

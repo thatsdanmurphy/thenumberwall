@@ -92,15 +92,21 @@
 /* Nav links — right side of back row */
 .app-header__nav {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-2);
   align-items: center;
+}
+
+@media (min-width: 480px) {
+  .app-header__nav {
+    gap: var(--space-3);
+  }
 }
 
 .app-header__nav-link {
   font-family:     var(--font-program);
   font-size:       0.75rem;
   font-weight:     500;
-  color:           var(--color-muted);
+  color:           rgba(255,255,255,0.50);
   letter-spacing:  0.04em;
   background:      none;
   border:          none;
@@ -151,8 +157,11 @@
 .app-header__create-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 4px 10px;
+  padding: 4px 8px;
+  min-width: 28px;
+  min-height: 28px;
   background: rgba(232, 124, 42, 0.15);
   border: 1px solid rgba(232, 124, 42, 0.35);
   border-radius: 4px;
@@ -163,6 +172,20 @@
   color: var(--color-heat);
   cursor: pointer;
   transition: background var(--motion-hover), border-color var(--motion-hover), box-shadow var(--motion-hover);
+}
+
+/* Hide label on mobile — just show the + icon */
+.app-header__create-label {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .app-header__create-label {
+    display: inline;
+  }
+  .app-header__create-btn {
+    padding: 4px 10px;
+  }
 }
 
 .app-header__create-btn:hover {

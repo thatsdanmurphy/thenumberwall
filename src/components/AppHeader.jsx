@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Plus } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import './AppHeader.css'
 
 export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagline = 'Legends live here.', badge = null }) {
@@ -18,12 +18,6 @@ export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagl
           </button>
         ) : <span />}
         <nav className="app-header__nav">
-          <button
-            className="app-header__create-btn"
-            onClick={() => navigate('/my-wall/new')}
-          >
-            <Plus size={12} /> Create Wall
-          </button>
           <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
             My Walls
           </button>
