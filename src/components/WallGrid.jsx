@@ -89,7 +89,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
         //   Raised from 2 to 4 so the wall doesn't glow everywhere
         const debating = activeSport
           ? sportDebateNumbers.has(String(num)) && legends.length >= 2
-          : legends.length >= 4 && !hasSacred
+          : legends.length >= 8 && !hasSacred
 
         return (
           <WallTile

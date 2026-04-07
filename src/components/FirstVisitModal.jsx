@@ -81,13 +81,13 @@ export default function FirstVisitModal() {
         </button>
 
         <div className="fv-modal__content">
-          <h2 className="fv-modal__title">Your kid just got #24.</h2>
-          <p className="fv-modal__subtitle">Do they know who wore it before them?</p>
+          <h2 className="fv-modal__title">Every number has a story.</h2>
+          <p className="fv-modal__subtitle">Do you know who defined yours?</p>
 
           <p className="fv-modal__body">
             The Number Wall is a living archive of the legends behind every jersey
             number across basketball, football, baseball, hockey, and soccer.
-            Click any number. See who defined it.
+            Click any number. See who wore it.
           </p>
 
           {/* Actual tile visuals showing heat levels */}
