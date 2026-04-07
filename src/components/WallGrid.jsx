@@ -85,10 +85,11 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
 
         // Pulse decision:
         //   Sport active → pulse if curated debate exists for this sport
-        //   ALL view     → pulse if contested (2+ legends, no SACRED)
+        //   ALL view     → pulse if truly contested (4+ legends, no SACRED)
+        //   Raised from 2 to 4 so the wall doesn't glow everywhere
         const debating = activeSport
           ? sportDebateNumbers.has(String(num)) && legends.length >= 2
-          : legends.length >= 2 && !hasSacred
+          : legends.length >= 4 && !hasSacred
 
         return (
           <WallTile

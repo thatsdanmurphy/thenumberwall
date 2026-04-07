@@ -1176,53 +1176,109 @@
   border-radius: 14px;
 }
 
+.hub-welcome__hook {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  color: rgba(255,255,255,0.45);
+  margin: 0 0 6px;
+  letter-spacing: 0.01em;
+}
+
 .hub-welcome__heading {
   font-family: var(--font-banner);
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--color-paper);
-  margin: 0 0 12px;
-}
-
-.hub-welcome__body {
-  font-family: var(--font-program);
-  font-size: 0.8125rem;
-  line-height: 1.55;
-  color: rgba(255,255,255,0.50);
   margin: 0 0 20px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.hub-welcome__features {
+.hub-welcome__slots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 0 20px;
+}
+
+.hub-welcome__slot {
+  flex: 1;
+  max-width: 110px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  text-align: left;
-  max-width: 320px;
-  margin: 0 auto 24px;
+  gap: 3px;
 }
 
-.hub-welcome__feature {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.hub-welcome__slot--number {
+  background: rgba(60, 130, 255, 0.08);
+  border: 1px solid rgba(60, 130, 255, 0.18);
+}
+.hub-welcome__slot--city {
+  background: rgba(232, 124, 42, 0.06);
+  border: 1px solid rgba(232, 124, 42, 0.15);
+}
+.hub-welcome__slot--hero {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.12);
+}
+
+.hub-welcome__slot-label {
+  font-family: var(--font-scoreboard);
+  font-size: 0.4rem;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+}
+
+.hub-welcome__slot--number .hub-welcome__slot-value {
+  font-family: var(--font-banner);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(80, 150, 255, 0.85);
+  text-shadow: 0 0 10px rgba(60, 130, 255, 0.35);
+}
+.hub-welcome__slot--city .hub-welcome__slot-value {
+  font-family: var(--font-banner);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(232, 160, 80, 0.85);
+  text-shadow: 0 0 10px rgba(232, 124, 42, 0.30);
+}
+.hub-welcome__slot--hero .hub-welcome__slot-value {
+  font-family: var(--font-banner);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255, 225, 100, 0.85);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.28);
+}
+
+.hub-welcome__sub {
   font-family: var(--font-program);
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.40);
-  line-height: 1.4;
-}
-
-.hub-welcome__feature-icon {
-  flex: 0 0 14px;
-  color: rgba(232, 124, 42, 0.55);
+  line-height: 1.5;
+  color: rgba(255,255,255,0.35);
+  margin: 0 0 20px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hub-welcome__cta {
   margin: 0 auto;
   min-width: 140px;
+}
+
+/* ─── Identity heading ─────────────────────────────────────────────────── */
+
+.hub-identity-heading {
+  display: block;
+  font-family: var(--font-scoreboard);
+  font-size: 0.45rem;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.20);
+  padding: 20px 14px 0;
 }
 
 /* ─── Identity row — 3-across ──────────────────────────────────────────── */
@@ -1238,8 +1294,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 14px;
-  height: 80px;  /* Fixed height — no shift between states */
+  padding: 18px 14px;
+  height: 90px;  /* Taller — more visual weight */
   cursor: pointer;
   transition: background 0.2s;
   border-bottom: 2px solid transparent;
@@ -1335,18 +1391,30 @@
   line-height: 1.15;
 }
 
-/* Empty prompt — exact same size as filled value */
+/* Empty prompt — exact same size as filled value, but more visible */
 .id-chip__prompt {
   font-family: var(--font-banner);
   font-size: 1.2rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.18);
   letter-spacing: 0.03em;
   line-height: 1.15;
+  transition: color 0.2s;
 }
 
 .id-chip--empty:hover .id-chip__prompt {
-  color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.35);
+}
+
+/* Pulsing underline on empty chips — draws the eye */
+.id-chip--empty {
+  border-bottom: 2px solid rgba(232, 124, 42, 0.08);
+  animation: chip-nudge 3s ease-in-out infinite;
+}
+
+@keyframes chip-nudge {
+  0%, 100% { border-bottom-color: rgba(232, 124, 42, 0.06); }
+  50%      { border-bottom-color: rgba(232, 124, 42, 0.18); }
 }
 
 /* Editing input — exact same size as filled value */
@@ -1369,6 +1437,18 @@
 .id-chip__input--number { color: rgba(80, 150, 255, 0.95); max-width: 50px; }
 .id-chip__input--city   { color: rgba(232, 160, 80, 0.95); max-width: 120px; }
 .id-chip__input--hero   { color: rgba(255, 225, 100, 0.90); max-width: 100%; }
+
+/* Number legends hint — "Brady, Namath, Stockton" */
+.id-chip__number-hint {
+  font-family: var(--font-program);
+  font-size: 0.55rem;
+  color: rgba(80, 150, 255, 0.40);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
 
 /* Hero autocomplete suggestions */
 .id-chip__suggestions {
@@ -1456,6 +1536,32 @@
   font-family: var(--font-program);
   font-size: 0.8125rem;
   color: var(--color-muted);
+  margin: 0 0 16px;
+}
+
+.hub-empty__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: rgba(232, 124, 42, 0.10);
+  border: 1px solid rgba(232, 124, 42, 0.25);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  font-family: var(--font-scoreboard);
+  font-size: 0.7rem;
+  letter-spacing: 0.10em;
+  color: rgba(232, 124, 42, 0.70);
+}
+
+.hub-empty__cta:hover {
+  background: rgba(232, 124, 42, 0.15);
+  border-color: rgba(232, 124, 42, 0.40);
+}
+
+.hub-empty__cta svg {
+  color: rgba(232, 124, 42, 0.55);
 }
 
 /* ─── Wall list ────────────────────────────────────────────────────────── */

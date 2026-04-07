@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Hash, MapPin, Star, ChevronRight, Plus, X } from 'lucide-react'
+import { ChevronRight, Plus } from 'lucide-react'
 import { listMyWalls } from '../lib/myWallStore.js'
 import { getIdentity, setIdentityField } from '../lib/identity.js'
 import { wallData, bostonLegends } from '../data/index.js'
@@ -43,36 +43,62 @@ function getHeroSuggestions(query) {
     .map(([name, number]) => ({ name, number }))
 }
 
+// ─── Number → legends lookup (for number chip autocomplete) ─────────────────
+
+const TIER_WEIGHT = { SACRED: 5, LEGEND: 4, CONDITIONAL: 3, ACTIVE: 2 }
+
+const NUMBER_TO_LEGENDS = (() => {
+  const map = {}  // number string → [{ name, tier }] sorted by tier weight
+  for (const entry of [...wallData, ...bostonLegends]) {
+    if (entry.tier === 'UNWRITTEN' || !entry.name) continue
+    const num = String(entry.number)
+    if (!map[num]) map[num] = []
+    // Dedupe by name
+    if (!map[num].some(e => e.name.toLowerCase() === entry.name.toLowerCase())) {
+      map[num].push({ name: entry.name, tier: entry.tier })
+    }
+  }
+  // Sort each list by tier weight (highest first)
+  for (const num of Object.keys(map)) {
+    map[num].sort((a, b) => (TIER_WEIGHT[b.tier] || 0) - (TIER_WEIGHT[a.tier] || 0))
+  }
+  return map
+})()
+
+function getNumberLegends(numStr) {
+  if (!numStr) return null
+  const legends = NUMBER_TO_LEGENDS[numStr]
+  if (!legends || legends.length === 0) return null
+  // Return top 3 names as a hint string
+  const names = legends.slice(0, 3).map(l => l.name.split(' ').pop())
+  return names.join(', ') + (legends.length > 3 ? '...' : '')
+}
+
 // ─── Welcome Placemat (first visit) ──────────────────────────────────────
 
 function WelcomePlacemat({ onDismiss }) {
   return (
     <div className="hub-welcome">
       <div className="hub-welcome__content">
-        <h2 className="hub-welcome__heading">WELCOME TO MY WALLS</h2>
-        <p className="hub-welcome__body">
-          This is your corner of The Number Wall. Claim your number, rep your city, name your hero — then build walls around the things you care about.
-        </p>
-        <div className="hub-welcome__features">
-          <div className="hub-welcome__feature">
-            <Hash size={14} className="hub-welcome__feature-icon" />
-            <span>Claim the number that means something to you</span>
+        <p className="hub-welcome__hook">Every fan has a number.</p>
+        <h2 className="hub-welcome__heading">WHAT'S YOURS?</h2>
+        <div className="hub-welcome__slots">
+          <div className="hub-welcome__slot hub-welcome__slot--number">
+            <span className="hub-welcome__slot-label">YOUR NUMBER</span>
+            <span className="hub-welcome__slot-value">#12</span>
           </div>
-          <div className="hub-welcome__feature">
-            <MapPin size={14} className="hub-welcome__feature-icon" />
-            <span>Rep your city and its legends</span>
+          <div className="hub-welcome__slot hub-welcome__slot--city">
+            <span className="hub-welcome__slot-label">YOUR CITY</span>
+            <span className="hub-welcome__slot-value">Boston</span>
           </div>
-          <div className="hub-welcome__feature">
-            <Star size={14} className="hub-welcome__feature-icon" />
-            <span>Name your all-time hero</span>
-          </div>
-          <div className="hub-welcome__feature">
-            <Plus size={14} className="hub-welcome__feature-icon" />
-            <span>Build themed walls and share them with friends</span>
+          <div className="hub-welcome__slot hub-welcome__slot--hero">
+            <span className="hub-welcome__slot-label">YOUR HERO</span>
+            <span className="hub-welcome__slot-value">Brady</span>
           </div>
         </div>
+        <p className="hub-welcome__sub">Claim your identity. Then build walls around what you care about.</p>
         <button className="btn-primary hub-welcome__cta" onClick={onDismiss}>
-          LET'S GO
+          CLAIM MINE
         </button>
       </div>
     </div>
@@ -111,6 +137,9 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
     setEditing(false)
   }
 
+  // Number legends hint — shows who wore this number as you type
+  const numberHint = field === 'number' ? getNumberLegends(draft || value) : null
+
   // Editing state — same height container
   if (editing) {
     return (
@@ -128,6 +157,9 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
             inputMode={field === 'number' ? 'numeric' : 'text'}
             placeholder={field === 'number' ? '00' : field === 'city' ? 'City' : 'Name'}
           />
+          {field === 'number' && draft && numberHint && (
+            <span className="id-chip__number-hint">{numberHint}</span>
+          )}
         </div>
         {/* Autocomplete dropdown (hero + city) */}
         {suggestions.length > 0 && (
@@ -165,6 +197,9 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
             <span className={`id-chip__value id-chip__value--${field}`}>
               {field === 'number' ? `#${value}` : value}
             </span>
+          )}
+          {field === 'number' && numberHint && (
+            <span className="id-chip__number-hint">{numberHint}</span>
           )}
         </div>
       </div>
@@ -256,26 +291,29 @@ export default function MyWallsHub() {
       {/* First-visit welcome placemat */}
       {showWelcome && <WelcomePlacemat onDismiss={dismissWelcome} />}
 
-      {/* Identity row */}
+      {/* Identity section */}
+      {!showWelcome && (
+        <span className="hub-identity-heading">YOUR IDENTITY</span>
+      )}
       <div className="hub-identity-row">
         <IdentityChip
           field="number"
           label="Your Number"
-          emptyPrompt="Got one?"
+          emptyPrompt="Claim it"
           value={identity.number}
           onSave={handleIdentitySave}
         />
         <IdentityChip
           field="city"
           label="Your City"
-          emptyPrompt="Where from?"
+          emptyPrompt="Rep it"
           value={identity.city}
           onSave={handleIdentitySave}
         />
         <IdentityChip
           field="hero"
           label="Your Hero"
-          emptyPrompt="All-time #1?"
+          emptyPrompt="Name them"
           value={identity.hero}
           onSave={handleIdentitySave}
         />
@@ -348,17 +386,23 @@ export default function MyWallsHub() {
         </>
       ) : (
         <div className="hub-empty">
-          <p className="hub-empty__text">No walls yet. Build your first one.</p>
+          <p className="hub-empty__text">You haven't built any walls yet.</p>
+          <button className="hub-empty__cta" onClick={() => setShowModal(true)}>
+            <Plus size={16} />
+            <span>BUILD YOUR FIRST WALL</span>
+          </button>
         </div>
       )}
 
-      {/* Build a new wall CTA */}
-      <div className="hub-build-cta">
-        <button className="hub-build-btn" onClick={() => setShowModal(true)}>
-          <Plus size={18} />
-          <span className="hub-build-btn__text">BUILD A NEW WALL</span>
-        </button>
-      </div>
+      {/* Build a new wall CTA — only show when user already has walls */}
+      {walls.length > 0 && (
+        <div className="hub-build-cta">
+          <button className="hub-build-btn" onClick={() => setShowModal(true)}>
+            <Plus size={18} />
+            <span className="hub-build-btn__text">BUILD A NEW WALL</span>
+          </button>
+        </div>
+      )}
 
       <NewWallModal
         open={showModal}
