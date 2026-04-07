@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { track } from '@vercel/analytics'
 import { Award, Check, ExternalLink, X } from 'lucide-react'
 import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
@@ -31,8 +31,16 @@ function pickAssoc(assocList, sportFilter, wallId = 'global') {
   return wallDebates.find(a => a.sport === null) ?? null
 }
 
-// ─── Tier sort order ──────────────────────────────────────────────────────────
+// ─── Tier sort order + descriptions ───────────────────────────────────────────
 const TIER_RANK = { SACRED: 0, LEGEND: 1, CONDITIONAL: 2, ACTIVE: 3 }
+
+const TIER_DESC = {
+  SACRED:      'Retired league-wide or untouchable — the number belongs to them.',
+  LEGEND:      'Hall of Fame or era-defining player who wore this number.',
+  CONDITIONAL: 'Legend status under annual review.',
+  ACTIVE:      'Currently active player building their legacy.',
+  UNWRITTEN:   'No legend has claimed this number yet.',
+}
 
 function sortLegends(entries) {
   return [...entries].sort((a, b) => {
@@ -101,6 +109,14 @@ function PlayerCard({ entry, isTop = false }) {
           </div>
 
           <div className="player-card__badges">
+            {entry.tier && entry.tier !== 'UNWRITTEN' && (
+              <span
+                className={`player-card__badge player-card__badge--tier player-card__badge--tier-${entry.tier.toLowerCase()}`}
+                title={TIER_DESC[entry.tier] ?? ''}
+              >
+                {entry.tier === 'CONDITIONAL' ? 'LEGEND' : entry.tier}
+              </span>
+            )}
             {entry.team && (
               <span className="player-card__badge" style={teamBadgeStyle}>{entry.team}</span>
             )}
@@ -340,9 +356,77 @@ function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
   )
 }
 
+// ─── Swipe-down-to-close hook (mobile bottom sheet) ──────────────────────────
+// Tracks vertical touch drag on the panel. If user swipes down > threshold,
+// fires onClose. Applies live translateY during drag for rubber-band feel.
+function useSwipeDown(panelRef, onClose) {
+  const startY  = useRef(0)
+  const currentY = useRef(0)
+  const dragging = useRef(false)
+
+  const onTouchStart = useCallback((e) => {
+    // Only enable swipe when panel is scrolled to top (not mid-scroll)
+    const el = panelRef.current
+    if (!el || el.scrollTop > 5) return
+    startY.current = e.touches[0].clientY
+    currentY.current = startY.current
+    dragging.current = true
+    el.style.transition = 'none'
+  }, [panelRef])
+
+  const onTouchMove = useCallback((e) => {
+    if (!dragging.current) return
+    currentY.current = e.touches[0].clientY
+    const dy = currentY.current - startY.current
+    if (dy > 0) {
+      // Dragging down — apply dampened translateY
+      const dampened = Math.min(dy * 0.6, 200)
+      panelRef.current.style.transform = `translateY(${dampened}px)`
+    }
+  }, [panelRef])
+
+  const onTouchEnd = useCallback(() => {
+    if (!dragging.current) return
+    dragging.current = false
+    const dy = currentY.current - startY.current
+    const el = panelRef.current
+    if (!el) return
+
+    // Restore transition for snap-back or close
+    el.style.transition = ''
+
+    if (dy > 80) {
+      // Swipe was far enough — close
+      el.style.transform = 'translateY(100%)'
+      setTimeout(onClose, 200)
+    } else {
+      // Snap back
+      el.style.transform = ''
+    }
+  }, [panelRef, onClose])
+
+  useEffect(() => {
+    const el = panelRef.current
+    if (!el) return
+    // Only attach on mobile
+    if (window.matchMedia('(min-width: 768px)').matches) return
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: true })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+    }
+  })
+}
+
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
 export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global' }) {
   const [copied, setCopied] = useState(false)
+  const panelRef = useRef(null)
+  useSwipeDown(panelRef, onClear)
 
   const hasSelection = Boolean(selected)
   const entries      = selected?.entries ?? []
@@ -382,7 +466,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   }
 
   return (
-    <aside className={`player-panel${!hasSelection ? ' player-panel--idle' : ''}`}>
+    <aside ref={panelRef} className={`player-panel${!hasSelection ? ' player-panel--idle' : ''}`}>
 
       <div className="player-panel__handle" aria-hidden="true" />
 

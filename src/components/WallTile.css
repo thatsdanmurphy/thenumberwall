@@ -37,6 +37,23 @@
   z-index: 2;
 }
 
+/* Unwritten — subtle diagonal lines so empty tiles read as "open slot" */
+.wall-tile--unwritten {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, 0.025) 4px,
+      rgba(255, 255, 255, 0.025) 5px
+    ) !important;
+  opacity: 0.55;
+}
+
+.wall-tile--unwritten:hover {
+  opacity: 0.80;
+}
+
 /* Active — white ring + elevated z. Background/border/glow handled inline.
    Smooth ring appearance via box-shadow transition above. */
 .wall-tile--active {

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import AppShell    from '../components/AppShell.jsx'
@@ -9,14 +9,25 @@ import WallGrid    from '../components/WallGrid.jsx'
 import PlayerPanel from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import FirstVisitModal  from '../components/FirstVisitModal.jsx'
-import { wallData, buildFilteredIndex } from '../data/index.js'
+import { wallData, buildFilteredIndex, globalIndex } from '../data/index.js'
 import './WallPage.css'
 
 export default function WallPage() {
+  const { num } = useParams()  // from /number/:num route
   const [selected,     setSelected]     = useState(null)  // { number, entries } | null
   const [sportFilter,  setSportFilter]  = useState(null)  // Set of sport IDs | null = all
 
   useEffect(() => { document.title = 'The Number Wall' }, [])
+
+  // Deep link: /number/23 → pre-select that tile on mount
+  useEffect(() => {
+    if (num) {
+      const entries = globalIndex.get(String(num))
+      if (entries) {
+        setSelected({ number: String(num), entries })
+      }
+    }
+  }, [num])
 
   // Rebuild the index when the sport filter changes.
   // Memoised — only recalculates when sportFilter changes.

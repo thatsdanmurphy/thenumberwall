@@ -388,6 +388,32 @@
   white-space:    nowrap;
 }
 
+/* Tier badges — color-coded by tier level */
+.player-card__badge--tier {
+  font-size:      0.45rem;
+  letter-spacing: 0.14em;
+  cursor:         help;
+}
+
+.player-card__badge--tier-sacred {
+  background:   rgba(200, 220, 255, 0.08);
+  border-color: rgba(200, 220, 255, 0.30);
+  color:        rgba(200, 220, 255, 0.85);
+}
+
+.player-card__badge--tier-legend,
+.player-card__badge--tier-conditional {
+  background:   rgba(232, 124, 42, 0.10);
+  border-color: rgba(232, 124, 42, 0.30);
+  color:        rgba(232, 124, 42, 0.85);
+}
+
+.player-card__badge--tier-active {
+  background:   rgba(158, 212, 76, 0.10);
+  border-color: rgba(158, 212, 76, 0.28);
+  color:        rgba(158, 212, 76, 0.85);
+}
+
 /* Sport emoji badge — no text transform, just the icon */
 .player-card__badge--sport {
   font-size:      0.75rem;

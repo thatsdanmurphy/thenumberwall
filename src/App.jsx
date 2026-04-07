@@ -12,8 +12,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Routes>
-        <Route path="/"          element={<WallPage />} />
-        <Route path="/boston"     element={<BostonPage />} />
+        <Route path="/"              element={<WallPage />} />
+        <Route path="/number/:num"   element={<WallPage />} />
+        <Route path="/boston"         element={<BostonPage />} />
         <Route path="/about"     element={<AboutPage />} />
         <Route path="/my-wall"   element={<MyWallsPage />} />
         <Route path="/my-wall/new" element={<MyWallsPage />} />

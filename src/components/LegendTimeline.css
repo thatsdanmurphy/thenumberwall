@@ -141,7 +141,42 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ─── The Bar ────────────────────────────────────────────────────────────── */
+/* ─── View Toggle ───────────────────────────────────────────────────────── */
+
+.legend-timeline__toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: var(--space-3);
+}
+
+.legend-timeline__toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1px solid rgba(200, 195, 185, 0.12);
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(200, 195, 185, 0.4);
+  font-family: var(--font-scoreboard);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.legend-timeline__toggle-btn:hover {
+  color: rgba(200, 195, 185, 0.7);
+  border-color: rgba(200, 195, 185, 0.2);
+}
+
+.legend-timeline__toggle-btn--active {
+  color: rgba(255, 230, 120, 0.9);
+  border-color: rgba(255, 230, 120, 0.3);
+  background: rgba(255, 230, 120, 0.05);
+}
+
+/* ─── The Bar (Glow view) ───────────────────────────────────────────────── */
 
 .legend-timeline__bar {
   position: relative;
@@ -161,6 +196,72 @@
   width: 100%;
   height: 100%;
   cursor: crosshair;
+}
+
+/* ─── Segmented Bar ─────────────────────────────────────────────────────── */
+
+.legend-timeline__segmented {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgb(3, 3, 12);
+  gap: 1px;
+  cursor: crosshair;
+}
+
+.seg-game {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  transition: transform 100ms ease-out, filter 100ms ease-out;
+}
+
+.seg-game:hover {
+  transform: scaleY(1.08);
+  z-index: 2;
+  filter: brightness(1.2);
+}
+
+.seg-game--active {
+  transform: scaleY(1.12);
+  z-index: 3;
+  filter: brightness(1.3);
+}
+
+.seg-game--moment {
+  border-top: 2px solid rgba(255, 230, 120, 0.4);
+}
+
+.seg-game--sacred {
+  border-top: 2px solid rgba(255, 230, 120, 0.9);
+}
+
+.seg-game--negative {
+  border-top: 2px solid rgba(255, 75, 90, 0.6);
+}
+
+.seg-game__sacred-pip {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 252, 220, 0.9);
+}
+
+.seg-game__neg-pip {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 75, 90, 0.8);
 }
 
 /* ─── Year Ticks ─────────────────────────────────────────────────────────── */
@@ -421,7 +522,8 @@
   .legend-timeline__number { font-size: 2.5rem; }
   .legend-timeline__name { font-size: 1.5rem; }
   .legend-timeline__draft { order: -1; text-align: left; width: 100%; }
-  .legend-timeline__bar { height: 64px; }
+  .legend-timeline__bar { height: 72px; }
+  .legend-timeline__segmented { height: 72px; }
   .era-label__name { font-size: 0.625rem; }
   .legend-timeline__markers { height: 30px; }
   .moment-marker__label { font-size: 0.5625rem; }
@@ -430,19 +532,30 @@
   .legend-timeline__bar-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    touch-action: pan-x;
   }
   .legend-timeline__bar,
+  .legend-timeline__segmented,
   .legend-timeline__era-labels,
   .legend-timeline__markers,
-  .legend-timeline__years { min-width: 600px; }
+  .legend-timeline__years { min-width: 700px; }
+
+  /* Bigger touch targets on mobile */
+  .seg-game { min-width: 2px; }
+  .moment-marker { padding: 4px; }
+  .era-label { padding: 4px 2px; }
+  .legend-timeline__toggle { margin-bottom: var(--space-2); }
 }
 
 @media (min-width: 1024px) {
   .legend-timeline__number { font-size: 5.5rem; }
   .legend-timeline__name { font-size: 2.25rem; }
   .legend-timeline__bar { height: 120px; }
+  .legend-timeline__segmented { height: 120px; }
 }
 
 @media (min-width: 1440px) {
   .legend-timeline__bar { height: 140px; }
+  .legend-timeline__segmented { height: 140px; }
 }
