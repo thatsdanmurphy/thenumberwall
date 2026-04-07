@@ -48,11 +48,18 @@ export default function AboutPage() {
           <p className="about-page__body">
             Beyond the global wall, each city gets its own. More cities are coming.
           </p>
-          <Link to="/boston" className="about-page__city-cta">
-            <span className="about-page__city-cta-name">THE BOSTON WALL</span>
-            <span className="about-page__city-cta-teams">Red Sox · Patriots · Celtics · Bruins</span>
-            <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
-          </Link>
+          <div className="about-page__city-list">
+            <Link to="/boston" className="about-page__city-cta">
+              <span className="about-page__city-cta-name">THE BOSTON WALL</span>
+              <span className="about-page__city-cta-teams">Red Sox · Patriots · Celtics · Bruins</span>
+              <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
+            </Link>
+            <Link to="/newyork" className="about-page__city-cta">
+              <span className="about-page__city-cta-name">THE NEW YORK WALL</span>
+              <span className="about-page__city-cta-teams">Yankees · Mets · Knicks · Nets · Giants · Jets · Rangers · Islanders</span>
+              <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
+            </Link>
+          </div>
         </section>
 
         <hr className="about-page__rule" />

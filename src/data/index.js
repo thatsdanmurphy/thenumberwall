@@ -5,17 +5,21 @@
  * Source of truth: 03_Data/dist/ (compiled from relational CSVs).
  * Re-run compile_wall_data.py to regenerate, then re-export to JSON.
  *
- * Four datasets:
+ * Datasets:
  *   wallData       — 171 entries, numbers 0, 00, 1–99 (global wall)
  *   bostonLegends  — 82 entries (Boston legend wall)
  *   bostonCurrent  — 133 entries (Boston current season rosters)
  *   bcLegends      — 24 entries (Boston College retired jerseys)
+ *   nyLegends      — New York metro legends (scaffolded, data TBD)
+ *   nyCurrent      — New York metro current rosters (scaffolded, data TBD)
  */
 
 import wallDataRaw      from './wallData.json'
 import bostonLegendsRaw from './bostonLegends.json'
 import bostonCurrentRaw from './bostonCurrent.json'
 import bcLegendsRaw     from './bcLegends.json'
+import nyLegendsRaw     from './nyLegends.json'
+import nyCurrentRaw     from './nyCurrent.json'
 
 // ─── Normalise ─────────────────────────────────────────────────────────────
 // Clean and type-cast raw CSV rows into consistent JS objects.
@@ -87,8 +91,12 @@ function buildIndex(entries) {
   return index
 }
 
+export const nyLegends = nyLegendsRaw.map(normalise)
+export const nyCurrent = nyCurrentRaw.map(normalise)
+
 export const globalIndex  = buildIndex(wallData)
 export const bostonIndex  = buildIndex([...bostonLegends, ...bostonCurrent])
+export const nyIndex      = buildIndex([...nyLegends, ...nyCurrent])
 export const bcIndex      = buildIndex(bcLegends)
 
 // Ordered tile numbers for the BC wall — only numbers with retired jerseys.

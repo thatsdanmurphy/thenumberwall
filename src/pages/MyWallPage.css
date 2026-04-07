@@ -1280,7 +1280,7 @@
   letter-spacing: 0.06em;
   color: var(--color-paper);
   padding: 24px 0 8px;
-  text-align: center;
+  text-align: left;
 }
 
 /* ─── Identity row — 3-across, equal columns ─────────────────────────── */
@@ -1341,11 +1341,11 @@
 }
 
 /* Filled values — bright + glowy.
-   ALL states (filled, empty, editing) use 1.2rem so nothing jumps. */
+   ALL states (filled, empty, editing) use same size so nothing jumps. */
 .id-chip__value {
   font-family: var(--font-banner);
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   letter-spacing: 0.02em;
   line-height: 1.15;
 }
@@ -1374,7 +1374,7 @@
 
 .id-chip__hero-name {
   font-family: var(--font-program);
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: rgba(255, 225, 100, 0.60);
   line-height: 1.2;
@@ -1386,7 +1386,7 @@
 
 .id-chip__hero-num {
   font-family: var(--font-banner);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: rgba(255, 225, 100, 0.90);
   text-shadow:
@@ -1398,7 +1398,7 @@
 /* Empty prompt — exact same size as filled value, but more visible */
 .id-chip__prompt {
   font-family: var(--font-banner);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: rgba(255,255,255,0.18);
   letter-spacing: 0.03em;
@@ -1428,7 +1428,7 @@
   border-bottom: 2px solid rgba(255,255,255,0.15);
   font-family: var(--font-banner);
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   color: var(--color-paper);
   outline: none;
   width: 100%;

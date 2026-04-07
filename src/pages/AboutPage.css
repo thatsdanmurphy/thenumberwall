@@ -64,6 +64,12 @@
 
 /* ── CTAs ───────────────────────────────────────────────────────────────── */
 
+.about-page__city-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* City-card style CTA — matches Discover the Locals on the home screen */
 .about-page__city-cta {
   display:         flex;
