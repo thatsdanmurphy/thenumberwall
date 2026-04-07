@@ -1274,11 +1274,12 @@
 
 .hub-identity-heading {
   display: block;
-  font-family: var(--font-scoreboard);
-  font-size: 0.5rem;
-  letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.30);
-  padding: 20px 0 4px;
+  font-family: var(--font-banner);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: rgba(255,255,255,0.55);
+  padding: 24px 0 8px;
   text-align: center;
 }
 
@@ -1294,7 +1295,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
   padding: 20px 10px;
   min-height: 90px;

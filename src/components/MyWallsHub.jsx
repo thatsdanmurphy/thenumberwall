@@ -137,9 +137,6 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
     setEditing(false)
   }
 
-  // Number legends hint — shows who wore this number as you type
-  const numberHint = field === 'number' ? getNumberLegends(draft || value) : null
-
   // Editing state — same height container
   if (editing) {
     return (
@@ -157,9 +154,6 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
             inputMode={field === 'number' ? 'numeric' : 'text'}
             placeholder={field === 'number' ? '00' : field === 'city' ? 'City' : 'Name'}
           />
-          {field === 'number' && draft && numberHint && (
-            <span className="id-chip__number-hint">{numberHint}</span>
-          )}
         </div>
         {/* Autocomplete dropdown (hero + city) */}
         {suggestions.length > 0 && (
@@ -197,9 +191,6 @@ function IdentityChip({ field, label, emptyPrompt, value, onSave }) {
             <span className={`id-chip__value id-chip__value--${field}`}>
               {field === 'number' ? `#${value}` : value}
             </span>
-          )}
-          {field === 'number' && numberHint && (
-            <span className="id-chip__number-hint">{numberHint}</span>
           )}
         </div>
       </div>
