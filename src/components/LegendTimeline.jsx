@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
-import { Trophy, Star, Zap, HeartCrack, Cross, Circle, BarChart3, Flame } from 'lucide-react'
+import { Trophy, Star, Zap, HeartCrack, Cross, Circle } from 'lucide-react'
 import './LegendTimeline.css'
 
 // ─── Brady Career Eras (overlaid chapter labels, not hard boundaries) ───────
@@ -465,7 +465,7 @@ export default function LegendTimeline({ timeline }) {
   const containerRef = useRef(null)
   const rafRef = useRef(null)
 
-  const [viewMode, setViewMode] = useState('glow') // 'glow' | 'segmented'
+  const viewMode = 'glow' // segmented removed — glow is the view
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [pinnedIndex, setPinnedIndex] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
@@ -544,24 +544,6 @@ export default function LegendTimeline({ timeline }) {
   // The "active" index is pinned if set, otherwise hovered
   const activeIndex = pinnedIndex !== null ? pinnedIndex : hoveredIndex
 
-  // Precompute segment pixel positions (for segmented view tooltip placement)
-  // Accounts for gravitational flex weights so tooltip appears over the actual visual center
-  const segPositions = useMemo(() => {
-    if (!containerWidth || games.length === 0) return null
-    const n = games.length
-    const weights = games.map(g => impactWeight(g))
-    const totalWeight = weights.reduce((a, b) => a + b, 0)
-    const gapTotal = (n - 1) * 1  // 1px gap between segments
-    const usableWidth = containerWidth - gapTotal
-    const positions = new Float64Array(n + 1)
-    positions[0] = 0
-    for (let i = 0; i < n; i++) {
-      const segWidth = (weights[i] / totalWeight) * usableWidth
-      positions[i + 1] = positions[i] + segWidth + (i < n - 1 ? 1 : 0)
-    }
-    return positions
-  }, [games, containerWidth])
-
   // Draw — captures gameX positions for icon overlay
   useEffect(() => {
     const canvas = canvasRef.current
@@ -630,16 +612,13 @@ export default function LegendTimeline({ timeline }) {
     } else {
       setPinnedIndex(gameIdx)
       setHoveredIndex(gameIdx)
-      const w = containerWidth || 800
-      if (viewMode === 'segmented' && segPositions) {
-        const cx = (segPositions[gameIdx] + segPositions[gameIdx + 1]) / 2
-        setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
-      } else if (gamePositions) {
+      if (gamePositions) {
+        const w = containerWidth || 800
         const cx = (gamePositions[gameIdx] + gamePositions[gameIdx + 1]) / 2
         setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
       }
     }
-  }, [pinnedIndex, gamePositions, segPositions, viewMode, containerWidth])
+  }, [pinnedIndex, gamePositions, containerWidth])
 
   // Click on an era label — pin to the best game in that era (highest glow)
   const handleEraClick = useCallback((era) => {
@@ -654,16 +633,13 @@ export default function LegendTimeline({ timeline }) {
     } else {
       setPinnedIndex(bestIdx)
       setHoveredIndex(bestIdx)
-      const w = containerWidth || 800
-      if (viewMode === 'segmented' && segPositions) {
-        const cx = (segPositions[bestIdx] + segPositions[bestIdx + 1]) / 2
-        setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
-      } else if (gamePositions) {
+      if (gamePositions) {
+        const w = containerWidth || 800
         const cx = (gamePositions[bestIdx] + gamePositions[bestIdx + 1]) / 2
         setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
       }
     }
-  }, [games, pinnedIndex, gamePositions, segPositions, viewMode, containerWidth])
+  }, [games, pinnedIndex, gamePositions, containerWidth])
 
   if (!timeline) return null
   const draft = timeline.draft || {}
@@ -693,22 +669,6 @@ export default function LegendTimeline({ timeline }) {
         </div>
       </div>
 
-      {/* View toggle */}
-      <div className="legend-timeline__toggle">
-        <button
-          className={`legend-timeline__toggle-btn ${viewMode === 'glow' ? 'legend-timeline__toggle-btn--active' : ''}`}
-          onClick={() => setViewMode('glow')}
-        >
-          <Flame size={14} /> Glow
-        </button>
-        <button
-          className={`legend-timeline__toggle-btn ${viewMode === 'segmented' ? 'legend-timeline__toggle-btn--active' : ''}`}
-          onClick={() => setViewMode('segmented')}
-        >
-          <BarChart3 size={14} /> Segments
-        </button>
-      </div>
-
       {/* The Bar */}
       <div className="legend-timeline__bar-wrap" ref={containerRef}>
 
@@ -732,77 +692,22 @@ export default function LegendTimeline({ timeline }) {
           })}
         </div>
 
-        {/* Glow view — canvas with blur/bloom/animation */}
-        {viewMode === 'glow' && (
-          <div className="legend-timeline__bar">
-            <canvas
-              ref={canvasRef}
-              className="legend-timeline__canvas"
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              onClick={handleCanvasClick}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            />
-          </div>
-        )}
-
-        {/* Segmented view — flat colored blocks, no canvas */}
-        {viewMode === 'segmented' && (
-          <div
-            className="legend-timeline__segmented"
-            onMouseLeave={() => { if (pinnedIndex === null) setHoveredIndex(null) }}
-            onClick={(e) => { if (e.target === e.currentTarget && pinnedIndex !== null) setPinnedIndex(null) }}
-          >
-            {games.map((g, i) => {
-              const score = g.glow_score || 0
-              const color = glowToColor(score)
-              const hasMoment = g.moments?.length > 0
-              const isSacred = g.moments?.some(m => m.use_sacred_color)
-              const isNeg = g.moments?.some(m => m.intensity < 0)
-              const isActive = activeIndex === i
-              // Impact weight: moments define the landscape, quiet weeks compress
-              const absScore = Math.abs(score)
-              const baseWeight = impactWeight(g)
-              // Hover/active amplifies — never shrinks
-              const isHovered = hoveredIndex === i && pinnedIndex === null
-              const weight = isActive ? baseWeight * 2.5 : isHovered ? baseWeight * 1.8 : baseWeight
-              return (
-                <div
-                  key={i}
-                  className={`seg-game ${hasMoment ? 'seg-game--moment' : ''} ${isSacred ? 'seg-game--sacred' : ''} ${isNeg ? 'seg-game--negative' : ''} ${isActive ? 'seg-game--active' : ''} ${!hasMoment && absScore < 2 ? 'seg-game--quiet' : ''}`}
-                  style={{ backgroundColor: colorToCSS(color), flex: weight }}
-                  onMouseEnter={() => {
-                    if (pinnedIndex !== null) return
-                    setHoveredIndex(i)
-                    if (segPositions) {
-                      const cx = (segPositions[i] + segPositions[i + 1]) / 2
-                      setTooltipPos({ x: Math.min(Math.max(cx, 120), containerWidth - 120), y: -10 })
-                    }
-                  }}
-                  onClick={() => {
-                    if (pinnedIndex === i) { setPinnedIndex(null) }
-                    else {
-                      setPinnedIndex(i)
-                      setHoveredIndex(i)
-                      if (segPositions) {
-                        const cx = (segPositions[i] + segPositions[i + 1]) / 2
-                        setTooltipPos({ x: Math.min(Math.max(cx, 120), containerWidth - 120), y: -10 })
-                      }
-                    }
-                  }}
-                >
-                  {isSacred && <div className="seg-game__sacred-pip" />}
-                  {isNeg && hasMoment && <div className="seg-game__neg-pip" />}
-                </div>
-              )
-            })}
-          </div>
-        )}
+        {/* The glow bar — canvas with blur/bloom/animation */}
+        <div className="legend-timeline__bar">
+          <canvas
+            ref={canvasRef}
+            className="legend-timeline__canvas"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleCanvasClick}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          />
+        </div>
 
         {/* Moment icon markers — below the bar, icons only, labels on hover/click */}
         <div className="legend-timeline__markers">
-          {viewMode === 'glow' && gamePositions && tieredMarkers.map((m, i) => {
+          {gamePositions && tieredMarkers.map((m, i) => {
             if (m.cx === undefined) return null
             const isPinned = pinnedIndex === m.gameIdx
             return (
@@ -810,22 +715,6 @@ export default function LegendTimeline({ timeline }) {
                 key={i}
                 className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''} ${isPinned ? 'moment-marker--pinned' : ''}`}
                 style={{ left: `${m.cx}px` }}
-                onClick={() => handleMomentClick(m.gameIdx)}
-              >
-                <div className="moment-marker__line" />
-                <span className="moment-marker__icon">{m.icon}</span>
-                <span className="moment-marker__label">{m.label}</span>
-              </div>
-            )
-          })}
-          {viewMode === 'segmented' && segPositions && momentMarkers.map((m, i) => {
-            const cx = (segPositions[m.gameIdx] + segPositions[m.gameIdx + 1]) / 2
-            const isPinned = pinnedIndex === m.gameIdx
-            return (
-              <div
-                key={i}
-                className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''} ${isPinned ? 'moment-marker--pinned' : ''}`}
-                style={{ left: `${cx}px` }}
                 onClick={() => handleMomentClick(m.gameIdx)}
               >
                 <div className="moment-marker__line" />
