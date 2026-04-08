@@ -430,6 +430,36 @@ function getMomentIcon(moment) {
 }
 
 
+// ─── Impact Weight — drives segment width in segmented view ────────────────
+// Not just score. Moments define the landscape. Sacred = massive. Heartbreak = wide.
+// Quiet weeks compress to make room for what matters.
+function impactWeight(game) {
+  const score = game.glow_score || 0
+  const absScore = Math.abs(score)
+  const hasMoment = game.moments?.length > 0
+  const isSacred = game.moments?.some(m => m.use_sacred_color)
+  const maxIntensity = hasMoment
+    ? Math.max(...game.moments.map(m => Math.abs(m.intensity || 0)))
+    : 0
+
+  // Sacred moments are the pillars — Super Bowl wins tower over everything
+  if (isSacred) return 16
+
+  // High-intensity moments (big wins, heartbreaks, injuries) — these define eras
+  if (hasMoment && maxIntensity >= 8) return 10
+  if (hasMoment && maxIntensity >= 6) return 7
+  if (hasMoment && maxIntensity >= 4) return 5
+  if (hasMoment) return 3
+
+  // Non-moment games: score determines presence but at much smaller scale
+  if (absScore >= 8) return 3     // great or terrible game, no named moment
+  if (absScore >= 5) return 1.5
+  if (absScore >= 3) return 0.8
+  if (absScore >= 1) return 0.4
+  return 0.25                     // true quiet weeks — barely there
+}
+
+
 export default function LegendTimeline({ timeline }) {
   const canvasRef = useRef(null)
   const containerRef = useRef(null)
@@ -519,10 +549,7 @@ export default function LegendTimeline({ timeline }) {
   const segPositions = useMemo(() => {
     if (!containerWidth || games.length === 0) return null
     const n = games.length
-    const weights = games.map(g => {
-      const absScore = Math.abs(g.glow_score || 0)
-      return absScore >= 9 ? 6 : absScore >= 7 ? 4 : absScore >= 5 ? 2.5 : absScore >= 3 ? 1.5 : absScore >= 1 ? 0.8 : 0.5
-    })
+    const weights = games.map(g => impactWeight(g))
     const totalWeight = weights.reduce((a, b) => a + b, 0)
     const gapTotal = (n - 1) * 1  // 1px gap between segments
     const usableWidth = containerWidth - gapTotal
@@ -734,9 +761,9 @@ export default function LegendTimeline({ timeline }) {
               const isSacred = g.moments?.some(m => m.use_sacred_color)
               const isNeg = g.moments?.some(m => m.intensity < 0)
               const isActive = activeIndex === i
-              // Gravitational width: extreme scores physically wider — big moments demand space
+              // Impact weight: moments define the landscape, quiet weeks compress
               const absScore = Math.abs(score)
-              const weight = absScore >= 9 ? 6 : absScore >= 7 ? 4 : absScore >= 5 ? 2.5 : absScore >= 3 ? 1.5 : absScore >= 1 ? 0.8 : 0.5
+              const weight = impactWeight(g)
               return (
                 <div
                   key={i}
