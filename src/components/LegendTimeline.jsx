@@ -364,11 +364,10 @@ function drawTimeline(canvas, games, hoveredIndex, breathPhase, shimmerPhase) {
 
 // ─── Tooltip ────────────────────────────────────────────────────────────────
 
-function TimelineTooltip({ game, x, y, pinned, usePercent }) {
+function TimelineTooltip({ game, x, y, pinned }) {
   if (!game) return null
-  const left = usePercent ? x : `${x}px`
   return (
-    <div className={`timeline-tooltip ${pinned ? 'timeline-tooltip--pinned' : ''}`} style={{ left, top: `${y}px` }}>
+    <div className={`timeline-tooltip ${pinned ? 'timeline-tooltip--pinned' : ''}`} style={{ left: `${x}px`, top: `${y}px` }}>
       {game.is_bye ? (
         <div className="timeline-tooltip__bye">Bye Week</div>
       ) : game.is_dnp ? (
@@ -515,6 +514,27 @@ export default function LegendTimeline({ timeline }) {
   // The "active" index is pinned if set, otherwise hovered
   const activeIndex = pinnedIndex !== null ? pinnedIndex : hoveredIndex
 
+  // Precompute segment pixel positions (for segmented view tooltip placement)
+  // Accounts for gravitational flex weights so tooltip appears over the actual visual center
+  const segPositions = useMemo(() => {
+    if (!containerWidth || games.length === 0) return null
+    const n = games.length
+    const weights = games.map(g => {
+      const absScore = Math.abs(g.glow_score || 0)
+      return absScore >= 9 ? 6 : absScore >= 7 ? 4 : absScore >= 5 ? 2.5 : absScore >= 3 ? 1.5 : absScore >= 1 ? 0.8 : 0.5
+    })
+    const totalWeight = weights.reduce((a, b) => a + b, 0)
+    const gapTotal = (n - 1) * 1  // 1px gap between segments
+    const usableWidth = containerWidth - gapTotal
+    const positions = new Float64Array(n + 1)
+    positions[0] = 0
+    for (let i = 0; i < n; i++) {
+      const segWidth = (weights[i] / totalWeight) * usableWidth
+      positions[i + 1] = positions[i] + segWidth + (i < n - 1 ? 1 : 0)
+    }
+    return positions
+  }, [games, containerWidth])
+
   // Draw — captures gameX positions for icon overlay
   useEffect(() => {
     const canvas = canvasRef.current
@@ -538,7 +558,7 @@ export default function LegendTimeline({ timeline }) {
     const idx = lo
     if (idx >= 0 && idx < n) {
       setHoveredIndex(idx)
-      setTooltipPos({ x: Math.min(Math.max(x, 100), rect.width - 100), y: -10 })
+      setTooltipPos({ x: Math.min(Math.max(x, 120), rect.width - 120), y: -10 })
     }
   }, [games.length, gamePositions, pinnedIndex])
 
@@ -583,18 +603,19 @@ export default function LegendTimeline({ timeline }) {
     } else {
       setPinnedIndex(gameIdx)
       setHoveredIndex(gameIdx)
-      if (gamePositions) {
+      const w = containerWidth || 800
+      if (viewMode === 'segmented' && segPositions) {
+        const cx = (segPositions[gameIdx] + segPositions[gameIdx + 1]) / 2
+        setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
+      } else if (gamePositions) {
         const cx = (gamePositions[gameIdx] + gamePositions[gameIdx + 1]) / 2
-        const barRect = canvasRef.current?.getBoundingClientRect()
-        const w = barRect?.width || 800
-        setTooltipPos({ x: Math.min(Math.max(cx, 100), w - 100), y: -10 })
+        setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
       }
     }
-  }, [pinnedIndex, gamePositions])
+  }, [pinnedIndex, gamePositions, segPositions, viewMode, containerWidth])
 
   // Click on an era label — pin to the best game in that era (highest glow)
   const handleEraClick = useCallback((era) => {
-    // Find the peak game in this era
     let bestIdx = era.startIdx
     let bestGlow = -Infinity
     for (let i = era.startIdx; i < era.endIdx; i++) {
@@ -606,14 +627,16 @@ export default function LegendTimeline({ timeline }) {
     } else {
       setPinnedIndex(bestIdx)
       setHoveredIndex(bestIdx)
-      if (gamePositions) {
+      const w = containerWidth || 800
+      if (viewMode === 'segmented' && segPositions) {
+        const cx = (segPositions[bestIdx] + segPositions[bestIdx + 1]) / 2
+        setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
+      } else if (gamePositions) {
         const cx = (gamePositions[bestIdx] + gamePositions[bestIdx + 1]) / 2
-        const barRect = canvasRef.current?.getBoundingClientRect()
-        const w = barRect?.width || 800
-        setTooltipPos({ x: Math.min(Math.max(cx, 100), w - 100), y: -10 })
+        setTooltipPos({ x: Math.min(Math.max(cx, 120), w - 120), y: -10 })
       }
     }
-  }, [games, pinnedIndex, gamePositions])
+  }, [games, pinnedIndex, gamePositions, segPositions, viewMode, containerWidth])
 
   if (!timeline) return null
   const draft = timeline.draft || {}
@@ -702,6 +725,7 @@ export default function LegendTimeline({ timeline }) {
           <div
             className="legend-timeline__segmented"
             onMouseLeave={() => { if (pinnedIndex === null) setHoveredIndex(null) }}
+            onClick={(e) => { if (e.target === e.currentTarget && pinnedIndex !== null) setPinnedIndex(null) }}
           >
             {games.map((g, i) => {
               const score = g.glow_score || 0
@@ -710,25 +734,31 @@ export default function LegendTimeline({ timeline }) {
               const isSacred = g.moments?.some(m => m.use_sacred_color)
               const isNeg = g.moments?.some(m => m.intensity < 0)
               const isActive = activeIndex === i
-              // Gravitational width: extreme scores (bright or dark) get wider
+              // Gravitational width: extreme scores physically wider — big moments demand space
               const absScore = Math.abs(score)
-              const weight = absScore >= 8 ? 4 : absScore >= 5 ? 2.5 : absScore >= 3 ? 1.5 : 1
+              const weight = absScore >= 9 ? 6 : absScore >= 7 ? 4 : absScore >= 5 ? 2.5 : absScore >= 3 ? 1.5 : absScore >= 1 ? 0.8 : 0.5
               return (
                 <div
                   key={i}
-                  className={`seg-game ${hasMoment ? 'seg-game--moment' : ''} ${isSacred ? 'seg-game--sacred' : ''} ${isNeg ? 'seg-game--negative' : ''} ${isActive ? 'seg-game--active' : ''}`}
+                  className={`seg-game ${hasMoment ? 'seg-game--moment' : ''} ${isSacred ? 'seg-game--sacred' : ''} ${isNeg ? 'seg-game--negative' : ''} ${isActive ? 'seg-game--active' : ''} ${!hasMoment && absScore < 2 ? 'seg-game--quiet' : ''}`}
                   style={{ backgroundColor: colorToCSS(color), flex: weight }}
                   onMouseEnter={() => {
                     if (pinnedIndex !== null) return
                     setHoveredIndex(i)
-                    setTooltipPos({ x: (i / games.length) * 100, y: -10 })
+                    if (segPositions) {
+                      const cx = (segPositions[i] + segPositions[i + 1]) / 2
+                      setTooltipPos({ x: Math.min(Math.max(cx, 120), containerWidth - 120), y: -10 })
+                    }
                   }}
                   onClick={() => {
                     if (pinnedIndex === i) { setPinnedIndex(null) }
                     else {
                       setPinnedIndex(i)
                       setHoveredIndex(i)
-                      setTooltipPos({ x: (i / games.length) * 100, y: -10 })
+                      if (segPositions) {
+                        const cx = (segPositions[i] + segPositions[i + 1]) / 2
+                        setTooltipPos({ x: Math.min(Math.max(cx, 120), containerWidth - 120), y: -10 })
+                      }
                     }
                   }}
                 >
@@ -758,14 +788,14 @@ export default function LegendTimeline({ timeline }) {
               </div>
             )
           })}
-          {viewMode === 'segmented' && momentMarkers.map((m, i) => {
-            const left = (m.gameIdx / games.length) * 100
+          {viewMode === 'segmented' && segPositions && momentMarkers.map((m, i) => {
+            const cx = (segPositions[m.gameIdx] + segPositions[m.gameIdx + 1]) / 2
             const isPinned = pinnedIndex === m.gameIdx
             return (
               <div
                 key={i}
                 className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''} ${isPinned ? 'moment-marker--pinned' : ''}`}
-                style={{ left: `${left}%` }}
+                style={{ left: `${cx}px` }}
                 onClick={() => handleMomentClick(m.gameIdx)}
               >
                 <div className="moment-marker__line" />
@@ -810,19 +840,83 @@ export default function LegendTimeline({ timeline }) {
         {activeGame && (
           <TimelineTooltip
             game={activeGame}
-            x={viewMode === 'segmented' ? `${(activeIndex / games.length) * 100}%` : `${tooltipPos.x}px`}
+            x={tooltipPos.x}
             y={tooltipPos.y}
             pinned={pinnedIndex !== null}
-            usePercent={viewMode === 'segmented'}
           />
         )}
       </div>
 
       {/* Key */}
-      <div className="legend-timeline__key">
+      <div className="legend-timeline__key legend-timeline__key--desktop">
         <span className="legend-timeline__key-label">The quiet weeks</span>
         <div className="legend-timeline__key-bar" />
         <span className="legend-timeline__key-label">The moments that mattered</span>
+      </div>
+
+      {/* ── Mobile Vertical Timeline ────────────────────────────────────── */}
+      <div className="legend-timeline__vertical">
+        {eras.map(era => {
+          const eraGames = games.slice(era.startIdx, era.endIdx)
+          return (
+            <div key={era.id} className="vtl-era">
+              <div className="vtl-era__header">
+                <span className="vtl-era__label">{era.label}</span>
+                <span className="vtl-era__seasons">
+                  {era.seasons.length === 1 ? era.seasons[0] : `${era.seasons[0]}–${era.seasons[era.seasons.length - 1]}`}
+                </span>
+                <span className="vtl-era__tagline">{era.tagline}</span>
+              </div>
+              <div className="vtl-era__games">
+                {eraGames.map((g, j) => {
+                  const globalIdx = era.startIdx + j
+                  const score = g.glow_score || 0
+                  const absScore = Math.abs(score)
+                  const color = glowToColor(score)
+                  const hasMoment = g.moments?.length > 0
+                  const isSacred = g.moments?.some(m => m.use_sacred_color)
+                  const isNeg = g.moments?.some(m => m.intensity < 0)
+                  const isOpen = pinnedIndex === globalIdx
+                  // Bar width: percentage of max glow, minimum 8%
+                  const widthPct = Math.max(8, (absScore / 10) * 100)
+                  return (
+                    <div key={j} className="vtl-game-row">
+                      <div
+                        className={`vtl-game ${isSacred ? 'vtl-game--sacred' : ''} ${isNeg ? 'vtl-game--negative' : ''} ${hasMoment ? 'vtl-game--moment' : ''} ${isOpen ? 'vtl-game--open' : ''}`}
+                        style={{ width: `${widthPct}%`, backgroundColor: colorToCSS(color) }}
+                        onClick={() => setPinnedIndex(isOpen ? null : globalIdx)}
+                      >
+                        {hasMoment && <span className="vtl-game__icon">{getMomentIcon(g.moments[0])}</span>}
+                      </div>
+                      {hasMoment && (
+                        <span className={`vtl-game__moment-name ${isSacred ? 'vtl-game__moment-name--sacred' : ''} ${isNeg ? 'vtl-game__moment-name--negative' : ''}`}>
+                          {g.moments[0].moment_name}
+                        </span>
+                      )}
+                      {isOpen && (
+                        <div className="vtl-game__detail">
+                          {g.is_bye ? 'Bye Week' : g.is_dnp ? (
+                            <span className="vtl-game__dnp">DNP{g.dnp_reason ? ` — ${g.dnp_reason}` : ''}</span>
+                          ) : (
+                            <>
+                              <span className={`vtl-game__result vtl-game__result--${g.result?.toLowerCase()}`}>{g.result}</span>
+                              {' '}{g.score} vs {g.opponent}
+                              {g.stats?.pass_yards != null && (
+                                <span className="vtl-game__stats">
+                                  {' · '}{g.stats.pass_yards} yds, {g.stats.pass_td || 0} TD, {g.stats.interceptions || 0} INT
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
