@@ -763,7 +763,10 @@ export default function LegendTimeline({ timeline }) {
               const isActive = activeIndex === i
               // Impact weight: moments define the landscape, quiet weeks compress
               const absScore = Math.abs(score)
-              const weight = impactWeight(g)
+              const baseWeight = impactWeight(g)
+              // Hover/active amplifies — never shrinks
+              const isHovered = hoveredIndex === i && pinnedIndex === null
+              const weight = isActive ? baseWeight * 2.5 : isHovered ? baseWeight * 1.8 : baseWeight
               return (
                 <div
                   key={i}
