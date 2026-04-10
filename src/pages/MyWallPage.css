@@ -1254,6 +1254,17 @@
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.28);
 }
 
+.hub-welcome__slot-sub {
+  font-family: var(--font-program);
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.30);
+  line-height: 1.2;
+}
+
+.hub-welcome__slot-value--big {
+  font-size: 1.4rem;
+}
+
 .hub-welcome__sub {
   font-family: var(--font-program);
   font-size: 0.75rem;

@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader } from 'lucide-react'
+import { Loader, X } from 'lucide-react'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
@@ -234,7 +234,9 @@ export default function TeamWallPage() {
                     >
                       #{selected}
                     </div>
-                    <button className="tw-panel-close" onClick={() => setSelected(null)}>✕</button>
+                    <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
+                      <X size={11} /> CLOSE
+                    </button>
                   </div>
 
                   {/* Entries — flat list, no card wrapper */}

@@ -86,14 +86,16 @@ function WelcomePlacemat({ onDismiss }) {
           <div className="hub-welcome__slot hub-welcome__slot--number">
             <span className="hub-welcome__slot-label">YOUR NUMBER</span>
             <span className="hub-welcome__slot-value">#12</span>
+            <span className="hub-welcome__slot-sub">Brady</span>
           </div>
           <div className="hub-welcome__slot hub-welcome__slot--city">
             <span className="hub-welcome__slot-label">YOUR CITY</span>
             <span className="hub-welcome__slot-value">Boston</span>
+            <span className="hub-welcome__slot-sub">Massachusetts</span>
           </div>
           <div className="hub-welcome__slot hub-welcome__slot--hero">
             <span className="hub-welcome__slot-label">YOUR HERO</span>
-            <span className="hub-welcome__slot-value">Brady</span>
+            <span className="hub-welcome__slot-value hub-welcome__slot-value--big">Brady</span>
           </div>
         </div>
         <p className="hub-welcome__sub">Claim your identity. Then build walls around what you care about.</p>

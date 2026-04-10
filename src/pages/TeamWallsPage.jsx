@@ -61,7 +61,7 @@ export default function TeamWallsPage() {
 
         {/* ── Hero ──────────────────────────────────────────── */}
         <div className="twb-hero">
-          <h2 className="twb-hero__heading">YOUR TEAM. YOUR NUMBERS.</h2>
+          <h2 className="twb-hero__heading">YOUR TEAMS. YOUR NUMBERS.</h2>
           <p className="twb-hero__sub">
             Start a wall for your team. Share the link. Let your teammates claim their numbers.
           </p>
@@ -117,25 +117,22 @@ export default function TeamWallsPage() {
                   key={wall.id}
                   className="twb-card"
                   onClick={() => navigateToWall(wall)}
-                  style={{
-                    borderColor: accent.border,
-                  }}
                 >
-                  <div className="twb-card__color-bar" style={{ background: accent.bg }} />
                   <div className="twb-card__content">
-                    <span className="twb-card__school" style={{ color: accent.text }}>
-                      {wall.school}
-                    </span>
-                    <div className="twb-card__meta">
-                      <span>{sportLabel}</span>
-                      <span>·</span>
-                      <span>{wall.year}</span>
-                      <span>·</span>
-                      <span>{wall.level}</span>
-                    </div>
-                    <div className="twb-card__location">
-                      <MapPin size={11} />
-                      <span>{wall.city}, {wall.state}</span>
+                    <span className="twb-card__dot" style={{ background: accent.bg }} />
+                    <div className="twb-card__text">
+                      <span className="twb-card__school">
+                        {wall.school}
+                      </span>
+                      <div className="twb-card__meta">
+                        <span>{sportLabel}</span>
+                        <span>·</span>
+                        <span>{wall.year}</span>
+                      </div>
+                      <div className="twb-card__location">
+                        <MapPin size={11} />
+                        <span>{wall.city}, {wall.state}</span>
+                      </div>
                     </div>
                   </div>
                 </button>

@@ -8,6 +8,14 @@
   gap: var(--space-4);
 }
 
+@media (min-width: 768px) {
+  .twb-page {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 /* ── Hero ──────────────────────────────────────────────────────────────────── */
 
 .twb-hero {
@@ -139,13 +147,23 @@
   border-color: rgba(232, 124, 42, 0.22);
 }
 
-.twb-card__color-bar {
-  width: 4px;
-  flex-shrink: 0;
-}
-
 .twb-card__content {
   padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.twb-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.twb-card__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
