@@ -58,6 +58,20 @@ export default function AboutPage() {
         <hr className="about-page__rule" />
 
         <section className="about-page__section">
+          <h2 className="about-page__subheading">TEAM WALLS</h2>
+          <p className="about-page__body">
+            Start a wall for your team. Share the link with your teammates. Everyone claims their number. See who wore what — and who else in history wore it too.
+          </p>
+          <Link to="/walls" className="about-page__city-cta">
+            <span className="about-page__city-cta-name">BROWSE TEAM WALLS</span>
+            <span className="about-page__city-cta-teams">High school · College · Club · Any team, any era</span>
+            <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
+          </Link>
+        </section>
+
+        <hr className="about-page__rule" />
+
+        <section className="about-page__section">
           <h2 className="about-page__subheading">SOURCES</h2>
           <p className="about-page__body">
             Stats sourced from Basketball-Reference, Baseball-Reference, Hockey-Reference, and Pro-Football-Reference. International soccer from FBref and Transfermarkt. Hall of Fame status from each league's official records. Every player verified against at least one primary source. If you spot an error, tell us.

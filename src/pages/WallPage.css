@@ -42,7 +42,8 @@
 
 /* ── Discover the Locals ────────────────────────────────────────────────── */
 
-.wall-page__cities {
+.wall-page__cities,
+.wall-page__team-walls {
   margin-top:  var(--space-5);
   display:     flex;
   flex-direction: column;
