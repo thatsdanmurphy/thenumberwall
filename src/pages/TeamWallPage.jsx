@@ -3,18 +3,18 @@
  * Route: /walls/:schoolSlug/:sport/:year
  *
  * Grid shows numbers 0–99. Heat from entry density in team colors.
- * Panel matches main wall PlayerPanel styling.
+ * Add-player form is inline in the panel, not a modal.
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Plus, ExternalLink, Check, X } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
-import AddEntry   from '../components/AddEntry.jsx'
-import { loadTeamWallByRoute } from '../lib/teamWallStore.js'
+import { loadTeamWallByRoute, addTeamEntry } from '../lib/teamWallStore.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
+import { checkProfanity } from '../lib/profanityFilter.js'
 import './TeamWallPage.css'
 
 const TILE_NUMBERS = ['0', ...Array.from({ length: 99 }, (_, i) => String(i + 1))]
@@ -27,9 +27,14 @@ export default function TeamWallPage() {
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState(null)
   const [selected, setSelected] = useState(null)
-  const [showAdd, setShowAdd]   = useState(false)
-  const [addNumber, setAddNumber] = useState(null)
-  const [copied, setCopied]     = useState(false)
+
+  // Inline add form state
+  const [addName, setAddName]         = useState('')
+  const [addPosition, setAddPosition] = useState('')
+  const [addFunFact, setAddFunFact]   = useState('')
+  const [addSubmitting, setAddSubmitting] = useState(false)
+  const [addError, setAddError]       = useState(null)
+  const [addSuccess, setAddSuccess]   = useState(false)
 
   const fetchWall = useCallback(async () => {
     try {
@@ -49,6 +54,12 @@ export default function TeamWallPage() {
   useEffect(() => {
     if (wall) document.title = `${wall.school} ${sport} ${year} | The Number Wall`
   }, [wall, sport, year])
+
+  // Reset add form when selecting a different number
+  useEffect(() => {
+    setAddName(''); setAddPosition(''); setAddFunFact('')
+    setAddError(null); setAddSuccess(false)
+  }, [selected])
 
   // Build entry index: number → [entries]
   const entryIndex = useMemo(() => {
@@ -70,15 +81,38 @@ export default function TeamWallPage() {
     setSelected(prev => prev === num ? null : num)
   }
 
-  function handleAddClick(num) {
-    setAddNumber(num || selected)
-    setShowAdd(true)
-  }
+  async function handleAdd(e) {
+    e.preventDefault()
+    if (!addName.trim() || addSubmitting) return
 
-  async function handleEntryAdded() {
-    setShowAdd(false)
-    setAddNumber(null)
-    await fetchWall()
+    const nameCheck = checkProfanity(addName)
+    if (!nameCheck.clean) { setAddError(nameCheck.reason); return }
+    if (addFunFact) {
+      const factCheck = checkProfanity(addFunFact)
+      if (!factCheck.clean) { setAddError(factCheck.reason); return }
+    }
+
+    setAddSubmitting(true)
+    setAddError(null)
+
+    try {
+      await addTeamEntry(wall.id, {
+        number: selected,
+        name: addName.trim(),
+        gradYear: Number(year),
+        position: addPosition.trim() || null,
+        funFact: addFunFact.trim() || null,
+      })
+      setAddName(''); setAddPosition(''); setAddFunFact('')
+      setAddSuccess(true)
+      setTimeout(() => setAddSuccess(false), 2000)
+      await fetchWall()
+    } catch (err) {
+      setAddError('Something went wrong. Try again.')
+      console.error(err)
+    } finally {
+      setAddSubmitting(false)
+    }
   }
 
   function handleShare() {
@@ -87,8 +121,6 @@ export default function TeamWallPage() {
       navigator.share({ title: `${wall.school} ${sportLabel} ${year}`, url }).catch(() => {})
     } else {
       navigator.clipboard.writeText(url).catch(() => {})
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1800)
     }
   }
 
@@ -128,19 +160,15 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
-        {/* ── Summary card — school, sport, year, location, coach ── */}
+        {/* ── Summary line — one line, no box ──────────────── */}
         <div className="tw-summary">
-          <div className="tw-summary__top">
-            <span className="tw-summary__school">{wall.school}</span>
-            <span className="tw-summary__meta">
-              {sportLabel} · {wall.year} · {wall.city}, {wall.state}
-            </span>
-          </div>
+          <span className="tw-summary__meta">
+            {sportLabel} · {wall.year} · {wall.city}, {wall.state}
+          </span>
           {wall.coach_name && (
-            <div className="tw-summary__coach">
-              Coach {wall.coach_name}
-              {wall.coach_fun_fact && <span className="tw-summary__coach-fact"> — {wall.coach_fun_fact}</span>}
-            </div>
+            <span className="tw-summary__coach">
+              Coach {wall.coach_name}{wall.coach_fun_fact ? ` — ${wall.coach_fun_fact}` : ''}
+            </span>
           )}
         </div>
 
@@ -181,7 +209,7 @@ export default function TeamWallPage() {
             </div>
           </div>
 
-          {/* ── Detail panel — matches PlayerPanel baseline ── */}
+          {/* ── Panel ─────────────────────────────────────────── */}
           <aside className={`player-panel${!selected ? ' player-panel--idle' : ''}`}>
             <div className="player-panel__handle" aria-hidden="true" />
             <div className="player-panel__inner">
@@ -189,88 +217,82 @@ export default function TeamWallPage() {
               {!selected && (
                 <div className="player-panel__idle">
                   <div className="player-panel__idle-wall">PICK A NUMBER.</div>
-                  <div className="player-panel__idle-prompt">See who wore it — or add yourself.</div>
+                  <div className="player-panel__idle-prompt">See who wore it — or add a name.</div>
                 </div>
               )}
 
               {selected && (
                 <>
-                  <div className="player-panel__header">
-                    <div className="player-panel__header-left">
-                      <div
-                        className="player-panel__number"
-                        style={{
-                          color: TEAM_PALETTES[colorKey]?.[4]?.text || 'var(--color-heat)',
-                          textShadow: `0 0 28px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
-                        }}
-                      >
-                        #{selected}
-                      </div>
-                      <div className="player-panel__subtitle">
-                        {selectedEntries.length === 0
-                          ? 'NO ONE YET'
-                          : `${selectedEntries.length} ${selectedEntries.length === 1 ? 'PLAYER' : 'PLAYERS'}`
-                        }
-                      </div>
+                  {/* Number + close */}
+                  <div className="tw-panel-header">
+                    <div
+                      className="player-panel__number"
+                      style={{
+                        color: TEAM_PALETTES[colorKey]?.[4]?.text || 'var(--color-heat)',
+                        textShadow: `0 0 28px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
+                      }}
+                    >
+                      #{selected}
                     </div>
-                    <div className="player-panel__header-actions">
-                      <button
-                        className={`player-panel__share${copied ? ' player-panel__share--copied' : ''}`}
-                        onClick={handleShare}
-                        aria-label="Share this wall"
-                      >
-                        {copied ? <><Check size={11} /> COPIED</> : <><ExternalLink size={11} /> SHARE</>}
-                      </button>
-                      <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
-                        <X size={11} /> CLOSE
-                      </button>
-                    </div>
+                    <button className="tw-panel-close" onClick={() => setSelected(null)}>✕</button>
                   </div>
 
-                  {/* Entries */}
+                  {/* Entries — flat list, no card wrapper */}
                   {selectedEntries.length === 0 ? (
-                    <div className="player-panel__unwritten">
-                      <div className="player-panel__unwritten-line">Nobody has claimed #{selected} yet.</div>
-                      <div className="player-panel__unwritten-sub">Were you this number?</div>
-                      <button className="player-panel__unwritten-cta" onClick={() => handleAddClick(selected)}>
-                        Add a player →
-                      </button>
+                    <div className="tw-empty-number">
+                      <span className="tw-empty-number__text">Remember who wore #{selected}?</span>
                     </div>
                   ) : (
-                    <div className="player-panel__cards">
-                      {selectedEntries.map((entry, i) => (
-                        <div key={entry.id} className={`player-card${i === 0 ? ' player-card--top' : ''}`}>
-                          <div className="player-card__row">
-                            <div className="player-card__info">
-                              <div className="player-card__name-row">
-                                <span className="player-card__name">{entry.name}</span>
-                              </div>
-                              <div className="player-card__badges">
-                                {entry.position && (
-                                  <span className="player-card__badge">{entry.position}</span>
-                                )}
-                                <span className="player-card__badge player-card__badge--dim">
-                                  '{String(entry.grad_year).slice(-2)}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          {entry.fun_fact && (
-                            <div className="player-card__fact">{entry.fun_fact}</div>
-                          )}
+                    <div className="tw-entries">
+                      {selectedEntries.map((entry) => (
+                        <div key={entry.id} className="tw-entry">
+                          <span className="tw-entry__name">{entry.name}</span>
+                          {entry.position && <span className="tw-entry__badge">{entry.position}</span>}
+                          {entry.fun_fact && <p className="tw-entry__fact">{entry.fun_fact}</p>}
                         </div>
                       ))}
-                      <button
-                        className="player-panel__add-legend"
-                        onClick={() => handleAddClick(selected)}
-                      >
-                        + Add a player
-                      </button>
                     </div>
                   )}
+
+                  {/* Inline add form */}
+                  <form className="tw-add" onSubmit={handleAdd}>
+                    <span className="tw-add__label">ADD A PLAYER</span>
+                    {addError && <span className="tw-add__error">{addError}</span>}
+                    <input
+                      type="text"
+                      className="tw-add__input"
+                      placeholder="Name"
+                      value={addName}
+                      onChange={e => setAddName(e.target.value)}
+                    />
+                    <div className="tw-add__row">
+                      <input
+                        type="text"
+                        className="tw-add__input tw-add__input--half"
+                        placeholder="Position"
+                        value={addPosition}
+                        onChange={e => setAddPosition(e.target.value)}
+                        maxLength={20}
+                      />
+                      <input
+                        type="text"
+                        className="tw-add__input tw-add__input--half"
+                        placeholder="Fun fact"
+                        value={addFunFact}
+                        onChange={e => setAddFunFact(e.target.value.slice(0, 140))}
+                        maxLength={140}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="tw-add__submit"
+                      disabled={!addName.trim() || addSubmitting}
+                    >
+                      {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added' : 'Add'}
+                    </button>
+                  </form>
                 </>
               )}
-
             </div>
           </aside>
         </div>
@@ -281,15 +303,6 @@ export default function TeamWallPage() {
       {selected && (
         <div className="tw-backdrop" onClick={() => setSelected(null)} aria-hidden="true" />
       )}
-
-      <AddEntry
-        open={showAdd}
-        onClose={() => { setShowAdd(false); setAddNumber(null) }}
-        onAdded={handleEntryAdded}
-        wallId={wall.id}
-        wallYear={wall.year}
-        prefillNumber={addNumber}
-      />
     </AppShell>
   )
 }
