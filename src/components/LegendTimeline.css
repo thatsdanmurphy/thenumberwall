@@ -561,8 +561,8 @@
   background: rgba(6, 8, 18, 0.95);
   border: 1px solid rgba(255, 230, 120, 0.1);
   border-radius: 14px;
-  padding: 14px 16px;
-  height: 165px;
+  padding: 12px 16px;
+  height: 155px;
   margin-bottom: -12px;  /* bar tucks under the card */
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.7),
@@ -743,7 +743,7 @@
   display: flex;
   justify-content: center;
   min-height: 0;
-  padding-top: 12px;  /* breathing room under the card overlap */
+  padding: 12px 0 20px;  /* top: under card overlap, bottom: iOS safe zone */
   touch-action: none;
   cursor: pointer;
   -webkit-user-select: none;
@@ -853,7 +853,11 @@
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  .legend-timeline { padding: var(--space-3); }
+  .legend-timeline {
+    padding: var(--space-2) var(--space-3) 0;
+    height: 100dvh;
+    overflow: hidden;
+  }
 
   /* Hide desktop header and horizontal bar on mobile */
   .legend-timeline__header,
@@ -863,9 +867,9 @@
   .vtl {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 40px);
-    min-height: 500px;
-    overflow: hidden;  /* prevent page scroll — bar handles everything */
+    height: 100%;
+    overflow: hidden;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
 
