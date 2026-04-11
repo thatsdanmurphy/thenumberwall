@@ -8,11 +8,11 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X } from 'lucide-react'
+import { Loader, X, Pencil } from 'lucide-react'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
-import { loadTeamWallByRoute, addTeamEntry } from '../lib/teamWallStore.js'
+import { loadTeamWallByRoute, addTeamEntry, updateTeamEntry } from '../lib/teamWallStore.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import './TeamWallPage.css'
@@ -20,7 +20,7 @@ import './TeamWallPage.css'
 const TILE_NUMBERS = ['0', ...Array.from({ length: 99 }, (_, i) => String(i + 1))]
 
 export default function TeamWallPage() {
-  const { schoolSlug, sport, year } = useParams()
+  const { schoolSlug, sport } = useParams()
   const navigate = useNavigate()
 
   const [wall, setWall]         = useState(null)
@@ -31,14 +31,23 @@ export default function TeamWallPage() {
   // Inline add form state
   const [addName, setAddName]         = useState('')
   const [addPosition, setAddPosition] = useState('')
+  const [addGradYear, setAddGradYear] = useState('')
   const [addFunFact, setAddFunFact]   = useState('')
   const [addSubmitting, setAddSubmitting] = useState(false)
   const [addError, setAddError]       = useState(null)
   const [addSuccess, setAddSuccess]   = useState(false)
 
+  // Edit state — which entry is being edited
+  const [editingId, setEditingId]     = useState(null)
+  const [editName, setEditName]       = useState('')
+  const [editPosition, setEditPosition] = useState('')
+  const [editGradYear, setEditGradYear] = useState('')
+  const [editFunFact, setEditFunFact] = useState('')
+  const [editSubmitting, setEditSubmitting] = useState(false)
+
   const fetchWall = useCallback(async () => {
     try {
-      const data = await loadTeamWallByRoute(schoolSlug, sport, Number(year))
+      const data = await loadTeamWallByRoute(schoolSlug, sport)
       if (!data) setError('Wall not found.')
       else setWall(data)
     } catch (err) {
@@ -47,18 +56,21 @@ export default function TeamWallPage() {
     } finally {
       setLoading(false)
     }
-  }, [schoolSlug, sport, year])
+  }, [schoolSlug, sport])
+
+  const sportLabel = sport?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 
   useEffect(() => { fetchWall() }, [fetchWall])
 
   useEffect(() => {
-    if (wall) document.title = `${wall.school} ${sport} ${year} | The Number Wall`
-  }, [wall, sport, year])
+    if (wall) document.title = `${wall.school} ${sportLabel} | The Number Wall`
+  }, [wall, sportLabel])
 
-  // Reset add form when selecting a different number
+  // Reset forms when selecting a different number
   useEffect(() => {
-    setAddName(''); setAddPosition(''); setAddFunFact('')
+    setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
     setAddError(null); setAddSuccess(false)
+    setEditingId(null)
   }, [selected])
 
   // Build entry index: number → [entries]
@@ -75,7 +87,6 @@ export default function TeamWallPage() {
 
   const colorKey       = wall?.color_primary || 'orange'
   const selectedEntries = selected ? (entryIndex.get(selected) || []) : []
-  const sportLabel     = sport?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 
   function handleTileClick(num) {
     setSelected(prev => prev === num ? null : num)
@@ -99,11 +110,11 @@ export default function TeamWallPage() {
       await addTeamEntry(wall.id, {
         number: selected,
         name: addName.trim(),
-        gradYear: Number(year),
+        gradYear: addGradYear ? Number(addGradYear) : null,
         position: addPosition.trim() || null,
         funFact: addFunFact.trim() || null,
       })
-      setAddName(''); setAddPosition(''); setAddFunFact('')
+      setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
       setAddSuccess(true)
       setTimeout(() => setAddSuccess(false), 2000)
       await fetchWall()
@@ -118,9 +129,39 @@ export default function TeamWallPage() {
   function handleShare() {
     const url = window.location.href
     if (navigator.share) {
-      navigator.share({ title: `${wall.school} ${sportLabel} ${year}`, url }).catch(() => {})
+      navigator.share({ title: `${wall.school} ${sportLabel}`, url }).catch(() => {})
     } else {
       navigator.clipboard.writeText(url).catch(() => {})
+    }
+  }
+
+  function startEditing(entry) {
+    setEditingId(entry.id)
+    setEditName(entry.name || '')
+    setEditPosition(entry.position || '')
+    setEditGradYear(entry.grad_year ? String(entry.grad_year) : '')
+    setEditFunFact(entry.fun_fact || '')
+  }
+
+  async function handleEditSave(e) {
+    e.preventDefault()
+    if (!editName.trim() || editSubmitting) return
+    const nameCheck = checkProfanity(editName)
+    if (!nameCheck.clean) { setAddError(nameCheck.reason); return }
+    setEditSubmitting(true)
+    try {
+      await updateTeamEntry(editingId, {
+        name: editName.trim(),
+        position: editPosition.trim() || null,
+        gradYear: editGradYear ? Number(editGradYear) : null,
+        funFact: editFunFact.trim() || null,
+      })
+      setEditingId(null)
+      await fetchWall()
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setEditSubmitting(false)
     }
   }
 
@@ -163,7 +204,7 @@ export default function TeamWallPage() {
         {/* ── Summary line — one line, no box ──────────────── */}
         <div className="tw-summary">
           <span className="tw-summary__meta">
-            {sportLabel} · {wall.year} · {wall.city}, {wall.state}
+            {sportLabel} · {wall.city}, {wall.state}
           </span>
           {wall.coach_name && (
             <span className="tw-summary__coach">
@@ -239,60 +280,123 @@ export default function TeamWallPage() {
                     </button>
                   </div>
 
-                  {/* Entries — flat list, no card wrapper */}
+                  {/* Entries — flat list with edit capability */}
                   {selectedEntries.length === 0 ? (
-                    <div className="tw-empty-number">
-                      <span className="tw-empty-number__text">Remember who wore #{selected}?</span>
-                    </div>
+                    <>
+                      <div className="tw-empty-number">
+                        <span className="tw-empty-number__text">Remember who wore #{selected}?</span>
+                      </div>
+
+                      {/* Add form — only when number is empty */}
+                      <form className="tw-add" onSubmit={handleAdd}>
+                        <span className="tw-add__label">ADD A PLAYER</span>
+                        {addError && <span className="tw-add__error">{addError}</span>}
+                        <input
+                          type="text"
+                          className="tw-add__input"
+                          placeholder="Name"
+                          value={addName}
+                          onChange={e => setAddName(e.target.value)}
+                        />
+                        <div className="tw-add__row">
+                          <input
+                            type="text"
+                            className="tw-add__input tw-add__input--half"
+                            placeholder="Position"
+                            value={addPosition}
+                            onChange={e => setAddPosition(e.target.value)}
+                            maxLength={20}
+                          />
+                          <input
+                            type="text"
+                            className="tw-add__input tw-add__input--half"
+                            placeholder="Grad year"
+                            value={addGradYear}
+                            onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                            inputMode="numeric"
+                            maxLength={4}
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          className="tw-add__input"
+                          placeholder="Fun fact (optional)"
+                          value={addFunFact}
+                          onChange={e => setAddFunFact(e.target.value.slice(0, 140))}
+                          maxLength={140}
+                        />
+                        <button
+                          type="submit"
+                          className="tw-add__submit"
+                          disabled={!addName.trim() || addSubmitting}
+                        >
+                          {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added' : 'Add'}
+                        </button>
+                      </form>
+                    </>
                   ) : (
                     <div className="tw-entries">
                       {selectedEntries.map((entry) => (
-                        <div key={entry.id} className="tw-entry">
-                          <span className="tw-entry__name">{entry.name}</span>
-                          {entry.position && <span className="tw-entry__badge">{entry.position}</span>}
-                          {entry.fun_fact && <p className="tw-entry__fact">{entry.fun_fact}</p>}
-                        </div>
+                        editingId === entry.id ? (
+                          /* Inline edit form */
+                          <form key={entry.id} className="tw-add" onSubmit={handleEditSave}>
+                            <span className="tw-add__label">EDIT</span>
+                            <input
+                              type="text"
+                              className="tw-add__input"
+                              placeholder="Name"
+                              value={editName}
+                              onChange={e => setEditName(e.target.value)}
+                              autoFocus
+                            />
+                            <div className="tw-add__row">
+                              <input
+                                type="text"
+                                className="tw-add__input tw-add__input--half"
+                                placeholder="Position"
+                                value={editPosition}
+                                onChange={e => setEditPosition(e.target.value)}
+                                maxLength={20}
+                              />
+                              <input
+                                type="text"
+                                className="tw-add__input tw-add__input--half"
+                                placeholder="Grad year"
+                                value={editGradYear}
+                                onChange={e => setEditGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                                inputMode="numeric"
+                                maxLength={4}
+                              />
+                            </div>
+                            <input
+                              type="text"
+                              className="tw-add__input"
+                              placeholder="Fun fact (optional)"
+                              value={editFunFact}
+                              onChange={e => setEditFunFact(e.target.value.slice(0, 140))}
+                              maxLength={140}
+                            />
+                            <div className="tw-add__row">
+                              <button type="submit" className="tw-add__submit" disabled={!editName.trim() || editSubmitting}>
+                                {editSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Save'}
+                              </button>
+                              <button type="button" className="tw-add__submit" onClick={() => setEditingId(null)}>Cancel</button>
+                            </div>
+                          </form>
+                        ) : (
+                          <div key={entry.id} className="tw-entry">
+                            <span className="tw-entry__name">{entry.name}</span>
+                            {entry.position && <span className="tw-entry__badge">{entry.position}</span>}
+                            {entry.grad_year && <span className="tw-entry__badge">'{String(entry.grad_year).slice(-2)}</span>}
+                            <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
+                              <Pencil size={11} />
+                            </button>
+                            {entry.fun_fact && <p className="tw-entry__fact">{entry.fun_fact}</p>}
+                          </div>
+                        )
                       ))}
                     </div>
                   )}
-
-                  {/* Inline add form */}
-                  <form className="tw-add" onSubmit={handleAdd}>
-                    <span className="tw-add__label">ADD A PLAYER</span>
-                    {addError && <span className="tw-add__error">{addError}</span>}
-                    <input
-                      type="text"
-                      className="tw-add__input"
-                      placeholder="Name"
-                      value={addName}
-                      onChange={e => setAddName(e.target.value)}
-                    />
-                    <div className="tw-add__row">
-                      <input
-                        type="text"
-                        className="tw-add__input tw-add__input--half"
-                        placeholder="Position"
-                        value={addPosition}
-                        onChange={e => setAddPosition(e.target.value)}
-                        maxLength={20}
-                      />
-                      <input
-                        type="text"
-                        className="tw-add__input tw-add__input--half"
-                        placeholder="Fun fact"
-                        value={addFunFact}
-                        onChange={e => setAddFunFact(e.target.value.slice(0, 140))}
-                        maxLength={140}
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="tw-add__submit"
-                      disabled={!addName.trim() || addSubmitting}
-                    >
-                      {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added' : 'Add'}
-                    </button>
-                  </form>
                 </>
               )}
             </div>

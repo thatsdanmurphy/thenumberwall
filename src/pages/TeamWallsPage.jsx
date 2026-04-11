@@ -48,7 +48,7 @@ export default function TeamWallsPage() {
   }
 
   function navigateToWall(wall) {
-    navigate(`/walls/${wall.school_slug}/${wall.sport}/${wall.year}`)
+    navigate(`/walls/${wall.school_slug}/${wall.sport}`)
   }
 
   const wallsToShow = searchResults !== null ? searchResults : activeWalls
@@ -126,8 +126,6 @@ export default function TeamWallsPage() {
                         </span>
                         <div className="twb-card__meta">
                           <span>{sportLabel}</span>
-                          <span>·</span>
-                          <span>{wall.year}</span>
                         </div>
                         <div className="twb-card__location">
                           <MapPin size={11} />

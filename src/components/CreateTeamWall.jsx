@@ -1,6 +1,9 @@
 /**
- * CreateTeamWall — Multi-step modal for starting a new team wall.
- * Steps: 1) School + location  2) Sport + year  3) Colors + coach
+ * CreateTeamWall — Two-step modal for starting a new team wall.
+ * Steps: 1) School + location  2) Sport + colors + coach
+ *
+ * Year is no longer wall-level — it lives on each entry (grad year).
+ * One wall per school per sport, accumulates across all years.
  */
 
 import { useState } from 'react'
@@ -33,9 +36,6 @@ const US_STATES = [
   'VA','WA','WV','WI','WY','DC',
 ]
 
-const currentYear = new Date().getFullYear()
-const YEARS = Array.from({ length: 60 }, (_, i) => currentYear - i)
-
 export default function CreateTeamWall({ open, onClose }) {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
@@ -48,19 +48,15 @@ export default function CreateTeamWall({ open, onClose }) {
   const [state, setState]     = useState('')
 
   // Step 2
-  const [sport, setSport]     = useState('')
-  const [year, setYear]       = useState('')
-
-  // Step 3
-  const [colorPrimary, setColorPrimary] = useState('red')
-  const [coachName, setCoachName]       = useState('')
-  const [coachFunFact, setCoachFunFact] = useState('')
+  const [sport, setSport]                 = useState('')
+  const [colorPrimary, setColorPrimary]   = useState('red')
+  const [coachName, setCoachName]         = useState('')
+  const [coachFunFact, setCoachFunFact]   = useState('')
 
   if (!open) return null
 
   const canProceed1 = school.trim() && city.trim() && state
-  const canProceed2 = sport && year
-  const canSubmit   = canProceed1 && canProceed2
+  const canSubmit   = canProceed1 && sport
 
   function handleNext() {
     setError(null)
@@ -68,14 +64,12 @@ export default function CreateTeamWall({ open, onClose }) {
       const check = checkProfanity(school)
       if (!check.clean) { setError(check.reason); return }
       setStep(2)
-    } else if (step === 2) {
-      setStep(3)
     }
   }
 
   function handleBack() {
     setError(null)
-    setStep(s => Math.max(1, s - 1))
+    setStep(1)
   }
 
   async function handleSubmit() {
@@ -89,7 +83,6 @@ export default function CreateTeamWall({ open, onClose }) {
         city:   city.trim(),
         state,
         sport,
-        year:   Number(year),
         colorPrimary,
         coachName:    coachName.trim() || null,
         coachFunFact: coachFunFact.trim() || null,
@@ -97,10 +90,10 @@ export default function CreateTeamWall({ open, onClose }) {
 
       const slug = slugify(school.trim())
       onClose()
-      navigate(`/walls/${slug}/${sport}/${year}`)
+      navigate(`/walls/${slug}/${sport}`)
     } catch (err) {
       if (err?.code === '23505') {
-        setError('A wall for this exact team + year already exists.')
+        setError('A wall for this school + sport already exists. Search for it!')
       } else {
         setError('Something went wrong. Try again.')
       }
@@ -118,11 +111,10 @@ export default function CreateTeamWall({ open, onClose }) {
         </button>
 
         <div className="ctw-header">
-          <span className="ctw-step-label">STEP {step} OF 3</span>
+          <span className="ctw-step-label">STEP {step} OF 2</span>
           <h2 className="ctw-title">
             {step === 1 && 'YOUR SCHOOL'}
             {step === 2 && 'YOUR TEAM'}
-            {step === 3 && 'THE DETAILS'}
           </h2>
         </div>
 
@@ -168,7 +160,7 @@ export default function CreateTeamWall({ open, onClose }) {
           </div>
         )}
 
-        {/* ── Step 2: Sport + Year ──────────────────────────── */}
+        {/* ── Step 2: Sport + Colors + Coach ───────────────── */}
         {step === 2 && (
           <div className="ctw-fields">
             <label className="ctw-label">
@@ -185,25 +177,6 @@ export default function CreateTeamWall({ open, onClose }) {
                 ))}
               </select>
             </label>
-            <label className="ctw-label">
-              <span>Year</span>
-              <select
-                className="ctw-select"
-                value={year}
-                onChange={e => setYear(e.target.value)}
-              >
-                <option value="">Select year…</option>
-                {YEARS.map(y => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-        )}
-
-        {/* ── Step 3: Colors + Coach ────────────────────────── */}
-        {step === 3 && (
-          <div className="ctw-fields">
             <label className="ctw-label">
               <span>Team Color</span>
               <div className="ctw-color-grid">
@@ -265,11 +238,11 @@ export default function CreateTeamWall({ open, onClose }) {
             </button>
           )}
           <div className="ctw-nav__spacer" />
-          {step < 3 ? (
+          {step === 1 ? (
             <button
               className="ctw-btn ctw-btn--next"
               onClick={handleNext}
-              disabled={step === 1 ? !canProceed1 : !canProceed2}
+              disabled={!canProceed1}
             >
               Next <ChevronRight size={16} />
             </button>

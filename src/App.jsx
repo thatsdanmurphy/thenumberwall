@@ -24,7 +24,7 @@ export default function App() {
         <Route path="/my-wall/new" element={<MyWallsPage />} />
         <Route path="/wall/:slug" element={<MyWallPage />} />
         <Route path="/walls"     element={<TeamWallsPage />} />
-        <Route path="/walls/:schoolSlug/:sport/:year" element={<TeamWallPage />} />
+        <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} />
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
         <Route path="*"          element={<NotFoundPage />} />

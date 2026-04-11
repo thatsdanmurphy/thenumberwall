@@ -38,7 +38,7 @@ export function slugify(text) {
 
 export async function createTeamWall({
   school, city, state, country = 'US',
-  sport, year,
+  sport,
   colorPrimary, colorSecondary,
   coachName, coachFunFact,
 }) {
@@ -52,7 +52,6 @@ export async function createTeamWall({
     state,
     country,
     sport,
-    year:            Number(year),
     color_primary:   colorPrimary || 'orange',
     created_by:      fp,
   }
@@ -95,13 +94,12 @@ export async function loadTeamWall(wallId) {
 
 // ─── Load by slug + sport + year ───────────────────────────────────────────
 
-export async function loadTeamWallByRoute(schoolSlug, sport, year) {
+export async function loadTeamWallByRoute(schoolSlug, sport) {
   const { data: wall, error } = await supabase
     .from('team_walls')
     .select('*')
     .eq('school_slug', schoolSlug)
     .eq('sport', sport)
-    .eq('year', Number(year))
     .eq('status', 'active')
     .single()
 
@@ -209,9 +207,10 @@ export async function addTeamEntry(wallId, { number, name, gradYear, position, f
     wall_id:   wallId,
     number:    String(number),
     name,
-    grad_year: Number(gradYear),
     added_by:  fp,
   }
+
+  if (gradYear) row.grad_year = Number(gradYear)
 
   if (position) row.position = position
   if (funFact)  row.fun_fact = funFact.slice(0, 140)
@@ -219,6 +218,26 @@ export async function addTeamEntry(wallId, { number, name, gradYear, position, f
   const { data, error } = await supabase
     .from('team_wall_entries')
     .insert(row)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+// ─── Update an entry (anyone can edit name, position, fun_fact, grad_year) ─
+
+export async function updateTeamEntry(entryId, { name, position, funFact, gradYear }) {
+  const updates = {}
+  if (name !== undefined)     updates.name      = name
+  if (position !== undefined) updates.position   = position || null
+  if (funFact !== undefined)  updates.fun_fact   = funFact ? funFact.slice(0, 140) : null
+  if (gradYear !== undefined) updates.grad_year  = gradYear ? Number(gradYear) : null
+
+  const { data, error } = await supabase
+    .from('team_wall_entries')
+    .update(updates)
+    .eq('id', entryId)
     .select()
     .single()
 
@@ -270,16 +289,15 @@ export function isWallCreator(wall) {
   return wall.created_by === getFingerprint()
 }
 
-// ─── Get all years for a school + sport (for lineage view) ─────────────────
+// ─── Get all sports for a school (for sport nav) ──────────────────────────
 
-export async function getSchoolYears(schoolSlug, sport) {
+export async function getSchoolSports(schoolSlug) {
   const { data, error } = await supabase
     .from('team_walls')
-    .select('id, year, level, roster_size, created_at')
+    .select('id, sport, color_primary, created_at')
     .eq('school_slug', schoolSlug)
-    .eq('sport', sport)
     .eq('status', 'active')
-    .order('year', { ascending: false })
+    .order('sport', { ascending: true })
 
   if (error) return []
   return data || []

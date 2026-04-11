@@ -59,12 +59,12 @@
   }
 
   .tw-grid-col {
-    flex: 0 0 50%;
+    flex: 0 0 61.8%;
   }
 
   .tw-body .player-panel {
     flex: 1;
-    max-width: none;
+    max-width: var(--panel-max-width);
   }
 }
 
@@ -132,6 +132,20 @@
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 3px;
   padding: 2px 6px;
+}
+
+.tw-entry__edit {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.20);
+  cursor: pointer;
+  padding: 2px;
+  transition: color var(--motion-hover);
+  align-self: center;
+}
+
+.tw-entry__edit:hover {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .tw-entry__fact {
