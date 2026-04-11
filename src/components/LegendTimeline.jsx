@@ -983,84 +983,95 @@ export default function LegendTimeline({ timeline }) {
       </div>
 
       {/* ── Mobile Vertical Glow Timeline ──────────────────────────────── */}
-      <div className="vtl" ref={vContainerRef}>
-        {/* Vertical glow bar — left side */}
-        <div className="vtl__bar-col">
-          <canvas
-            ref={vCanvasRef}
-            className="vtl__canvas"
-            onTouchStart={handleVTouchStart}
-            onTouchMove={handleVTouchMove}
-            onTouchEnd={handleVTouchEnd}
-          />
-          {/* Era markers along the bar */}
-          {vGamePositions && eras.map(era => {
-            const top = vGamePositions[era.startIdx]
-            const height = vGamePositions[era.endIdx] - top
-            return (
-              <div
-                key={era.id}
-                className={`vtl__era-mark ${activeEra?.id === era.id ? 'vtl__era-mark--active' : ''}`}
-                style={{ top: `${top}px`, height: `${height}px` }}
-              >
-                <span className="vtl__era-yr">
-                  {era.seasons.length === 1 ? era.seasons[0] : `'${String(era.seasons[0]).slice(2)}`}
-                </span>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Right side — era info + Live Activity card */}
-        <div className="vtl__info-col">
-          {/* Current era context */}
+      <div className="vtl">
+        {/* Persistent top card — header + game info unified */}
+        <div className="vtl__card">
+          <div className="vtl__card-header">
+            <span className="vtl__card-number">12</span>
+            <div className="vtl__card-name-block">
+              <span className="vtl__card-name">{timeline.player_name}</span>
+              <span className="vtl__card-meta">
+                {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+              </span>
+            </div>
+          </div>
           {activeEra && (
-            <div className="vtl__era-context">
-              <span className="vtl__era-name">{activeEra.label}</span>
-              <span className="vtl__era-tagline">{activeEra.tagline}</span>
+            <div className="vtl__card-era">
+              <span className="vtl__card-era-name">{activeEra.label}</span>
+              <span className="vtl__card-era-tagline">{activeEra.tagline}</span>
             </div>
           )}
-
-          {/* Live Activity card — visible during scrub or when pinned */}
-          {activeGame && (isScrubbing || pinnedIndex !== null) && (
-            <div className={`vtl__live-card ${isScrubbing ? 'vtl__live-card--scrubbing' : ''}`}>
+          {activeGame ? (
+            <div className="vtl__card-game">
               {activeGame.is_bye ? (
-                <div className="vtl__live-bye">Bye Week</div>
+                <div className="vtl__card-bye">Bye Week</div>
               ) : activeGame.is_dnp ? (
-                <div className="vtl__live-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''}</div>
+                <div className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''}</div>
               ) : (
                 <>
-                  <div className="vtl__live-matchup">
-                    <span className={`vtl__live-result vtl__live-result--${activeGame.result?.toLowerCase()}`}>
+                  <div className="vtl__card-matchup">
+                    <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
                       {activeGame.result}
                     </span>
                     {' '}{activeGame.score}
-                    <span className="vtl__live-opponent"> vs {activeGame.opponent}</span>
+                    <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
                   </div>
                   {activeGame.stats?.pass_yards != null && (
-                    <div className="vtl__live-stats">
+                    <div className="vtl__card-stats">
                       {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
                       {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
                     </div>
                   )}
                   {activeGame.moments?.length > 0 && (
-                    <div className={`vtl__live-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__live-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__live-moment--negative' : ''}`}>
+                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
                       {getMomentIcon(activeGame.moments[0])}
                       <span>{activeGame.moments[0].moment_name}</span>
                     </div>
                   )}
                 </>
               )}
-              <div className="vtl__live-meta">
+              <div className="vtl__card-meta-line">
                 {activeGame.week} · {activeGame.season}
-                <span className="vtl__live-glow"> · Glow {activeGame.glow_score?.toFixed(1)}</span>
+                <span className="vtl__card-glow"> · Glow {activeGame.glow_score?.toFixed(1)}</span>
               </div>
             </div>
+          ) : (
+            <div className="vtl__card-hint">Touch the bar, slide to explore</div>
           )}
+        </div>
 
-          {!activeGame && !isScrubbing && pinnedIndex === null && (
-            <div className="vtl__hint">
-              Touch and hold the bar,<br />slide to explore.
+        {/* Centered bar area with scrub indicator */}
+        <div className="vtl__bar-area">
+          <div className="vtl__bar-col">
+            <canvas
+              ref={vCanvasRef}
+              className="vtl__canvas"
+              onTouchStart={handleVTouchStart}
+              onTouchMove={handleVTouchMove}
+              onTouchEnd={handleVTouchEnd}
+            />
+            {/* Era year ticks along the bar edge */}
+            {vGamePositions && eras.map(era => {
+              const top = vGamePositions[era.startIdx]
+              return (
+                <div
+                  key={era.id}
+                  className={`vtl__era-tick ${activeEra?.id === era.id ? 'vtl__era-tick--active' : ''}`}
+                  style={{ top: `${top}px` }}
+                >
+                  {era.seasons.length === 1 ? era.seasons[0] : `'${String(era.seasons[0]).slice(2)}`}
+                </div>
+              )
+            })}
+          </div>
+          {/* Horizontal scrub indicator — shows where finger is */}
+          {activeIndex !== null && vGamePositions && (
+            <div
+              className="vtl__scrub-indicator"
+              style={{ top: `${(vGamePositions[activeIndex] + vGamePositions[activeIndex + 1]) / 2}px` }}
+            >
+              <div className="vtl__scrub-line" />
+              <div className="vtl__scrub-node" />
             </div>
           )}
         </div>
