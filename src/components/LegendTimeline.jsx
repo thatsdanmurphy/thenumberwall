@@ -362,6 +362,173 @@ function drawTimeline(canvas, games, hoveredIndex, breathPhase, shimmerPhase) {
 }
 
 
+// ─── Vertical Bar — Canvas Renderer (mobile) ───────────────────────────────
+// Same glow palette, same gravitational weight, but flows top→bottom.
+// Amplitude extends left/right from center. Returns gameY positions.
+
+function drawVerticalTimeline(canvas, games, hoveredIndex, breathPhase) {
+  const ctx = canvas.getContext('2d')
+  const dpr = window.devicePixelRatio || 1
+  const rect = canvas.getBoundingClientRect()
+  canvas.width = rect.width * dpr
+  canvas.height = rect.height * dpr
+  ctx.scale(dpr, dpr)
+
+  const w = rect.width, h = rect.height, n = games.length
+  if (n === 0 || h === 0) return null
+
+  ctx.fillStyle = 'rgb(3, 3, 12)'
+  ctx.fillRect(0, 0, w, h)
+
+  const smoothed = smoothGlowScores(games, 3)
+  const midX = w / 2
+  const minAmp = 0.15
+  const maxAmp = 1.0
+
+  // Gravitational weight — moments take more vertical space
+  const scales = new Float64Array(n)
+  let totalScale = 0
+  for (let i = 0; i < n; i++) {
+    let s = 1.0
+    const mom = games[i].moments
+    if (mom?.length > 0) {
+      const isSacred = mom.some(m => m.use_sacred_color)
+      const maxAbs = Math.max(...mom.map(m => Math.abs(m.intensity || 0)))
+      if (isSacred) s = 5.0
+      else if (maxAbs >= 7) s = 3.5
+      else if (maxAbs >= 3) s = 2.0
+    }
+    // Dock magnification on hover
+    if (hoveredIndex !== null) {
+      const dist = Math.abs(i - hoveredIndex)
+      if (dist < 20) s += 0.6 * 0.5 * (1 + Math.cos(Math.PI * dist / 20))
+    }
+    scales[i] = s; totalScale += s
+  }
+  const gameY = new Float64Array(n + 1)
+  gameY[0] = 0
+  for (let i = 0; i < n; i++) gameY[i + 1] = gameY[i] + (scales[i] / totalScale) * h
+
+  function vis(gf) {
+    const i0 = Math.min(Math.max(Math.floor(gf), 0), n - 1)
+    const i1 = Math.min(i0 + 1, n - 1)
+    const frac = gf - i0
+    const glow = smoothed[i0] * (1 - frac) + smoothed[i1] * frac
+    const color = glowToColor(glow)
+    const norm = (glow + 10) / 20
+    let amp = minAmp + (maxAmp - minAmp) * Math.pow(norm, 0.55)
+    if (hoveredIndex !== null) {
+      const dist = Math.abs(gf - hoveredIndex)
+      if (dist < 20) amp = Math.min(1.0, amp + 0.15 * 0.5 * (1 + Math.cos(Math.PI * dist / 20)))
+    }
+    return { glow, color, amp }
+  }
+
+  // Pass 1: Main waveform — top to bottom
+  const pixelH = Math.ceil(h)
+  for (let py = 0; py < pixelH; py++) {
+    let lo = 0, hi = n - 1
+    while (lo < hi) { const m = (lo + hi) >> 1; if (gameY[m + 1] <= py) lo = m + 1; else hi = m }
+    const idx = lo, gs = gameY[idx], ge = gameY[idx + 1], gh = ge - gs
+    const gf = idx + (gh > 0 ? (py - gs) / gh : 0)
+    const { color, amp } = vis(gf)
+    const barW = w * amp
+    const x0 = midX - barW / 2
+    const { r, g, b } = color
+    const grad = ctx.createLinearGradient(x0, 0, x0 + barW, 0)
+    grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.5)`)
+    grad.addColorStop(0.35, `rgba(${Math.min(255, r + 20)}, ${Math.min(255, g + 15)}, ${Math.min(255, b + 10)}, 1)`)
+    grad.addColorStop(0.5, `rgba(${Math.min(255, r + 30)}, ${Math.min(255, g + 20)}, ${Math.min(255, b + 10)}, 1)`)
+    grad.addColorStop(0.65, `rgba(${Math.min(255, r + 20)}, ${Math.min(255, g + 15)}, ${Math.min(255, b + 10)}, 1)`)
+    grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.5)`)
+    ctx.fillStyle = grad
+    ctx.fillRect(x0, py, barW, 1.5)
+  }
+
+  // Pass 2: Bloom
+  ctx.globalCompositeOperation = 'screen'
+  for (let py = 0; py < pixelH; py += 2) {
+    let lo = 0, hi = n - 1
+    while (lo < hi) { const m = (lo + hi) >> 1; if (gameY[m + 1] <= py) lo = m + 1; else hi = m }
+    const idx = lo, gs = gameY[idx], ge = gameY[idx + 1], gh = ge - gs
+    const gf = idx + (gh > 0 ? (py - gs) / gh : 0)
+    const { glow, color, amp } = vis(gf)
+    if (glow < 2) continue
+    const str = ((glow - 2) / 8) * 0.3
+    const barW = w * amp * 1.4
+    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${str})`
+    ctx.fillRect(midX - barW / 2, py - 2, barW, 5)
+  }
+  ctx.globalCompositeOperation = 'source-over'
+
+  // Pass 3: Sacred sunbursts — horizontal flares
+  for (let i = 0; i < n; i++) {
+    if (!games[i].moments?.some(m => m.use_sacred_color)) continue
+    const cy = (gameY[i] + gameY[i + 1]) / 2
+    const breath = 0.7 + 0.3 * Math.sin(breathPhase + i * 0.5)
+    const floodR = Math.max(h * 0.08, 40)
+    const flood = ctx.createRadialGradient(midX, cy, 0, midX, cy, floodR)
+    flood.addColorStop(0, `rgba(255, 245, 180, ${0.55 * breath})`)
+    flood.addColorStop(0.2, `rgba(255, 230, 100, ${0.35 * breath})`)
+    flood.addColorStop(0.5, `rgba(255, 195, 45, ${0.15 * breath})`)
+    flood.addColorStop(1, 'rgba(100, 55, 10, 0)')
+    ctx.fillStyle = flood
+    ctx.fillRect(0, Math.max(0, cy - floodR), w, floodR * 2)
+    // Horizontal light ray
+    ctx.globalCompositeOperation = 'screen'
+    const rayH = 4
+    const rayGrad = ctx.createLinearGradient(0, 0, w, 0)
+    rayGrad.addColorStop(0, `rgba(255, 248, 200, ${0.3 * breath})`)
+    rayGrad.addColorStop(0.3, `rgba(255, 248, 200, ${0.08 * breath})`)
+    rayGrad.addColorStop(0.5, `rgba(255, 255, 240, ${0.4 * breath})`)
+    rayGrad.addColorStop(0.7, `rgba(255, 248, 200, ${0.08 * breath})`)
+    rayGrad.addColorStop(1, `rgba(255, 248, 200, ${0.3 * breath})`)
+    ctx.fillStyle = rayGrad
+    ctx.fillRect(0, cy - rayH / 2, w, rayH)
+    ctx.globalCompositeOperation = 'source-over'
+  }
+
+  // Pass 4: Negative craters
+  for (let i = 0; i < n; i++) {
+    if (!games[i].moments?.length) continue
+    const minInt = Math.min(...games[i].moments.map(m => m.intensity || 0))
+    if (minInt >= 0) continue
+    const cy = (gameY[i] + gameY[i + 1]) / 2
+    const severity = Math.abs(minInt) / 10
+    const voidR = Math.max(h * 0.04 * severity, 20)
+    const voidGrad = ctx.createRadialGradient(midX, cy, 0, midX, cy, voidR)
+    voidGrad.addColorStop(0, `rgba(0, 0, 4, ${0.9 * severity})`)
+    voidGrad.addColorStop(0.4, `rgba(2, 2, 10, ${0.5 * severity})`)
+    voidGrad.addColorStop(1, 'rgba(3, 3, 12, 0)')
+    ctx.fillStyle = voidGrad
+    ctx.fillRect(0, cy - voidR, w, voidR * 2)
+  }
+
+  // Vignette — left/right edges
+  const vg = ctx.createLinearGradient(0, 0, w, 0)
+  vg.addColorStop(0, 'rgba(3, 3, 12, 0.55)')
+  vg.addColorStop(0.2, 'rgba(3, 3, 12, 0)')
+  vg.addColorStop(0.8, 'rgba(3, 3, 12, 0)')
+  vg.addColorStop(1, 'rgba(3, 3, 12, 0.55)')
+  ctx.fillStyle = vg
+  ctx.fillRect(0, 0, w, h)
+
+  // Hover indicator
+  if (hoveredIndex !== null && hoveredIndex >= 0 && hoveredIndex < n) {
+    const y0 = gameY[hoveredIndex], y1 = gameY[hoveredIndex + 1]
+    const gh = y1 - y0
+    const hg = ctx.createRadialGradient(midX, y0 + gh / 2, 0, midX, y0 + gh / 2, Math.max(gh * 2, 8))
+    hg.addColorStop(0, 'rgba(255, 255, 255, 0.15)')
+    hg.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)')
+    hg.addColorStop(1, 'rgba(255, 255, 255, 0)')
+    ctx.fillStyle = hg
+    ctx.fillRect(0, y0 - gh * 2, w, gh * 5)
+  }
+
+  return gameY
+}
+
+
 // ─── Tooltip ────────────────────────────────────────────────────────────────
 
 function TimelineTooltip({ game, x, y, pinned }) {
@@ -462,10 +629,14 @@ function impactWeight(game) {
 
 export default function LegendTimeline({ timeline }) {
   const canvasRef = useRef(null)
+  const vCanvasRef = useRef(null)       // vertical mobile canvas
   const containerRef = useRef(null)
+  const vContainerRef = useRef(null)    // vertical mobile container
   const rafRef = useRef(null)
+  const scrubRef = useRef(false)        // is user in tap-hold scrub mode?
+  const scrubTimerRef = useRef(null)    // delay timer for tap-hold activation
+  const lastMomentRef = useRef(null)    // tracks last moment crossed for haptics
 
-  const viewMode = 'glow' // segmented removed — glow is the view
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [pinnedIndex, setPinnedIndex] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
@@ -473,6 +644,8 @@ export default function LegendTimeline({ timeline }) {
   const [breathPhase, setBreathPhase] = useState(0)
   const [shimmerPhase, setShimmerPhase] = useState(0)
   const [gamePositions, setGamePositions] = useState(null)
+  const [vGamePositions, setVGamePositions] = useState(null)  // vertical positions
+  const [isScrubbing, setIsScrubbing] = useState(false)       // live activity visible
 
   const games = timeline?.games || []
   const eras = useMemo(() => buildEras(games), [games])
@@ -605,6 +778,79 @@ export default function LegendTimeline({ timeline }) {
     if (pinnedIndex !== null) setPinnedIndex(null)
   }, [pinnedIndex])
 
+  // ── Vertical mobile canvas draw ──
+  useEffect(() => {
+    const canvas = vCanvasRef.current
+    if (!canvas) return
+    const gy = drawVerticalTimeline(canvas, games, activeIndex, breathPhase)
+    if (gy) setVGamePositions(gy)
+  }, [games, activeIndex, breathPhase])
+
+  // ── Mobile tap-hold-scrub handlers ──
+  const hapticPulse = useCallback((game) => {
+    if (!game?.moments?.length) return
+    const isSacred = game.moments.some(m => m.use_sacred_color)
+    if (navigator.vibrate) {
+      navigator.vibrate(isSacred ? [15, 30, 15] : 12)
+    }
+  }, [])
+
+  const vScrubToIndex = useCallback((touchY) => {
+    const canvas = vCanvasRef.current
+    if (!canvas || !vGamePositions) return
+    const rect = canvas.getBoundingClientRect()
+    const y = touchY - rect.top
+    const n = games.length
+    let lo = 0, hi = n - 1
+    while (lo < hi) {
+      const m = (lo + hi) >> 1
+      if (vGamePositions[m + 1] <= y) lo = m + 1; else hi = m
+    }
+    if (lo >= 0 && lo < n) {
+      // Check if we crossed a moment boundary
+      if (lo !== hoveredIndex && games[lo].moments?.length > 0) {
+        const momentKey = lo
+        if (lastMomentRef.current !== momentKey) {
+          lastMomentRef.current = momentKey
+          hapticPulse(games[lo])
+        }
+      }
+      setHoveredIndex(lo)
+      setPinnedIndex(lo)
+    }
+  }, [games, vGamePositions, hoveredIndex, hapticPulse])
+
+  const handleVTouchStart = useCallback((e) => {
+    e.preventDefault()
+    // Start scrub after brief hold (150ms)
+    scrubTimerRef.current = setTimeout(() => {
+      scrubRef.current = true
+      setIsScrubbing(true)
+      const touch = e.touches[0]
+      vScrubToIndex(touch.clientY)
+    }, 150)
+  }, [vScrubToIndex])
+
+  const handleVTouchMove = useCallback((e) => {
+    e.preventDefault()
+    if (!scrubRef.current) {
+      // If moved before hold timer, activate immediately (they're scrubbing)
+      clearTimeout(scrubTimerRef.current)
+      scrubRef.current = true
+      setIsScrubbing(true)
+    }
+    const touch = e.touches[0]
+    vScrubToIndex(touch.clientY)
+  }, [vScrubToIndex])
+
+  const handleVTouchEnd = useCallback(() => {
+    clearTimeout(scrubTimerRef.current)
+    scrubRef.current = false
+    lastMomentRef.current = null
+    // Keep pinned on whatever they landed on, but exit scrub mode after delay
+    setTimeout(() => setIsScrubbing(false), 2000)
+  }, [])
+
   // Click on a moment marker — pin tooltip to that game
   const handleMomentClick = useCallback((gameIdx) => {
     if (pinnedIndex === gameIdx) {
@@ -653,20 +899,17 @@ export default function LegendTimeline({ timeline }) {
     <div className="legend-timeline">
       {/* Header */}
       <div className="legend-timeline__header">
-        <div className="legend-timeline__number">
-          #{timeline.player_id?.includes('brady') ? '12' : ''}
+        <div className="legend-timeline__number-row">
+          <span className="legend-timeline__number">12</span>
+          <div className="legend-timeline__name-block">
+            <h1 className="legend-timeline__name">{timeline.player_name}</h1>
+            <p className="legend-timeline__meta">
+              {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+              <span className="legend-timeline__draft-inline"> · Rd {draft.round}, Pick {draft.pick} · {draft.year}</span>
+            </p>
+          </div>
         </div>
-        <div className="legend-timeline__info">
-          <h1 className="legend-timeline__name">{timeline.player_name}</h1>
-          <p className="legend-timeline__meta">
-            {timeline.position} · {timeline.career_span} · {timeline.total_games} games
-          </p>
-          <p className="legend-timeline__voice">{timeline.voice_line}</p>
-        </div>
-        <div className="legend-timeline__draft">
-          <div className="legend-timeline__draft-pick">#{draft.pick}</div>
-          <div className="legend-timeline__draft-label">Rd {draft.round} · {draft.year}</div>
-        </div>
+        <p className="legend-timeline__voice">{timeline.voice_line}</p>
       </div>
 
       {/* The Bar */}
@@ -773,69 +1016,88 @@ export default function LegendTimeline({ timeline }) {
         <span className="legend-timeline__key-label">The moments that mattered</span>
       </div>
 
-      {/* ── Mobile Vertical Timeline ────────────────────────────────────── */}
-      <div className="legend-timeline__vertical">
-        {eras.map(era => {
-          const eraGames = games.slice(era.startIdx, era.endIdx)
-          return (
-            <div key={era.id} className="vtl-era">
-              <div className="vtl-era__header">
-                <span className="vtl-era__label">{era.label}</span>
-                <span className="vtl-era__seasons">
-                  {era.seasons.length === 1 ? era.seasons[0] : `${era.seasons[0]}–${era.seasons[era.seasons.length - 1]}`}
+      {/* ── Mobile Vertical Glow Timeline ──────────────────────────────── */}
+      <div className="vtl" ref={vContainerRef}>
+        {/* Vertical glow bar — left side */}
+        <div className="vtl__bar-col">
+          <canvas
+            ref={vCanvasRef}
+            className="vtl__canvas"
+            onTouchStart={handleVTouchStart}
+            onTouchMove={handleVTouchMove}
+            onTouchEnd={handleVTouchEnd}
+          />
+          {/* Era markers along the bar */}
+          {vGamePositions && eras.map(era => {
+            const top = vGamePositions[era.startIdx]
+            const height = vGamePositions[era.endIdx] - top
+            return (
+              <div
+                key={era.id}
+                className={`vtl__era-mark ${activeEra?.id === era.id ? 'vtl__era-mark--active' : ''}`}
+                style={{ top: `${top}px`, height: `${height}px` }}
+              >
+                <span className="vtl__era-yr">
+                  {era.seasons.length === 1 ? era.seasons[0] : `'${String(era.seasons[0]).slice(2)}`}
                 </span>
-                <span className="vtl-era__tagline">{era.tagline}</span>
               </div>
-              <div className="vtl-era__games">
-                {eraGames.map((g, j) => {
-                  const globalIdx = era.startIdx + j
-                  const score = g.glow_score || 0
-                  const absScore = Math.abs(score)
-                  const color = glowToColor(score)
-                  const hasMoment = g.moments?.length > 0
-                  const isSacred = g.moments?.some(m => m.use_sacred_color)
-                  const isNeg = g.moments?.some(m => m.intensity < 0)
-                  const isOpen = pinnedIndex === globalIdx
-                  // Bar width: percentage of max glow, minimum 8%
-                  const widthPct = Math.max(8, (absScore / 10) * 100)
-                  return (
-                    <div key={j} className="vtl-game-row">
-                      <div
-                        className={`vtl-game ${isSacred ? 'vtl-game--sacred' : ''} ${isNeg ? 'vtl-game--negative' : ''} ${hasMoment ? 'vtl-game--moment' : ''} ${isOpen ? 'vtl-game--open' : ''}`}
-                        style={{ width: `${widthPct}%`, backgroundColor: colorToCSS(color) }}
-                        onClick={() => setPinnedIndex(isOpen ? null : globalIdx)}
-                      >
-                        {hasMoment && <span className="vtl-game__icon">{getMomentIcon(g.moments[0])}</span>}
-                      </div>
-                      {hasMoment && (
-                        <span className={`vtl-game__moment-name ${isSacred ? 'vtl-game__moment-name--sacred' : ''} ${isNeg ? 'vtl-game__moment-name--negative' : ''}`}>
-                          {g.moments[0].moment_name}
-                        </span>
-                      )}
-                      {isOpen && (
-                        <div className="vtl-game__detail">
-                          {g.is_bye ? 'Bye Week' : g.is_dnp ? (
-                            <span className="vtl-game__dnp">DNP{g.dnp_reason ? ` — ${g.dnp_reason}` : ''}</span>
-                          ) : (
-                            <>
-                              <span className={`vtl-game__result vtl-game__result--${g.result?.toLowerCase()}`}>{g.result}</span>
-                              {' '}{g.score} vs {g.opponent}
-                              {g.stats?.pass_yards != null && (
-                                <span className="vtl-game__stats">
-                                  {' · '}{g.stats.pass_yards} yds, {g.stats.pass_td || 0} TD, {g.stats.interceptions || 0} INT
-                                </span>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      )}
+            )
+          })}
+        </div>
+
+        {/* Right side — era info + Live Activity card */}
+        <div className="vtl__info-col">
+          {/* Current era context */}
+          {activeEra && (
+            <div className="vtl__era-context">
+              <span className="vtl__era-name">{activeEra.label}</span>
+              <span className="vtl__era-tagline">{activeEra.tagline}</span>
+            </div>
+          )}
+
+          {/* Live Activity card — visible during scrub or when pinned */}
+          {activeGame && (isScrubbing || pinnedIndex !== null) && (
+            <div className={`vtl__live-card ${isScrubbing ? 'vtl__live-card--scrubbing' : ''}`}>
+              {activeGame.is_bye ? (
+                <div className="vtl__live-bye">Bye Week</div>
+              ) : activeGame.is_dnp ? (
+                <div className="vtl__live-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''}</div>
+              ) : (
+                <>
+                  <div className="vtl__live-matchup">
+                    <span className={`vtl__live-result vtl__live-result--${activeGame.result?.toLowerCase()}`}>
+                      {activeGame.result}
+                    </span>
+                    {' '}{activeGame.score}
+                    <span className="vtl__live-opponent"> vs {activeGame.opponent}</span>
+                  </div>
+                  {activeGame.stats?.pass_yards != null && (
+                    <div className="vtl__live-stats">
+                      {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
+                      {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
                     </div>
-                  )
-                })}
+                  )}
+                  {activeGame.moments?.length > 0 && (
+                    <div className={`vtl__live-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__live-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__live-moment--negative' : ''}`}>
+                      {getMomentIcon(activeGame.moments[0])}
+                      <span>{activeGame.moments[0].moment_name}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              <div className="vtl__live-meta">
+                {activeGame.week} · {activeGame.season}
+                <span className="vtl__live-glow"> · Glow {activeGame.glow_score?.toFixed(1)}</span>
               </div>
             </div>
-          )
-        })}
+          )}
+
+          {!activeGame && !isScrubbing && pinnedIndex === null && (
+            <div className="vtl__hint">
+              Touch and hold the bar,<br />slide to explore.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
