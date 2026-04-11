@@ -10,13 +10,24 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Loader, X, Pencil, Plus } from 'lucide-react'
+import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
+import CreateTeamWall from '../components/CreateTeamWall.jsx'
 import { loadTeamWallByRoute, addTeamEntry, updateTeamEntry, getSchoolSports } from '../lib/teamWallStore.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import './TeamWallPage.css'
+
+// Sport icon map — matches SportsFilter
+const SPORT_ICONS = {
+  basketball: FaBasketballBall,
+  football:   FaFootballBall,
+  baseball:   FaBaseballBall,
+  hockey:     FaHockeyPuck,
+  soccer:     FaFutbol,
+}
 
 const TILE_NUMBERS = ['0', ...Array.from({ length: 99 }, (_, i) => String(i + 1))]
 
@@ -43,6 +54,7 @@ export default function TeamWallPage() {
 
   // Sports nav — other sports for this school
   const [schoolSports, setSchoolSports] = useState([])
+  const [showCreate, setShowCreate]     = useState(false)
 
   // Edit state — which entry is being edited
   const [editingId, setEditingId]     = useState(null)
@@ -229,35 +241,32 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
-        {/* ── Sports nav — active sports lit, others show + ── */}
-        {schoolSports.length > 0 && (
-          <div className="tw-sports-nav">
-            {schoolSports.map(s => {
-              const isActive = s.sport === sport
+        {/* ── Sports nav — reuses SportsFilter pill styles ── */}
+        <div className="sports-filter" role="group" aria-label="Sports at this school">
+          {schoolSports
+            .filter(s => s.sport !== sport)   /* don't re-list current sport */
+            .map(s => {
               const label = s.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+              const Icon = SPORT_ICONS[s.sport]
               return (
                 <button
                   key={s.id}
-                  className={`tw-sport-chip${isActive ? ' tw-sport-chip--active' : ''}`}
-                  onClick={() => !isActive && navigate(`/walls/${schoolSlug}/${s.sport}`)}
-                  style={isActive ? {
-                    borderColor: TEAM_PALETTES[s.color_primary]?.[3]?.border || 'rgba(255,255,255,0.3)',
-                    color: TEAM_PALETTES[s.color_primary]?.[3]?.text || '#fff',
-                  } : undefined}
+                  className="sports-filter__pill"
+                  onClick={() => navigate(`/walls/${schoolSlug}/${s.sport}`)}
                 >
+                  {Icon && <Icon size={13} className="sports-filter__icon" />}
                   {label}
                 </button>
               )
             })}
-            <button
-              className="tw-sport-chip tw-sport-chip--add"
-              onClick={() => navigate('/walls')}
-              title="Start another sport wall for this school"
-            >
-              <Plus size={12} />
-            </button>
-          </div>
-        )}
+          <button
+            className="tw-sports-nav__add"
+            onClick={() => setShowCreate(true)}
+            title="Start another sport wall for this school"
+          >
+            <Plus size={12} /> Add sport
+          </button>
+        </div>
 
         {/* ── Summary line — one line, no box ──────────────── */}
         <div className="tw-summary">
@@ -266,7 +275,7 @@ export default function TeamWallPage() {
           </span>
           {wall.coach_name && (
             <span className="tw-summary__coach">
-              Coach {wall.coach_name}{wall.coach_fun_fact ? ` — ${wall.coach_fun_fact}` : ''}
+              Coach: {wall.coach_name}
             </span>
           )}
         </div>
@@ -491,6 +500,9 @@ export default function TeamWallPage() {
       {selected && (
         <div className="tw-backdrop" onClick={() => setSelected(null)} aria-hidden="true" />
       )}
+
+      {/* Create modal — launched from sports nav "Add sport" */}
+      <CreateTeamWall open={showCreate} onClose={() => setShowCreate(false)} />
     </AppShell>
   )
 }

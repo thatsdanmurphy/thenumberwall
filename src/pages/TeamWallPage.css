@@ -15,55 +15,30 @@
   padding: var(--space-7) var(--space-3);
 }
 
-/* ── Sports nav — chip bar at top ─────────────────────────────────────────── */
+/* ── Sports nav — add button for unfilled sports ─────────────────────────── */
 
-.tw-sports-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-
-.tw-sport-chip {
-  font-family: var(--font-scoreboard);
-  font-size: 0.5rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 3px;
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
-}
-
-.tw-sport-chip:hover:not(.tw-sport-chip--active) {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.55);
-  border-color: rgba(255, 255, 255, 0.20);
-}
-
-.tw-sport-chip--active {
-  background: rgba(255, 255, 255, 0.08);
-  cursor: default;
-}
-
-.tw-sport-chip--add {
-  display: flex;
-  align-items: center;
+.tw-sports-nav__add {
+  display:         inline-flex;
+  align-items:     center;
   justify-content: center;
-  width: 26px;
-  height: 22px;
-  padding: 0;
-  border-style: dashed;
-  color: rgba(255, 255, 255, 0.22);
+  gap:             4px;
+  padding:         5px 10px;
+  background:      rgba(255, 255, 255, 0.03);
+  border:          1px dashed rgba(255, 255, 255, 0.10);
+  border-radius:   4px;
+  font-family:     var(--font-scoreboard);
+  font-size:       0.6875rem;
+  letter-spacing:  0.10em;
+  color:           rgba(255, 255, 255, 0.25);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
+  white-space:     nowrap;
 }
 
-.tw-sport-chip--add:hover {
-  color: rgba(255, 255, 255, 0.50);
-  border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.06);
+.tw-sports-nav__add:hover {
+  background:   rgba(255, 255, 255, 0.06);
+  color:        rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.20);
 }
 
 /* ── Summary — one line, no box ───────────────────────────────────────────── */
@@ -89,7 +64,7 @@
   font-style: italic;
 }
 
-/* ── Body: 50/50 desktop, stacked mobile ──────────────────────────────────── */
+/* ── Body: golden ratio desktop, stacked mobile (matches WallPage) ────────── */
 
 .tw-body {
   flex: 1;
@@ -105,7 +80,7 @@
 @media (min-width: 768px) {
   .tw-body {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     gap: var(--space-4);
   }
 
