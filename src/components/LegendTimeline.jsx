@@ -634,12 +634,17 @@ export default function LegendTimeline({ timeline }) {
   const rafRef = useRef(null)
   const scrubRef = useRef(false)
 
+  // Animation phases as refs — avoids re-renders on every frame
+  const breathRef = useRef(0)
+  const shimmerRef = useRef(0)
+  const gamePositionsRef = useRef(null)
+  const vGamePositionsRef = useRef(null)
+
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [pinnedIndex, setPinnedIndex] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [containerWidth, setContainerWidth] = useState(0)
-  const [breathPhase, setBreathPhase] = useState(0)
-  const [shimmerPhase, setShimmerPhase] = useState(0)
+  // State copies for JSX that needs positions (markers, scrub indicator)
   const [gamePositions, setGamePositions] = useState(null)
   const [vGamePositions, setVGamePositions] = useState(null)
 
@@ -687,18 +692,6 @@ export default function LegendTimeline({ timeline }) {
   }, [momentMarkers, gamePositions])
 
   // Animation loop
-  useEffect(() => {
-    let running = true
-    function tick(time) {
-      if (!running) return
-      setBreathPhase((time / 2200) % (Math.PI * 2))
-      setShimmerPhase((time / 12000) % 1)
-      rafRef.current = requestAnimationFrame(tick)
-    }
-    rafRef.current = requestAnimationFrame(tick)
-    return () => { running = false; cancelAnimationFrame(rafRef.current) }
-  }, [])
-
   // Resize
   useEffect(() => {
     const el = containerRef.current
@@ -713,32 +706,68 @@ export default function LegendTimeline({ timeline }) {
   // The "active" index is pinned if set, otherwise hovered
   const activeIndex = pinnedIndex !== null ? pinnedIndex : hoveredIndex
 
-  // Draw — captures gameX positions for icon overlay
+  // Single rAF loop — draws both canvases directly, no React state for animation
+  const activeIndexRef = useRef(activeIndex)
+  activeIndexRef.current = activeIndex
+  const gamesRef = useRef(games)
+  gamesRef.current = games
+
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas || !containerWidth) return
-    const gx = drawTimeline(canvas, games, activeIndex, breathPhase, shimmerPhase)
-    if (gx) setGamePositions(gx)
-  }, [games, activeIndex, containerWidth, breathPhase, shimmerPhase])
+    let running = true
+    let lastPositionSync = 0
+
+    function tick(time) {
+      if (!running) return
+      breathRef.current = (time / 2200) % (Math.PI * 2)
+      shimmerRef.current = (time / 12000) % 1
+
+      // Draw horizontal canvas
+      const hCanvas = canvasRef.current
+      if (hCanvas && hCanvas.getBoundingClientRect().width > 0) {
+        const gx = drawTimeline(hCanvas, gamesRef.current, activeIndexRef.current, breathRef.current, shimmerRef.current)
+        if (gx) gamePositionsRef.current = gx
+      }
+
+      // Draw vertical canvas
+      const vCanvas = vCanvasRef.current
+      if (vCanvas && vCanvas.getBoundingClientRect().height > 0) {
+        const gy = drawVerticalTimeline(vCanvas, gamesRef.current, activeIndexRef.current, breathRef.current)
+        if (gy) vGamePositionsRef.current = gy
+      }
+
+      // Sync positions to React state infrequently (for markers/scrub indicator)
+      if (time - lastPositionSync > 150) {
+        lastPositionSync = time
+        if (gamePositionsRef.current) setGamePositions(gamePositionsRef.current)
+        if (vGamePositionsRef.current) setVGamePositions(vGamePositionsRef.current)
+      }
+
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+    return () => { running = false; cancelAnimationFrame(rafRef.current) }
+  }, []) // empty deps — runs once, reads everything via refs
 
   // Mouse hover on canvas — only updates if nothing is pinned
   const handleMouseMove = useCallback((e) => {
     if (pinnedIndex !== null) return  // pinned tooltip takes priority
     const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect || !gamePositions) return
+    const positions = gamePositionsRef.current
+    if (!rect || !positions) return
     const x = e.clientX - rect.left
-    const n = games.length
+    const n = gamesRef.current.length
     let lo = 0, hi = n - 1
     while (lo < hi) {
       const m = (lo + hi) >> 1
-      if (gamePositions[m + 1] <= x) lo = m + 1; else hi = m
+      if (positions[m + 1] <= x) lo = m + 1; else hi = m
     }
     const idx = lo
     if (idx >= 0 && idx < n) {
       setHoveredIndex(idx)
       setTooltipPos({ x: Math.min(Math.max(x, 120), rect.width - 120), y: -10 })
+      setGamePositions(positions)
     }
-  }, [games.length, gamePositions, pinnedIndex])
+  }, [pinnedIndex])
 
   const handleMouseLeave = useCallback(() => {
     if (pinnedIndex === null) setHoveredIndex(null)
@@ -747,20 +776,21 @@ export default function LegendTimeline({ timeline }) {
   // Touch drag on canvas — scrub through games
   const handleTouchMove = useCallback((e) => {
     const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect || !gamePositions) return
+    const positions = gamePositionsRef.current
+    if (!rect || !positions) return
     const touch = e.touches[0]
     const x = touch.clientX - rect.left
-    const n = games.length
+    const n = gamesRef.current.length
     let lo = 0, hi = n - 1
     while (lo < hi) {
       const m = (lo + hi) >> 1
-      if (gamePositions[m + 1] <= x) lo = m + 1; else hi = m
+      if (positions[m + 1] <= x) lo = m + 1; else hi = m
     }
     if (lo >= 0 && lo < n) {
       setHoveredIndex(lo)
       setTooltipPos({ x: Math.min(Math.max(x, 80), rect.width - 80), y: -10 })
     }
-  }, [games.length, gamePositions])
+  }, [])
 
   const handleTouchEnd = useCallback(() => {
     // On touch end, pin whatever was last touched so the tooltip stays visible
@@ -774,31 +804,26 @@ export default function LegendTimeline({ timeline }) {
     if (pinnedIndex !== null) setPinnedIndex(null)
   }, [pinnedIndex])
 
-  // ── Vertical mobile canvas draw ──
-  useEffect(() => {
-    const canvas = vCanvasRef.current
-    if (!canvas) return
-    const gy = drawVerticalTimeline(canvas, games, activeIndex, breathPhase)
-    if (gy) setVGamePositions(gy)
-  }, [games, activeIndex, breathPhase])
-
   // ── Mobile scrub handlers ──
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
-    if (!canvas || !vGamePositions) return
+    const positions = vGamePositionsRef.current
+    if (!canvas || !positions) return
     const rect = canvas.getBoundingClientRect()
     const y = touchY - rect.top
-    const n = games.length
+    const n = gamesRef.current.length
     let lo = 0, hi = n - 1
     while (lo < hi) {
       const m = (lo + hi) >> 1
-      if (vGamePositions[m + 1] <= y) lo = m + 1; else hi = m
+      if (positions[m + 1] <= y) lo = m + 1; else hi = m
     }
     if (lo >= 0 && lo < n) {
       setHoveredIndex(lo)
       setPinnedIndex(lo)
+      // Force position sync for scrub indicator
+      setVGamePositions(positions)
     }
-  }, [games, vGamePositions])
+  }, [])
 
   const handleVTouchStart = useCallback((e) => {
     e.preventDefault()
