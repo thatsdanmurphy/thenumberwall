@@ -554,17 +554,24 @@
 }
 
 /* ── Persistent top card: header + game info merged ── */
+/* Floats above the bar — bar slides underneath on scrub */
 .vtl__card {
-  background: rgba(6, 8, 18, 0.92);
+  position: relative;
+  z-index: 10;
+  background: rgba(6, 8, 18, 0.95);
   border: 1px solid rgba(255, 230, 120, 0.1);
   border-radius: 14px;
   padding: 14px 16px;
+  min-height: 150px;
+  margin-bottom: -12px;  /* bar tucks under the card */
   box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.4),
     0 0 1px rgba(255, 230, 120, 0.15);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .vtl__card-header {
@@ -727,13 +734,38 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Centered bar area ── */
+/* ── Centered bar area — full touch target, contacts-style scrub ── */
+/* Slides under the card — top edge fades into the card shadow */
 .vtl__bar-area {
   position: relative;
+  z-index: 1;
   flex: 1;
   display: flex;
   justify-content: center;
   min-height: 0;
+  padding-top: 12px;  /* breathing room under the card overlap */
+  touch-action: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Fade mask at the top — bar dissolves into card shadow */
+.vtl__bar-area::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 3, 12, 0.9) 0%,
+    rgba(3, 3, 12, 0.4) 50%,
+    transparent 100%
+  );
+  z-index: 2;
+  pointer-events: none;
 }
 
 .vtl__bar-col {
@@ -748,7 +780,7 @@
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  touch-action: none;
+  pointer-events: none;  /* parent handles touch */
 }
 
 /* Era year ticks — positioned along the left edge of the bar */
@@ -780,30 +812,42 @@
   transition: top 60ms ease-out;
 }
 
+/* Grabber handles — 28px circles on each side of the bar */
+.vtl__scrub-handle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 240, 160, 0.12);
+  border: 1.5px solid rgba(255, 230, 120, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex-shrink: 0;
+  box-shadow:
+    0 0 10px rgba(255, 220, 80, 0.2),
+    0 0 25px rgba(255, 195, 45, 0.08);
+}
+
+.vtl__scrub-grip {
+  display: block;
+  width: 10px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: rgba(255, 230, 120, 0.6);
+}
+
 .vtl__scrub-line {
   flex: 1;
   height: 2px;
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    rgba(255, 230, 120, 0.6) 15%,
-    rgba(255, 230, 120, 0.6) 85%,
-    transparent 100%
+    rgba(255, 230, 120, 0.5) 0%,
+    rgba(255, 230, 120, 0.6) 50%,
+    rgba(255, 230, 120, 0.5) 100%
   );
   box-shadow: 0 0 6px rgba(255, 220, 80, 0.3);
-}
-
-.vtl__scrub-node {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255, 240, 160, 1);
-  border: 2px solid rgba(255, 252, 220, 0.9);
-  box-shadow:
-    0 0 12px rgba(255, 220, 80, 0.7),
-    0 0 30px rgba(255, 195, 45, 0.3),
-    0 0 50px rgba(255, 195, 45, 0.1);
-  flex-shrink: 0;
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -821,7 +865,7 @@
     flex-direction: column;
     height: calc(100vh - 40px);
     min-height: 500px;
-    gap: var(--space-3);
+    overflow: hidden;  /* prevent page scroll — bar handles everything */
   }
 }
 
