@@ -899,20 +899,17 @@ export default function LegendTimeline({ timeline }) {
     <div className="legend-timeline">
       {/* Header */}
       <div className="legend-timeline__header">
-        <div className="legend-timeline__number">
-          #{timeline.player_id?.includes('brady') ? '12' : ''}
+        <div className="legend-timeline__number-row">
+          <span className="legend-timeline__number">12</span>
+          <div className="legend-timeline__name-block">
+            <h1 className="legend-timeline__name">{timeline.player_name}</h1>
+            <p className="legend-timeline__meta">
+              {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+              <span className="legend-timeline__draft-inline"> · Rd {draft.round}, Pick {draft.pick} · {draft.year}</span>
+            </p>
+          </div>
         </div>
-        <div className="legend-timeline__info">
-          <h1 className="legend-timeline__name">{timeline.player_name}</h1>
-          <p className="legend-timeline__meta">
-            {timeline.position} · {timeline.career_span} · {timeline.total_games} games
-          </p>
-          <p className="legend-timeline__voice">{timeline.voice_line}</p>
-        </div>
-        <div className="legend-timeline__draft">
-          <div className="legend-timeline__draft-pick">#{draft.pick}</div>
-          <div className="legend-timeline__draft-label">Rd {draft.round} · {draft.year}</div>
-        </div>
+        <p className="legend-timeline__voice">{timeline.voice_line}</p>
       </div>
 
       {/* The Bar */}

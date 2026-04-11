@@ -13,62 +13,77 @@
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 
 .legend-timeline__header {
+  margin-bottom: var(--space-5);
+}
+
+.legend-timeline__number-row {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .legend-timeline__number {
   font-family: var(--font-banner);
   font-size: 4.5rem;
-  line-height: 1;
-  color: var(--color-paper);
-  opacity: 0.4;
+  line-height: 0.85;
   flex-shrink: 0;
+  color: rgba(255, 230, 120, 0.85);
+  text-shadow:
+    0 0 30px rgba(255, 220, 80, 0.35),
+    0 0 60px rgba(255, 195, 45, 0.15),
+    0 0 100px rgba(255, 195, 45, 0.08);
+  animation: number-glow 4s ease-in-out infinite alternate;
 }
 
-.legend-timeline__info { flex: 1; min-width: 0; }
+@keyframes number-glow {
+  0% {
+    text-shadow:
+      0 0 30px rgba(255, 220, 80, 0.3),
+      0 0 60px rgba(255, 195, 45, 0.12),
+      0 0 100px rgba(255, 195, 45, 0.06);
+  }
+  100% {
+    text-shadow:
+      0 0 35px rgba(255, 220, 80, 0.45),
+      0 0 70px rgba(255, 195, 45, 0.2),
+      0 0 120px rgba(255, 195, 45, 0.1);
+  }
+}
+
+.legend-timeline__name-block {
+  min-width: 0;
+}
 
 .legend-timeline__name {
   font-family: var(--font-banner);
   font-size: 2rem;
-  line-height: 1.1;
+  line-height: 1;
   color: var(--color-paper);
-  margin: 0 0 var(--space-1) 0;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
 }
 
 .legend-timeline__meta {
   font-family: var(--font-scoreboard);
-  font-size: 0.875rem;
-  color: rgba(200, 195, 185, 0.8);
-  margin: 0 0 var(--space-2) 0;
-  letter-spacing: 0.02em;
+  font-size: 0.8125rem;
+  color: rgba(200, 195, 185, 0.65);
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.legend-timeline__draft-inline {
+  color: rgba(200, 195, 185, 0.4);
 }
 
 .legend-timeline__voice {
   font-family: var(--font-program);
-  font-size: 1rem;
-  color: var(--color-paper);
-  opacity: 0.8;
+  font-size: 0.9375rem;
+  color: rgba(200, 195, 185, 0.7);
   margin: 0;
   line-height: 1.5;
   font-style: italic;
-}
-
-.legend-timeline__draft { text-align: right; flex-shrink: 0; }
-
-.legend-timeline__draft-pick {
-  font-family: var(--font-banner);
-  font-size: 1.75rem;
-  color: rgba(200, 195, 185, 0.55);
-}
-
-.legend-timeline__draft-label {
-  font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
-  color: rgba(200, 195, 185, 0.6);
-  margin-top: var(--space-1);
+  max-width: 520px;
 }
 
 /* ─── Bar Wrap ───────────────────────────────────────────────────────────── */
@@ -732,10 +747,11 @@
 
 @media (max-width: 768px) {
   .legend-timeline { padding: var(--space-3); }
-  .legend-timeline__header { flex-wrap: wrap; gap: var(--space-2); }
-  .legend-timeline__number { font-size: 2.5rem; }
-  .legend-timeline__name { font-size: 1.5rem; }
-  .legend-timeline__draft { order: -1; text-align: left; width: 100%; }
+  .legend-timeline__number-row { gap: var(--space-2); }
+  .legend-timeline__number { font-size: 3rem; }
+  .legend-timeline__name { font-size: 1.375rem; }
+  .legend-timeline__meta { font-size: 0.6875rem; }
+  .legend-timeline__voice { font-size: 0.8125rem; }
 
   /* Hide horizontal bar on mobile, show vertical glow */
   .legend-timeline__bar-wrap,
@@ -755,7 +771,7 @@
 }
 
 @media (min-width: 1024px) {
-  .legend-timeline__number { font-size: 5.5rem; }
+  .legend-timeline__number { font-size: 5.5rem; text-shadow: 0 0 40px rgba(255, 220, 80, 0.4), 0 0 80px rgba(255, 195, 45, 0.18), 0 0 140px rgba(255, 195, 45, 0.1); }
   .legend-timeline__name { font-size: 2.25rem; }
   .legend-timeline__bar { height: 120px; }
   .legend-timeline__segmented { height: 120px; }
