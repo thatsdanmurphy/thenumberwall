@@ -48,6 +48,7 @@ export default function TeamWallPage() {
   const [addSubmitting, setAddSubmitting] = useState(false)
   const [addError, setAddError]       = useState(null)
   const [addSuccess, setAddSuccess]   = useState(false)
+  const [showAddForm, setShowAddForm] = useState(false)
 
   // Year filter for panel entries
   const [yearFilter, setYearFilter]   = useState(null) // null = all years
@@ -95,7 +96,7 @@ export default function TeamWallPage() {
   // Reset forms when selecting a different number
   useEffect(() => {
     setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
-    setAddError(null); setAddSuccess(false)
+    setAddError(null); setAddSuccess(false); setShowAddForm(false)
     setEditingId(null); setYearFilter(null)
   }, [selected])
 
@@ -243,22 +244,22 @@ export default function TeamWallPage() {
 
         {/* ── Sports nav — reuses SportsFilter pill styles ── */}
         <div className="sports-filter" role="group" aria-label="Sports at this school">
-          {schoolSports
-            .filter(s => s.sport !== sport)   /* don't re-list current sport */
-            .map(s => {
-              const label = s.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-              const Icon = SPORT_ICONS[s.sport]
-              return (
-                <button
-                  key={s.id}
-                  className="sports-filter__pill"
-                  onClick={() => navigate(`/walls/${schoolSlug}/${s.sport}`)}
-                >
-                  {Icon && <Icon size={13} className="sports-filter__icon" />}
-                  {label}
-                </button>
-              )
-            })}
+          {schoolSports.map(s => {
+            const isActive = s.sport === sport
+            const label = s.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+            const Icon = SPORT_ICONS[s.sport]
+            return (
+              <button
+                key={s.id}
+                className={`sports-filter__pill${isActive ? ' sports-filter__pill--active' : ''}`}
+                onClick={() => !isActive && navigate(`/walls/${schoolSlug}/${s.sport}`)}
+                aria-pressed={isActive}
+              >
+                {Icon && <Icon size={13} className="sports-filter__icon" />}
+                {label}
+              </button>
+            )
+          })}
           <button
             className="tw-sports-nav__add"
             onClick={() => setShowCreate(true)}
@@ -268,22 +269,27 @@ export default function TeamWallPage() {
           </button>
         </div>
 
-        {/* ── Summary line — one line, no box ──────────────── */}
+        {/* ── Summary line ──────────────────────────────── */}
         <div className="tw-summary">
           <span className="tw-summary__meta">
-            {sportLabel} · {wall.city}, {wall.state}
+            {wall.city}, {wall.state}
           </span>
-          {wall.coach_name && (
-            <span className="tw-summary__coach">
-              Coach: {wall.coach_name}
-            </span>
-          )}
         </div>
 
         {/* ── Grid + panel ─────────────────────────────────── */}
         <div className="tw-body">
 
           <div className="tw-grid-col">
+            {/* ── Coach block — fillable, sits above grid ── */}
+            <div className="tw-coach-block">
+              <div className="tw-coach-block__slot">
+                <span className="tw-coach-block__label">HC</span>
+                <span className="tw-coach-block__value">
+                  {wall.coach_name || <span className="tw-coach-block__empty">Add coach</span>}
+                </span>
+              </div>
+            </div>
+
             <div className="tw-grid">
               {TILE_NUMBERS.map(num => {
                 const entries   = entryIndex.get(num) || []
@@ -368,49 +374,25 @@ export default function TeamWallPage() {
                     </div>
                   )}
 
-                  {/* Entries — always shown if they exist */}
+                  {/* Player cards — reuses player-card styles from main wall */}
                   {filteredEntries.length > 0 ? (
-                    <div className="tw-entries">
-                      {filteredEntries.map((entry) => (
+                    <div className="player-panel__cards">
+                      {filteredEntries.map((entry, i) => (
                         editingId === entry.id ? (
                           /* Inline edit form */
                           <form key={entry.id} className="tw-add" onSubmit={handleEditSave}>
                             <span className="tw-add__label">EDIT</span>
-                            <input
-                              type="text"
-                              className="tw-add__input"
-                              placeholder="Name"
-                              value={editName}
-                              onChange={e => setEditName(e.target.value)}
-                              autoFocus
-                            />
+                            <input type="text" className="tw-add__input" placeholder="Name"
+                              value={editName} onChange={e => setEditName(e.target.value)} autoFocus />
                             <div className="tw-add__row">
-                              <input
-                                type="text"
-                                className="tw-add__input tw-add__input--half"
-                                placeholder="Position"
-                                value={editPosition}
-                                onChange={e => setEditPosition(e.target.value)}
-                                maxLength={20}
-                              />
-                              <input
-                                type="text"
-                                className="tw-add__input tw-add__input--half"
-                                placeholder="Grad year"
-                                value={editGradYear}
-                                onChange={e => setEditGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
-                                inputMode="numeric"
-                                maxLength={4}
-                              />
+                              <input type="text" className="tw-add__input tw-add__input--half" placeholder="Position"
+                                value={editPosition} onChange={e => setEditPosition(e.target.value)} maxLength={20} />
+                              <input type="text" className="tw-add__input tw-add__input--half" placeholder="Grad year"
+                                value={editGradYear} onChange={e => setEditGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                                inputMode="numeric" maxLength={4} />
                             </div>
-                            <input
-                              type="text"
-                              className="tw-add__input"
-                              placeholder="Fun fact (optional)"
-                              value={editFunFact}
-                              onChange={e => setEditFunFact(e.target.value.slice(0, 140))}
-                              maxLength={140}
-                            />
+                            <input type="text" className="tw-add__input" placeholder="Fun fact (optional)"
+                              value={editFunFact} onChange={e => setEditFunFact(e.target.value.slice(0, 140))} maxLength={140} />
                             <div className="tw-add__row">
                               <button type="submit" className="tw-add__submit" disabled={!editName.trim() || editSubmitting}>
                                 {editSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Save'}
@@ -419,14 +401,22 @@ export default function TeamWallPage() {
                             </div>
                           </form>
                         ) : (
-                          <div key={entry.id} className="tw-entry">
-                            <span className="tw-entry__name">{entry.name}</span>
-                            {entry.position && <span className="tw-entry__badge">{entry.position}</span>}
-                            {entry.grad_year && <span className="tw-entry__badge">'{String(entry.grad_year).slice(-2)}</span>}
-                            <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
-                              <Pencil size={11} />
-                            </button>
-                            {entry.fun_fact && <p className="tw-entry__fact">{entry.fun_fact}</p>}
+                          <div key={entry.id} className={`player-card${i === 0 ? ' player-card--top' : ''}`}>
+                            <div className="player-card__row">
+                              <div className="player-card__info">
+                                <div className="player-card__name-row">
+                                  <span className="player-card__name">{entry.name}</span>
+                                  <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
+                                    <Pencil size={11} />
+                                  </button>
+                                </div>
+                                <div className="player-card__badges">
+                                  {entry.position && <span className="player-card__badge player-card__badge--dim">{entry.position}</span>}
+                                  {entry.grad_year && <span className="player-card__badge player-card__badge--dim">'{String(entry.grad_year).slice(-2)}</span>}
+                                </div>
+                              </div>
+                            </div>
+                            {entry.fun_fact && <div className="player-card__fact">{entry.fun_fact}</div>}
                           </div>
                         )
                       ))}
@@ -442,52 +432,34 @@ export default function TeamWallPage() {
                     </div>
                   )}
 
-                  {/* Add form — ALWAYS visible */}
-                  <form className="tw-add" onSubmit={handleAdd}>
-                    <span className="tw-add__label">ADD A PLAYER</span>
-                    {addError && <span className="tw-add__error">{addError}</span>}
-                    <input
-                      type="text"
-                      className="tw-add__input"
-                      placeholder="Name"
-                      value={addName}
-                      onChange={e => setAddName(e.target.value)}
-                    />
-                    <div className="tw-add__row">
-                      <input
-                        type="text"
-                        className="tw-add__input tw-add__input--half"
-                        placeholder="Position"
-                        value={addPosition}
-                        onChange={e => setAddPosition(e.target.value)}
-                        maxLength={20}
-                      />
-                      <input
-                        type="text"
-                        className="tw-add__input tw-add__input--half"
-                        placeholder="Grad year"
-                        value={addGradYear}
-                        onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
-                        inputMode="numeric"
-                        maxLength={4}
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      className="tw-add__input"
-                      placeholder="Fun fact (optional)"
-                      value={addFunFact}
-                      onChange={e => setAddFunFact(e.target.value.slice(0, 140))}
-                      maxLength={140}
-                    />
-                    <button
-                      type="submit"
-                      className="tw-add__submit"
-                      disabled={!addName.trim() || addSubmitting}
-                    >
-                      {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added ✓' : 'Add'}
+                  {/* Add a player — button toggles form */}
+                  {!showAddForm ? (
+                    <button className="player-panel__add-legend" onClick={() => setShowAddForm(true)}>
+                      + Add a Player
                     </button>
-                  </form>
+                  ) : (
+                    <form className="tw-add" onSubmit={handleAdd}>
+                      <span className="tw-add__label">ADD A PLAYER</span>
+                      {addError && <span className="tw-add__error">{addError}</span>}
+                      <input type="text" className="tw-add__input" placeholder="Name"
+                        value={addName} onChange={e => setAddName(e.target.value)} autoFocus />
+                      <div className="tw-add__row">
+                        <input type="text" className="tw-add__input tw-add__input--half" placeholder="Position"
+                          value={addPosition} onChange={e => setAddPosition(e.target.value)} maxLength={20} />
+                        <input type="text" className="tw-add__input tw-add__input--half" placeholder="Grad year"
+                          value={addGradYear} onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                          inputMode="numeric" maxLength={4} />
+                      </div>
+                      <input type="text" className="tw-add__input" placeholder="Fun fact (optional)"
+                        value={addFunFact} onChange={e => setAddFunFact(e.target.value.slice(0, 140))} maxLength={140} />
+                      <div className="tw-add__row">
+                        <button type="submit" className="tw-add__submit" disabled={!addName.trim() || addSubmitting}>
+                          {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added' : 'Add'}
+                        </button>
+                        <button type="button" className="tw-add__submit" onClick={() => setShowAddForm(false)}>Cancel</button>
+                      </div>
+                    </form>
+                  )}
                 </>
               )}
             </div>

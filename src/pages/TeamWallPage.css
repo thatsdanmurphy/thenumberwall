@@ -57,11 +57,41 @@
   text-transform: uppercase;
 }
 
-.tw-summary__coach {
-  font-family: var(--font-program);
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.40);
+/* ── Coach block — fillable slot above grid ──────────────────────────────── */
+
+.tw-coach-block {
+  display:       flex;
+  flex-wrap:     wrap;
+  gap:           var(--space-2);
+  padding:       var(--space-2) 0 var(--space-3);
+}
+
+.tw-coach-block__slot {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            6px;
+  padding:        4px 10px;
+  background:     rgba(255, 255, 255, 0.03);
+  border:         1px solid rgba(255, 255, 255, 0.08);
+  border-radius:  4px;
+}
+
+.tw-coach-block__label {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.5rem;
+  letter-spacing: 0.14em;
+  color:          rgba(255, 255, 255, 0.35);
+}
+
+.tw-coach-block__value {
+  font-family:    var(--font-program);
+  font-size:      0.75rem;
+  color:          rgba(255, 255, 255, 0.65);
+}
+
+.tw-coach-block__empty {
   font-style: italic;
+  color:      rgba(255, 255, 255, 0.22);
 }
 
 /* ── Body: golden ratio desktop, stacked mobile (matches WallPage) ────────── */
@@ -137,41 +167,7 @@
   font-style: italic;
 }
 
-/* ── Entry list — flat, no card boxes ─────────────────────────────────────── */
-
-.tw-entries {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: var(--space-3);
-}
-
-.tw-entry {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2);
-}
-
-.tw-entry__name {
-  font-family: var(--font-banner);
-  font-size: 1rem;
-  letter-spacing: 0.03em;
-  color: var(--color-paper);
-}
-
-.tw-entry__badge {
-  font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 3px;
-  padding: 2px 6px;
-}
+/* ── Edit pencil button (used inside player-card on team walls) ──────────── */
 
 .tw-entry__edit {
   background: none;
@@ -185,15 +181,6 @@
 
 .tw-entry__edit:hover {
   color: rgba(255, 255, 255, 0.55);
-}
-
-.tw-entry__fact {
-  width: 100%;
-  font-family: var(--font-program);
-  font-size: 0.6875rem;
-  line-height: 1.5;
-  color: var(--color-muted);
-  margin: 0;
 }
 
 /* ── Year filter chips ────────────────────────────────────────────────────── */
