@@ -123,8 +123,21 @@
 
 .tw-grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 3px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .tw-grid {
+    grid-template-columns: repeat(10, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .tw-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
 }
 
 /* ── Panel header — number + close ────────────────────────────────────────── */
