@@ -502,10 +502,10 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   onClick={handleShare}
                   aria-label={`Share #${number}`}
                 >
-                  {copied ? <><Check size={11} /> COPIED</> : <><ExternalLink size={11} /> SHARE</>}
+                  {copied ? <Check size={14} /> : <ExternalLink size={14} />}
                 </button>
                 <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
-                  <X size={11} /> CLOSE
+                  <X size={14} />
                 </button>
               </div>
             </div>

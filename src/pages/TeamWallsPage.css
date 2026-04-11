@@ -1,6 +1,8 @@
 /* TeamWallsPage — browse and discover team walls.
    Follows baseline token system from global.css. */
 
+/* ── Page: stacked mobile, left/right desktop ────────────────────────────── */
+
 .twb-page {
   flex: 1;
   display: flex;
@@ -8,11 +10,32 @@
   gap: var(--space-4);
 }
 
+.twb-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.twb-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
 @media (min-width: 768px) {
   .twb-page {
-    max-width: 680px;
-    margin-left: auto;
-    margin-right: auto;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .twb-left {
+    flex: 0 0 50%;
+    position: sticky;
+    top: var(--space-4);
+  }
+
+  .twb-right {
+    flex: 1;
   }
 }
 
@@ -21,6 +44,18 @@
 .twb-hero {
   text-align: center;
   padding: var(--space-5) var(--space-3) var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .twb-hero {
+    text-align: left;
+    padding: var(--space-6) 0 var(--space-3);
+  }
+
+  .twb-hero__sub {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .twb-hero__heading {

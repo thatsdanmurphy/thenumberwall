@@ -58,89 +58,89 @@ export default function TeamWallsPage() {
       <AppHeader title="TEAM WALLS" back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
 
       <main className="twb-page">
-
-        {/* ── Hero ──────────────────────────────────────────── */}
-        <div className="twb-hero">
-          <h2 className="twb-hero__heading">YOUR TEAMS. YOUR NUMBERS.</h2>
-          <p className="twb-hero__sub">
-            Start a wall for your team. Share the link. Let your teammates claim their numbers.
-          </p>
-          <button className="twb-hero__cta" onClick={() => setShowCreate(true)}>
-            <Plus size={16} /> Start a Team Wall
-          </button>
+        {/* ── Left: Hero ───────────────────────────────────── */}
+        <div className="twb-left">
+          <div className="twb-hero">
+            <h2 className="twb-hero__heading">YOUR TEAMS. YOUR NUMBERS.</h2>
+            <p className="twb-hero__sub">
+              Start a wall for your team. Share the link. Let your teammates claim their numbers.
+            </p>
+            <button className="twb-hero__cta" onClick={() => setShowCreate(true)}>
+              <Plus size={16} /> Start a Team Wall
+            </button>
+          </div>
         </div>
 
-        {/* ── Search ────────────────────────────────────────── */}
-        <form className="twb-search" onSubmit={handleSearch}>
-          <Search size={16} className="twb-search__icon" />
-          <input
-            type="text"
-            className="twb-search__input"
-            placeholder="Search by school name…"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-          />
-          {query && (
-            <button type="submit" className="twb-search__btn">
-              Search
-            </button>
-          )}
-        </form>
+        {/* ── Right: Search + Cards ────────────────────────── */}
+        <div className="twb-right">
+          <form className="twb-search" onSubmit={handleSearch}>
+            <Search size={16} className="twb-search__icon" />
+            <input
+              type="text"
+              className="twb-search__input"
+              placeholder="Search by school name…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+            />
+            {query && (
+              <button type="submit" className="twb-search__btn">
+                Search
+              </button>
+            )}
+          </form>
 
-        {/* ── Section label ─────────────────────────────────── */}
-        <span className="twb-section-label">
-          {searchResults !== null
-            ? `${searchResults.length} RESULT${searchResults.length !== 1 ? 'S' : ''}`
-            : 'BUILDING NOW'
-          }
-        </span>
-
-        {/* ── Wall cards ────────────────────────────────────── */}
-        {loading ? (
-          <p className="twb-empty">Loading…</p>
-        ) : wallsToShow.length === 0 ? (
-          <div className="twb-empty">
+          <span className="twb-section-label">
             {searchResults !== null
-              ? <p>No walls found for "{query}". Be the first!</p>
-              : <p>No team walls yet. Start one and be the first.</p>
+              ? `${searchResults.length} RESULT${searchResults.length !== 1 ? 'S' : ''}`
+              : 'BUILDING NOW'
             }
-          </div>
-        ) : (
-          <div className="twb-cards">
-            {wallsToShow.map(wall => {
-              const palette = TEAM_PALETTES[wall.color_primary] || TEAM_PALETTES.orange
-              const accent  = palette[3] // "hot" level
-              const sportLabel = wall.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          </span>
 
-              return (
-                <button
-                  key={wall.id}
-                  className="twb-card"
-                  onClick={() => navigateToWall(wall)}
-                >
-                  <div className="twb-card__content">
-                    <span className="twb-card__dot" style={{ background: accent.bg }} />
-                    <div className="twb-card__text">
-                      <span className="twb-card__school">
-                        {wall.school}
-                      </span>
-                      <div className="twb-card__meta">
-                        <span>{sportLabel}</span>
-                        <span>·</span>
-                        <span>{wall.year}</span>
-                      </div>
-                      <div className="twb-card__location">
-                        <MapPin size={11} />
-                        <span>{wall.city}, {wall.state}</span>
+          {loading ? (
+            <p className="twb-empty">Loading…</p>
+          ) : wallsToShow.length === 0 ? (
+            <div className="twb-empty">
+              {searchResults !== null
+                ? <p>No walls found for "{query}". Be the first!</p>
+                : <p>No team walls yet. Start one and be the first.</p>
+              }
+            </div>
+          ) : (
+            <div className="twb-cards">
+              {wallsToShow.map(wall => {
+                const palette = TEAM_PALETTES[wall.color_primary] || TEAM_PALETTES.orange
+                const accent  = palette[3] // "hot" level
+                const sportLabel = wall.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+
+                return (
+                  <button
+                    key={wall.id}
+                    className="twb-card"
+                    onClick={() => navigateToWall(wall)}
+                  >
+                    <div className="twb-card__content">
+                      <span className="twb-card__dot" style={{ background: accent.bg }} />
+                      <div className="twb-card__text">
+                        <span className="twb-card__school">
+                          {wall.school}
+                        </span>
+                        <div className="twb-card__meta">
+                          <span>{sportLabel}</span>
+                          <span>·</span>
+                          <span>{wall.year}</span>
+                        </div>
+                        <div className="twb-card__location">
+                          <MapPin size={11} />
+                          <span>{wall.city}, {wall.state}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        )}
-
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </main>
 
       <AppFooter />

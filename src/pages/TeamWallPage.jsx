@@ -235,7 +235,7 @@ export default function TeamWallPage() {
                       #{selected}
                     </div>
                     <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
-                      <X size={11} /> CLOSE
+                      <X size={14} />
                     </button>
                   </div>
 
