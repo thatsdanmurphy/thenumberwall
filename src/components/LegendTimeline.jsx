@@ -633,6 +633,9 @@ export default function LegendTimeline({ timeline }) {
   const containerRef = useRef(null)
   const rafRef = useRef(null)
   const scrubRef = useRef(false)
+  const scrubIndicatorRef = useRef(null) // direct DOM ref for scrub position
+  const vScrubRafRef = useRef(null)      // rAF throttle for mobile scrub
+  const pendingScrubIdx = useRef(null)   // pending index for throttled state update
 
   // Animation phases as refs — avoids re-renders on every frame
   const breathRef = useRef(0)
@@ -805,6 +808,7 @@ export default function LegendTimeline({ timeline }) {
   }, [pinnedIndex])
 
   // ── Mobile scrub handlers ──
+  // Direct DOM update for scrub indicator (zero lag), throttled React state for card
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
     const positions = vGamePositionsRef.current
@@ -818,10 +822,26 @@ export default function LegendTimeline({ timeline }) {
       if (positions[m + 1] <= y) lo = m + 1; else hi = m
     }
     if (lo >= 0 && lo < n) {
-      setHoveredIndex(lo)
-      setPinnedIndex(lo)
-      // Force position sync for scrub indicator
-      setVGamePositions(positions)
+      // Instant: move scrub indicator via direct DOM (bypasses React entirely)
+      const scrubEl = scrubIndicatorRef.current
+      if (scrubEl) {
+        const py = (positions[lo] + positions[lo + 1]) / 2
+        scrubEl.style.top = `${py}px`
+        scrubEl.style.opacity = '1'
+      }
+      // Throttled: update card content via React (once per frame)
+      pendingScrubIdx.current = lo
+      if (!vScrubRafRef.current) {
+        vScrubRafRef.current = requestAnimationFrame(() => {
+          const idx = pendingScrubIdx.current
+          if (idx !== null) {
+            setHoveredIndex(idx)
+            setPinnedIndex(idx)
+            setVGamePositions(vGamePositionsRef.current)
+          }
+          vScrubRafRef.current = null
+        })
+      }
     }
   }, [])
 
@@ -1091,25 +1111,27 @@ export default function LegendTimeline({ timeline }) {
               )
             })}
           </div>
-          {/* Scrub indicator — grabber handles on both sides of the bar */}
-          {activeIndex !== null && vGamePositions && (
-            <div
-              className="vtl__scrub-indicator"
-              style={{ top: `${(vGamePositions[activeIndex] + vGamePositions[activeIndex + 1]) / 2}px` }}
-            >
-              <div className="vtl__scrub-handle vtl__scrub-handle--left">
-                <span className="vtl__scrub-grip" />
-                <span className="vtl__scrub-grip" />
-                <span className="vtl__scrub-grip" />
-              </div>
-              <div className="vtl__scrub-line" />
-              <div className="vtl__scrub-handle vtl__scrub-handle--right">
-                <span className="vtl__scrub-grip" />
-                <span className="vtl__scrub-grip" />
-                <span className="vtl__scrub-grip" />
-              </div>
+          {/* Scrub indicator — always visible, positioned via ref for zero-lag */}
+          <div
+            ref={scrubIndicatorRef}
+            className="vtl__scrub-indicator"
+            style={{ top: activeIndex !== null && vGamePositions
+              ? `${(vGamePositions[activeIndex] + vGamePositions[activeIndex + 1]) / 2}px`
+              : '20px'
+            }}
+          >
+            <div className="vtl__scrub-handle vtl__scrub-handle--left">
+              <span className="vtl__scrub-grip" />
+              <span className="vtl__scrub-grip" />
+              <span className="vtl__scrub-grip" />
             </div>
-          )}
+            <div className="vtl__scrub-line" />
+            <div className="vtl__scrub-handle vtl__scrub-handle--right">
+              <span className="vtl__scrub-grip" />
+              <span className="vtl__scrub-grip" />
+              <span className="vtl__scrub-grip" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
