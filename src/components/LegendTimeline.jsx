@@ -633,7 +633,8 @@ export default function LegendTimeline({ timeline }) {
   const containerRef = useRef(null)
   const vContainerRef = useRef(null)    // vertical mobile container
   const rafRef = useRef(null)
-  const scrubRef = useRef(false)        // is user actively scrubbing?
+  const scrubRef = useRef(false)        // is user in tap-hold scrub mode?
+  const scrubTimerRef = useRef(null)    // delay timer for tap-hold activation
   const lastMomentRef = useRef(null)    // tracks last moment crossed for haptics
 
   const [hoveredIndex, setHoveredIndex] = useState(null)
@@ -644,6 +645,7 @@ export default function LegendTimeline({ timeline }) {
   const [shimmerPhase, setShimmerPhase] = useState(0)
   const [gamePositions, setGamePositions] = useState(null)
   const [vGamePositions, setVGamePositions] = useState(null)  // vertical positions
+  const [isScrubbing, setIsScrubbing] = useState(false)       // live activity visible
 
   const games = timeline?.games || []
   const eras = useMemo(() => buildEras(games), [games])
@@ -784,7 +786,15 @@ export default function LegendTimeline({ timeline }) {
     if (gy) setVGamePositions(gy)
   }, [games, activeIndex, breathPhase])
 
-  // ── Mobile scrub handlers ──
+  // ── Mobile tap-hold-scrub handlers ──
+  const hapticPulse = useCallback((game) => {
+    if (!game?.moments?.length) return
+    const isSacred = game.moments.some(m => m.use_sacred_color)
+    if (navigator.vibrate) {
+      navigator.vibrate(isSacred ? [15, 30, 15] : 12)
+    }
+  }, [])
+
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
     if (!canvas || !vGamePositions) return
@@ -797,38 +807,48 @@ export default function LegendTimeline({ timeline }) {
       if (vGamePositions[m + 1] <= y) lo = m + 1; else hi = m
     }
     if (lo >= 0 && lo < n) {
-      // Haptic pulse when crossing a moment boundary
-      if (lo !== lastMomentRef.current && games[lo].moments?.length > 0) {
-        lastMomentRef.current = lo
-        if (navigator.vibrate) {
-          const isSacred = games[lo].moments.some(m => m.use_sacred_color)
-          navigator.vibrate(isSacred ? [15, 30, 15] : 12)
+      // Check if we crossed a moment boundary
+      if (lo !== hoveredIndex && games[lo].moments?.length > 0) {
+        const momentKey = lo
+        if (lastMomentRef.current !== momentKey) {
+          lastMomentRef.current = momentKey
+          hapticPulse(games[lo])
         }
-      } else if (!games[lo]?.moments?.length) {
-        lastMomentRef.current = null
       }
       setHoveredIndex(lo)
       setPinnedIndex(lo)
     }
-  }, [games, vGamePositions])
+  }, [games, vGamePositions, hoveredIndex, hapticPulse])
 
   const handleVTouchStart = useCallback((e) => {
     e.preventDefault()
-    scrubRef.current = true
-    const touch = e.touches[0]
-    vScrubToIndex(touch.clientY)
+    // Start scrub after brief hold (150ms)
+    scrubTimerRef.current = setTimeout(() => {
+      scrubRef.current = true
+      setIsScrubbing(true)
+      const touch = e.touches[0]
+      vScrubToIndex(touch.clientY)
+    }, 150)
   }, [vScrubToIndex])
 
   const handleVTouchMove = useCallback((e) => {
     e.preventDefault()
+    if (!scrubRef.current) {
+      // If moved before hold timer, activate immediately (they're scrubbing)
+      clearTimeout(scrubTimerRef.current)
+      scrubRef.current = true
+      setIsScrubbing(true)
+    }
     const touch = e.touches[0]
     vScrubToIndex(touch.clientY)
   }, [vScrubToIndex])
 
   const handleVTouchEnd = useCallback(() => {
+    clearTimeout(scrubTimerRef.current)
     scrubRef.current = false
     lastMomentRef.current = null
-    // Pin stays — card keeps showing the last touched game
+    // Keep pinned on whatever they landed on, but exit scrub mode after delay
+    setTimeout(() => setIsScrubbing(false), 2000)
   }, [])
 
   // Click on a moment marker — pin tooltip to that game
@@ -997,97 +1017,86 @@ export default function LegendTimeline({ timeline }) {
       </div>
 
       {/* ── Mobile Vertical Glow Timeline ──────────────────────────────── */}
-      <div className="vtl">
-        {/* Persistent top card — header + live game info merged */}
-        <div className="vtl__card">
-          <div className="vtl__card-header">
-            <span className="vtl__card-number">12</span>
-            <div className="vtl__card-identity">
-              <span className="vtl__card-name">{timeline.player_name}</span>
-              <span className="vtl__card-meta">
-                {timeline.position} · {timeline.career_span}
-              </span>
-            </div>
-            {activeEra && (
-              <div className="vtl__card-era">
-                <span className="vtl__card-era-name">{activeEra.label}</span>
-                <span className="vtl__card-era-tagline">{activeEra.tagline}</span>
-              </div>
-            )}
-          </div>
-          {/* Live game info — updates as you scrub */}
-          {activeGame && !activeGame.is_bye && !activeGame.is_dnp ? (
-            <div className="vtl__card-game">
-              <div className="vtl__card-matchup">
-                <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
-                  {activeGame.result}
+      <div className="vtl" ref={vContainerRef}>
+        {/* Vertical glow bar — left side */}
+        <div className="vtl__bar-col">
+          <canvas
+            ref={vCanvasRef}
+            className="vtl__canvas"
+            onTouchStart={handleVTouchStart}
+            onTouchMove={handleVTouchMove}
+            onTouchEnd={handleVTouchEnd}
+          />
+          {/* Era markers along the bar */}
+          {vGamePositions && eras.map(era => {
+            const top = vGamePositions[era.startIdx]
+            const height = vGamePositions[era.endIdx] - top
+            return (
+              <div
+                key={era.id}
+                className={`vtl__era-mark ${activeEra?.id === era.id ? 'vtl__era-mark--active' : ''}`}
+                style={{ top: `${top}px`, height: `${height}px` }}
+              >
+                <span className="vtl__era-yr">
+                  {era.seasons.length === 1 ? era.seasons[0] : `'${String(era.seasons[0]).slice(2)}`}
                 </span>
-                {' '}{activeGame.score}
-                <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
-                <span className="vtl__card-week">{activeGame.week} · {activeGame.season}</span>
               </div>
-              {activeGame.stats?.pass_yards != null && (
-                <div className="vtl__card-stats">
-                  {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
-                </div>
-              )}
-              {activeGame.moments?.length > 0 && (
-                <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
-                  {getMomentIcon(activeGame.moments[0])}
-                  <span>{activeGame.moments[0].moment_name}</span>
-                </div>
-              )}
-            </div>
-          ) : activeGame?.is_bye ? (
-            <div className="vtl__card-game"><span className="vtl__card-bye">Bye Week</span></div>
-          ) : activeGame?.is_dnp ? (
-            <div className="vtl__card-game"><span className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''}</span></div>
-          ) : (
-            <div className="vtl__card-game vtl__card-game--empty">
-              <span className="vtl__card-hint">Touch the bar. Slide to explore.</span>
-            </div>
-          )}
+            )
+          })}
         </div>
 
-        {/* Vertical glow bar — wide, centered */}
-        <div className="vtl__bar-area">
-          <div className="vtl__bar-col">
-            <canvas
-              ref={vCanvasRef}
-              className="vtl__canvas"
-              onTouchStart={handleVTouchStart}
-              onTouchMove={handleVTouchMove}
-              onTouchEnd={handleVTouchEnd}
-            />
-            {/* Horizontal stroke + node at scrub position */}
-            {activeIndex !== null && vGamePositions && (() => {
-              const cy = (vGamePositions[activeIndex] + vGamePositions[activeIndex + 1]) / 2
-              const isMoment = games[activeIndex]?.moments?.length > 0
-              const isSacred = games[activeIndex]?.moments?.some(m => m.use_sacred_color)
-              return (
-                <div
-                  className={`vtl__scrub-indicator ${isMoment ? 'vtl__scrub-indicator--moment' : ''} ${isSacred ? 'vtl__scrub-indicator--sacred' : ''}`}
-                  style={{ top: `${cy}px` }}
-                >
-                  <div className="vtl__scrub-line" />
-                  <div className="vtl__scrub-node" />
-                </div>
-              )
-            })()}
-            {/* Era year ticks along the right edge */}
-            {vGamePositions && eras.map(era => {
-              const top = vGamePositions[era.startIdx]
-              return (
-                <span
-                  key={era.id}
-                  className={`vtl__era-tick ${activeEra?.id === era.id ? 'vtl__era-tick--active' : ''}`}
-                  style={{ top: `${top}px` }}
-                >
-                  {era.seasons[0]}
-                </span>
-              )
-            })}
-          </div>
+        {/* Right side — era info + Live Activity card */}
+        <div className="vtl__info-col">
+          {/* Current era context */}
+          {activeEra && (
+            <div className="vtl__era-context">
+              <span className="vtl__era-name">{activeEra.label}</span>
+              <span className="vtl__era-tagline">{activeEra.tagline}</span>
+            </div>
+          )}
+
+          {/* Live Activity card — visible during scrub or when pinned */}
+          {activeGame && (isScrubbing || pinnedIndex !== null) && (
+            <div className={`vtl__live-card ${isScrubbing ? 'vtl__live-card--scrubbing' : ''}`}>
+              {activeGame.is_bye ? (
+                <div className="vtl__live-bye">Bye Week</div>
+              ) : activeGame.is_dnp ? (
+                <div className="vtl__live-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''}</div>
+              ) : (
+                <>
+                  <div className="vtl__live-matchup">
+                    <span className={`vtl__live-result vtl__live-result--${activeGame.result?.toLowerCase()}`}>
+                      {activeGame.result}
+                    </span>
+                    {' '}{activeGame.score}
+                    <span className="vtl__live-opponent"> vs {activeGame.opponent}</span>
+                  </div>
+                  {activeGame.stats?.pass_yards != null && (
+                    <div className="vtl__live-stats">
+                      {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
+                      {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
+                    </div>
+                  )}
+                  {activeGame.moments?.length > 0 && (
+                    <div className={`vtl__live-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__live-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__live-moment--negative' : ''}`}>
+                      {getMomentIcon(activeGame.moments[0])}
+                      <span>{activeGame.moments[0].moment_name}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              <div className="vtl__live-meta">
+                {activeGame.week} · {activeGame.season}
+                <span className="vtl__live-glow"> · Glow {activeGame.glow_score?.toFixed(1)}</span>
+              </div>
+            </div>
+          )}
+
+          {!activeGame && !isScrubbing && pinnedIndex === null && (
+            <div className="vtl__hint">
+              Touch and hold the bar,<br />slide to explore.
+            </div>
+          )}
         </div>
       </div>
     </div>
