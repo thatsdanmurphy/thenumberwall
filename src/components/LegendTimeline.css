@@ -531,161 +531,201 @@
   font-style: italic;
 }
 
-/* ─── Vertical Mobile Timeline ──────────────────────────────────────────── */
-/* Hidden on desktop, replaces the horizontal bar on mobile */
+/* ─── Vertical Mobile Glow Timeline ─────────────────────────────────────── */
+/* Hidden on desktop. Vertical glow bar left, info right, Live Activity card. */
 
-.legend-timeline__vertical {
+.vtl {
   display: none;
 }
 
-.vtl-era {
-  margin-bottom: var(--space-5);
+.vtl__bar-col {
+  position: relative;
+  width: 70px;
+  flex-shrink: 0;
 }
 
-.vtl-era__header {
+.vtl__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  touch-action: none;
+}
+
+/* Era year markers along the bar */
+.vtl__era-mark {
+  position: absolute;
+  left: 0;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px 10px;
-  margin-bottom: var(--space-2);
-  padding-bottom: var(--space-1);
-  border-bottom: 1px solid rgba(200, 195, 185, 0.1);
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4px;
+  pointer-events: none;
+  border-top: 1px solid rgba(200, 195, 185, 0.08);
 }
 
-.vtl-era__label {
-  font-family: var(--font-banner);
-  font-size: 1.125rem;
-  color: rgba(255, 230, 120, 0.9);
+.vtl__era-mark--active {
+  border-top-color: rgba(255, 230, 120, 0.25);
 }
 
-.vtl-era__seasons {
+.vtl__era-yr {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
-  color: rgba(200, 195, 185, 0.5);
+  font-size: 0.5625rem;
+  color: rgba(200, 195, 185, 0.35);
   letter-spacing: 0.04em;
 }
 
-.vtl-era__tagline {
-  width: 100%;
-  font-family: var(--font-program);
-  font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.55);
-  font-style: italic;
+.vtl__era-mark--active .vtl__era-yr {
+  color: rgba(255, 230, 120, 0.7);
 }
 
-.vtl-era__games {
+/* Right info column */
+.vtl__info-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+
+.vtl__era-context {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.vtl-game-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.vtl-game {
-  height: 6px;
-  border-radius: 3px;
-  min-width: 12px;
-  cursor: pointer;
-  transition: height 200ms ease-out, filter 200ms ease-out, box-shadow 200ms ease-out;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 2px;
-  overflow: visible;
-}
-
-.vtl-game:active {
-  height: 10px;
-  filter: brightness(1.4);
-}
-
-.vtl-game--moment {
-  height: 10px;
-  border-radius: 5px;
-}
-
-.vtl-game--sacred {
-  height: 14px;
-  border-radius: 7px;
-  box-shadow: 0 0 12px rgba(255, 220, 80, 0.35), 0 0 4px rgba(255, 220, 80, 0.6);
-}
-
-.vtl-game--negative.vtl-game--moment {
-  box-shadow: 0 0 8px rgba(255, 75, 90, 0.2);
-}
-
-.vtl-game--open {
-  height: 14px;
-  filter: brightness(1.5);
-  box-shadow: 0 0 16px rgba(255, 230, 120, 0.2);
-}
-
-.vtl-game__icon {
-  display: flex;
-  align-items: center;
-  color: rgba(255, 252, 220, 0.9);
-  flex-shrink: 0;
-}
-
-.vtl-game--negative .vtl-game__icon {
-  color: rgba(255, 75, 90, 0.9);
-}
-
-.vtl-game__icon svg {
-  width: 10px;
-  height: 10px;
-}
-
-.vtl-game__moment-name {
-  font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: rgba(200, 195, 185, 0.65);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.vtl-game__moment-name--sacred {
+.vtl__era-name {
+  font-family: var(--font-banner);
+  font-size: 1.25rem;
   color: rgba(255, 230, 120, 0.9);
-  font-weight: 600;
+  line-height: 1.1;
 }
 
-.vtl-game__moment-name--negative {
-  color: rgba(255, 75, 90, 0.8);
-}
-
-.vtl-game__detail {
-  width: 100%;
+.vtl__era-tagline {
   font-family: var(--font-program);
   font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.85);
-  padding: 4px 0 6px 12px;
-  animation: vtl-detail-in 180ms ease-out;
+  color: rgba(200, 195, 185, 0.5);
+  font-style: italic;
 }
 
-.vtl-game__result { font-family: var(--font-banner); font-size: 0.875rem; }
-.vtl-game__result--w { color: rgba(255, 230, 100, 0.95); }
-.vtl-game__result--l { color: #FF4D5E; }
+/* Live Activity card — compact, iOS-inspired */
+.vtl__live-card {
+  background: rgba(6, 8, 18, 0.92);
+  border: 1px solid rgba(255, 230, 120, 0.1);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 1px rgba(255, 230, 120, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: vtl-card-in 180ms ease-out;
+}
 
-.vtl-game__stats {
+.vtl__live-card--scrubbing {
+  border-color: rgba(255, 230, 120, 0.25);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(255, 230, 120, 0.06),
+    0 0 1px rgba(255, 230, 120, 0.3);
+}
+
+@keyframes vtl-card-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.vtl__live-matchup {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  color: var(--color-paper);
+  line-height: 1.3;
+}
+
+.vtl__live-result {
+  font-family: var(--font-banner);
+  font-size: 1rem;
+}
+
+.vtl__live-result--w { color: rgba(255, 230, 100, 0.95); }
+.vtl__live-result--l { color: #FF4D5E; }
+
+.vtl__live-opponent {
+  color: rgba(200, 195, 185, 0.75);
+}
+
+.vtl__live-stats {
   font-family: var(--font-scoreboard);
   font-size: 0.6875rem;
   color: rgba(200, 195, 185, 0.6);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
 }
 
-.vtl-game__dnp {
+.vtl__live-moment {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 230, 120, 0.1);
   font-family: var(--font-banner);
-  color: #FF4D5E;
   font-size: 0.8125rem;
+  color: rgba(255, 230, 100, 0.9);
 }
 
-@keyframes vtl-detail-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+.vtl__live-moment--sacred {
+  color: rgba(255, 252, 220, 1);
+}
+
+.vtl__live-moment--sacred svg {
+  filter: drop-shadow(0 0 4px rgba(255, 220, 80, 0.6));
+}
+
+.vtl__live-moment--negative {
+  color: rgba(255, 75, 90, 0.9);
+  border-top-color: rgba(255, 75, 90, 0.15);
+}
+
+.vtl__live-moment svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.vtl__live-meta {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.35);
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
+.vtl__live-glow {
+  color: rgba(200, 195, 185, 0.25);
+}
+
+.vtl__live-bye {
+  font-family: var(--font-scoreboard);
+  font-size: 0.8125rem;
+  color: rgba(200, 195, 185, 0.5);
+}
+
+.vtl__live-dnp {
+  font-family: var(--font-banner);
+  font-size: 0.8125rem;
+  color: #FF4D5E;
+}
+
+.vtl__hint {
+  font-family: var(--font-program);
+  font-size: 0.8125rem;
+  color: rgba(200, 195, 185, 0.3);
+  font-style: italic;
+  line-height: 1.5;
+  padding-top: var(--space-4);
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -697,12 +737,21 @@
   .legend-timeline__name { font-size: 1.5rem; }
   .legend-timeline__draft { order: -1; text-align: left; width: 100%; }
 
-  /* Hide horizontal bar on mobile, show vertical */
+  /* Hide horizontal bar on mobile, show vertical glow */
   .legend-timeline__bar-wrap,
-  .legend-timeline__toggle,
   .legend-timeline__key--desktop { display: none; }
 
-  .legend-timeline__vertical { display: block; }
+  .vtl {
+    display: flex;
+    gap: var(--space-3);
+    height: 70vh;
+    min-height: 400px;
+    max-height: 700px;
+  }
+
+  .vtl__bar-col {
+    height: 100%;
+  }
 }
 
 @media (min-width: 1024px) {
