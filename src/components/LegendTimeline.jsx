@@ -631,11 +631,8 @@ export default function LegendTimeline({ timeline }) {
   const canvasRef = useRef(null)
   const vCanvasRef = useRef(null)       // vertical mobile canvas
   const containerRef = useRef(null)
-  const vContainerRef = useRef(null)    // vertical mobile container
   const rafRef = useRef(null)
-  const scrubRef = useRef(false)        // is user in tap-hold scrub mode?
-  const scrubTimerRef = useRef(null)    // delay timer for tap-hold activation
-  const lastMomentRef = useRef(null)    // tracks last moment crossed for haptics
+  const scrubRef = useRef(false)
 
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [pinnedIndex, setPinnedIndex] = useState(null)
@@ -644,8 +641,7 @@ export default function LegendTimeline({ timeline }) {
   const [breathPhase, setBreathPhase] = useState(0)
   const [shimmerPhase, setShimmerPhase] = useState(0)
   const [gamePositions, setGamePositions] = useState(null)
-  const [vGamePositions, setVGamePositions] = useState(null)  // vertical positions
-  const [isScrubbing, setIsScrubbing] = useState(false)       // live activity visible
+  const [vGamePositions, setVGamePositions] = useState(null)
 
   const games = timeline?.games || []
   const eras = useMemo(() => buildEras(games), [games])
@@ -786,15 +782,7 @@ export default function LegendTimeline({ timeline }) {
     if (gy) setVGamePositions(gy)
   }, [games, activeIndex, breathPhase])
 
-  // ── Mobile tap-hold-scrub handlers ──
-  const hapticPulse = useCallback((game) => {
-    if (!game?.moments?.length) return
-    const isSacred = game.moments.some(m => m.use_sacred_color)
-    if (navigator.vibrate) {
-      navigator.vibrate(isSacred ? [15, 30, 15] : 12)
-    }
-  }, [])
-
+  // ── Mobile scrub handlers ──
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
     if (!canvas || !vGamePositions) return
@@ -807,48 +795,26 @@ export default function LegendTimeline({ timeline }) {
       if (vGamePositions[m + 1] <= y) lo = m + 1; else hi = m
     }
     if (lo >= 0 && lo < n) {
-      // Check if we crossed a moment boundary
-      if (lo !== hoveredIndex && games[lo].moments?.length > 0) {
-        const momentKey = lo
-        if (lastMomentRef.current !== momentKey) {
-          lastMomentRef.current = momentKey
-          hapticPulse(games[lo])
-        }
-      }
       setHoveredIndex(lo)
       setPinnedIndex(lo)
     }
-  }, [games, vGamePositions, hoveredIndex, hapticPulse])
+  }, [games, vGamePositions])
 
   const handleVTouchStart = useCallback((e) => {
     e.preventDefault()
-    // Start scrub after brief hold (150ms)
-    scrubTimerRef.current = setTimeout(() => {
-      scrubRef.current = true
-      setIsScrubbing(true)
-      const touch = e.touches[0]
-      vScrubToIndex(touch.clientY)
-    }, 150)
+    scrubRef.current = true
+    const touch = e.touches[0]
+    vScrubToIndex(touch.clientY)
   }, [vScrubToIndex])
 
   const handleVTouchMove = useCallback((e) => {
     e.preventDefault()
-    if (!scrubRef.current) {
-      // If moved before hold timer, activate immediately (they're scrubbing)
-      clearTimeout(scrubTimerRef.current)
-      scrubRef.current = true
-      setIsScrubbing(true)
-    }
     const touch = e.touches[0]
     vScrubToIndex(touch.clientY)
   }, [vScrubToIndex])
 
   const handleVTouchEnd = useCallback(() => {
-    clearTimeout(scrubTimerRef.current)
     scrubRef.current = false
-    lastMomentRef.current = null
-    // Keep pinned on whatever they landed on, but exit scrub mode after delay
-    setTimeout(() => setIsScrubbing(false), 2000)
   }, [])
 
   // Click on a moment marker — pin tooltip to that game

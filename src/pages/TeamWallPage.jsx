@@ -1,18 +1,19 @@
 /**
  * TeamWallPage — displays a single crowdsourced team wall.
- * Route: /walls/:schoolSlug/:sport/:year
+ * Route: /walls/:schoolSlug/:sport
  *
  * Grid shows numbers 0–99. Heat from entry density in team colors.
- * Add-player form is inline in the panel, not a modal.
+ * One wall per school per sport — accumulates across all years.
+ * Add-player form is always visible in the panel.
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil } from 'lucide-react'
+import { Loader, X, Pencil, Plus } from 'lucide-react'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
-import { loadTeamWallByRoute, addTeamEntry, updateTeamEntry } from '../lib/teamWallStore.js'
+import { loadTeamWallByRoute, addTeamEntry, updateTeamEntry, getSchoolSports } from '../lib/teamWallStore.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import './TeamWallPage.css'
@@ -36,6 +37,12 @@ export default function TeamWallPage() {
   const [addSubmitting, setAddSubmitting] = useState(false)
   const [addError, setAddError]       = useState(null)
   const [addSuccess, setAddSuccess]   = useState(false)
+
+  // Year filter for panel entries
+  const [yearFilter, setYearFilter]   = useState(null) // null = all years
+
+  // Sports nav — other sports for this school
+  const [schoolSports, setSchoolSports] = useState([])
 
   // Edit state — which entry is being edited
   const [editingId, setEditingId]     = useState(null)
@@ -62,6 +69,13 @@ export default function TeamWallPage() {
 
   useEffect(() => { fetchWall() }, [fetchWall])
 
+  // Fetch all sports for this school (for sports nav)
+  useEffect(() => {
+    if (schoolSlug) {
+      getSchoolSports(schoolSlug).then(setSchoolSports).catch(console.error)
+    }
+  }, [schoolSlug])
+
   useEffect(() => {
     if (wall) document.title = `${wall.school} ${sportLabel} | The Number Wall`
   }, [wall, sportLabel])
@@ -70,7 +84,7 @@ export default function TeamWallPage() {
   useEffect(() => {
     setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
     setAddError(null); setAddSuccess(false)
-    setEditingId(null)
+    setEditingId(null); setYearFilter(null)
   }, [selected])
 
   // Build entry index: number → [entries]
@@ -87,6 +101,20 @@ export default function TeamWallPage() {
 
   const colorKey       = wall?.color_primary || 'orange'
   const selectedEntries = selected ? (entryIndex.get(selected) || []) : []
+
+  // Unique years across entries for this number (for filter chips)
+  const uniqueYears = useMemo(() => {
+    const years = selectedEntries
+      .map(e => e.grad_year)
+      .filter(Boolean)
+    return [...new Set(years)].sort((a, b) => a - b)
+  }, [selectedEntries])
+
+  // Apply year filter
+  const filteredEntries = useMemo(() => {
+    if (!yearFilter) return selectedEntries
+    return selectedEntries.filter(e => e.grad_year === yearFilter)
+  }, [selectedEntries, yearFilter])
 
   function handleTileClick(num) {
     setSelected(prev => prev === num ? null : num)
@@ -201,6 +229,36 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
+        {/* ── Sports nav — active sports lit, others show + ── */}
+        {schoolSports.length > 0 && (
+          <div className="tw-sports-nav">
+            {schoolSports.map(s => {
+              const isActive = s.sport === sport
+              const label = s.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+              return (
+                <button
+                  key={s.id}
+                  className={`tw-sport-chip${isActive ? ' tw-sport-chip--active' : ''}`}
+                  onClick={() => !isActive && navigate(`/walls/${schoolSlug}/${s.sport}`)}
+                  style={isActive ? {
+                    borderColor: TEAM_PALETTES[s.color_primary]?.[3]?.border || 'rgba(255,255,255,0.3)',
+                    color: TEAM_PALETTES[s.color_primary]?.[3]?.text || '#fff',
+                  } : undefined}
+                >
+                  {label}
+                </button>
+              )
+            })}
+            <button
+              className="tw-sport-chip tw-sport-chip--add"
+              onClick={() => navigate('/walls')}
+              title="Start another sport wall for this school"
+            >
+              <Plus size={12} />
+            </button>
+          </div>
+        )}
+
         {/* ── Summary line — one line, no box ──────────────── */}
         <div className="tw-summary">
           <span className="tw-summary__meta">
@@ -280,63 +338,31 @@ export default function TeamWallPage() {
                     </button>
                   </div>
 
-                  {/* Entries — flat list with edit capability */}
-                  {selectedEntries.length === 0 ? (
-                    <>
-                      <div className="tw-empty-number">
-                        <span className="tw-empty-number__text">Remember who wore #{selected}?</span>
-                      </div>
-
-                      {/* Add form — only when number is empty */}
-                      <form className="tw-add" onSubmit={handleAdd}>
-                        <span className="tw-add__label">ADD A PLAYER</span>
-                        {addError && <span className="tw-add__error">{addError}</span>}
-                        <input
-                          type="text"
-                          className="tw-add__input"
-                          placeholder="Name"
-                          value={addName}
-                          onChange={e => setAddName(e.target.value)}
-                        />
-                        <div className="tw-add__row">
-                          <input
-                            type="text"
-                            className="tw-add__input tw-add__input--half"
-                            placeholder="Position"
-                            value={addPosition}
-                            onChange={e => setAddPosition(e.target.value)}
-                            maxLength={20}
-                          />
-                          <input
-                            type="text"
-                            className="tw-add__input tw-add__input--half"
-                            placeholder="Grad year"
-                            value={addGradYear}
-                            onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
-                            inputMode="numeric"
-                            maxLength={4}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          className="tw-add__input"
-                          placeholder="Fun fact (optional)"
-                          value={addFunFact}
-                          onChange={e => setAddFunFact(e.target.value.slice(0, 140))}
-                          maxLength={140}
-                        />
+                  {/* Year filter chips — show when entries span 2+ years */}
+                  {uniqueYears.length >= 2 && (
+                    <div className="tw-year-filter">
+                      <button
+                        className={`tw-year-chip${!yearFilter ? ' tw-year-chip--active' : ''}`}
+                        onClick={() => setYearFilter(null)}
+                      >
+                        ALL
+                      </button>
+                      {uniqueYears.map(yr => (
                         <button
-                          type="submit"
-                          className="tw-add__submit"
-                          disabled={!addName.trim() || addSubmitting}
+                          key={yr}
+                          className={`tw-year-chip${yearFilter === yr ? ' tw-year-chip--active' : ''}`}
+                          onClick={() => setYearFilter(yr === yearFilter ? null : yr)}
                         >
-                          {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added' : 'Add'}
+                          '{String(yr).slice(-2)}
                         </button>
-                      </form>
-                    </>
-                  ) : (
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Entries — always shown if they exist */}
+                  {filteredEntries.length > 0 ? (
                     <div className="tw-entries">
-                      {selectedEntries.map((entry) => (
+                      {filteredEntries.map((entry) => (
                         editingId === entry.id ? (
                           /* Inline edit form */
                           <form key={entry.id} className="tw-add" onSubmit={handleEditSave}>
@@ -396,7 +422,63 @@ export default function TeamWallPage() {
                         )
                       ))}
                     </div>
+                  ) : (
+                    <div className="tw-empty-number">
+                      <span className="tw-empty-number__text">
+                        {yearFilter
+                          ? `No one from '${String(yearFilter).slice(-2)} wore #${selected} yet.`
+                          : `Remember who wore #${selected}?`
+                        }
+                      </span>
+                    </div>
                   )}
+
+                  {/* Add form — ALWAYS visible */}
+                  <form className="tw-add" onSubmit={handleAdd}>
+                    <span className="tw-add__label">ADD A PLAYER</span>
+                    {addError && <span className="tw-add__error">{addError}</span>}
+                    <input
+                      type="text"
+                      className="tw-add__input"
+                      placeholder="Name"
+                      value={addName}
+                      onChange={e => setAddName(e.target.value)}
+                    />
+                    <div className="tw-add__row">
+                      <input
+                        type="text"
+                        className="tw-add__input tw-add__input--half"
+                        placeholder="Position"
+                        value={addPosition}
+                        onChange={e => setAddPosition(e.target.value)}
+                        maxLength={20}
+                      />
+                      <input
+                        type="text"
+                        className="tw-add__input tw-add__input--half"
+                        placeholder="Grad year"
+                        value={addGradYear}
+                        onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                        inputMode="numeric"
+                        maxLength={4}
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      className="tw-add__input"
+                      placeholder="Fun fact (optional)"
+                      value={addFunFact}
+                      onChange={e => setAddFunFact(e.target.value.slice(0, 140))}
+                      maxLength={140}
+                    />
+                    <button
+                      type="submit"
+                      className="tw-add__submit"
+                      disabled={!addName.trim() || addSubmitting}
+                    >
+                      {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added ✓' : 'Add'}
+                    </button>
+                  </form>
                 </>
               )}
             </div>
