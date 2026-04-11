@@ -546,201 +546,279 @@
   font-style: italic;
 }
 
-/* ─── Vertical Mobile Glow Timeline ─────────────────────────────────────── */
-/* Hidden on desktop. Vertical glow bar left, info right, Live Activity card. */
+/* ─── Mobile Vertical Glow Timeline ─────────────────────────────────────── */
+/* Hidden on desktop. Persistent card top, wide centered glow bar below. */
 
 .vtl {
   display: none;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Persistent top card: header + live game info ── */
+
+.vtl__card {
+  background: rgba(6, 8, 18, 0.92);
+  border: 1px solid rgba(255, 230, 120, 0.08);
+  border-radius: 16px;
+  padding: 14px 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 1px rgba(255, 230, 120, 0.12);
+}
+
+.vtl__card-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.vtl__card-number {
+  font-family: var(--font-banner);
+  font-size: 1.75rem;
+  line-height: 0.85;
+  color: rgba(255, 230, 120, 0.85);
+  text-shadow: 0 0 20px rgba(255, 220, 80, 0.3);
+  flex-shrink: 0;
+}
+
+.vtl__card-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.vtl__card-name {
+  font-family: var(--font-banner);
+  font-size: 1.125rem;
+  color: var(--color-paper);
+  line-height: 1;
+}
+
+.vtl__card-meta {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.5);
+  letter-spacing: 0.03em;
+}
+
+.vtl__card-era {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.vtl__card-era-name {
+  display: block;
+  font-family: var(--font-banner);
+  font-size: 0.8125rem;
+  color: rgba(255, 230, 120, 0.8);
+  line-height: 1;
+}
+
+.vtl__card-era-tagline {
+  display: block;
+  font-family: var(--font-program);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.4);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Game info area */
+.vtl__card-game {
+  padding-top: 8px;
+  border-top: 1px solid rgba(200, 195, 185, 0.06);
+  min-height: 36px;
+}
+
+.vtl__card-game--empty {
+  border-top: none;
+}
+
+.vtl__card-matchup {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  color: var(--color-paper);
+  line-height: 1.3;
+}
+
+.vtl__card-result {
+  font-family: var(--font-banner);
+  font-size: 0.9375rem;
+}
+
+.vtl__card-result--w { color: rgba(255, 230, 100, 0.95); }
+.vtl__card-result--l { color: #FF4D5E; }
+.vtl__card-opponent { color: rgba(200, 195, 185, 0.7); }
+
+.vtl__card-week {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  color: rgba(200, 195, 185, 0.35);
+  margin-left: 8px;
+  letter-spacing: 0.03em;
+}
+
+.vtl__card-stats {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.55);
+  margin-top: 3px;
+  letter-spacing: 0.02em;
+}
+
+.vtl__card-moment {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  font-family: var(--font-banner);
+  font-size: 0.75rem;
+  color: rgba(255, 230, 100, 0.85);
+}
+
+.vtl__card-moment--sacred {
+  color: rgba(255, 252, 220, 1);
+}
+
+.vtl__card-moment--sacred svg {
+  filter: drop-shadow(0 0 4px rgba(255, 220, 80, 0.5));
+}
+
+.vtl__card-moment--negative {
+  color: rgba(255, 75, 90, 0.85);
+}
+
+.vtl__card-moment svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.vtl__card-bye {
+  font-family: var(--font-scoreboard);
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.45);
+}
+
+.vtl__card-dnp {
+  font-family: var(--font-banner);
+  font-size: 0.75rem;
+  color: #FF4D5E;
+}
+
+.vtl__card-hint {
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.25);
+  font-style: italic;
+}
+
+/* ── Bar area: wide, centered ── */
+
+.vtl__bar-area {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
 }
 
 .vtl__bar-col {
   position: relative;
-  width: 70px;
-  flex-shrink: 0;
+  width: 65%;
+  max-width: 240px;
+  height: 100%;
 }
 
 .vtl__canvas {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   touch-action: none;
 }
 
-/* Era year markers along the bar */
-.vtl__era-mark {
+/* Scrub indicator — horizontal stroke with node */
+.vtl__scrub-indicator {
+  position: absolute;
+  left: -16px;
+  right: -16px;
+  height: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: top 60ms ease-out;
+}
+
+.vtl__scrub-line {
   position: absolute;
   left: 0;
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 4px;
-  pointer-events: none;
-  border-top: 1px solid rgba(200, 195, 185, 0.08);
+  right: 0;
+  top: -0.5px;
+  height: 1px;
+  background: rgba(200, 195, 185, 0.35);
 }
 
-.vtl__era-mark--active {
-  border-top-color: rgba(255, 230, 120, 0.25);
+.vtl__scrub-indicator--moment .vtl__scrub-line {
+  background: rgba(255, 230, 120, 0.5);
+  height: 1.5px;
+  box-shadow: 0 0 6px rgba(255, 230, 120, 0.2);
 }
 
-.vtl__era-yr {
+.vtl__scrub-indicator--sacred .vtl__scrub-line {
+  background: rgba(255, 230, 120, 0.8);
+  height: 2px;
+  box-shadow: 0 0 12px rgba(255, 220, 80, 0.4);
+}
+
+.vtl__scrub-node {
+  position: absolute;
+  right: -3px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(200, 195, 185, 0.7);
+  box-shadow: 0 0 6px rgba(200, 195, 185, 0.3);
+}
+
+.vtl__scrub-indicator--moment .vtl__scrub-node {
+  background: rgba(255, 230, 120, 0.9);
+  box-shadow: 0 0 10px rgba(255, 220, 80, 0.4);
+  width: 10px;
+  height: 10px;
+  top: -5px;
+  right: -4px;
+}
+
+.vtl__scrub-indicator--sacred .vtl__scrub-node {
+  background: rgba(255, 252, 220, 1);
+  box-shadow: 0 0 16px rgba(255, 220, 80, 0.6), 0 0 4px rgba(255, 252, 220, 0.8);
+  width: 12px;
+  height: 12px;
+  top: -6px;
+  right: -5px;
+}
+
+/* Era year ticks along right edge of bar */
+.vtl__era-tick {
+  position: absolute;
+  right: -32px;
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
-  color: rgba(200, 195, 185, 0.35);
-  letter-spacing: 0.04em;
-}
-
-.vtl__era-mark--active .vtl__era-yr {
-  color: rgba(255, 230, 120, 0.7);
-}
-
-/* Right info column */
-.vtl__info-col {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding-top: var(--space-2);
-}
-
-.vtl__era-context {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.vtl__era-name {
-  font-family: var(--font-banner);
-  font-size: 1.25rem;
-  color: rgba(255, 230, 120, 0.9);
-  line-height: 1.1;
-}
-
-.vtl__era-tagline {
-  font-family: var(--font-program);
-  font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.5);
-  font-style: italic;
-}
-
-/* Live Activity card — compact, iOS-inspired */
-.vtl__live-card {
-  background: rgba(6, 8, 18, 0.92);
-  border: 1px solid rgba(255, 230, 120, 0.1);
-  border-radius: 14px;
-  padding: 12px 14px;
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.5),
-    0 0 1px rgba(255, 230, 120, 0.15);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  animation: vtl-card-in 180ms ease-out;
-}
-
-.vtl__live-card--scrubbing {
-  border-color: rgba(255, 230, 120, 0.25);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.6),
-    0 0 30px rgba(255, 230, 120, 0.06),
-    0 0 1px rgba(255, 230, 120, 0.3);
-}
-
-@keyframes vtl-card-in {
-  from { opacity: 0; transform: translateY(6px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.vtl__live-matchup {
-  font-family: var(--font-program);
-  font-size: 0.9375rem;
-  color: var(--color-paper);
-  line-height: 1.3;
-}
-
-.vtl__live-result {
-  font-family: var(--font-banner);
-  font-size: 1rem;
-}
-
-.vtl__live-result--w { color: rgba(255, 230, 100, 0.95); }
-.vtl__live-result--l { color: #FF4D5E; }
-
-.vtl__live-opponent {
-  color: rgba(200, 195, 185, 0.75);
-}
-
-.vtl__live-stats {
-  font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: rgba(200, 195, 185, 0.6);
-  margin-top: 4px;
-  letter-spacing: 0.02em;
-}
-
-.vtl__live-moment {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 230, 120, 0.1);
-  font-family: var(--font-banner);
-  font-size: 0.8125rem;
-  color: rgba(255, 230, 100, 0.9);
-}
-
-.vtl__live-moment--sacred {
-  color: rgba(255, 252, 220, 1);
-}
-
-.vtl__live-moment--sacred svg {
-  filter: drop-shadow(0 0 4px rgba(255, 220, 80, 0.6));
-}
-
-.vtl__live-moment--negative {
-  color: rgba(255, 75, 90, 0.9);
-  border-top-color: rgba(255, 75, 90, 0.15);
-}
-
-.vtl__live-moment svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.vtl__live-meta {
-  font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
-  color: rgba(200, 195, 185, 0.35);
-  margin-top: 6px;
-  letter-spacing: 0.03em;
-}
-
-.vtl__live-glow {
+  font-size: 0.5rem;
   color: rgba(200, 195, 185, 0.25);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  transform: translateY(-0.5em);
 }
 
-.vtl__live-bye {
-  font-family: var(--font-scoreboard);
-  font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.5);
-}
-
-.vtl__live-dnp {
-  font-family: var(--font-banner);
-  font-size: 0.8125rem;
-  color: #FF4D5E;
-}
-
-.vtl__hint {
-  font-family: var(--font-program);
-  font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.3);
-  font-style: italic;
-  line-height: 1.5;
-  padding-top: var(--space-4);
+.vtl__era-tick--active {
+  color: rgba(255, 230, 120, 0.55);
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -755,18 +833,15 @@
 
   /* Hide horizontal bar on mobile, show vertical glow */
   .legend-timeline__bar-wrap,
+  .legend-timeline__header,
   .legend-timeline__key--desktop { display: none; }
 
   .vtl {
     display: flex;
+    flex-direction: column;
     gap: var(--space-3);
-    height: 70vh;
-    min-height: 400px;
-    max-height: 700px;
-  }
-
-  .vtl__bar-col {
-    height: 100%;
+    height: calc(100vh - 40px);
+    min-height: 500px;
   }
 }
 
