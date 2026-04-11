@@ -808,42 +808,82 @@ export default function LegendTimeline({ timeline }) {
   }, [pinnedIndex])
 
   // ── Mobile scrub handlers ──
-  // Direct DOM update for scrub indicator (zero lag), throttled React state for card
+  // Edge acceleration: finger near top/bottom auto-animates to start/end
+  const edgeAnimRef = useRef(null)
+
+  const applyScrubIndex = useCallback((idx) => {
+    const positions = vGamePositionsRef.current
+    const n = gamesRef.current.length
+    if (idx < 0 || idx >= n || !positions) return
+    // Instant: move scrub line via direct DOM
+    const scrubEl = scrubIndicatorRef.current
+    if (scrubEl) {
+      const py = (positions[idx] + positions[idx + 1]) / 2
+      scrubEl.style.top = `${py}px`
+    }
+    // Throttled: update card via React
+    pendingScrubIdx.current = idx
+    if (!vScrubRafRef.current) {
+      vScrubRafRef.current = requestAnimationFrame(() => {
+        const i = pendingScrubIdx.current
+        if (i !== null) {
+          setHoveredIndex(i)
+          setPinnedIndex(i)
+          setVGamePositions(vGamePositionsRef.current)
+        }
+        vScrubRafRef.current = null
+      })
+    }
+  }, [])
+
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
     const positions = vGamePositionsRef.current
     if (!canvas || !positions) return
     const rect = canvas.getBoundingClientRect()
-    const y = Math.max(0, Math.min(touchY - rect.top, rect.height - 1))
+    const relY = touchY - rect.top
+    const h = rect.height
     const n = gamesRef.current.length
+    const edgeZone = h * 0.12  // top/bottom 12% triggers acceleration
+
+    // Cancel any running edge animation
+    if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
+
+    // Edge acceleration — auto-glide to start or end
+    if (relY < edgeZone) {
+      // Near top — accelerate toward game 0
+      const speed = Math.max(1, Math.round((1 - relY / edgeZone) * 8))
+      const runEdge = () => {
+        const cur = pendingScrubIdx.current ?? 0
+        const next = Math.max(0, cur - speed)
+        applyScrubIndex(next)
+        if (next > 0 && scrubRef.current) edgeAnimRef.current = requestAnimationFrame(runEdge)
+      }
+      edgeAnimRef.current = requestAnimationFrame(runEdge)
+      return
+    }
+    if (relY > h - edgeZone) {
+      // Near bottom — accelerate toward last game
+      const speed = Math.max(1, Math.round((1 - (h - relY) / edgeZone) * 8))
+      const runEdge = () => {
+        const cur = pendingScrubIdx.current ?? n - 1
+        const next = Math.min(n - 1, cur + speed)
+        applyScrubIndex(next)
+        if (next < n - 1 && scrubRef.current) edgeAnimRef.current = requestAnimationFrame(runEdge)
+      }
+      edgeAnimRef.current = requestAnimationFrame(runEdge)
+      return
+    }
+
+    // Normal zone — direct position mapping
+    const y = Math.max(0, Math.min(relY, h - 1))
     let lo = 0, hi = n - 1
     while (lo < hi) {
       const m = (lo + hi) >> 1
       if (positions[m + 1] <= y) lo = m + 1; else hi = m
     }
-    if (lo >= 0 && lo < n) {
-      // Instant: move scrub indicator via direct DOM (bypasses React entirely)
-      const scrubEl = scrubIndicatorRef.current
-      if (scrubEl) {
-        const py = (positions[lo] + positions[lo + 1]) / 2
-        scrubEl.style.top = `${py}px`
-        scrubEl.style.opacity = '1'
-      }
-      // Throttled: update card content via React (once per frame)
-      pendingScrubIdx.current = lo
-      if (!vScrubRafRef.current) {
-        vScrubRafRef.current = requestAnimationFrame(() => {
-          const idx = pendingScrubIdx.current
-          if (idx !== null) {
-            setHoveredIndex(idx)
-            setPinnedIndex(idx)
-            setVGamePositions(vGamePositionsRef.current)
-          }
-          vScrubRafRef.current = null
-        })
-      }
-    }
-  }, [])
+    applyScrubIndex(lo)
+  }, [applyScrubIndex])
 
   const handleVTouchStart = useCallback((e) => {
     e.preventDefault()
@@ -860,6 +900,7 @@ export default function LegendTimeline({ timeline }) {
 
   const handleVTouchEnd = useCallback(() => {
     scrubRef.current = false
+    if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
   }, [])
 
   // Click on a moment marker — pin tooltip to that game
@@ -1028,70 +1069,14 @@ export default function LegendTimeline({ timeline }) {
       </div>
 
       {/* ── Mobile Vertical Glow Timeline ──────────────────────────────── */}
-      <div className="vtl">
-        {/* Persistent top card — header + game info unified */}
-        <div className="vtl__card">
-          <div className="vtl__card-header">
-            <span className="vtl__card-number">12</span>
-            <div className="vtl__card-name-block">
-              <span className="vtl__card-name">{timeline.player_name}</span>
-              <span className="vtl__card-meta">
-                {timeline.position} · {timeline.career_span} · {timeline.total_games} games
-              </span>
-            </div>
-          </div>
-          {activeEra && (
-            <div className="vtl__card-era">
-              <span className="vtl__card-era-name">{activeEra.label}</span>
-              <span className="vtl__card-era-tagline">{activeEra.tagline}</span>
-            </div>
-          )}
-          {activeGame ? (
-            <div className="vtl__card-game">
-              {activeGame.is_bye ? (
-                <div className="vtl__card-bye">Bye Week</div>
-              ) : activeGame.is_dnp ? (
-                <div className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''}</div>
-              ) : (
-                <>
-                  <div className="vtl__card-matchup">
-                    <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
-                      {activeGame.result}
-                    </span>
-                    {' '}{activeGame.score}
-                    <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
-                  </div>
-                  {activeGame.stats?.pass_yards != null && (
-                    <div className="vtl__card-stats">
-                      {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
-                      {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
-                    </div>
-                  )}
-                  {activeGame.moments?.length > 0 && (
-                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
-                      {getMomentIcon(activeGame.moments[0])}
-                      <span>{activeGame.moments[0].moment_name}</span>
-                    </div>
-                  )}
-                </>
-              )}
-              <div className="vtl__card-meta-line">
-                {activeGame.week} · {activeGame.season}
-                <span className="vtl__card-glow"> · Glow {activeGame.glow_score?.toFixed(1)}</span>
-              </div>
-            </div>
-          ) : (
-            <div className="vtl__card-hint">Touch the bar, slide to explore</div>
-          )}
-        </div>
-
-        {/* Centered bar area — entire area is touch target (contacts-style scrub) */}
-        <div
-          className="vtl__bar-area"
-          onTouchStart={handleVTouchStart}
-          onTouchMove={handleVTouchMove}
-          onTouchEnd={handleVTouchEnd}
-        >
+      <div
+        className="vtl"
+        onTouchStart={handleVTouchStart}
+        onTouchMove={handleVTouchMove}
+        onTouchEnd={handleVTouchEnd}
+      >
+        {/* Bar fills the screen — touch anywhere to scrub */}
+        <div className="vtl__bar-area">
           <div className="vtl__bar-col">
             <canvas
               ref={vCanvasRef}
@@ -1111,7 +1096,7 @@ export default function LegendTimeline({ timeline }) {
               )
             })}
           </div>
-          {/* Scrub indicator — always visible, positioned via ref for zero-lag */}
+          {/* Scrub line — always visible, positioned via ref for zero-lag */}
           <div
             ref={scrubIndicatorRef}
             className="vtl__scrub-indicator"
@@ -1120,17 +1105,69 @@ export default function LegendTimeline({ timeline }) {
               : '20px'
             }}
           >
-            <div className="vtl__scrub-handle vtl__scrub-handle--left">
-              <span className="vtl__scrub-grip" />
-              <span className="vtl__scrub-grip" />
-              <span className="vtl__scrub-grip" />
-            </div>
             <div className="vtl__scrub-line" />
-            <div className="vtl__scrub-handle vtl__scrub-handle--right">
-              <span className="vtl__scrub-grip" />
-              <span className="vtl__scrub-grip" />
-              <span className="vtl__scrub-grip" />
+          </div>
+        </div>
+
+        {/* Bottom card — unified scrub marker + info display */}
+        <div className="vtl__card">
+          <div className="vtl__card-header">
+            <span className="vtl__card-number">12</span>
+            <div className="vtl__card-name-block">
+              <span className="vtl__card-name">{timeline.player_name}</span>
+              {activeEra ? (
+                <span className="vtl__card-meta">
+                  {activeEra.label} · {activeEra.tagline}
+                </span>
+              ) : (
+                <span className="vtl__card-meta">
+                  {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+                </span>
+              )}
             </div>
+          </div>
+          {activeGame ? (
+            <div className="vtl__card-game">
+              {activeGame.is_bye ? (
+                <div className="vtl__card-bye">Bye Week · {activeGame.season}</div>
+              ) : activeGame.is_dnp ? (
+                <div className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''} · {activeGame.season}</div>
+              ) : (
+                <>
+                  <div className="vtl__card-matchup">
+                    <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
+                      {activeGame.result}
+                    </span>
+                    {' '}{activeGame.score}
+                    <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
+                  </div>
+                  <div className="vtl__card-detail-row">
+                    {activeGame.stats?.pass_yards != null && (
+                      <span className="vtl__card-stats">
+                        {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
+                        {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
+                      </span>
+                    )}
+                    <span className="vtl__card-meta-line">
+                      {activeGame.week} · {activeGame.season}
+                      <span className="vtl__card-glow"> · {activeGame.glow_score?.toFixed(1)}</span>
+                    </span>
+                  </div>
+                  {activeGame.moments?.length > 0 && (
+                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
+                      {getMomentIcon(activeGame.moments[0])}
+                      <span>{activeGame.moments[0].moment_name}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="vtl__card-hint">Touch the bar, slide to explore</div>
+          )}
+          {/* Grabber grip — bottom edge is the marker */}
+          <div className="vtl__card-grip">
+            <span /><span /><span />
           </div>
         </div>
       </div>

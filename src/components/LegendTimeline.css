@@ -547,225 +547,19 @@
 }
 
 /* ─── Vertical Mobile Glow Timeline ─────────────────────────────────────── */
-/* Hidden on desktop. Unified persistent card top, centered wide bar below. */
+/* Bar fills screen. Card at bottom = unified scrub marker + info display. */
 
 .vtl {
   display: none;
 }
 
-/* ── Persistent top card: header + game info merged ── */
-/* Fixed height — no layout shift. Floats above bar. */
-.vtl__card {
-  position: relative;
-  z-index: 10;
-  background: rgba(6, 8, 18, 0.95);
-  border: 1px solid rgba(255, 230, 120, 0.1);
-  border-radius: 14px;
-  padding: 12px 16px;
-  height: 155px;
-  margin-bottom: -12px;  /* bar tucks under the card */
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.7),
-    0 2px 8px rgba(0, 0, 0, 0.4),
-    0 0 1px rgba(255, 230, 120, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.vtl__card-header {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
-.vtl__card-number {
-  font-family: var(--font-banner);
-  font-size: 2rem;
-  line-height: 0.85;
-  color: rgba(255, 230, 120, 0.85);
-  text-shadow:
-    0 0 20px rgba(255, 220, 80, 0.3),
-    0 0 40px rgba(255, 195, 45, 0.12);
-}
-
-.vtl__card-name-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.vtl__card-name {
-  font-family: var(--font-banner);
-  font-size: 1.125rem;
-  color: var(--color-paper);
-  line-height: 1;
-}
-
-.vtl__card-meta {
-  font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
-  color: rgba(200, 195, 185, 0.5);
-  letter-spacing: 0.03em;
-}
-
-.vtl__card-era {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 230, 120, 0.08);
-}
-
-.vtl__card-era-name {
-  font-family: var(--font-banner);
-  font-size: 0.9375rem;
-  color: rgba(255, 230, 120, 0.9);
-  line-height: 1;
-}
-
-.vtl__card-era-tagline {
-  font-family: var(--font-program);
-  font-size: 0.75rem;
-  color: rgba(200, 195, 185, 0.45);
-  font-style: italic;
-}
-
-/* Game info within the card */
-.vtl__card-game {
-  animation: vtl-card-in 120ms ease-out;
-}
-
-.vtl__card-matchup {
-  font-family: var(--font-program);
-  font-size: 0.9375rem;
-  color: var(--color-paper);
-  line-height: 1.3;
-}
-
-.vtl__card-result {
-  font-family: var(--font-banner);
-  font-size: 1rem;
-}
-
-.vtl__card-result--w { color: rgba(255, 230, 100, 0.95); }
-.vtl__card-result--l { color: #FF4D5E; }
-
-.vtl__card-opponent {
-  color: rgba(200, 195, 185, 0.75);
-}
-
-.vtl__card-stats {
-  font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
-  color: rgba(200, 195, 185, 0.6);
-  margin-top: 4px;
-  letter-spacing: 0.02em;
-}
-
-.vtl__card-moment {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 230, 120, 0.1);
-  font-family: var(--font-banner);
-  font-size: 0.8125rem;
-  color: rgba(255, 230, 100, 0.9);
-}
-
-.vtl__card-moment--sacred {
-  color: rgba(255, 252, 220, 1);
-}
-
-.vtl__card-moment--sacred svg {
-  filter: drop-shadow(0 0 4px rgba(255, 220, 80, 0.6));
-}
-
-.vtl__card-moment--negative {
-  color: rgba(255, 75, 90, 0.9);
-  border-top-color: rgba(255, 75, 90, 0.15);
-}
-
-.vtl__card-moment svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.vtl__card-meta-line {
-  font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
-  color: rgba(200, 195, 185, 0.35);
-  margin-top: 6px;
-  letter-spacing: 0.03em;
-}
-
-.vtl__card-glow {
-  color: rgba(200, 195, 185, 0.25);
-}
-
-.vtl__card-bye {
-  font-family: var(--font-scoreboard);
-  font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.5);
-}
-
-.vtl__card-dnp {
-  font-family: var(--font-banner);
-  font-size: 0.8125rem;
-  color: #FF4D5E;
-}
-
-.vtl__card-hint {
-  font-family: var(--font-program);
-  font-size: 0.8125rem;
-  color: rgba(200, 195, 185, 0.3);
-  font-style: italic;
-}
-
-@keyframes vtl-card-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Centered bar area — full touch target, contacts-style scrub ── */
-/* Slides under the card — top edge fades into the card shadow */
+/* ── Bar area — fills remaining space, full touch target ── */
 .vtl__bar-area {
   position: relative;
-  z-index: 1;
   flex: 1;
   display: flex;
   justify-content: center;
   min-height: 0;
-  padding: 12px 0 20px;  /* top: under card overlap, bottom: iOS safe zone */
-  touch-action: none;
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* Fade mask at the top — bar dissolves into card shadow */
-.vtl__bar-area::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 24px;
-  background: linear-gradient(
-    to bottom,
-    rgba(3, 3, 12, 0.9) 0%,
-    rgba(3, 3, 12, 0.4) 50%,
-    transparent 100%
-  );
-  z-index: 2;
-  pointer-events: none;
 }
 
 .vtl__bar-col {
@@ -780,10 +574,10 @@
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  pointer-events: none;  /* parent handles touch */
+  pointer-events: none;
 }
 
-/* Era year ticks — positioned along the left edge of the bar */
+/* Era year ticks — along the left edge of the bar */
 .vtl__era-tick {
   position: absolute;
   left: -28px;
@@ -799,7 +593,7 @@
   color: rgba(255, 230, 120, 0.65);
 }
 
-/* Scrub indicator — always visible, positioned via direct DOM for zero lag */
+/* Scrub line — thin horizontal indicator, positioned via direct DOM */
 .vtl__scrub-indicator {
   position: absolute;
   left: 0;
@@ -812,49 +606,194 @@
   will-change: top;
 }
 
-/* Grabber handles — 28px circles on each side of the bar */
-.vtl__scrub-handle {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 240, 160, 0.12);
-  border: 1.5px solid rgba(255, 230, 120, 0.4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  flex-shrink: 0;
-  box-shadow:
-    0 0 10px rgba(255, 220, 80, 0.2),
-    0 0 25px rgba(255, 195, 45, 0.08);
-}
-
-.vtl__scrub-grip {
-  display: block;
-  width: 10px;
-  height: 1.5px;
-  border-radius: 1px;
-  background: rgba(255, 230, 120, 0.6);
-}
-
 .vtl__scrub-line {
   flex: 1;
   height: 2px;
   background: linear-gradient(
     90deg,
-    rgba(255, 230, 120, 0.5) 0%,
-    rgba(255, 230, 120, 0.6) 50%,
-    rgba(255, 230, 120, 0.5) 100%
+    transparent 5%,
+    rgba(255, 230, 120, 0.5) 20%,
+    rgba(255, 230, 120, 0.5) 80%,
+    transparent 95%
   );
-  box-shadow: 0 0 6px rgba(255, 220, 80, 0.3);
+  box-shadow: 0 0 8px rgba(255, 220, 80, 0.25);
+}
+
+/* ── Bottom card — the scrub marker + info display ── */
+.vtl__card {
+  position: relative;
+  z-index: 10;
+  background: rgba(6, 8, 18, 0.95);
+  border: 1px solid rgba(255, 230, 120, 0.1);
+  border-radius: 14px 14px 0 0;
+  padding: 12px 16px 14px;
+  height: 140px;
+  margin-top: -8px;  /* tuck under bar slightly */
+  box-shadow:
+    0 -8px 32px rgba(0, 0, 0, 0.7),
+    0 -2px 8px rgba(0, 0, 0, 0.4),
+    0 0 1px rgba(255, 230, 120, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  flex-shrink: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Grip bar at top of card — "grab me" indicator */
+.vtl__card-grip {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 8px 0 4px;
+}
+
+.vtl__card-grip span {
+  display: block;
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 230, 120, 0.25);
+}
+
+.vtl__card-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.vtl__card-number {
+  font-family: var(--font-banner);
+  font-size: 1.75rem;
+  line-height: 0.85;
+  color: rgba(255, 230, 120, 0.85);
+  text-shadow:
+    0 0 20px rgba(255, 220, 80, 0.3),
+    0 0 40px rgba(255, 195, 45, 0.12);
+}
+
+.vtl__card-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.vtl__card-name {
+  font-family: var(--font-banner);
+  font-size: 1rem;
+  color: var(--color-paper);
+  line-height: 1;
+}
+
+.vtl__card-meta {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  color: rgba(200, 195, 185, 0.5);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Game info */
+.vtl__card-game {
+  animation: vtl-card-in 100ms ease-out;
+}
+
+.vtl__card-matchup {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  color: var(--color-paper);
+  line-height: 1.3;
+}
+
+.vtl__card-result {
+  font-family: var(--font-banner);
+  font-size: 0.9375rem;
+}
+
+.vtl__card-result--w { color: rgba(255, 230, 100, 0.95); }
+.vtl__card-result--l { color: #FF4D5E; }
+
+.vtl__card-opponent {
+  color: rgba(200, 195, 185, 0.75);
+}
+
+/* Stats + meta on one row */
+.vtl__card-detail-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 3px;
+}
+
+.vtl__card-stats {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.6);
+  letter-spacing: 0.02em;
+}
+
+.vtl__card-meta-line {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5625rem;
+  color: rgba(200, 195, 185, 0.35);
+  letter-spacing: 0.03em;
+}
+
+.vtl__card-glow {
+  color: rgba(200, 195, 185, 0.25);
+}
+
+.vtl__card-moment {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 230, 120, 0.1);
+  font-family: var(--font-banner);
+  font-size: 0.75rem;
+  color: rgba(255, 230, 100, 0.9);
+}
+
+.vtl__card-moment--sacred { color: rgba(255, 252, 220, 1); }
+.vtl__card-moment--sacred svg { filter: drop-shadow(0 0 4px rgba(255, 220, 80, 0.6)); }
+.vtl__card-moment--negative { color: rgba(255, 75, 90, 0.9); border-top-color: rgba(255, 75, 90, 0.15); }
+.vtl__card-moment svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.vtl__card-bye {
+  font-family: var(--font-scoreboard);
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.5);
+}
+
+.vtl__card-dnp {
+  font-family: var(--font-banner);
+  font-size: 0.75rem;
+  color: #FF4D5E;
+}
+
+.vtl__card-hint {
+  font-family: var(--font-program);
+  font-size: 0.75rem;
+  color: rgba(200, 195, 185, 0.3);
+  font-style: italic;
+  padding-top: 4px;
+}
+
+@keyframes vtl-card-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
   .legend-timeline {
-    padding: var(--space-2) var(--space-3) 0;
+    padding: 0;
     height: 100dvh;
     overflow: hidden;
   }
@@ -869,6 +808,9 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
