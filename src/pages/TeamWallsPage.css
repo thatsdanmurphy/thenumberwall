@@ -36,6 +36,7 @@
 
   .twb-right {
     flex: 1;
+    padding-top: var(--space-5);
   }
 }
 
@@ -49,7 +50,7 @@
 @media (min-width: 768px) {
   .twb-hero {
     text-align: left;
-    padding: var(--space-6) 0 var(--space-3);
+    padding: var(--space-5) 0 var(--space-3);
   }
 
   .twb-hero__sub {

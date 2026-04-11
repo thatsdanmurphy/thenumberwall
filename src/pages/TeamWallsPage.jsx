@@ -61,7 +61,7 @@ export default function TeamWallsPage() {
         {/* ── Left: Hero ───────────────────────────────────── */}
         <div className="twb-left">
           <div className="twb-hero">
-            <h2 className="twb-hero__heading">YOUR TEAMS. YOUR NUMBERS.</h2>
+            <h2 className="twb-hero__heading">EVERY TEAM HAS A WALL.</h2>
             <p className="twb-hero__sub">
               Start a wall for your team. Share the link. Let your teammates claim their numbers.
             </p>
