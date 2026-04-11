@@ -810,7 +810,7 @@ export default function LegendTimeline({ timeline }) {
     const positions = vGamePositionsRef.current
     if (!canvas || !positions) return
     const rect = canvas.getBoundingClientRect()
-    const y = touchY - rect.top
+    const y = Math.max(0, Math.min(touchY - rect.top, rect.height - 1))
     const n = gamesRef.current.length
     let lo = 0, hi = n - 1
     while (lo < hi) {
@@ -1065,15 +1065,17 @@ export default function LegendTimeline({ timeline }) {
           )}
         </div>
 
-        {/* Centered bar area with scrub indicator */}
-        <div className="vtl__bar-area">
+        {/* Centered bar area — entire area is touch target (contacts-style scrub) */}
+        <div
+          className="vtl__bar-area"
+          onTouchStart={handleVTouchStart}
+          onTouchMove={handleVTouchMove}
+          onTouchEnd={handleVTouchEnd}
+        >
           <div className="vtl__bar-col">
             <canvas
               ref={vCanvasRef}
               className="vtl__canvas"
-              onTouchStart={handleVTouchStart}
-              onTouchMove={handleVTouchMove}
-              onTouchEnd={handleVTouchEnd}
             />
             {/* Era year ticks along the bar edge */}
             {vGamePositions && eras.map(era => {
@@ -1089,14 +1091,23 @@ export default function LegendTimeline({ timeline }) {
               )
             })}
           </div>
-          {/* Horizontal scrub indicator — shows where finger is */}
+          {/* Scrub indicator — grabber handles on both sides of the bar */}
           {activeIndex !== null && vGamePositions && (
             <div
               className="vtl__scrub-indicator"
               style={{ top: `${(vGamePositions[activeIndex] + vGamePositions[activeIndex + 1]) / 2}px` }}
             >
+              <div className="vtl__scrub-handle vtl__scrub-handle--left">
+                <span className="vtl__scrub-grip" />
+                <span className="vtl__scrub-grip" />
+                <span className="vtl__scrub-grip" />
+              </div>
               <div className="vtl__scrub-line" />
-              <div className="vtl__scrub-node" />
+              <div className="vtl__scrub-handle vtl__scrub-handle--right">
+                <span className="vtl__scrub-grip" />
+                <span className="vtl__scrub-grip" />
+                <span className="vtl__scrub-grip" />
+              </div>
             </div>
           )}
         </div>
