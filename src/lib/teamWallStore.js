@@ -212,6 +212,18 @@ export async function browseTeamWalls({ state, sport, query, limit = 20 } = {}) 
   return data || []
 }
 
+// ─── Walls for map — light, town-keyed, sport-colored ─────────────────────
+// Returns one row per wall with town + sport, used by the hub map to light
+// up dots. Multiple walls in the same town stack into a single glowing node.
+export async function getWallsForMap() {
+  const { data, error } = await supabase
+    .from('team_walls')
+    .select('id, school, school_slug, sport, town, town_slug, state, color_primary')
+    .eq('status', 'active')
+  if (error) throw error
+  return data || []
+}
+
 // ─── Get recent / active walls (for homepage "BUILDING NOW" section) ──────
 
 export async function getActiveWalls(limit = 5) {
