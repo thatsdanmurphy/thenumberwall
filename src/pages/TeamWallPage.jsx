@@ -606,13 +606,10 @@ export default function TeamWallPage() {
                       {wall.coach_fun_fact && (
                         <div className="tw-coach-panel__fact">{wall.coach_fun_fact}</div>
                       )}
-                      {!isArchived && isCreator && (
+                      {!isArchived && (
                         <button className="tnw-btn tnw-btn--secondary tw-coach-panel__edit" onClick={startEditCoach}>
                           <Pencil size={12} /> {wall.coach_name ? 'Edit' : 'Add coach'}
                         </button>
-                      )}
-                      {!isCreator && !wall.coach_name && (
-                        <p className="tw-coach-panel__hint">Only the wall creator can add the coach.</p>
                       )}
                     </div>
                   ) : (

@@ -438,6 +438,8 @@ const RETIRE_COOLDOWN_DAYS = 7
 // exposing only coach_name + coach_fun_fact keeps this safe to ship before
 // broader wall-settings UI lands.
 export async function updateWallCoach(wallId, { coachName, coachFunFact }) {
+  // Coach is a community contribution like any entry, not a creator-only
+  // setting. Anyone who can see the wall can add/update the coach.
   const { data, error } = await supabase
     .from('team_walls')
     .update({
@@ -445,7 +447,6 @@ export async function updateWallCoach(wallId, { coachName, coachFunFact }) {
       coach_fun_fact: coachFunFact?.trim() || null,
     })
     .eq('id', wallId)
-    .eq('created_by', getFingerprint())
     .select()
     .single()
   if (error) throw error
