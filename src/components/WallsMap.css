@@ -10,40 +10,6 @@
   padding: var(--space-4) var(--space-3) var(--space-3);
 }
 
-/* ── Header copy ─────────────────────────────────────────────────────────── */
-
-.walls-map__header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  text-align: center;
-}
-
-.walls-map__eyebrow {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-caption);
-  letter-spacing: 0.22em;
-  color:          var(--ink-low);
-  text-transform: uppercase;
-}
-
-.walls-map__title {
-  font-family: var(--font-banner);
-  font-size:   clamp(1.2rem, 3vw, 1.75rem);
-  color:       var(--color-paper);
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-.walls-map__sub {
-  font-family: var(--font-program);
-  font-size:   var(--text-small);
-  color:       var(--ink-mid);
-  max-width:   44ch;
-  margin:      0 auto;
-  line-height: 1.5;
-}
-
 /* ── Stage — holds the SVG map + floating tooltip ────────────────────────── */
 
 .walls-map__stage {
@@ -51,11 +17,12 @@
   width: 100%;
 }
 
-/* State outlines — ghosted parchment, just enough to read the country. */
+/* State outlines — readable at a glance, with enough contrast to feel like
+   a real map, not a ghost. */
 .walls-map__state {
-  fill:          var(--surface-1);
-  stroke:        var(--border-subtle);
-  stroke-width:  0.5;
+  fill:          rgba(255, 255, 255, 0.06);
+  stroke:        rgba(255, 255, 255, 0.28);
+  stroke-width:  0.7;
   transition:    fill 200ms ease;
 }
 

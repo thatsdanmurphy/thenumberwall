@@ -100,18 +100,6 @@ export default function WallsMap() {
 
   return (
     <div className="walls-map">
-      <div className="walls-map__header">
-        <span className="walls-map__eyebrow">THE MAP</span>
-        <h3 className="walls-map__title">
-          {showSeed ? 'The first wall lights here.' : 'Every wall is a light.'}
-        </h3>
-        <p className="walls-map__sub">
-          {showSeed
-            ? 'One pulse, waiting. Start a team wall and a new dot joins the map.'
-            : 'Each town with an active wall glows. Tap a dot to visit that town.'}
-        </p>
-      </div>
-
       <div className="walls-map__stage">
         <ComposableMap
           projection="geoAlbersUsa"

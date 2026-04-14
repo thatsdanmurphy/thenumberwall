@@ -41,34 +41,6 @@
   }
 }
 
-/* ── Founder's note — quiet editorial voice under the map ──────────────── */
-
-.twb-note {
-  margin-top: var(--space-4);
-  padding: var(--space-4) var(--space-4);
-  border-top: 1px solid var(--border-subtle);
-  text-align: center;
-}
-
-.twb-note__body {
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  line-height: 1.7;
-  color: var(--ink-mid);
-  max-width: 52ch;
-  margin: 0 auto;
-  font-style: italic;
-}
-
-.twb-note__sig {
-  margin-top: var(--space-2);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.18em;
-  color: var(--ink-low);
-  text-transform: uppercase;
-}
-
 /* ── Hero ──────────────────────────────────────────────────────────────────── */
 
 .twb-hero {

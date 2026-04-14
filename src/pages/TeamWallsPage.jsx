@@ -87,15 +87,6 @@ export default function TeamWallsPage() {
           </div>
 
           <WallsMap />
-
-          <aside className="twb-note">
-            <p className="twb-note__body">
-              Every jersey number has a story. This is where your school's gets
-              told — number by number, name by name. Walls grow when alumni,
-              players, and parents show up and remember. Start one for your team.
-            </p>
-            <p className="twb-note__sig">— Dan, founder</p>
-          </aside>
         </div>
 
         {/* ── Right: Search + Cards ────────────────────────── */}
