@@ -836,44 +836,65 @@ export default function LegendTimeline({ timeline }) {
     }
   }, [])
 
+  // Track latest touch Y so edge-accel loop can respond to finger lingering
+  const lastTouchYRef = useRef(null)
+  const edgeDirectionRef = useRef(0)  // -1 up, +1 down, 0 none
+
+  const runEdgeLoop = useCallback(() => {
+    if (!scrubRef.current) { edgeAnimRef.current = null; return }
+    const canvas = vCanvasRef.current
+    if (!canvas) { edgeAnimRef.current = null; return }
+    const rect = canvas.getBoundingClientRect()
+    const h = rect.height
+    const n = gamesRef.current.length
+    const edgeZone = h * 0.18
+    const touchY = lastTouchYRef.current
+    if (touchY == null) { edgeAnimRef.current = null; return }
+    const relY = touchY - rect.top
+
+    let dir = 0, speed = 0
+    if (relY < edgeZone) {
+      dir = -1
+      // closer to top = faster; up to ~20 games/frame at the very edge
+      const t = Math.max(0, Math.min(1, 1 - relY / edgeZone))
+      speed = Math.max(1, Math.round(t * t * 20))
+    } else if (relY > h - edgeZone) {
+      dir = 1
+      const t = Math.max(0, Math.min(1, 1 - (h - relY) / edgeZone))
+      speed = Math.max(1, Math.round(t * t * 20))
+    }
+
+    if (dir === 0) { edgeAnimRef.current = null; edgeDirectionRef.current = 0; return }
+
+    const cur = pendingScrubIdx.current ?? (dir < 0 ? 0 : n - 1)
+    const next = Math.max(0, Math.min(n - 1, cur + dir * speed))
+    applyScrubIndex(next)
+    edgeDirectionRef.current = dir
+    edgeAnimRef.current = requestAnimationFrame(runEdgeLoop)
+  }, [applyScrubIndex])
+
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
     const positions = vGamePositionsRef.current
     if (!canvas || !positions) return
+    lastTouchYRef.current = touchY
     const rect = canvas.getBoundingClientRect()
     const relY = touchY - rect.top
     const h = rect.height
     const n = gamesRef.current.length
-    const edgeZone = h * 0.12  // top/bottom 12% triggers acceleration
+    const edgeZone = h * 0.18
 
-    // Cancel any running edge animation
+    // If in edge zone, ensure edge loop is running
+    if (relY < edgeZone || relY > h - edgeZone) {
+      if (!edgeAnimRef.current) {
+        edgeAnimRef.current = requestAnimationFrame(runEdgeLoop)
+      }
+      return
+    }
+
+    // Out of edge zone — cancel any edge animation
     if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
-
-    // Edge acceleration — auto-glide to start or end
-    if (relY < edgeZone) {
-      // Near top — accelerate toward game 0
-      const speed = Math.max(1, Math.round((1 - relY / edgeZone) * 8))
-      const runEdge = () => {
-        const cur = pendingScrubIdx.current ?? 0
-        const next = Math.max(0, cur - speed)
-        applyScrubIndex(next)
-        if (next > 0 && scrubRef.current) edgeAnimRef.current = requestAnimationFrame(runEdge)
-      }
-      edgeAnimRef.current = requestAnimationFrame(runEdge)
-      return
-    }
-    if (relY > h - edgeZone) {
-      // Near bottom — accelerate toward last game
-      const speed = Math.max(1, Math.round((1 - (h - relY) / edgeZone) * 8))
-      const runEdge = () => {
-        const cur = pendingScrubIdx.current ?? n - 1
-        const next = Math.min(n - 1, cur + speed)
-        applyScrubIndex(next)
-        if (next < n - 1 && scrubRef.current) edgeAnimRef.current = requestAnimationFrame(runEdge)
-      }
-      edgeAnimRef.current = requestAnimationFrame(runEdge)
-      return
-    }
+    edgeDirectionRef.current = 0
 
     // Normal zone — direct position mapping
     const y = Math.max(0, Math.min(relY, h - 1))
@@ -883,7 +904,7 @@ export default function LegendTimeline({ timeline }) {
       if (positions[m + 1] <= y) lo = m + 1; else hi = m
     }
     applyScrubIndex(lo)
-  }, [applyScrubIndex])
+  }, [applyScrubIndex, runEdgeLoop])
 
   const handleVTouchStart = useCallback((e) => {
     e.preventDefault()
@@ -900,6 +921,8 @@ export default function LegendTimeline({ timeline }) {
 
   const handleVTouchEnd = useCallback(() => {
     scrubRef.current = false
+    lastTouchYRef.current = null
+    edgeDirectionRef.current = 0
     if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
   }, [])
 
@@ -1075,7 +1098,21 @@ export default function LegendTimeline({ timeline }) {
         onTouchMove={handleVTouchMove}
         onTouchEnd={handleVTouchEnd}
       >
-        {/* Bar fills the screen — touch anywhere to scrub */}
+        {/* Persistent top header — always shows Brady #12 */}
+        <div className="vtl__top-header">
+          <span className="vtl__top-number">12</span>
+          <div className="vtl__top-name-block">
+            <span className="vtl__top-name">{timeline.player_name}</span>
+            <span className="vtl__top-meta">
+              {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+            </span>
+          </div>
+          {activeEra && (
+            <span className="vtl__top-era">{activeEra.label}</span>
+          )}
+        </div>
+
+        {/* Bar fills remaining space — touch anywhere to scrub */}
         <div className="vtl__bar-area">
           <div className="vtl__bar-col">
             <canvas
@@ -1109,23 +1146,8 @@ export default function LegendTimeline({ timeline }) {
           </div>
         </div>
 
-        {/* Bottom card — unified scrub marker + info display */}
+        {/* Bottom card — game info only (no Brady duplicate) */}
         <div className="vtl__card">
-          <div className="vtl__card-header">
-            <span className="vtl__card-number">12</span>
-            <div className="vtl__card-name-block">
-              <span className="vtl__card-name">{timeline.player_name}</span>
-              {activeEra ? (
-                <span className="vtl__card-meta">
-                  {activeEra.label} · {activeEra.tagline}
-                </span>
-              ) : (
-                <span className="vtl__card-meta">
-                  {timeline.position} · {timeline.career_span} · {timeline.total_games} games
-                </span>
-              )}
-            </div>
-          </div>
           {activeGame ? (
             <div className="vtl__card-game">
               {activeGame.is_bye ? (
@@ -1165,10 +1187,6 @@ export default function LegendTimeline({ timeline }) {
           ) : (
             <div className="vtl__card-hint">Touch the bar, slide to explore</div>
           )}
-          {/* Grabber grip — bottom edge is the marker */}
-          <div className="vtl__card-grip">
-            <span /><span /><span />
-          </div>
         </div>
       </div>
     </div>

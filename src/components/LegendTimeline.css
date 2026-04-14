@@ -60,7 +60,7 @@
   font-size: 2rem;
   line-height: 1;
   color: var(--color-paper);
-  margin: 0 0 4px 0;
+  margin: 0 0 var(--space-1) 0;
   letter-spacing: -0.01em;
 }
 
@@ -553,13 +553,74 @@
   display: none;
 }
 
+/* ── Persistent top header — always visible #12 Brady ── */
+.vtl__top-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px var(--space-3) 10px;
+  border-bottom: 1px solid rgba(255, 230, 120, 0.06);
+  background: rgba(6, 8, 18, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: 58px;
+  box-sizing: border-box;
+}
+
+.vtl__top-number {
+  font-family: var(--font-banner);
+  font-size: 1.75rem;
+  line-height: 0.85;
+  color: rgba(255, 230, 120, 0.85);
+  text-shadow:
+    0 0 20px rgba(255, 220, 80, 0.3),
+    0 0 40px rgba(255, 195, 45, 0.12);
+  flex-shrink: 0;
+}
+
+.vtl__top-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.vtl__top-name {
+  font-family: var(--font-banner);
+  font-size: 1rem;
+  color: var(--color-paper);
+  line-height: 1;
+}
+
+.vtl__top-meta {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: rgba(200, 195, 185, 0.5);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vtl__top-era {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  color: rgba(255, 230, 120, 0.6);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
 /* ── Bar area — fills remaining space, full touch target ── */
 .vtl__bar-area {
   position: relative;
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   justify-content: center;
   min-height: 0;
+  padding: var(--space-3) 0;
 }
 
 .vtl__bar-col {
@@ -573,7 +634,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   pointer-events: none;
 }
 
@@ -583,7 +644,7 @@
   left: -28px;
   transform: translateY(-50%);
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   color: rgba(200, 195, 185, 0.3);
   letter-spacing: 0.04em;
   pointer-events: none;
@@ -619,25 +680,26 @@
   box-shadow: 0 0 8px rgba(255, 220, 80, 0.25);
 }
 
-/* ── Bottom card — the scrub marker + info display ── */
+/* ── Bottom card — game info only (Brady header is persistent up top) ── */
 .vtl__card {
   position: relative;
   z-index: 10;
   background: rgba(6, 8, 18, 0.95);
-  border: 1px solid rgba(255, 230, 120, 0.1);
-  border-radius: 14px 14px 0 0;
-  padding: 12px 16px 14px;
-  height: 140px;
-  margin-top: -8px;  /* tuck under bar slightly */
+  border-top: 1px solid rgba(255, 230, 120, 0.12);
+  padding: 12px var(--space-3) 14px;
+  height: 110px;
+  box-sizing: border-box;
   box-shadow:
     0 -8px 32px rgba(0, 0, 0, 0.7),
-    0 -2px 8px rgba(0, 0, 0, 0.4),
-    0 0 1px rgba(255, 230, 120, 0.15);
+    0 -2px 8px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   flex-shrink: 0;
   overflow: hidden;
   touch-action: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Grip bar at top of card — "grab me" indicator */
@@ -645,7 +707,7 @@
   display: flex;
   justify-content: center;
   gap: 0;
-  padding: 8px 0 4px;
+  padding: var(--space-2) 0 var(--space-1);
 }
 
 .vtl__card-grip span {
@@ -660,7 +722,7 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
 }
 
 .vtl__card-number {
@@ -689,7 +751,7 @@
 
 .vtl__card-meta {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   color: rgba(200, 195, 185, 0.5);
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -731,14 +793,14 @@
 
 .vtl__card-stats {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
+  font-size: var(--text-label);
   color: rgba(200, 195, 185, 0.6);
   letter-spacing: 0.02em;
 }
 
 .vtl__card-meta-line {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   color: rgba(200, 195, 185, 0.35);
   letter-spacing: 0.03em;
 }
@@ -751,11 +813,11 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 4px;
-  padding-top: 4px;
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
   border-top: 1px solid rgba(255, 230, 120, 0.1);
   font-family: var(--font-banner);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(255, 230, 100, 0.9);
 }
 
@@ -766,22 +828,22 @@
 
 .vtl__card-bye {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(200, 195, 185, 0.5);
 }
 
 .vtl__card-dnp {
   font-family: var(--font-banner);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: #FF4D5E;
 }
 
 .vtl__card-hint {
   font-family: var(--font-program);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(200, 195, 185, 0.3);
   font-style: italic;
-  padding-top: 4px;
+  padding-top: var(--space-1);
 }
 
 @keyframes vtl-card-in {
