@@ -9,38 +9,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.newyork-page__tab {
-  font-family:     var(--font-scoreboard);
-  font-size:       0.625rem;
-  letter-spacing:  0.18em;
-  color:           rgba(255,255,255,0.35);
-  background:      none;
-  border:          none;
-  padding:         var(--space-2) var(--space-3);
-  padding-bottom:  calc(var(--space-2) + 2px);
-  cursor:          pointer;
-  position:        relative;
-  transition:      color var(--motion-hover);
-}
-
-.newyork-page__tab:hover {
-  color: rgba(255,255,255,0.65);
-}
-
-.newyork-page__tab--active {
-  color: var(--color-paper);
-}
-
-.newyork-page__tab--active::after {
-  content:      '';
-  position:     absolute;
-  bottom:       -1px;
-  left:         0;
-  right:        0;
-  height:       2px;
-  background:   var(--color-heat);
-  border-radius: 1px 1px 0 0;
-}
+/* Tab buttons themselves use shared .tnw-tab / .tnw-tab--active in global.css */
 
 /* ── Main container ─────────────────────────────────────────────────────── */
 
@@ -83,17 +52,12 @@
 
 /* ── Mobile backdrop ────────────────────────────────────────────────────── */
 
-.newyork-page__backdrop {
-  display: none;
-}
+/* Structural rules from .tnw-backdrop in global.css. Only display toggle + z-index kept. */
+.newyork-page__backdrop { display: none; }
 
 @media (max-width: 767px) {
   .newyork-page__backdrop {
-    display:    block;
-    position:   fixed;
-    inset:      0;
-    background: rgba(8, 12, 16, 0.65);
-    z-index:    199;
-    animation:  backdropIn 200ms ease-out;
+    display: block;
+    z-index: 199;
   }
 }

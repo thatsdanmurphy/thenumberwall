@@ -56,7 +56,7 @@ export default function EmailCapture({ variant = 'footer' }) {
       )}
       <div className="email-capture__row">
         <input
-          className="email-capture__input"
+          className="tnw-input email-capture__input"
           type="email"
           placeholder={variant === 'footer' ? 'your@email.com' : 'Email address'}
           value={email}
@@ -66,7 +66,7 @@ export default function EmailCapture({ variant = 'footer' }) {
           autoComplete="email"
         />
         <button
-          className="email-capture__btn"
+          className="tnw-btn tnw-btn--secondary email-capture__btn"
           type="submit"
           disabled={status === 'loading' || !email.trim()}
         >

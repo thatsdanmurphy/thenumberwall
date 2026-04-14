@@ -9,39 +9,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.boston-page__tab {
-  font-family:     var(--font-scoreboard);
-  font-size:       0.625rem;
-  letter-spacing:  0.18em;
-  color:           rgba(255,255,255,0.35);
-  background:      none;
-  border:          none;
-  padding:         var(--space-2) var(--space-3);
-  padding-bottom:  calc(var(--space-2) + 2px); /* accounts for bottom border */
-  cursor:          pointer;
-  position:        relative;
-  transition:      color var(--motion-hover);
-}
-
-.boston-page__tab:hover {
-  color: rgba(255,255,255,0.65);
-}
-
-.boston-page__tab--active {
-  color: var(--color-paper);
-}
-
-/* Active underline */
-.boston-page__tab--active::after {
-  content:      '';
-  position:     absolute;
-  bottom:       -1px;
-  left:         0;
-  right:        0;
-  height:       2px;
-  background:   var(--color-heat);
-  border-radius: 1px 1px 0 0;
-}
+/* Tab buttons themselves use shared .tnw-tab / .tnw-tab--active in global.css */
 
 /* ── Main container ─────────────────────────────────────────────────────── */
 
@@ -84,22 +52,12 @@
 
 /* ── Mobile backdrop ────────────────────────────────────────────────────── */
 
-.boston-page__backdrop {
-  display: none;
-}
+/* Structural rules from .tnw-backdrop in global.css. Only display toggle + z-index kept. */
+.boston-page__backdrop { display: none; }
 
 @media (max-width: 767px) {
   .boston-page__backdrop {
-    display:    block;
-    position:   fixed;
-    inset:      0;
-    background: rgba(8, 12, 16, 0.65);
-    z-index:    199;
-    animation:  backdropIn 200ms ease-out;
+    display: block;
+    z-index: 199;
   }
-}
-
-@keyframes backdropIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }

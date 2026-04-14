@@ -11,7 +11,7 @@
 
 .app-footer__copy {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: var(--color-muted);
   letter-spacing: 0.06em;
   opacity: 0.5;
@@ -20,7 +20,7 @@
 
 .app-footer__link {
   font-family: var(--font-program);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   font-weight: 500;
   color: var(--color-muted);
   letter-spacing: 0.04em;

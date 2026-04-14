@@ -23,7 +23,7 @@ export default function NewWallModal({ open, onClose, onSelect }) {
   const evergreen = prompts.filter(p => p.months === null)
 
   return (
-    <div className="nw-modal__overlay" onClick={onClose}>
+    <div className="tnw-overlay nw-modal__overlay" onClick={onClose}>
       <div className="nw-modal" onClick={e => e.stopPropagation()}>
         <div className="nw-modal__header">
           <span className="nw-modal__title">BUILD A NEW WALL</span>

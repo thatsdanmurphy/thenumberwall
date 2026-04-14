@@ -1,21 +1,13 @@
 /* FirstVisitModal — welcome overlay for new visitors.
    Sells the concept. Uses real tile visuals, not emojis. */
 
+/* Structural backdrop rules come from .tnw-overlay in global.css.
+   Only z-index + unique opacity + padding override are kept here. */
 .fv-modal__backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(8, 12, 16, 0.82);
   z-index: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(8, 12, 16, 0.82);
   padding: var(--space-4);
-  animation: fvBackdropIn 300ms ease-out;
-}
-
-@keyframes fvBackdropIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  animation-duration: 300ms;
 }
 
 .fv-modal {
@@ -23,8 +15,8 @@
   max-width: 400px;
   width: 100%;
   background: #12161C;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
   box-shadow:
     0 0 40px rgba(232, 124, 42, 0.12),
     0 24px 64px rgba(0, 0, 0, 0.55);
@@ -46,13 +38,13 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-2);
   color: var(--color-muted);
   transition: background var(--motion-hover), color var(--motion-hover);
 }
 
 .fv-modal__close:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--surface-4);
   color: var(--color-paper);
 }
 
@@ -61,12 +53,12 @@
 }
 
 .fv-modal__title {
-  font-family: var(--font-banner);
-  font-size: 1.375rem;
+  font-family:    var(--font-banner);
+  font-size:      var(--text-h1);
   letter-spacing: 0.02em;
-  color: var(--color-paper);
-  line-height: 1.15;
-  margin: 0 0 4px;
+  color:          var(--color-paper);
+  line-height:    1.15;
+  margin:         0 0 var(--space-1);
 }
 
 .fv-modal__subtitle {
@@ -82,7 +74,7 @@
   font-family: var(--font-program);
   font-size: 0.8125rem;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.60);
+  color: var(--ink-mid);
   margin: 0 0 var(--space-4);
 }
 
@@ -113,16 +105,16 @@
 
 .fv-modal__tile-num {
   font-family: var(--font-banner);
-  font-size: 1.125rem;
+  font-size: var(--text-h2);
   line-height: 1;
   letter-spacing: -0.01em;
 }
 
 .fv-modal__tile-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--ink-dim);
   text-transform: uppercase;
 }
 
@@ -130,8 +122,8 @@
 
 .fv-modal__hook {
   font-family: var(--font-program);
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.40);
+  font-size: var(--text-small);
+  color: var(--ink-dim);
   text-align: center;
   margin: 0 0 var(--space-4);
   font-style: italic;
@@ -139,23 +131,16 @@
 
 /* ── CTA button ──── */
 
+/* Inherits .tnw-btn .tnw-btn--primary; local overrides for full-width + glow. */
 .fv-modal__cta {
-  width: 100%;
-  padding: 12px 0;
-  background: var(--color-heat);
-  border: none;
-  border-radius: 6px;
-  font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.10em;
-  color: var(--color-night);
-  cursor: pointer;
-  transition: background var(--motion-hover), box-shadow var(--motion-hover);
+  width:         100%;
+  padding:       12px 0;
+  font-size:     var(--text-small);
+  border-radius: var(--radius-md);
+  transition:    background var(--motion-hover), box-shadow var(--motion-hover);
 }
 
-.fv-modal__cta:hover {
-  background: #F09030;
+.fv-modal__cta:hover:not(:disabled) {
   box-shadow: 0 0 18px rgba(232, 124, 42, 0.45);
 }
 

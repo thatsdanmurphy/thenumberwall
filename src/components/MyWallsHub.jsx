@@ -4,6 +4,8 @@ import { ChevronRight, Plus } from 'lucide-react'
 import { listMyWalls } from '../lib/myWallStore.js'
 import { getIdentity, setIdentityField } from '../lib/identity.js'
 import { wallData, bostonLegends } from '../data/index.js'
+import { TIER_WEIGHT } from '../data/tiers.js'
+import { HUB_WELCOMED, MY_WALL_TOKEN } from '../lib/storageKeys.js'
 import { getCitySuggestions } from '../lib/cities.js'
 import NewWallModal from './NewWallModal.jsx'
 
@@ -45,7 +47,7 @@ function getHeroSuggestions(query) {
 
 // ─── Number → legends lookup (for number chip autocomplete) ─────────────────
 
-const TIER_WEIGHT = { SACRED: 5, LEGEND: 4, CONDITIONAL: 3, ACTIVE: 2 }
+// Tier weights imported from data/tiers.js (single source of truth)
 
 const NUMBER_TO_LEGENDS = (() => {
   const map = {}  // number string → [{ name, tier }] sorted by tier weight
@@ -86,14 +88,16 @@ function WelcomePlacemat({ onDismiss }) {
           <div className="hub-welcome__slot hub-welcome__slot--number">
             <span className="hub-welcome__slot-label">YOUR NUMBER</span>
             <span className="hub-welcome__slot-value">#12</span>
+            <span className="hub-welcome__slot-sub">Brady</span>
           </div>
           <div className="hub-welcome__slot hub-welcome__slot--city">
             <span className="hub-welcome__slot-label">YOUR CITY</span>
             <span className="hub-welcome__slot-value">Boston</span>
+            <span className="hub-welcome__slot-sub">Massachusetts</span>
           </div>
           <div className="hub-welcome__slot hub-welcome__slot--hero">
             <span className="hub-welcome__slot-label">YOUR HERO</span>
-            <span className="hub-welcome__slot-value">Brady</span>
+            <span className="hub-welcome__slot-value hub-welcome__slot-value--big">Brady</span>
           </div>
         </div>
         <p className="hub-welcome__sub">Claim your identity. Then build walls around what you care about.</p>
@@ -218,13 +222,13 @@ export default function MyWallsHub() {
   const [showModal, setShowModal]   = useState(false)
   const [showWelcome, setShowWelcome] = useState(() => {
     if (typeof window === 'undefined') return false
-    return !localStorage.getItem('tnw_hub_welcomed')
+    return !localStorage.getItem(HUB_WELCOMED)
   })
 
-  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_token') : null
+  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem(MY_WALL_TOKEN) : null
 
   function dismissWelcome() {
-    localStorage.setItem('tnw_hub_welcomed', '1')
+    localStorage.setItem(HUB_WELCOMED, '1')
     setShowWelcome(false)
   }
 
@@ -378,7 +382,7 @@ export default function MyWallsHub() {
       ) : (
         <div className="hub-empty">
           <p className="hub-empty__text">You haven't built any walls yet.</p>
-          <button className="hub-empty__cta" onClick={() => setShowModal(true)}>
+          <button className="tnw-btn tnw-btn--secondary hub-empty__cta" onClick={() => setShowModal(true)}>
             <Plus size={16} />
             <span>BUILD YOUR FIRST WALL</span>
           </button>

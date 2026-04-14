@@ -53,6 +53,51 @@
   --motion-reveal: 250ms ease-in-out;
   --motion-heat:   300ms ease-in-out;
   --motion-color:  200ms ease-out;
+
+  /* ── Type scale ──────────────────────────────────────────────
+     Use these instead of raw rem values. If a component needs a
+     size that isn't here, the scale is wrong — add a token, don't
+     hardcode. Sizes derived from the existing spread (8 distinct
+     rems) collapsed to 7 canonical steps. */
+  --text-h1:      1.375rem;  /* modal titles, major headings */
+  --text-h2:      1.125rem;  /* section heads */
+  --text-body:    0.9rem;    /* base body copy, inputs */
+  --text-small:   0.75rem;   /* dense body, secondary text */
+  --text-caption: 0.6875rem; /* pills, chips, badges */
+  --text-label:   0.625rem;  /* eyebrow / all-caps labels */
+  --text-micro:   0.5625rem; /* smallest labels, stat tags */
+
+  /* Letter-spacing scale for scoreboard-style labels */
+  --tracking-normal:  0;
+  --tracking-wide:    0.10em;
+  --tracking-wider:   0.14em;
+  --tracking-widest:  0.18em;
+
+  /* ── Surface / border tints ──────────────────────────────────
+     All white-on-dark tints collapse to this scale. Surfaces are
+     background fills; borders are hairlines. Use the closest
+     match — do NOT invent new alpha values. */
+  --surface-1:      rgba(255, 255, 255, 0.03);  /* barely-there card bg */
+  --surface-2:      rgba(255, 255, 255, 0.05);  /* resting input/button bg */
+  --surface-3:      rgba(255, 255, 255, 0.08);  /* hover surface */
+  --surface-4:      rgba(255, 255, 255, 0.12);  /* active / pressed */
+
+  --border-faint:   rgba(255, 255, 255, 0.06);  /* section dividers */
+  --border-soft:    rgba(255, 255, 255, 0.10);  /* default input border */
+  --border-medium:  rgba(255, 255, 255, 0.16);  /* buttons, stronger edges */
+  --border-strong:  rgba(255, 255, 255, 0.30);  /* hover / focus */
+
+  /* Text tints for secondary hierarchy (on dark bg) */
+  --ink-dim:        rgba(255, 255, 255, 0.35);  /* placeholder, dormant tab */
+  --ink-low:        rgba(255, 255, 255, 0.50);  /* secondary labels */
+  --ink-mid:        rgba(255, 255, 255, 0.70);  /* body on dim surface */
+  --ink-high:       rgba(255, 255, 255, 0.85);  /* body, default */
+
+  /* ── Radius scale ───────────────────────────────────────────── */
+  --radius-sm:      4px;   /* inputs, buttons, tiles */
+  --radius-md:      6px;   /* cards, chips */
+  --radius-lg:      10px;  /* large surfaces, empty-state CTAs */
+  --radius-xl:      14px;  /* hero panels */
 }
 
 /* ─── Reset ─────────────────────────────────────────────────────── */
@@ -119,4 +164,174 @@ a:focus-visible {
 
 @media (min-width: 1440px) {
   :root { --grid-margin: 96px; }
+}
+
+/* ─── Shared overlay / backdrop utilities ──────────────────────────
+   Two variants:
+     .tnw-overlay  — centred modal (display:flex, centered content)
+     .tnw-backdrop — full-screen dim (no flex, just covers the viewport)
+   Set z-index per-component via a local override class. */
+
+.tnw-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 16, 0.80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  animation: tnw-overlayIn 200ms ease-out;
+}
+
+.tnw-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 16, 0.65);
+  animation: tnw-overlayIn 200ms ease-out;
+}
+
+@keyframes tnw-overlayIn {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+
+/* ─── Primitive: button ────────────────────────────────────────────
+   Base for all CTA-style buttons. Variants apply color treatment.
+   Override sparingly with component-local classes only when a button
+   genuinely needs a non-standard size or layout (rare). */
+
+.tnw-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-2);
+  font-family:     var(--font-scoreboard);
+  font-size:       var(--text-label);
+  font-weight:     700;
+  letter-spacing:  var(--tracking-wide);
+  text-transform:  uppercase;
+  padding:         var(--space-2) var(--space-4);
+  border:          1px solid transparent;
+  border-radius:   4px;
+  cursor:          pointer;
+  transition:      background var(--motion-hover),
+                   color var(--motion-hover),
+                   border-color var(--motion-hover);
+  white-space:     nowrap;
+}
+
+.tnw-btn:disabled {
+  opacity: 0.35;
+  cursor:  not-allowed;
+}
+
+/* Primary — heat-orange CTA, the default "do this thing" button */
+.tnw-btn--primary {
+  background: var(--color-heat);
+  color:      var(--color-night);
+}
+.tnw-btn--primary:hover:not(:disabled) {
+  background: var(--color-blaze);
+}
+
+/* Secondary — bordered, low-weight, for "also possible" actions */
+.tnw-btn--secondary {
+  background:   rgba(255, 255, 255, 0.05);
+  color:        rgba(255, 255, 255, 0.70);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.tnw-btn--secondary:hover:not(:disabled) {
+  background:   rgba(255, 255, 255, 0.10);
+  color:        rgba(255, 255, 255, 0.90);
+  border-color: rgba(255, 255, 255, 0.30);
+}
+
+/* Ghost — text-only, for tertiary / dismiss / cancel */
+.tnw-btn--ghost {
+  background: none;
+  color:      rgba(255, 255, 255, 0.50);
+}
+.tnw-btn--ghost:hover:not(:disabled) {
+  color: var(--color-paper);
+}
+
+/* ─── Primitive: input ─────────────────────────────────────────────
+   Base for text inputs across forms. */
+
+.tnw-input {
+  font-family:    var(--font-program);
+  font-size:      var(--text-body);
+  color:          var(--color-paper);
+  background:     rgba(255, 255, 255, 0.04);
+  border:         1px solid rgba(255, 255, 255, 0.10);
+  border-radius:  4px;
+  padding:        var(--space-2) var(--space-3);
+  outline:        none;
+  width:          100%;
+  transition:     border-color var(--motion-hover);
+}
+
+.tnw-input:focus {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.tnw-input::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+/* ─── Primitive: tab ───────────────────────────────────────────────
+   Used by city pages (Boston, NY, …). Active state draws a heat
+   underline. Place inside a flex container with a 1px bottom border. */
+
+.tnw-tab {
+  font-family:     var(--font-scoreboard);
+  font-size:       var(--text-label);
+  letter-spacing:  var(--tracking-widest);
+  text-transform:  uppercase;
+  color:           rgba(255, 255, 255, 0.35);
+  background:      none;
+  border:          none;
+  padding:         var(--space-2) var(--space-3);
+  padding-bottom:  calc(var(--space-2) + 2px);
+  cursor:          pointer;
+  position:        relative;
+  transition:      color var(--motion-hover);
+}
+
+.tnw-tab:hover {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.tnw-tab--active {
+  color: var(--color-paper);
+}
+
+.tnw-tab--active::after {
+  content:       '';
+  position:      absolute;
+  bottom:        -1px;
+  left:          0;
+  right:         0;
+  height:        2px;
+  background:    var(--color-heat);
+  border-radius: 1px 1px 0 0;
+}
+
+/* ─── Type utility classes ────────────────────────────────────────
+   For when a component needs canonical type without inventing yet
+   another rem. Compose with color/weight as needed. */
+
+.tnw-eyebrow {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color:          rgba(255, 255, 255, 0.55);
+}
+
+.tnw-modal-title {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-h1);
+  letter-spacing: 0.04em;
+  color:          var(--color-paper);
 }

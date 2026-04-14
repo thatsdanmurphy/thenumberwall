@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import { SACRED_TILE } from '../data/index.js'
+import { FIRST_VISITED } from '../lib/storageKeys.js'
 import './FirstVisitModal.css'
-
-const STORAGE_KEY = 'nw_visited'
 
 /**
  * FirstVisitModal — shown once to new visitors.
@@ -27,14 +27,10 @@ const HEAT = [
   { bg: 'rgba(222,125,0,0.82)',   border: 'rgba(245,180,30,0.92)',  glow: '0 0 24px rgba(245,193,53,0.92), 0 0 48px rgba(255,130,0,0.50)', text: 'rgba(255,210,120,1)' },
 ]
 
-const SACRED_STYLE = {
-  bg: 'rgba(200,220,255,0.12)', border: 'rgba(200,220,255,0.38)',
-  glow: '0 0 18px rgba(200,220,255,0.52), 0 0 36px rgba(180,210,255,0.22)',
-  text: 'rgba(230,240,255,0.92)',
-}
+// Sacred style imported from data/index.js (single source of truth)
 
 function MiniTile({ number, heat, sacred }) {
-  const s = sacred ? SACRED_STYLE : HEAT[heat]
+  const s = sacred ? SACRED_TILE : HEAT[heat]
   return (
     <div
       className="fv-modal__tile"
@@ -53,7 +49,7 @@ export default function FirstVisitModal() {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    const alreadyVisited = localStorage.getItem(STORAGE_KEY)
+    const alreadyVisited = localStorage.getItem(FIRST_VISITED)
     if (!alreadyVisited) {
       const timer = setTimeout(() => setShow(true), 800)
       return () => clearTimeout(timer)
@@ -62,13 +58,13 @@ export default function FirstVisitModal() {
 
   function dismiss() {
     setShow(false)
-    localStorage.setItem(STORAGE_KEY, '1')
+    localStorage.setItem(FIRST_VISITED, '1')
   }
 
   if (!show) return null
 
   return (
-    <div className="fv-modal__backdrop" onClick={dismiss}>
+    <div className="tnw-overlay fv-modal__backdrop" onClick={dismiss}>
       <div
         className="fv-modal"
         onClick={e => e.stopPropagation()}
@@ -104,7 +100,7 @@ export default function FirstVisitModal() {
             The brighter the tile, the more legends wore it.
           </p>
 
-          <button className="fv-modal__cta" onClick={dismiss}>
+          <button className="tnw-btn tnw-btn--primary fv-modal__cta" onClick={dismiss}>
             Explore the Wall
           </button>
         </div>

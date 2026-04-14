@@ -5,10 +5,12 @@
  * These live at the hub level, not tied to any specific wall.
  */
 
+import { IDENTITY_NUMBER, IDENTITY_CITY, IDENTITY_HERO } from './storageKeys.js'
+
 const KEYS = {
-  number: 'tnw_identity_number',
-  city:   'tnw_identity_city',
-  hero:   'tnw_identity_hero',  // stored as number string
+  number: IDENTITY_NUMBER,
+  city:   IDENTITY_CITY,
+  hero:   IDENTITY_HERO,  // stored as number string
 }
 
 export function getIdentity() {

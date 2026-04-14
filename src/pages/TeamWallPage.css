@@ -1,0 +1,247 @@
+/* TeamWallPage — lean layout, reuses baseline wall-tile + player-panel */
+
+.tw-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tw-loading {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--color-muted);
+  text-align: center;
+  padding: var(--space-7) var(--space-3);
+}
+
+/* ── Sports nav — add button for unfilled sports ─────────────────────────── */
+
+.tw-sports-nav__add {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-1);
+  padding:         5px 10px;
+  background:      var(--surface-1);
+  border:          1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family:     var(--font-scoreboard);
+  font-size: var(--text-caption);
+  letter-spacing:  0.10em;
+  color:           var(--ink-dim);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
+  white-space:     nowrap;
+}
+
+.tw-sports-nav__add:hover {
+  background:   var(--surface-2);
+  color:        var(--ink-low);
+  border-color: var(--border-medium);
+}
+
+/* ── Sport picker — inline chips that slide out ──────────────────────────── */
+
+.tw-sport-picker {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       6px;
+  width:     100%;
+  animation: tw-picker-in 200ms ease-out;
+}
+
+.tw-sport-picker__pill {
+  opacity: 0.65;
+}
+
+.tw-sport-picker__pill:hover {
+  opacity: 1;
+}
+
+@keyframes tw-picker-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Coach tile — lives inside the grid, spans 4 columns ─────────────────── */
+
+.tw-coach-tile {
+  grid-column:     span 4;
+  display:         flex;
+  align-items:     center;
+  gap:             6px;
+  padding:         0 var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.tw-coach-tile:hover {
+  border-color: var(--border-medium) !important;
+}
+
+.tw-coach-tile__label {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.45rem;
+  letter-spacing: 0.14em;
+  color:          var(--ink-dim);
+  flex-shrink:    0;
+}
+
+.tw-coach-tile__name {
+  font-family:    var(--font-program);
+  font-size: var(--text-label);
+  color:          var(--ink-mid);
+  white-space:    nowrap;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+}
+
+.tw-coach-tile__empty {
+  font-style: italic;
+  color:      var(--ink-dim);
+}
+
+/* Body layout: uses shared wall-page__body + wall-page__grid-col from WallPage.css */
+
+/* Grid: uses shared .wall-grid from WallGrid.css (8→10→12 responsive columns) */
+
+/* ── Panel header — number + close ────────────────────────────────────────── */
+
+.tw-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+/* ── Empty number state ───────────────────────────────────────────────────── */
+
+.tw-empty-number {
+  padding: var(--space-3) 0;
+}
+
+.tw-empty-number__text {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-dim);
+  font-style: italic;
+}
+
+/* ── Edit pencil button (used inside player-card on team walls) ──────────── */
+
+.tw-entry__edit {
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  cursor: pointer;
+  padding: 2px;
+  transition: color var(--motion-hover);
+  align-self: center;
+}
+
+.tw-entry__edit:hover {
+  color: var(--ink-low);
+}
+
+/* ── Year filter chips ────────────────────────────────────────────────────── */
+
+.tw-year-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+.tw-year-chip {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5rem;
+  letter-spacing: 0.10em;
+  color: var(--ink-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 3px;
+  padding: 3px var(--space-2);
+  cursor: pointer;
+  transition: background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
+}
+
+.tw-year-chip:hover:not(.tw-year-chip--active) {
+  background: var(--surface-3);
+  color: var(--ink-low);
+}
+
+.tw-year-chip--active {
+  background: var(--surface-3);
+  color: var(--ink-mid);
+  border-color: var(--border-strong);
+}
+
+/* ── Inline add form ──────────────────────────────────────────────────────── */
+
+.tw-add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-faint);
+}
+
+.tw-add__label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.16em;
+  color: var(--ink-dim);
+}
+
+.tw-add__error {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: #ff6b6b;
+}
+
+/* Inputs inherit .tnw-input; slightly denser than the default. */
+.tw-add__input {
+  font-size: var(--text-small);
+}
+
+.tw-add__row {
+  display: flex;
+  gap:     var(--space-2);
+}
+
+.tw-add__input--half {
+  flex:      1;
+  min-width: 0;
+}
+
+/* Inherits .tnw-btn .tnw-btn--secondary; compact density for inline form. */
+.tw-add__submit {
+  align-self:     flex-start;
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-wider);
+  padding:        var(--space-1) var(--space-3);
+}
+
+.tw-add__spinner {
+  animation: tw-spin 800ms linear infinite;
+}
+
+@keyframes tw-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Mobile backdrop ──────────────────────────────────────────────────────── */
+
+/* Structural rules from .tnw-backdrop in global.css. Only display toggle + z-index kept. */
+.tw-backdrop { display: none; }
+
+@media (max-width: 767px) {
+  .tw-backdrop {
+    display: block;
+    z-index: 199;
+  }
+}

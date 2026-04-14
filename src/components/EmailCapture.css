@@ -13,64 +13,35 @@
   align-items: center;
 }
 
+/* Input inherits .tnw-input; local overrides for inline sizing only. */
 .email-capture__input {
-  flex: 1;
+  flex:      1;
   min-width: 0;
-  background:   rgba(255,255,255,0.05);
-  border:       1px solid rgba(255,255,255,0.14);
-  border-radius: 4px;
-  padding:      0 10px;
-  height:       32px;
-  font-family:  var(--font-program);
-  font-size:    0.75rem;
-  color:        var(--color-paper);
-  outline:      none;
-  transition:   border-color var(--motion-hover);
+  padding:   0 10px;
+  height:    32px;
+  font-size: var(--text-small);
 }
 
-.email-capture__input::placeholder {
-  color: rgba(255,255,255,0.28);
-}
-
-.email-capture__input:focus {
-  border-color: rgba(255,255,255,0.38);
-}
-
+/* Button inherits .tnw-btn .tnw-btn--secondary; sized to match input row. */
 .email-capture__btn {
-  height:        32px;
-  padding:       0 12px;
-  background:    rgba(255,255,255,0.08);
-  border:        1px solid rgba(255,255,255,0.18);
-  border-radius: 4px;
-  font-family:   var(--font-program);
-  font-size:     0.6875rem;
-  font-weight:   600;
+  height:         32px;
+  padding:        0 12px;
+  font-family:    var(--font-program);
+  font-size:      var(--text-caption);
   letter-spacing: 0.05em;
-  color:         var(--color-paper);
-  cursor:        pointer;
-  white-space:   nowrap;
-  transition:    background var(--motion-hover), opacity var(--motion-hover);
-}
-
-.email-capture__btn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.14);
-}
-
-.email-capture__btn:disabled {
-  opacity: 0.35;
-  cursor:  default;
+  text-transform: none;
 }
 
 .email-capture__err {
   font-family: var(--font-program);
-  font-size:   0.625rem;
+  font-size: var(--text-label);
   color:       rgba(232,100,80,0.80);
   letter-spacing: 0.02em;
 }
 
 .email-capture--done {
   font-family: var(--font-scoreboard);
-  font-size:   0.75rem;
+  font-size: var(--text-small);
   color:       var(--color-muted);
   letter-spacing: 0.06em;
   opacity:     0.7;
@@ -82,19 +53,19 @@
 }
 
 .email-capture--footer .email-capture__input {
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
 }
 
 /* ── Panel variant (post-pick, inside PlayerPanel) ───────────── */
 .email-capture--panel {
   /* sits below the crowd message */
   padding-top: var(--space-3);
-  border-top:  1px solid rgba(255,255,255,0.06);
+  border-top:  1px solid var(--border-faint);
 }
 
 .email-capture__label {
   font-family:    var(--font-program);
-  font-size:      0.625rem;
+  font-size: var(--text-label);
   color:          var(--color-muted);
   letter-spacing: 0.05em;
   opacity:        0.55;

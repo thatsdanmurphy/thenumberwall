@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { X } from 'lucide-react'
 import { wallData, bostonLegends } from '../data/index.js'
+import { SPORT_NAMES } from '../data/sports.js'
 import './PlayerSearch.css'
 
 /**
@@ -35,7 +36,7 @@ function buildSearchIndex() {
   return players
 }
 
-const SPORTS = ['Basketball', 'Baseball', 'Hockey', 'Football', 'Soccer']
+// Sport names imported from data/sports.js (single source of truth)
 
 export default function PlayerSearch({ number, onPlace, onCancel, hideHeader = false }) {
   const [query, setQuery]       = useState('')
@@ -158,7 +159,7 @@ export default function PlayerSearch({ number, onPlace, onCancel, hideHeader = f
             Don't see them? Add <strong>{query}</strong> to your wall.
           </p>
           <div className="player-search__sport-pills">
-            {SPORTS.map(s => (
+            {SPORT_NAMES.map(s => (
               <button
                 key={s}
                 className={`player-search__sport-pill ${customSport === s ? 'player-search__sport-pill--active' : ''}`}

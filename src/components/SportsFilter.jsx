@@ -1,23 +1,9 @@
 import { track } from '@vercel/analytics'
-import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
+import { getSportIcon, LEGEND_SPORTS } from '../data/sports.js'
 import './SportsFilter.css'
 
-// Sport icon map — Font Awesome sport icons via react-icons
-const SPORT_ICONS = {
-  Basketball: FaBasketballBall,
-  Football:   FaFootballBall,
-  Baseball:   FaBaseballBall,
-  Hockey:     FaHockeyPuck,
-  Soccer:     FaFutbol,
-}
-
-export const SPORTS = [
-  { id: 'Basketball', label: 'Basketball' },
-  { id: 'Football',   label: 'Football' },
-  { id: 'Baseball',   label: 'Baseball' },
-  { id: 'Hockey',     label: 'Hockey' },
-  { id: 'Soccer',     label: 'Soccer' },
-]
+// Re-export for backwards compatibility — consumers that import SPORTS from SportsFilter
+export const SPORTS = LEGEND_SPORTS
 
 /**
  * SportsFilter — exclusive single-select.
@@ -50,7 +36,7 @@ export default function SportsFilter({ active, onChange, sports, trackEvent }) {
 
       {sportsList.map(sport => {
         const isOn = !allActive && active.has(sport.id)
-        const Icon = SPORT_ICONS[sport.id]
+        const Icon = getSportIcon(sport.id)
         return (
           <button
             key={sport.id}

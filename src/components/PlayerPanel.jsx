@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { track } from '@vercel/analytics'
 import { Award, Check, ExternalLink, X } from 'lucide-react'
-import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
+import { getSportIcon } from '../data/sports.js'
+import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
+import { pickKey } from '../lib/storageKeys.js'
 import associationsData from '../data/associations.json'
 import './PlayerPanel.css'
 
@@ -31,16 +33,7 @@ function pickAssoc(assocList, sportFilter, wallId = 'global') {
   return wallDebates.find(a => a.sport === null) ?? null
 }
 
-// ─── Tier sort order + descriptions ───────────────────────────────────────────
-const TIER_RANK = { SACRED: 0, LEGEND: 1, CONDITIONAL: 2, ACTIVE: 3 }
-
-const TIER_DESC = {
-  SACRED:      'Retired league-wide or untouchable — the number belongs to them.',
-  LEGEND:      'Hall of Fame or era-defining player who wore this number.',
-  CONDITIONAL: 'Legend status under annual review.',
-  ACTIVE:      'Currently active player building their legacy.',
-  UNWRITTEN:   'No legend has claimed this number yet.',
-}
+// Tier sort order + descriptions imported from data/tiers.js (single source of truth)
 
 function sortLegends(entries) {
   return [...entries].sort((a, b) => {
@@ -72,13 +65,7 @@ const TEAM_ACCENT = {
   'Boston Patriots':      { bg: 'rgba(74,140,255,0.12)', border: 'rgba(74,140,255,0.38)', text: '#4A8CFF' },
 }
 
-const SPORT_ICON = {
-  Basketball: FaBasketballBall,
-  Football:   FaFootballBall,
-  Baseball:   FaBaseballBall,
-  Hockey:     FaHockeyPuck,
-  Soccer:     FaFutbol,
-}
+// Sport icons imported from data/sports.js (single source of truth)
 
 // ─── Share helper ─────────────────────────────────────────────────────────────
 function shareNumber(number) {
@@ -92,7 +79,7 @@ function shareNumber(number) {
 
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
 function PlayerCard({ entry, isTop = false }) {
-  const SportIcon      = SPORT_ICON[entry.sport] || Award
+  const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
   const teamAccent     = TEAM_ACCENT[entry.team] ?? null
   const teamBadgeStyle = teamAccent
@@ -141,21 +128,21 @@ function PlayerCard({ entry, isTop = false }) {
 
 function getSavedPick(number) {
   try {
-    const raw = localStorage.getItem(`nw_pick_${number}`)
+    const raw = localStorage.getItem(pickKey(number))
     return raw ? JSON.parse(raw) : null
   } catch { return null }
 }
 
 function savePick(number, idx) {
   try {
-    localStorage.setItem(`nw_pick_${number}`, JSON.stringify({ idx, ts: Date.now() }))
+    localStorage.setItem(pickKey(number), JSON.stringify({ idx, ts: Date.now() }))
   } catch {}
 }
 
 // clearPick retained for future use (e.g. admin/debug tools) but not exposed in UI.
 // Pick is permanent by design — prevents vote inflation from reset/re-vote loops.
 function clearPick(number) { // eslint-disable-line no-unused-vars
-  try { localStorage.removeItem(`nw_pick_${number}`) } catch {}
+  try { localStorage.removeItem(pickKey(number)) } catch {}
 }
 
 // Last name only for compact chips
@@ -502,10 +489,10 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   onClick={handleShare}
                   aria-label={`Share #${number}`}
                 >
-                  {copied ? <><Check size={11} /> COPIED</> : <><ExternalLink size={11} /> SHARE</>}
+                  {copied ? <Check size={14} /> : <ExternalLink size={14} />}
                 </button>
                 <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
-                  <X size={11} /> CLOSE
+                  <X size={14} />
                 </button>
               </div>
             </div>

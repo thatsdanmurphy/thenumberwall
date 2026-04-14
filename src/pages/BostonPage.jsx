@@ -76,7 +76,7 @@ export default function BostonPage() {
           {TABS.map(t => (
             <button
               key={t.id}
-              className={`boston-page__tab${tab === t.id ? ' boston-page__tab--active' : ''}`}
+              className={`tnw-tab${tab === t.id ? ' tnw-tab--active' : ''}`}
               role="tab"
               aria-selected={tab === t.id}
               onClick={() => handleTabChange(t.id)}
@@ -117,7 +117,7 @@ export default function BostonPage() {
 
       {selected && (
         <div
-          className="boston-page__backdrop"
+          className="tnw-backdrop boston-page__backdrop"
           onClick={handleClear}
           aria-hidden="true"
         />

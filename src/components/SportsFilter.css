@@ -10,8 +10,8 @@
 
 .sports-filter__label {
   font-family:    var(--font-program);
-  font-size:      0.6875rem;
-  color:          rgba(255, 255, 255, 0.35);
+  font-size: var(--text-caption);
+  color:          var(--ink-dim);
   letter-spacing: 0.02em;
   margin-right:   2px;
 }
@@ -21,13 +21,13 @@
   align-items:    center;
   gap:            5px;
   padding:        5px 10px;
-  background:     rgba(255,255,255,0.05);
-  border:         1px solid rgba(255,255,255,0.12);
-  border-radius:  4px;
+  background:     var(--surface-2);
+  border:         1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
   font-family:    var(--font-scoreboard);
-  font-size:      0.6875rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.10em;
-  color:          rgba(255,255,255,0.42);
+  color:          var(--ink-low);
   cursor:         pointer;
   transition:     background var(--motion-hover),
                   border-color var(--motion-hover),
@@ -36,21 +36,21 @@
 }
 
 .sports-filter__pill:hover {
-  background:   rgba(255,255,255,0.09);
-  border-color: rgba(255,255,255,0.24);
-  color:        rgba(255,255,255,0.72);
+  background:   var(--surface-2);
+  border-color: var(--border-medium);
+  color:        var(--ink-mid);
 }
 
 /* Active state — lit up in heat orange */
 .sports-filter__pill--active {
-  background:   rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.55);
+  background:   var(--surface-4);
+  border-color: var(--border-strong);
   color:        var(--color-paper);
 }
 
 .sports-filter__pill--active:hover {
-  background:   rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.75);
+  background:   var(--surface-4);
+  border-color: var(--border-strong);
   color:        var(--color-paper);
 }
 

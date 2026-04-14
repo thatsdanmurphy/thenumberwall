@@ -1,11 +1,18 @@
 import { getHeatStyle, getTileTextColor, SELECTED_TILE } from '../data/index.js'
 import './WallTile.css'
 
-export default function WallTile({ number, entries, isActive, forceActive, isDebating, debateVariant, onClick }) {
+/**
+ * WallTile — a single number tile.
+ *
+ * Default: computes heat from legend entries (tier-based).
+ * Override: pass `heatStyle` and/or `textColor` for custom palettes
+ *           (e.g. team walls use count-based team-color heat).
+ */
+export default function WallTile({ number, entries, isActive, forceActive, isDebating, debateVariant, onClick, heatStyle: heatOverride, textColor: textOverride }) {
   const isSacred    = entries.some(e => e.tier === 'SACRED')
   // UNWRITTEN placeholder rows don't count — a tile is unwritten if it has no real legends
   const isUnwritten = !entries.some(e => e.tier !== 'UNWRITTEN')
-  const heat        = getHeatStyle(entries, isSacred)
+  const heat        = heatOverride || getHeatStyle(entries, isSacred)
 
   // forceActive: render selected (white) appearance without being the real active tile.
   // Used for supercut A/B comparisons — right tile of each pair shows pulse in selected state.
@@ -32,7 +39,7 @@ export default function WallTile({ number, entries, isActive, forceActive, isDeb
 
   const textColor = effectiveActive
     ? SELECTED_TILE.text
-    : getTileTextColor(entries, isSacred)
+    : (textOverride || getTileTextColor(entries, isSacred))
 
   // Pulse only shows when tile is NOT selected — selected state is clean white ring only.
   // Suppressing the amber ::after overlay when active prevents any sacred-tier confusion.

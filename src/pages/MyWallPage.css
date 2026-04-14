@@ -16,7 +16,7 @@
   padding: 10px 28px;
   background: var(--color-heat);
   border: 1px solid var(--color-heat);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   color: var(--color-night);
   font-family: var(--font-program);
   font-weight: 600;
@@ -37,9 +37,9 @@
 
 .btn-ghost {
   padding: 10px 28px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
   color: var(--color-paper);
   font-family: var(--font-program);
   font-weight: 600;
@@ -61,7 +61,7 @@
 .btn-text {
   background: none;
   border: none;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   color: var(--color-muted);
   font-family: var(--font-program);
   font-size: 0.8125rem;
@@ -79,12 +79,12 @@
 
 .btn-micro {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  border-radius: 4px;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
   padding: 5px 10px;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--ink-mid);
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
   cursor: pointer;
   transition: color var(--motion-hover), border-color var(--motion-hover), background var(--motion-hover);
@@ -93,8 +93,8 @@
 
 .btn-micro:hover {
   color: var(--color-paper);
-  border-color: rgba(255, 255, 255, 0.45);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+  background: var(--surface-2);
 }
 
 .btn-micro--heat {
@@ -136,7 +136,7 @@
 
 .my-wall-page__not-found h2 {
   font-family: var(--font-banner);
-  font-size: 1.25rem;
+  font-size: var(--text-h1);
   color: var(--color-paper);
 }
 
@@ -182,13 +182,11 @@
     right: 0;
   }
 
+  /* Structural rules from .tnw-backdrop. Only mobile-specific overrides kept. */
   .my-wall-page__backdrop {
     display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
     z-index: 190;
-    animation: modal-fade 0.2s ease-out;
+    background: rgba(0, 0, 0, 0.55);
   }
 
   .my-wall-page__panel {
@@ -220,7 +218,7 @@
   .my-wall-page__sheet-handle {
     display: flex;
     justify-content: center;
-    padding: 12px 0 4px;
+    padding: 12px 0 var(--space-1);
     cursor: pointer;
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
@@ -229,7 +227,7 @@
   .my-wall-page__sheet-handle-bar {
     width: 36px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.18);
+    background: var(--surface-4);
     border-radius: 2px;
   }
 
@@ -294,7 +292,7 @@
   padding: var(--space-5) var(--space-4);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -314,16 +312,16 @@
 
 .my-wall-page__idle-headline {
   font-family: var(--font-banner);
-  font-size: 1.375rem;
+  font-size: var(--text-h1);
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.38);
+  color: var(--ink-dim);
 }
 
 .my-wall-page__idle-text {
   font-family: var(--font-program);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.38);
+  color: var(--ink-dim);
 }
 
 /* ─── My Wall Tile overrides ────────────────────────────────────────────── */
@@ -400,7 +398,7 @@
   padding: var(--space-5) var(--space-5);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 
 @media (max-width: 767px) {
@@ -426,7 +424,7 @@
   letter-spacing: 0.18em;
   color: var(--color-night);
   background: var(--color-heat);
-  padding: 2px 8px;
+  padding: 2px var(--space-2);
   border-radius: 2px;
   text-transform: uppercase;
   box-shadow: 0 0 10px rgba(232, 124, 42, 0.35);
@@ -444,7 +442,7 @@
 
 .my-wall-onboard__headline {
   font-family: var(--font-banner);
-  font-size: 1.25rem;
+  font-size: var(--text-h1);
   color: var(--color-paper);
   text-align: center;
   line-height: 1.2;
@@ -460,7 +458,7 @@
 
 .my-wall-onboard__label {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
+  font-size: var(--text-label);
   letter-spacing: 0.14em;
   color: var(--color-muted);
   text-transform: uppercase;
@@ -470,9 +468,9 @@
 .my-wall-onboard__number-input {
   width: 120px;
   padding: var(--space-3) var(--space-2);
-  background: rgba(255, 255, 255, 0.04);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
+  background: var(--surface-2);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--radius-md);
   color: var(--color-heat);
   font-family: var(--font-banner);
   font-size: 3rem;
@@ -502,7 +500,7 @@
 .my-wall-onboard__headline--name {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: var(--space-1);
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -513,7 +511,7 @@
   border-bottom: 2px solid rgba(232, 124, 42, 0.4);
   color: var(--color-heat);
   font-family: var(--font-banner);
-  font-size: 1.375rem;
+  font-size: var(--text-h1);
   text-align: center;
   width: 160px;
   outline: none;
@@ -532,17 +530,17 @@
 
 /* Full-width name input — replaces the inline ____'s Wall pattern */
 .my-wall-onboard__name-input {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 8px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   color: var(--color-paper);
   font-family: var(--font-banner);
-  font-size: 1.125rem;
+  font-size: var(--text-h2);
   font-weight: 600;
   text-align: center;
   width: 100%;
   outline: none;
-  padding: 14px 16px;
+  padding: 14px var(--space-3);
   caret-color: var(--color-heat);
   transition: border-color var(--motion-hover);
   box-sizing: border-box;
@@ -553,13 +551,13 @@
 }
 
 .my-wall-onboard__name-input::placeholder {
-  color: rgba(255,255,255,0.18);
+  color: var(--ink-dim);
   font-weight: 400;
 }
 
 .my-wall-onboard__url-preview {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: var(--color-muted);
   letter-spacing: 0.04em;
 }
@@ -571,7 +569,7 @@
 
 .my-wall-onboard__slug-taken {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: #E8182E;
   letter-spacing: 0.04em;
 }
@@ -587,7 +585,7 @@
 
 .my-wall-onboard__prompt-section-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
   color: var(--color-muted);
   text-transform: uppercase;
@@ -609,11 +607,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   padding: var(--space-3) var(--space-2);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 8px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: background var(--motion-hover), border-color var(--motion-hover);
   text-align: center;
@@ -631,20 +629,20 @@
 }
 
 .my-wall-onboard__prompt-icon {
-  font-size: 1.25rem;
+  font-size: var(--text-h1);
   line-height: 1;
 }
 
 .my-wall-onboard__prompt-name {
   font-family: var(--font-banner);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   letter-spacing: 0.03em;
   color: var(--color-paper);
 }
 
 .my-wall-onboard__prompt-desc {
   font-family: var(--font-program);
-  font-size: 0.625rem;
+  font-size: var(--text-label);
   color: var(--color-muted);
   line-height: 1.35;
 }
@@ -661,9 +659,9 @@
 .my-wall-onboard__theme-input {
   width: 100%;
   padding: var(--space-2) var(--space-3);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   color: var(--color-paper);
   font-family: var(--font-program);
   font-size: 0.8125rem;
@@ -677,7 +675,7 @@
 }
 
 .my-wall-onboard__theme-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--ink-dim);
 }
 
 /* Toggle row */
@@ -700,8 +698,8 @@
   position: relative;
   width: 40px;
   height: 22px;
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--surface-3);
+  border: 1px solid var(--border-medium);
   border-radius: 11px;
   cursor: pointer;
   transition: background var(--motion-hover), border-color var(--motion-hover);
@@ -738,7 +736,7 @@
 
 .my-wall-page__theme-name {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
   color: var(--color-heat);
   text-transform: uppercase;
@@ -746,7 +744,7 @@
 
 .my-wall-page__theme-desc {
   font-family: var(--font-program);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: var(--color-muted);
   margin-top: 2px;
 }
@@ -772,12 +770,12 @@
   padding: var(--space-2) var(--space-3);
   background: rgba(100, 170, 255, 0.06);
   border: 1px solid rgba(100, 170, 255, 0.15);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
 }
 
 .my-wall-page__contrib-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.10em;
   color: rgba(100, 170, 255, 0.70);
   white-space: nowrap;
@@ -797,7 +795,7 @@
 }
 
 .my-wall-page__contrib-input::placeholder {
-  color: rgba(255, 255, 255, 0.20);
+  color: var(--ink-dim);
 }
 
 /* ─── Panel — matches global PlayerPanel structure ──────────────────────── */
@@ -805,7 +803,7 @@
 .placed-panel {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4) var(--space-4);
   display: flex;
   flex-direction: column;
@@ -861,7 +859,7 @@
 /* "This one's yours" note */
 .placed-panel__my-number-note {
   font-family: var(--font-handwritten);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(100, 170, 255, 0.95);
   text-shadow: 0 0 14px rgba(60, 130, 255, 0.5), 0 0 28px rgba(60, 130, 255, 0.2);
   letter-spacing: 0;
@@ -872,8 +870,8 @@
 
 .placed-card {
   background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   padding: var(--space-3);
 }
 
@@ -909,16 +907,16 @@
 }
 
 .placed-card:first-of-type .placed-card__name {
-  font-size: 1.125rem;
+  font-size: var(--text-h2);
 }
 
 .placed-card__sport {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--ink-low);
+  background: var(--surface-2);
+  border: 1px solid var(--border-medium);
   border-radius: 3px;
   padding: 2px 6px;
   align-self: flex-start;
@@ -947,9 +945,9 @@
 
 .placed-card__stat-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--ink-mid);
   text-align: right;
   line-height: 1.4;
   margin-top: 3px;
@@ -960,7 +958,7 @@
 /* Fun fact — matches player-card__fact */
 .placed-card__fact {
   font-family: var(--font-program);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
   color: var(--color-muted);
   margin-top: var(--space-2);
@@ -968,7 +966,7 @@
 
 .placed-card__fallback {
   font-family: var(--font-program);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
   color: var(--color-muted);
   margin-top: var(--space-2);
@@ -999,9 +997,9 @@
 
 .placed-panel__who-else-label {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
+  font-size: var(--text-label);
   letter-spacing: 0.16em;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--ink-mid);
   display: block;
   margin-bottom: var(--space-2);
 }
@@ -1019,8 +1017,8 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   transition: background var(--motion-hover);
 }
 
@@ -1034,15 +1032,15 @@
 }
 
 .placed-panel__who-else-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-2);
 }
 
 /* "+ Add" label — muted until row hover */
 .placed-panel__who-else-action {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.18);
+  color: var(--ink-dim);
   white-space: nowrap;
   transition: color var(--motion-hover);
 }
@@ -1061,9 +1059,9 @@
 
 .placed-panel__who-else-meta {
   font-family: var(--font-scoreboard);
-  font-size: 0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--ink-low);
 }
 
 /* ─── Add another (dashed) ──────────────────────────────────────────────── */
@@ -1074,14 +1072,14 @@
 
 .my-wall-page__add-btn {
   background: none;
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-3);
   width: 100%;
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
+  font-size: var(--text-label);
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.28);
+  color: var(--ink-dim);
   cursor: pointer;
   transition: border-color var(--motion-hover), color var(--motion-hover);
 }
@@ -1116,7 +1114,7 @@
   left: 50%;
   transform: translateX(-50%);
   padding: var(--space-2) var(--space-4);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-family: var(--font-program);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -1159,7 +1157,7 @@
 /* ─── Welcome placemat (first visit) ──────────────────────────────────── */
 
 .hub-welcome {
-  padding: 32px 0 24px;
+  padding: var(--space-5) 0 var(--space-4);
   text-align: center;
   animation: welcome-in 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -1170,16 +1168,16 @@
 }
 
 .hub-welcome__content {
-  padding: 28px 24px;
+  padding: 28px var(--space-4);
   background: rgba(255,255,255,0.015);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-xl);
 }
 
 .hub-welcome__hook {
   font-family: var(--font-program);
   font-size: 0.8125rem;
-  color: rgba(255,255,255,0.45);
+  color: var(--ink-low);
   margin: 0 0 6px;
   letter-spacing: 0.01em;
 }
@@ -1195,7 +1193,7 @@
 
 .hub-welcome__slots {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   justify-content: center;
   margin: 0 0 20px;
 }
@@ -1203,8 +1201,8 @@
 .hub-welcome__slot {
   flex: 1;
   max-width: 110px;
-  padding: 10px 8px;
-  border-radius: 8px;
+  padding: 10px var(--space-2);
+  border-radius: var(--radius-md);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -1228,37 +1226,48 @@
   font-family: var(--font-scoreboard);
   font-size: 0.4rem;
   letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.25);
+  color: var(--ink-dim);
   text-transform: uppercase;
 }
 
 .hub-welcome__slot--number .hub-welcome__slot-value {
   font-family: var(--font-banner);
-  font-size: 1.1rem;
+  font-size: var(--text-h2);
   font-weight: 700;
   color: rgba(80, 150, 255, 0.85);
   text-shadow: 0 0 10px rgba(60, 130, 255, 0.35);
 }
 .hub-welcome__slot--city .hub-welcome__slot-value {
   font-family: var(--font-banner);
-  font-size: 1.1rem;
+  font-size: var(--text-h2);
   font-weight: 700;
   color: rgba(232, 160, 80, 0.85);
   text-shadow: 0 0 10px rgba(232, 124, 42, 0.30);
 }
 .hub-welcome__slot--hero .hub-welcome__slot-value {
   font-family: var(--font-banner);
-  font-size: 1.1rem;
+  font-size: var(--text-h2);
   font-weight: 700;
   color: rgba(255, 225, 100, 0.85);
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.28);
 }
 
+.hub-welcome__slot-sub {
+  font-family: var(--font-program);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+  line-height: 1.2;
+}
+
+.hub-welcome__slot-value--big {
+  font-size: 1.4rem;
+}
+
 .hub-welcome__sub {
   font-family: var(--font-program);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   line-height: 1.5;
-  color: rgba(255,255,255,0.35);
+  color: var(--ink-dim);
   margin: 0 0 20px;
   max-width: 340px;
   margin-left: auto;
@@ -1279,7 +1288,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--color-paper);
-  padding: 24px 0 8px;
+  padding: var(--space-4) 0 var(--space-2);
   text-align: left;
 }
 
@@ -1309,7 +1318,7 @@
 }
 
 .id-chip:hover {
-  background: rgba(255,255,255,0.02);
+  background: var(--surface-1);
 }
 
 /* Dividers between chips */
@@ -1320,7 +1329,7 @@
   top: 20%;
   height: 60%;
   width: 1px;
-  background: rgba(255,255,255,0.06);
+  background: var(--surface-2);
 }
 
 .id-chip__text {
@@ -1334,9 +1343,9 @@
 
 .id-chip__label {
   font-family: var(--font-scoreboard);
-  font-size: 0.55rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.40);
+  color: var(--ink-dim);
   text-transform: uppercase;
 }
 
@@ -1374,7 +1383,7 @@
 
 .id-chip__hero-name {
   font-family: var(--font-program);
-  font-size: 0.8rem;
+  font-size: var(--text-small);
   font-weight: 500;
   color: rgba(255, 225, 100, 0.60);
   line-height: 1.2;
@@ -1400,14 +1409,14 @@
   font-family: var(--font-banner);
   font-size: 1.6rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.18);
+  color: var(--ink-dim);
   letter-spacing: 0.03em;
   line-height: 1.15;
   transition: color 0.2s;
 }
 
 .id-chip--empty:hover .id-chip__prompt {
-  color: rgba(255,255,255,0.35);
+  color: var(--ink-dim);
 }
 
 /* Pulsing underline on empty chips — draws the eye */
@@ -1425,7 +1434,7 @@
 .id-chip__input {
   background: none;
   border: none;
-  border-bottom: 2px solid rgba(255,255,255,0.15);
+  border-bottom: 2px solid var(--border-medium);
   font-family: var(--font-banner);
   font-weight: 700;
   font-size: 1.6rem;
@@ -1446,7 +1455,7 @@
 /* Number legends hint — "Brady, Namath, Stockton" */
 .id-chip__number-hint {
   font-family: var(--font-program);
-  font-size: 0.55rem;
+  font-size: var(--text-micro);
   color: rgba(80, 150, 255, 0.40);
   line-height: 1.2;
   white-space: nowrap;
@@ -1463,7 +1472,7 @@
   right: 0;
   z-index: 20;
   background: var(--color-surface);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid var(--border-soft);
   border-radius: 0 0 8px 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.50);
   overflow: hidden;
@@ -1474,10 +1483,10 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 8px 14px;
+  padding: var(--space-2) 14px;
   background: none;
   border: none;
-  border-top: 1px solid rgba(255,255,255,0.04);
+  border-top: 1px solid var(--border-faint);
   cursor: pointer;
   transition: background 0.15s;
   font-family: var(--font-program);
@@ -1490,14 +1499,14 @@
 }
 
 .id-chip__suggestion-name {
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.70);
+  font-size: var(--text-small);
+  color: var(--ink-mid);
   text-transform: capitalize;
 }
 
 .id-chip__suggestion-num {
   font-family: var(--font-banner);
-  font-size: 0.8rem;
+  font-size: var(--text-small);
   font-weight: 700;
   color: rgba(255, 225, 100, 0.70);
 }
@@ -1510,7 +1519,7 @@
 .hub-divider {
   width: 100%;
   height: 1px;
-  background: rgba(255,255,255,0.05);
+  background: var(--surface-2);
 }
 
 /* ─── Section label ────────────────────────────────────────────────────── */
@@ -1542,28 +1551,24 @@
   font-family: var(--font-program);
   font-size: 0.8125rem;
   color: var(--color-muted);
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-3);
 }
 
+/* Inherits .tnw-btn .tnw-btn--secondary; heat tint overrides the default
+   white-on-white treatment to signal "build yours". */
 .hub-empty__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  background: rgba(232, 124, 42, 0.10);
-  border: 1px solid rgba(232, 124, 42, 0.25);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-  font-family: var(--font-scoreboard);
-  font-size: 0.7rem;
-  letter-spacing: 0.10em;
-  color: rgba(232, 124, 42, 0.70);
+  padding:       14px 28px;
+  border-radius: var(--radius-lg);
+  background:    rgba(232, 124, 42, 0.10);
+  border-color:  rgba(232, 124, 42, 0.25);
+  color:         rgba(232, 124, 42, 0.70);
+  font-size:     var(--text-small);
 }
 
-.hub-empty__cta:hover {
-  background: rgba(232, 124, 42, 0.15);
+.hub-empty__cta:hover:not(:disabled) {
+  background:   rgba(232, 124, 42, 0.15);
   border-color: rgba(232, 124, 42, 0.40);
+  color:        rgba(232, 124, 42, 0.85);
 }
 
 .hub-empty__cta svg {
@@ -1583,9 +1588,9 @@
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 10px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
   text-align: left;
@@ -1608,7 +1613,7 @@
   justify-content: center;
   background: rgba(60, 130, 255, 0.06);
   border: 1px solid rgba(60, 130, 255, 0.15);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-family: var(--font-banner);
   font-size: 1.3rem;
   font-weight: 700;
@@ -1624,11 +1629,11 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
-.prev-cell { background: rgba(255,255,255,0.04); }
+.prev-cell { background: var(--surface-2); }
 .prev-cell--lit { background: rgba(232, 124, 42, 0.25); }
 .prev-cell--sacred { background: rgba(255, 215, 0, 0.22); }
 .prev-cell--hot { background: rgba(232, 124, 42, 0.45); }
@@ -1647,7 +1652,7 @@
 
 .hub-wall-row__name {
   font-family: var(--font-banner);
-  font-size: 0.9rem;
+  font-size: var(--text-body);
   font-weight: 600;
   letter-spacing: 0.03em;
   color: var(--color-paper);
@@ -1655,8 +1660,8 @@
 
 .hub-wall-row__desc {
   font-family: var(--font-program);
-  font-size: 0.625rem;
-  color: rgba(255,255,255,0.35);
+  font-size: var(--text-label);
+  color: var(--ink-dim);
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
@@ -1666,14 +1671,14 @@
 .hub-wall-row__bottom {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   margin-top: 2px;
 }
 
 .hub-wall-row__count {
   font-family: var(--font-scoreboard);
-  font-size: 0.55rem;
-  color: rgba(255,255,255,0.25);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
   letter-spacing: 0.06em;
 }
 
@@ -1690,21 +1695,21 @@
   font-family: var(--font-scoreboard);
   font-size: 0.4rem;
   font-weight: 700;
-  color: rgba(255,255,255,0.70);
-  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--ink-mid);
+  border: 1px solid var(--border-soft);
 }
 
 .collab-more {
   font-family: var(--font-scoreboard);
   font-size: 0.42rem;
   letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.22);
+  color: var(--ink-dim);
   margin-left: 2px;
 }
 
 .hub-wall-row__arrow {
   flex: 0 0 16px;
-  color: rgba(255,255,255,0.12);
+  color: var(--ink-dim);
   transition: color 0.2s;
 }
 
@@ -1715,7 +1720,7 @@
 /* ─── Build CTA ────────────────────────────────────────────────────────── */
 
 .hub-build-cta {
-  padding: 16px 0 8px;
+  padding: var(--space-3) 0 var(--space-2);
 }
 
 .hub-build-btn {
@@ -1724,10 +1729,10 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 16px 20px;
+  padding: var(--space-3) 20px;
   background: none;
   border: 1px dashed rgba(232, 124, 42, 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
   font-family: var(--font-scoreboard);
@@ -1749,7 +1754,7 @@
 }
 
 .hub-build-btn__text {
-  font-size: 0.7rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.10em;
   color: rgba(232, 124, 42, 0.40);
   transition: color 0.2s;
@@ -1761,21 +1766,16 @@
 
 /* ─── New Wall Modal ───────────────────────────────────────────────────── */
 
+/* Structural rules from .tnw-overlay. Only z-index + bg override kept. */
 .nw-modal__overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
   z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: modal-fade 0.2s ease-out;
+  background: rgba(0, 0, 0, 0.75);
 }
 
 .nw-modal {
   background: var(--color-surface);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
   width: 90%;
   max-width: 440px;
   max-height: 85vh;
@@ -1794,15 +1794,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 20px var(--space-4) 12px;
+  border-bottom: 1px solid var(--border-faint);
 }
 
 .nw-modal__title {
   font-family: var(--font-banner);
-  font-size: 0.85rem;
+  font-size: var(--text-body);
   letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.85);
+  color: var(--ink-high);
   font-weight: 700;
 }
 
@@ -1810,20 +1810,20 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-  color: rgba(255,255,255,0.25);
+  padding: var(--space-1);
+  color: var(--ink-dim);
   transition: color 0.2s;
 }
 
 .nw-modal__close:hover {
-  color: rgba(255,255,255,0.55);
+  color: var(--ink-low);
 }
 
 .nw-modal__body {
-  padding: 16px 24px 24px;
+  padding: var(--space-3) var(--space-4) var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .nw-modal__section-label {
@@ -1832,7 +1832,7 @@
   letter-spacing: 0.14em;
   color: rgba(232, 124, 42, 0.55);
   margin-top: 12px;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
   font-weight: 600;
 }
 
@@ -1841,10 +1841,10 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 12px 16px;
+  padding: 12px var(--space-3);
   background: rgba(255,255,255,0.015);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
   text-align: left;
@@ -1865,7 +1865,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(232, 124, 42, 0.04);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .nw-modal__prompt-icon svg {
@@ -1882,11 +1882,11 @@
 }
 
 .nw-modal__prompt-icon--blank {
-  background: rgba(255,255,255,0.02);
+  background: var(--surface-1);
 }
 
 .nw-modal__prompt-icon--blank svg {
-  color: rgba(255,255,255,0.16);
+  color: var(--ink-dim);
 }
 
 .nw-modal__prompt-row:hover .nw-modal__prompt-icon--blank svg {
@@ -1903,22 +1903,22 @@
 
 .nw-modal__prompt-name {
   font-family: var(--font-banner);
-  font-size: 0.85rem;
+  font-size: var(--text-body);
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: rgba(255,255,255,0.80);
+  color: var(--ink-high);
 }
 
 .nw-modal__prompt-desc {
   font-family: var(--font-program);
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.40);
+  font-size: var(--text-label);
+  color: var(--ink-dim);
   line-height: 1.35;
 }
 
 .nw-modal__prompt-arrow {
   flex: 0 0 14px;
-  color: rgba(255,255,255,0.10);
+  color: var(--ink-dim);
   transition: color 0.2s;
 }
 
@@ -1928,8 +1928,8 @@
 
 .nw-modal__prompt-row--blank {
   border-style: dashed;
-  border-color: rgba(255,255,255,0.06);
-  margin-top: 4px;
+  border-color: var(--border-faint);
+  margin-top: var(--space-1);
 }
 
 /* ─── Responsive — hub on mobile ───────────────────────────────────────── */
@@ -1941,7 +1941,7 @@
 
   .id-chip {
     padding: 10px 10px;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .id-chip__value--number { font-size: 1.2rem; }
@@ -1954,26 +1954,18 @@
 
 /* ─── Confirmation modal ───────────────────────────────────────────────── */
 
+/* Structural rules from .tnw-overlay. Only z-index + bg override kept. */
 .my-wall-modal__overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.70);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 90;
-  animation: modal-fade 0.2s ease-out;
+  background: rgba(0, 0, 0, 0.70);
 }
 
-@keyframes modal-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+/* modal-fade removed — uses shared tnw-overlayIn keyframe from global.css */
 
 .my-wall-modal {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: var(--space-5);
   max-width: 380px;
   width: 90%;
@@ -1984,8 +1976,8 @@
 
 .my-wall-modal__title {
   font-family: var(--font-banner);
-  font-size: 1.125rem;
-  color: var(--color-paper);
+  font-size:   var(--text-h2);
+  color:       var(--color-paper);
 }
 
 .my-wall-modal__text {

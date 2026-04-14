@@ -1,0 +1,150 @@
+/* AddEntry — modal for claiming your number on a team wall */
+
+/* Structural rules from .tnw-overlay. Only z-index override kept. */
+.ae-overlay { z-index: 600; }
+
+.ae-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-5);
+  position: relative;
+}
+
+.ae-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  color: var(--color-muted);
+  transition: color var(--motion-hover);
+}
+
+.ae-close:hover {
+  color: var(--color-paper);
+}
+
+/* ── Header ─────────────────────────────────────────── */
+
+.ae-title {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-h1);
+  color:          var(--color-paper);
+  letter-spacing: 0.04em;
+}
+
+.ae-subtitle {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* ── Error ──────────────────────────────────────────── */
+
+.ae-error {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.20);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+/* ── Fields ─────────────────────────────────────────── */
+
+.ae-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ae-row {
+  display: flex;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.ae-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.ae-label > span {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.14em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ae-optional {
+  color: var(--ink-dim);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.ae-char-count {
+  color: var(--ink-dim);
+  font-size: var(--text-micro);
+  margin-left: auto;
+}
+
+/* Inputs use shared .tnw-input from global.css. Modifiers below add variants. */
+
+/* Number field — big and centered */
+.ae-label--number {
+  flex: 0 0 72px;
+}
+
+.ae-input--number {
+  font-family: var(--font-banner);
+  font-size: 1.5rem;
+  text-align: center;
+  padding: var(--space-2);
+}
+
+.ae-label--name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ae-label--small {
+  flex: 0 0 calc(50% - var(--space-3) / 2);
+}
+
+.ae-input--small {
+  max-width: 140px;
+}
+
+/* ── Submit ─────────────────────────────────────────── */
+
+/* Inherits base from .tnw-btn .tnw-btn--primary in global.css.
+   Overrides only what's truly local to this form: full-width + top margin. */
+.ae-submit {
+  width:      100%;
+  margin-top: var(--space-4);
+  padding:    var(--space-3);
+}
+
+/* ── Spinner ────────────────────────────────────────── */
+
+.ae-spinner {
+  animation: ae-spin 800ms linear infinite;
+}
+
+@keyframes ae-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ae-fadeIn removed — uses shared tnw-overlayIn keyframe from global.css */

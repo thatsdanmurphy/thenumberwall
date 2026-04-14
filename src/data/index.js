@@ -14,6 +14,7 @@
  *   nyCurrent      — New York metro current rosters (scaffolded, data TBD)
  */
 
+import { TIER_WEIGHT } from './tiers.js'
 import wallDataRaw      from './wallData.json'
 import bostonLegendsRaw from './bostonLegends.json'
 import bostonCurrentRaw from './bostonCurrent.json'
@@ -126,10 +127,7 @@ export const TILE_NUMBERS = ['0', '00', ...Array.from({ length: 99 }, (_, i) => 
 
 // ─── Heat level ────────────────────────────────────────────────────────────
 // Derives a heat step (0–5) from the entries on a tile.
-// Tier weights: SACRED=5, LEGEND=3, ACTIVE=2, UNWRITTEN=0.
-// Total weight maps to a heat step.
-
-const TIER_WEIGHT = { SACRED: 5, LEGEND: 3, ICON: 2, ACTIVE: 2, UNWRITTEN: 0 }
+// Tier weights imported from data/tiers.js (single source of truth).
 
 export function getHeatLevel(entries) {
   if (!entries || entries.length === 0) return 0
@@ -190,7 +188,7 @@ const HEAT_TILES = [
   { bg: 'rgba(222,125,0,0.82)',   border: 'rgba(245,180,30,0.92)',  glow: '0 0 24px rgba(245,193,53,0.92), 0 0 48px rgba(255,130,0,0.50), 0 0 64px rgba(255,80,0,0.22)', text: 'rgba(255,210,120,1)' },
 ]
 
-const SACRED_TILE = {
+export const SACRED_TILE = {
   bg:     'rgba(200,220,255,0.12)',
   border: 'rgba(200,220,255,0.38)',
   glow:   '0 0 18px rgba(200,220,255,0.52), 0 0 36px rgba(180,210,255,0.22)',

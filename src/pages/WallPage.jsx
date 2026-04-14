@@ -86,6 +86,16 @@ export default function WallPage() {
                 <span className="wall-page__city-soon">COMING SOON</span>
               </div>
             </div>
+
+            {/* Team Walls — below city boards */}
+            <div className="wall-page__team-walls">
+              <p className="wall-page__cities-label">TEAM WALLS</p>
+              <Link to="/walls" className="wall-page__city-card" onClick={() => track('team_walls_open')}>
+                <span className="wall-page__city-name">Every team has a wall.</span>
+                <span className="wall-page__city-teams">Start a wall for your team — high school, college, any era</span>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
 
           <PlayerPanel
@@ -101,7 +111,7 @@ export default function WallPage() {
       {/* Mobile backdrop — tapping it closes the panel */}
       {selected && (
         <div
-          className="wall-page__backdrop"
+          className="tnw-backdrop wall-page__backdrop"
           onClick={handleClear}
           aria-hidden="true"
         />

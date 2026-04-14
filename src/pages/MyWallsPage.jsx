@@ -17,6 +17,7 @@ import { listMyWalls, createWall, isSlugAvailable } from '../lib/myWallStore.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
 import { track } from '@vercel/analytics'
+import { MY_WALL_TOKEN, MY_WALL_ID, MY_WALL_SLUG } from '../lib/storageKeys.js'
 import './MyWallPage.css'
 
 // ─── Onboarding (2 steps for hub: name → theme) ───────────────────────────
@@ -238,7 +239,7 @@ export default function MyWallsPage() {
   const preselectedPrompt = location.state?.prompt || null
 
   const [hasWalls, setHasWalls] = useState(null)  // null = loading
-  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_token') : null
+  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem(MY_WALL_TOKEN) : null
 
   useEffect(() => {
     if (isNewRoute) { setHasWalls(true); return }  // skip check on /new
@@ -249,9 +250,9 @@ export default function MyWallsPage() {
   }, [ownerToken, isNewRoute])
 
   function handleOnboardComplete(newWall) {
-    localStorage.setItem('tnw_my_wall_id', newWall.id)
-    localStorage.setItem('tnw_my_wall_slug', newWall.slug)
-    localStorage.setItem('tnw_my_wall_token', newWall.owner_token)
+    localStorage.setItem(MY_WALL_ID, newWall.id)
+    localStorage.setItem(MY_WALL_SLUG, newWall.slug)
+    localStorage.setItem(MY_WALL_TOKEN, newWall.owner_token)
     navigate(`/wall/${newWall.slug}`, { replace: true })
   }
 

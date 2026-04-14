@@ -17,7 +17,12 @@ function buildSportDebateNumbers(wallId, sport) {
 }
 
 /**
- * WallGrid — 101-tile number grid.
+ * WallGrid — number tile grid.
+ *
+ * Default: 101-tile (0, 00, 1-99) legend grid with tier-based heat.
+ * Override: pass `numbers` for custom tile set,
+ *           `tileHeatFn(num, entries)` for custom heat palette,
+ *           `prefixContent` for elements before the tiles (e.g. coach tile).
  *
  * Pulse logic (two modes):
  *   ALL view (no sport filter) → pulse = "contested" — 2+ non-UNWRITTEN legends,
@@ -28,7 +33,7 @@ function buildSportDebateNumbers(wallId, sport) {
  * Keyboard nav:
  *   Arrow keys — move focus directionally within the grid
  */
-export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global', sportFilter = null }) {
+export default function WallGrid({ index = globalIndex, activeNumber = null, onSelect, wallId = 'global', sportFilter = null, numbers, tileHeatFn, prefixContent }) {
   const gridRef = useRef(null)
 
   const activeSport = sportFilter ? [...sportFilter][0] : null
@@ -70,6 +75,8 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
     if (next >= 0 && next < tiles.length) tiles[next].focus()
   }, [])
 
+  const tileNumbers = numbers || TILE_NUMBERS
+
   return (
     <div
       className="wall-grid"
@@ -78,7 +85,8 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
       ref={gridRef}
       onKeyDown={handleKeyDown}
     >
-      {TILE_NUMBERS.map(num => {
+      {prefixContent}
+      {tileNumbers.map(num => {
         const entries      = index.get(num) || []
         const legends      = entries.filter(e => e.tier !== 'UNWRITTEN')
         const hasSacred    = legends.some(e => e.tier === 'SACRED')
@@ -91,6 +99,9 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           ? sportDebateNumbers.has(String(num)) && legends.length >= 2
           : legends.length >= 8 && !hasSacred
 
+        // Custom heat: team walls pass tileHeatFn for team-color palettes
+        const heatProps = tileHeatFn ? tileHeatFn(num, entries) : {}
+
         return (
           <WallTile
             key={num}
@@ -100,6 +111,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
             isDebating={debating}
             debateVariant={debating ? 'c' : null}
             onClick={() => handleTileClick(num)}
+            {...heatProps}
           />
         )
       })}

@@ -13,7 +13,7 @@
 .player-panel {
   background:    var(--color-surface);
   border:        1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
 }
 
 /* Idle — no footprint on mobile */
@@ -33,7 +33,7 @@
     right:         0;
     margin-top:    0;
     max-height:    82vh;
-    border-radius: 14px 14px 0 0;
+    border-radius: var(--radius-xl) 14px 0 0;
     border-bottom: none;
     overflow-y:    auto;
     z-index:       200;
@@ -52,7 +52,7 @@
     display:       block;
     width:         36px;
     height:        4px;
-    background:    rgba(255,255,255,0.18);
+    background:    var(--surface-4);
     border-radius: 2px;
     margin:        12px auto 0;
     flex-shrink:   0;
@@ -103,18 +103,18 @@
 
 .player-panel__idle-wall {
   font-family:    var(--font-banner);
-  font-size:      1.375rem;
+  font-size: var(--text-h1);
   letter-spacing: 0.04em;
-  color:          rgba(255,255,255,0.38);
+  color:          var(--ink-dim);
   text-align:     center;
   width:          100%;
 }
 
 .player-panel__idle-prompt {
   font-family:    var(--font-program);
-  font-size:      0.75rem;
+  font-size: var(--text-small);
   letter-spacing: 0.01em;
-  color:          rgba(255,255,255,0.38);
+  color:          var(--ink-dim);
   text-align:     center;
   width:          100%;
 }
@@ -156,7 +156,7 @@
 
 .player-panel__subtitle {
   font-family:    var(--font-scoreboard);
-  font-size:      0.6875rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.18em;
   color:          var(--color-muted);
 }
@@ -171,63 +171,58 @@
   background:     rgba(200, 220, 255, 0.08);
   border:         1px solid rgba(200, 220, 255, 0.30);
   color:          rgba(200, 220, 255, 0.85);
-  padding:        3px 8px;
+  padding:        3px var(--space-2);
   border-radius:  3px;
 }
 
 
-/* ── Panel-level share button ───────────────────────────────────────────── */
+/* ── Panel-level share button — circle icon ────────────────────────────── */
 
 .player-panel__share {
-  flex-shrink:    0;
-  background:     none;
-  border:         1px solid rgba(255,255,255,0.20);
-  border-radius:  4px;
-  color:          rgba(255,255,255,0.62);
-  font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
-  letter-spacing: 0.14em;
-  padding:        5px 10px;
-  cursor:         pointer;
-  transition:     color var(--motion-hover), border-color var(--motion-hover),
-                  background var(--motion-hover);
-  white-space:    nowrap;
+  flex-shrink:     0;
+  width:           28px;
+  height:          28px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   50%;
+  background:      var(--surface-2);
+  border:          none;
+  color:           var(--color-muted);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), color var(--motion-hover);
 }
 
 .player-panel__share:hover {
-  color:        var(--color-paper);
-  border-color: rgba(255,255,255,0.45);
-  background:   rgba(255,255,255,0.07);
+  background: var(--surface-4);
+  color:      var(--color-paper);
 }
 
 .player-panel__share--copied {
-  color:        rgba(158,212,76,0.9);
-  border-color: rgba(158,212,76,0.40);
-  background:   rgba(158,212,76,0.08);
+  background: rgba(158, 212, 76, 0.12);
+  color:      rgba(158, 212, 76, 0.9);
 }
 
-/* ── Close button — no box, text only ───────────────────────────────────── */
+/* ── Close button — circle icon ────────────────────────────────────────── */
 
 .player-panel__close {
-  flex-shrink:    0;
-  background:     none;
-  border:         1px solid rgba(255,255,255,0.20);
-  border-radius:  4px;
-  color:          rgba(255,255,255,0.62);
-  font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
-  letter-spacing: 0.14em;
-  padding:        5px 10px;
-  cursor:         pointer;
-  transition:     color var(--motion-hover), border-color var(--motion-hover),
-                  background var(--motion-hover);
-  white-space:    nowrap;
+  flex-shrink:     0;
+  width:           28px;
+  height:          28px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   50%;
+  background:      var(--surface-2);
+  border:          none;
+  color:           var(--color-muted);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), color var(--motion-hover);
 }
 
 .player-panel__close:hover {
-  color:        var(--color-paper);
-  border-color: rgba(255,255,255,0.45);
-  background:   rgba(255,255,255,0.07);
+  background: var(--surface-4);
+  color:      var(--color-paper);
 }
 
 /* ── Sacred badge ───────────────────────────────────────────────────────── */
@@ -237,10 +232,10 @@
   margin-bottom:  var(--space-3);
   background:     rgba(200,220,255,0.08);
   border:         1px solid rgba(200,220,255,0.28);
-  border-radius:  4px;
+  border-radius: var(--radius-sm);
   padding:        3px 10px;
   font-family:    var(--font-scoreboard);
-  font-size:      0.625rem;
+  font-size: var(--text-label);
   letter-spacing: 0.2em;
   color:          var(--color-sacred);
 }
@@ -260,7 +255,7 @@
   font-family:    var(--font-banner);
   font-size:      1rem;
   letter-spacing: 0.04em;
-  color:          rgba(255,255,255,0.55);
+  color:          var(--ink-low);
   text-wrap:      balance;
   max-width:      22ch;
 }
@@ -269,7 +264,7 @@
   font-family:    var(--font-program);
   font-size:      0.8125rem;
   letter-spacing: 0;
-  color:          rgba(255,255,255,0.35);
+  color:          var(--ink-dim);
   font-style:     italic;
 }
 
@@ -277,22 +272,22 @@
   display:         inline-block;
   margin-top:      var(--space-2);
   padding:         var(--space-1) var(--space-3);
-  background:      rgba(255,255,255,0.05);
-  border:          1px solid rgba(255,255,255,0.16);
-  border-radius:   4px;
+  background:      var(--surface-2);
+  border:          1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
   font-family:     var(--font-scoreboard);
-  font-size:       0.625rem;
+  font-size: var(--text-label);
   letter-spacing:  0.18em;
-  color:           rgba(255,255,255,0.50);
+  color:           var(--ink-low);
   text-decoration: none;
   transition:      background var(--motion-hover), color var(--motion-hover),
                    border-color var(--motion-hover);
 }
 
 .player-panel__unwritten-cta:hover {
-  background:   rgba(255,255,255,0.10);
-  border-color: rgba(255,255,255,0.30);
-  color:        rgba(255,255,255,0.80);
+  background:   var(--surface-3);
+  border-color: var(--border-strong);
+  color:        var(--ink-high);
 }
 
 /* ── Contested nudge (ALL view, no debate mechanic) ────────────────────── */
@@ -300,24 +295,24 @@
 .player-panel__contested {
   display:        flex;
   flex-direction: column;
-  gap:            4px;
+  gap:            var(--space-1);
   padding:        var(--space-2) 0 var(--space-3);
-  border-bottom:  1px solid rgba(255, 255, 255, 0.07);
+  border-bottom:  1px solid var(--border-faint);
   margin-bottom:  var(--space-3);
 }
 
 .player-panel__contested-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.16em;
   color:          rgba(232, 124, 42, 0.65);
 }
 
 .player-panel__contested-hint {
   font-family:    var(--font-program);
-  font-size:      0.75rem;
+  font-size: var(--text-small);
   line-height:    1.5;
-  color:          rgba(255, 255, 255, 0.38);
+  color:          var(--ink-dim);
 }
 
 /* ── Player cards stack ─────────────────────────────────────────────────── */
@@ -332,8 +327,8 @@
 
 .player-card {
   background:    rgba(0,0,0,0.28);
-  border:        1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
+  border:        1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   padding:       var(--space-3);
 }
 
@@ -344,7 +339,7 @@
 }
 
 .player-card--top .player-card__name {
-  font-size: 1.125rem;
+  font-size: var(--text-h2);
 }
 
 /* Top row: info left, stat right */
@@ -388,7 +383,7 @@
   width: 12px;
   height: 12px;
   opacity: 0.45;
-  margin-left: 4px;
+  margin-left: var(--space-1);
   flex-shrink: 0;
 }
 
@@ -396,18 +391,18 @@
 
 .player-card__badges {
   display:     flex;
-  gap:         4px;
+  gap:         var(--space-1);
   align-items: center;
   flex-wrap:   wrap;
 }
 
 .player-card__badge {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  color:          rgba(255,255,255,0.55);
-  background:     rgba(255,255,255,0.07);
-  border:         1px solid rgba(255,255,255,0.14);
+  color:          var(--ink-low);
+  background:     var(--surface-2);
+  border:         1px solid var(--border-medium);
   border-radius:  3px;
   padding:        2px 6px;
   white-space:    nowrap;
@@ -441,7 +436,7 @@
 
 /* Sport emoji badge — no text transform, just the icon */
 .player-card__badge--sport {
-  font-size:      0.75rem;
+  font-size: var(--text-small);
   padding:        1px 5px;
   letter-spacing: 0;
   line-height:    1.4;
@@ -456,7 +451,7 @@
 .player-card__badge--dim {
   background:   transparent;
   border:       none;
-  color:        rgba(255,255,255,0.35);
+  color:        var(--ink-dim);
   padding-left: 0;
 }
 
@@ -474,7 +469,7 @@
 
 .player-card__fact {
   font-family: var(--font-program);
-  font-size:   0.6875rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
   color:       var(--color-muted);
   margin-top:  var(--space-2);
@@ -506,9 +501,9 @@
 
 .player-card__stat-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  color:          rgba(255,255,255,0.62);
+  color:          var(--ink-mid);
   text-align:     right;
   line-height:    1.4;
   margin-top:     3px;
@@ -520,16 +515,16 @@
 
 .your-pick {
   padding-bottom: var(--space-3);
-  border-bottom:  1px solid rgba(255, 255, 255, 0.07);
+  border-bottom:  1px solid var(--border-faint);
   margin-bottom:  var(--space-3);
 }
 
 .your-pick__label {
   display:        block;
   font-family:    var(--font-scoreboard);
-  font-size:      0.625rem;
+  font-size: var(--text-label);
   letter-spacing: 0.16em;
-  color:          rgba(255, 255, 255, 0.62);
+  color:          var(--ink-mid);
   margin-bottom:  var(--space-2);
 }
 
@@ -542,13 +537,13 @@
 
 .your-pick__chip {
   font-family:    var(--font-banner);
-  font-size:      0.75rem;
+  font-size: var(--text-small);
   letter-spacing: 0.01em;
-  color:          rgba(255, 255, 255, 0.65);
-  background:     rgba(255, 255, 255, 0.04);
-  border:         1px solid rgba(255, 255, 255, 0.1);
-  border-radius:  4px;
-  padding:        4px 10px;
+  color:          var(--ink-mid);
+  background:     var(--surface-2);
+  border:         1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding:        var(--space-1) 10px;
   cursor:         pointer;
   transition:
     background   150ms ease,
@@ -616,9 +611,9 @@
 
 .your-pick__your-call-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
-  color:          rgba(255, 255, 255, 0.28);
+  color:          var(--ink-dim);
 }
 
 .your-pick__your-call-name {
@@ -632,7 +627,7 @@
 .your-pick__split {
   display:        flex;
   flex-direction: column;
-  gap:            4px;
+  gap:            var(--space-1);
 }
 
 .your-pick__split-bar {
@@ -641,7 +636,7 @@
   overflow:      hidden;
   display:       flex;
   gap:           2px;
-  background:    rgba(255, 255, 255, 0.04);
+  background:    var(--surface-2);
 }
 
 .your-pick__split-fill {
@@ -659,7 +654,7 @@
 
 .your-pick__split-pct {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
   /* color is set inline via rankOrange() — graded amber by rank */
 }
@@ -677,9 +672,9 @@
 
 .your-pick__wall-note {
   font-family: var(--font-program);
-  font-size:   0.75rem;
+  font-size: var(--text-small);
   line-height: 1.55;
-  color:       rgba(255, 255, 255, 0.42);
+  color:       var(--ink-low);
   margin:      0;
   font-style:  italic;
 }
@@ -698,7 +693,7 @@
   font-family:    var(--font-scoreboard);
   font-size:      0.4375rem;
   letter-spacing: 0.12em;
-  color:          rgba(255, 255, 255, 0.18);
+  color:          var(--ink-dim);
   margin:         0;
 }
 
@@ -708,12 +703,12 @@
 /* "Missing someone?" nomination link — sits inline with chips */
 .your-pick__nominate {
   font-family:    var(--font-scoreboard);
-  font-size:      0.6875rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.10em;
-  color:          rgba(255, 255, 255, 0.65);
+  color:          var(--ink-mid);
   text-decoration: none;
   align-self:     center;
-  padding:        4px 6px;
+  padding:        var(--space-1) 6px;
   border-radius:  3px;
   transition:     color 150ms ease;
   white-space:    nowrap;
@@ -729,9 +724,9 @@
   display:        block;
   margin-top:     var(--space-3);
   font-family:    var(--font-scoreboard);
-  font-size:      0.5625rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
-  color:          rgba(255, 255, 255, 0.28);
+  color:          var(--ink-dim);
   text-decoration: none;
   text-align:     center;
   padding:        var(--space-2) 0;

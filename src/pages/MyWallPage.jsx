@@ -9,6 +9,7 @@ import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, deleteW
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
 import { track } from '@vercel/analytics'
+import { MY_WALL_TOKEN, MY_WALL_ID, MY_WALL_SLUG } from '../lib/storageKeys.js'
 import '../components/WallGrid.css'
 import './MyWallPage.css'
 
@@ -482,7 +483,7 @@ export default function MyWallPage() {
   const navigate     = useNavigate()
 
   // If no slug in URL but user has a saved wall, use it directly (no redirect flash)
-  const savedSlug = !slug && typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_slug') : null
+  const savedSlug = !slug && typeof window !== 'undefined' ? localStorage.getItem(MY_WALL_SLUG) : null
   const effectiveSlug = slug || savedSlug
 
   // All hooks must be called before any early return (rules of hooks)
@@ -521,7 +522,7 @@ export default function MyWallPage() {
       }
       setWall(result)
       // Track visitor (non-owner) wall views
-      const token = localStorage.getItem('tnw_my_wall_token')
+      const token = localStorage.getItem(MY_WALL_TOKEN)
       if (!token || token !== result.owner_token) {
         track('wall_visited', { slug, entries: result.entries.length })
       }
@@ -541,9 +542,9 @@ export default function MyWallPage() {
     track('wall_created', { slug: newWall.slug })
     setWall(newWall)
     setEntries(new Map())
-    localStorage.setItem('tnw_my_wall_id', newWall.id)
-    localStorage.setItem('tnw_my_wall_slug', newWall.slug)
-    localStorage.setItem('tnw_my_wall_token', newWall.owner_token)
+    localStorage.setItem(MY_WALL_ID, newWall.id)
+    localStorage.setItem(MY_WALL_SLUG, newWall.slug)
+    localStorage.setItem(MY_WALL_TOKEN, newWall.owner_token)
     navigate(`/wall/${newWall.slug}`, { replace: true })
   }
 
@@ -554,7 +555,7 @@ export default function MyWallPage() {
   }, [])
 
   // ─── Owner check helper ──────────────────────────────────────────────────
-  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem('tnw_my_wall_token') : null
+  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem(MY_WALL_TOKEN) : null
 
   // ─── Place a player — with dedupe check ──────────────────────────────────
   const handlePlace = useCallback(async (entryData) => {
@@ -641,8 +642,8 @@ export default function MyWallPage() {
     try {
       await deleteWall(wall.id, ownerToken)
       // Clear local state
-      localStorage.removeItem('tnw_my_wall_id')
-      localStorage.removeItem('tnw_my_wall_slug')
+      localStorage.removeItem(MY_WALL_ID)
+      localStorage.removeItem(MY_WALL_SLUG)
       setShowClearConfirm(false)
       showToast('Wall deleted.', 'success')
       navigate('/my-wall', { replace: true })
@@ -824,7 +825,7 @@ export default function MyWallPage() {
           {/* Mobile backdrop — tap to close */}
           {searchingNumber && (
             <div
-              className="my-wall-page__backdrop"
+              className="tnw-backdrop my-wall-page__backdrop"
               onClick={() => setSearching(null)}
               aria-hidden="true"
             />
@@ -963,7 +964,7 @@ export default function MyWallPage() {
 
         {/* Clear wall confirmation modal */}
         {showClearConfirm && (
-          <div className="my-wall-modal__overlay" onClick={() => setShowClearConfirm(false)}>
+          <div className="tnw-overlay my-wall-modal__overlay" onClick={() => setShowClearConfirm(false)}>
             <div className="my-wall-modal" onClick={e => e.stopPropagation()}>
               <h3 className="my-wall-modal__title">Delete this wall?</h3>
               <p className="my-wall-modal__text">This permanently deletes the wall and all its picks. This can't be undone.</p>

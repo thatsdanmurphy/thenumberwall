@@ -72,7 +72,7 @@ export default function NewYorkPage() {
           {TABS.map(t => (
             <button
               key={t.id}
-              className={`newyork-page__tab${tab === t.id ? ' newyork-page__tab--active' : ''}`}
+              className={`tnw-tab${tab === t.id ? ' tnw-tab--active' : ''}`}
               role="tab"
               aria-selected={tab === t.id}
               onClick={() => handleTabChange(t.id)}
@@ -112,7 +112,7 @@ export default function NewYorkPage() {
 
       {selected && (
         <div
-          className="newyork-page__backdrop"
+          className="tnw-backdrop newyork-page__backdrop"
           onClick={handleClear}
           aria-hidden="true"
         />

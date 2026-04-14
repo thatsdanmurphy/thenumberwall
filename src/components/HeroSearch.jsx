@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { Search, X } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import { wallData, bostonLegends, globalIndex } from '../data/index.js'
+import { SPORT_EMOJI } from '../data/sports.js'
 import './HeroSearch.css'
 
 /**
@@ -15,13 +16,7 @@ import './HeroSearch.css'
  * the WallGrid to that tile.
  */
 
-const SPORT_ICON = {
-  Basketball: '\u{1F3C0}',
-  Football:   '\u{1F3C8}',
-  Baseball:   '\u26BE',
-  Hockey:     '\u{1F3D2}',
-  Soccer:     '\u26BD',
-}
+// Sport emoji imported from data/sports.js (single source of truth)
 
 function buildNameIndex() {
   const seen = new Set()
@@ -243,7 +238,7 @@ export default function HeroSearch({ onSelect, index }) {
                   </>
                 ) : (
                   <>
-                    <span className="hero-search__result-sport">{SPORT_ICON[r.sport] ?? ''}</span>
+                    <span className="hero-search__result-sport">{SPORT_EMOJI[r.sport] ?? ''}</span>
                     <span className="hero-search__result-name">{r.name}</span>
                     <span className="hero-search__result-meta">
                       #{r.number} · {r.sport} · {r.tier}

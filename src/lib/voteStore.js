@@ -5,21 +5,20 @@
  */
 
 import { supabase } from './supabase.js'
-
-const LS_KEY = 'tnw_votes'
+import { VOTES } from './storageKeys.js'
 
 // ─── Local vote tracking ───────────────────────────────────────────────────
 
 function getLocalVotes() {
   try {
-    return JSON.parse(localStorage.getItem(LS_KEY) || '{}')
+    return JSON.parse(localStorage.getItem(VOTES) || '{}')
   } catch { return {} }
 }
 
 function setLocalVote(optionId) {
   const votes = getLocalVotes()
   votes[optionId] = Date.now()
-  localStorage.setItem(LS_KEY, JSON.stringify(votes))
+  localStorage.setItem(VOTES, JSON.stringify(votes))
 }
 
 export function hasVoted(optionId) {

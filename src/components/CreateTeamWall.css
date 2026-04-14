@@ -1,0 +1,206 @@
+/* CreateTeamWall — modal for starting a new team wall */
+
+/* Structural rules from .tnw-overlay. Only z-index override kept. */
+.ctw-overlay { z-index: 500; }
+
+.ctw-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 440px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: var(--space-5);
+  position: relative;
+}
+
+.ctw-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  color: var(--color-muted);
+  transition: color var(--motion-hover);
+}
+
+.ctw-close:hover {
+  color: var(--color-paper);
+}
+
+/* ── Header ─────────────────────────────────────────── */
+
+.ctw-header {
+  margin-bottom: var(--space-4);
+}
+
+.ctw-step-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.18em;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.ctw-title {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-h1);
+  color:          var(--color-paper);
+  letter-spacing: 0.04em;
+}
+
+/* ── Error ──────────────────────────────────────────── */
+
+.ctw-error {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.20);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+/* ── Fields ─────────────────────────────────────────── */
+
+.ctw-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ctw-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ctw-label > span {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+}
+
+.ctw-optional {
+  color: var(--ink-dim);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Inputs inherit .tnw-input. Selects mirror the input base + add a caret. */
+.ctw-select {
+  font-family:    var(--font-program);
+  font-size:      var(--text-body);
+  color:          var(--color-paper);
+  background:     var(--surface-2);
+  border:         1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding:        var(--space-2) var(--space-3);
+  padding-right:  36px;
+  outline:        none;
+  transition:     border-color var(--motion-hover);
+  appearance:     none;
+  background-image:    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239BA7B4' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:   no-repeat;
+  background-position: right 12px center;
+}
+
+.ctw-select:focus {
+  border-color: var(--border-strong);
+}
+
+.ctw-input--small {
+  max-width: 120px;
+}
+
+/* ── Chips (level selector) ─────────────────────────── */
+
+.ctw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ctw-chip {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-low);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  transition: all var(--motion-hover);
+}
+
+.ctw-chip:hover {
+  color: var(--ink-mid);
+  border-color: var(--border-medium);
+}
+
+.ctw-chip--active {
+  color: var(--color-paper);
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+}
+
+/* ── Color grid ─────────────────────────────────────── */
+
+.ctw-color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-2);
+}
+
+.ctw-color-swatch {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--motion-hover);
+}
+
+.ctw-color-swatch:hover {
+  transform: scale(1.08);
+}
+
+.ctw-color-swatch--active {
+  transform: scale(1.08);
+}
+
+/* ── Navigation buttons ─────────────────────────────── */
+
+.ctw-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.ctw-nav__spacer {
+  flex: 1;
+}
+
+/* Buttons inherit base from .tnw-btn (+ --ghost / --secondary / --primary)
+   in global.css. Local --back / --next / --submit modifiers exist only as
+   stable JSX hooks for any future wizard-specific overrides. */
+
+/* ── Spinner ────────────────────────────────────────── */
+
+.ctw-spinner {
+  animation: ctw-spin 800ms linear infinite;
+}
+
+@keyframes ctw-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Animations ─────────────────────────────────────── */
+
+/* ctw-fadeIn removed — uses shared tnw-overlayIn keyframe from global.css */

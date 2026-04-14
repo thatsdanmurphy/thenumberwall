@@ -836,14 +836,59 @@ export default function LegendTimeline({ timeline }) {
     }
   }, [])
 
+<<<<<<< HEAD
+=======
+  // Track latest touch Y so edge-accel loop can respond to finger lingering
+  const lastTouchYRef = useRef(null)
+  const edgeDirectionRef = useRef(0)  // -1 up, +1 down, 0 none
+
+  const runEdgeLoop = useCallback(() => {
+    if (!scrubRef.current) { edgeAnimRef.current = null; return }
+    const canvas = vCanvasRef.current
+    if (!canvas) { edgeAnimRef.current = null; return }
+    const rect = canvas.getBoundingClientRect()
+    const h = rect.height
+    const n = gamesRef.current.length
+    const edgeZone = h * 0.18
+    const touchY = lastTouchYRef.current
+    if (touchY == null) { edgeAnimRef.current = null; return }
+    const relY = touchY - rect.top
+
+    let dir = 0, speed = 0
+    if (relY < edgeZone) {
+      dir = -1
+      // closer to top = faster; up to ~20 games/frame at the very edge
+      const t = Math.max(0, Math.min(1, 1 - relY / edgeZone))
+      speed = Math.max(1, Math.round(t * t * 20))
+    } else if (relY > h - edgeZone) {
+      dir = 1
+      const t = Math.max(0, Math.min(1, 1 - (h - relY) / edgeZone))
+      speed = Math.max(1, Math.round(t * t * 20))
+    }
+
+    if (dir === 0) { edgeAnimRef.current = null; edgeDirectionRef.current = 0; return }
+
+    const cur = pendingScrubIdx.current ?? (dir < 0 ? 0 : n - 1)
+    const next = Math.max(0, Math.min(n - 1, cur + dir * speed))
+    applyScrubIndex(next)
+    edgeDirectionRef.current = dir
+    edgeAnimRef.current = requestAnimationFrame(runEdgeLoop)
+  }, [applyScrubIndex])
+
+>>>>>>> feature/team-walls
   const vScrubToIndex = useCallback((touchY) => {
     const canvas = vCanvasRef.current
     const positions = vGamePositionsRef.current
     if (!canvas || !positions) return
+<<<<<<< HEAD
+=======
+    lastTouchYRef.current = touchY
+>>>>>>> feature/team-walls
     const rect = canvas.getBoundingClientRect()
     const relY = touchY - rect.top
     const h = rect.height
     const n = gamesRef.current.length
+<<<<<<< HEAD
     const edgeZone = h * 0.12  // top/bottom 12% triggers acceleration
 
     // Cancel any running edge animation
@@ -874,6 +919,21 @@ export default function LegendTimeline({ timeline }) {
       edgeAnimRef.current = requestAnimationFrame(runEdge)
       return
     }
+=======
+    const edgeZone = h * 0.18
+
+    // If in edge zone, ensure edge loop is running
+    if (relY < edgeZone || relY > h - edgeZone) {
+      if (!edgeAnimRef.current) {
+        edgeAnimRef.current = requestAnimationFrame(runEdgeLoop)
+      }
+      return
+    }
+
+    // Out of edge zone — cancel any edge animation
+    if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
+    edgeDirectionRef.current = 0
+>>>>>>> feature/team-walls
 
     // Normal zone — direct position mapping
     const y = Math.max(0, Math.min(relY, h - 1))
@@ -883,7 +943,11 @@ export default function LegendTimeline({ timeline }) {
       if (positions[m + 1] <= y) lo = m + 1; else hi = m
     }
     applyScrubIndex(lo)
+<<<<<<< HEAD
   }, [applyScrubIndex])
+=======
+  }, [applyScrubIndex, runEdgeLoop])
+>>>>>>> feature/team-walls
 
   const handleVTouchStart = useCallback((e) => {
     e.preventDefault()
@@ -900,6 +964,11 @@ export default function LegendTimeline({ timeline }) {
 
   const handleVTouchEnd = useCallback(() => {
     scrubRef.current = false
+<<<<<<< HEAD
+=======
+    lastTouchYRef.current = null
+    edgeDirectionRef.current = 0
+>>>>>>> feature/team-walls
     if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
   }, [])
 
@@ -1075,7 +1144,25 @@ export default function LegendTimeline({ timeline }) {
         onTouchMove={handleVTouchMove}
         onTouchEnd={handleVTouchEnd}
       >
+<<<<<<< HEAD
         {/* Bar fills the screen — touch anywhere to scrub */}
+=======
+        {/* Persistent top header — always shows Brady #12 */}
+        <div className="vtl__top-header">
+          <span className="vtl__top-number">12</span>
+          <div className="vtl__top-name-block">
+            <span className="vtl__top-name">{timeline.player_name}</span>
+            <span className="vtl__top-meta">
+              {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+            </span>
+          </div>
+          {activeEra && (
+            <span className="vtl__top-era">{activeEra.label}</span>
+          )}
+        </div>
+
+        {/* Bar fills remaining space — touch anywhere to scrub */}
+>>>>>>> feature/team-walls
         <div className="vtl__bar-area">
           <div className="vtl__bar-col">
             <canvas
@@ -1109,6 +1196,7 @@ export default function LegendTimeline({ timeline }) {
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Bottom card — unified scrub marker + info display */}
         <div className="vtl__card">
           <div className="vtl__card-header">
@@ -1169,6 +1257,49 @@ export default function LegendTimeline({ timeline }) {
           <div className="vtl__card-grip">
             <span /><span /><span />
           </div>
+=======
+        {/* Bottom card — game info only (no Brady duplicate) */}
+        <div className="vtl__card">
+          {activeGame ? (
+            <div className="vtl__card-game">
+              {activeGame.is_bye ? (
+                <div className="vtl__card-bye">Bye Week · {activeGame.season}</div>
+              ) : activeGame.is_dnp ? (
+                <div className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''} · {activeGame.season}</div>
+              ) : (
+                <>
+                  <div className="vtl__card-matchup">
+                    <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
+                      {activeGame.result}
+                    </span>
+                    {' '}{activeGame.score}
+                    <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
+                  </div>
+                  <div className="vtl__card-detail-row">
+                    {activeGame.stats?.pass_yards != null && (
+                      <span className="vtl__card-stats">
+                        {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
+                        {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
+                      </span>
+                    )}
+                    <span className="vtl__card-meta-line">
+                      {activeGame.week} · {activeGame.season}
+                      <span className="vtl__card-glow"> · {activeGame.glow_score?.toFixed(1)}</span>
+                    </span>
+                  </div>
+                  {activeGame.moments?.length > 0 && (
+                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
+                      {getMomentIcon(activeGame.moments[0])}
+                      <span>{activeGame.moments[0].moment_name}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="vtl__card-hint">Touch the bar, slide to explore</div>
+          )}
+>>>>>>> feature/team-walls
         </div>
       </div>
     </div>
