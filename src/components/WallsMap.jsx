@@ -90,7 +90,9 @@ export default function WallsMap() {
   }, [])
 
   const nodes = useMemo(() => groupByTown(walls || []), [walls])
-  const isEmpty = walls !== null && nodes.length === 0
+  // Show seed pulse when the map has nothing to light (loading OR zero walls)
+  // so the stage is never blank. Live dots only appear when we have real data.
+  const showSeed = walls === null || nodes.length === 0
 
   // Projection scale tuned for the left column (≈500–650px wide).
   // AlbersUsa handles AK/HI insets automatically.
@@ -101,10 +103,10 @@ export default function WallsMap() {
       <div className="walls-map__header">
         <span className="walls-map__eyebrow">THE MAP</span>
         <h3 className="walls-map__title">
-          {isEmpty ? 'The first wall lights here.' : 'Every wall is a light.'}
+          {showSeed ? 'The first wall lights here.' : 'Every wall is a light.'}
         </h3>
         <p className="walls-map__sub">
-          {isEmpty
+          {showSeed
             ? 'One pulse, waiting. Start a team wall and a new dot joins the map.'
             : 'Each town with an active wall glows. Tap a dot to visit that town.'}
         </p>
@@ -135,8 +137,8 @@ export default function WallsMap() {
             }
           </Geographies>
 
-          {/* Zero-state: single pulsing seed dot */}
-          {isEmpty && (
+          {/* Seed pulse — shown on loading + zero-state */}
+          {showSeed && (
             <MapDot
               coords={SEED_COORDS}
               hue={SPORT_HUE.default}
@@ -148,7 +150,7 @@ export default function WallsMap() {
           )}
 
           {/* Live state: one dot per town, sport-colored */}
-          {!isEmpty && nodes.map(node => {
+          {!showSeed && nodes.map(node => {
             const dominantSport = node.sports[0]
             const count = node.walls.length
             const label = count === 1

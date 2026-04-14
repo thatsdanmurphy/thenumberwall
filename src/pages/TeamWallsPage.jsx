@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Users, MapPin, Flame } from 'lucide-react'
+import { Plus, Search, Users, Flame } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -87,6 +87,15 @@ export default function TeamWallsPage() {
           </div>
 
           <WallsMap />
+
+          <aside className="twb-note">
+            <p className="twb-note__body">
+              Every jersey number has a story. This is where your school's gets
+              told — number by number, name by name. Walls grow when alumni,
+              players, and parents show up and remember. Start one for your team.
+            </p>
+            <p className="twb-note__sig">— Dan, founder</p>
+          </aside>
         </div>
 
         {/* ── Right: Search + Cards ────────────────────────── */}
@@ -153,6 +162,12 @@ export default function TeamWallsPage() {
                           </div>
                           <div className="twb-card__meta">
                             <span>{sportLabel}</span>
+                            {wall.town && (
+                              <>
+                                <span className="twb-card__meta-sep" aria-hidden="true">·</span>
+                                <span className="twb-card__meta-town">{wall.town}, {wall.state}</span>
+                              </>
+                            )}
                           </div>
                           <div className="twb-card__signals">
                             {wall.entryCount > 0 && (
@@ -174,18 +189,6 @@ export default function TeamWallsPage() {
                         </div>
                       </div>
                     </button>
-                    {/* Location as a separate affordance — clicking the town
-                        drills into the town browse, not the wall. */}
-                    {wall.town_slug && (
-                      <button
-                        className="twb-card__town"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/walls/town/${wall.town_slug}`) }}
-                        aria-label={`See all walls in ${wall.town}, ${wall.state}`}
-                      >
-                        <MapPin size={11} />
-                        <span>{wall.town}, {wall.state}</span>
-                      </button>
-                    )}
                   </div>
                 )
               })}

@@ -41,6 +41,34 @@
   }
 }
 
+/* ── Founder's note — quiet editorial voice under the map ──────────────── */
+
+.twb-note {
+  margin-top: var(--space-4);
+  padding: var(--space-4) var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.twb-note__body {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  line-height: 1.7;
+  color: var(--ink-mid);
+  max-width: 52ch;
+  margin: 0 auto;
+  font-style: italic;
+}
+
+.twb-note__sig {
+  margin-top: var(--space-2);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.18em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+}
+
 /* ── Hero ──────────────────────────────────────────────────────────────────── */
 
 .twb-hero {
@@ -100,12 +128,20 @@
 }
 
 /* Input sits inside the search row; use .tnw-input base but strip the chrome
-   since the parent .twb-search provides the border/bg. */
-.twb-search__input {
+   since the parent .twb-search provides the border/bg. Specificity bumped
+   so .tnw-input's border/bg can't leak back in. */
+.twb-search .twb-search__input,
+.twb-search input.twb-search__input {
   flex:       1;
-  background: none;
+  background: transparent;
   border:     none;
   padding:    0;
+  box-shadow: none;
+  outline:    none;
+}
+.twb-search .twb-search__input:focus {
+  border:     none;
+  box-shadow: none;
 }
 
 /* Ghost-style search button with a heat accent. */
@@ -201,6 +237,14 @@
   letter-spacing: 0.12em;
   color: var(--color-muted);
   text-transform: uppercase;
+}
+
+.twb-card__meta-sep {
+  opacity: 0.55;
+}
+
+.twb-card__meta-town {
+  letter-spacing: 0.14em;
 }
 
 .twb-card__location {
