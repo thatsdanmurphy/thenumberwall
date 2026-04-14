@@ -60,11 +60,7 @@
   font-size: 2rem;
   line-height: 1;
   color: var(--color-paper);
-<<<<<<< HEAD
   margin: 0 0 4px 0;
-=======
-  margin: 0 0 var(--space-1) 0;
->>>>>>> feature/team-walls
   letter-spacing: -0.01em;
 }
 
@@ -102,7 +98,7 @@
 .legend-timeline__era-labels {
   position: relative;
   height: 38px;
-  margin-bottom: var(--space-2);
+  margin-bottom: 8px;
   overflow: visible;
 }
 
@@ -127,7 +123,7 @@
 
 .era-label__name {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
+  font-size: 0.75rem;
   color: rgba(200, 195, 185, 0.5);
   white-space: nowrap;
   overflow: visible;
@@ -142,7 +138,7 @@
 
 .era-label__tagline {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: 0.6875rem;
   color: rgba(200, 195, 185, 0.55);
   font-style: italic;
   white-space: nowrap;
@@ -164,7 +160,7 @@
 
 .legend-timeline__toggle {
   display: flex;
-  gap: var(--space-1);
+  gap: 4px;
   margin-bottom: var(--space-3);
 }
 
@@ -174,11 +170,11 @@
   gap: 5px;
   padding: 5px 12px;
   border: 1px solid rgba(200, 195, 185, 0.12);
-  border-radius: var(--radius-md);
+  border-radius: 6px;
   background: transparent;
   color: rgba(200, 195, 185, 0.4);
   font-family: var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: 0.6875rem;
   letter-spacing: 0.03em;
   cursor: pointer;
   transition: all 150ms ease-out;
@@ -201,7 +197,7 @@
   position: relative;
   width: 100%;
   height: 100px;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   overflow: hidden;
   background: rgb(3, 3, 12);
   box-shadow:
@@ -223,7 +219,7 @@
   display: flex;
   width: 100%;
   height: 100px;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   overflow: hidden;
   background: rgb(3, 3, 12);
   gap: 1px;
@@ -315,7 +311,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
+  font-size: 0.75rem;
   color: rgba(200, 195, 185, 0.45);
   letter-spacing: 0.05em;
   box-sizing: border-box;
@@ -328,7 +324,7 @@
   transform: translate(-50%, -100%);
   background: rgba(6, 8, 18, 0.95);
   border: 1px solid rgba(255, 230, 120, 0.1);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   padding: 10px 14px;
   pointer-events: none;
   z-index: 10;
@@ -350,13 +346,13 @@
 
 .timeline-tooltip__week {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
+  font-size: 0.75rem;
   color: rgba(200, 195, 185, 0.75);
 }
 
 .timeline-tooltip__type {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: 0.6875rem;
   color: rgba(255, 220, 100, 0.9);
   letter-spacing: 0.06em;
   font-weight: 600;
@@ -366,7 +362,7 @@
   font-family: var(--font-program);
   font-size: 0.875rem;
   color: var(--color-paper);
-  margin-bottom: var(--space-1);
+  margin-bottom: 4px;
 }
 
 .timeline-tooltip__result { font-family: var(--font-banner); font-size: 0.9375rem; }
@@ -376,17 +372,17 @@
 
 .timeline-tooltip__stats {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
+  font-size: 0.75rem;
   color: rgba(200, 195, 185, 0.75);
-  margin-bottom: var(--space-1);
+  margin-bottom: 4px;
 }
 
 .timeline-tooltip__moment {
   font-family: var(--font-banner);
   font-size: 0.875rem;
   color: rgba(255, 230, 100, 0.95);
-  margin-top: var(--space-1);
-  padding-top: var(--space-1);
+  margin-top: 4px;
+  padding-top: 4px;
   border-top: 1px solid rgba(255, 230, 120, 0.1);
 }
 
@@ -394,21 +390,21 @@
 
 .timeline-tooltip__glow {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: 0.6875rem;
   color: rgba(200, 195, 185, 0.45);
-  margin-top: var(--space-1);
+  margin-top: 4px;
 }
 
 .timeline-tooltip__bye { font-family: var(--font-scoreboard); font-size: 0.8125rem; color: rgba(200, 195, 185, 0.7); }
 .timeline-tooltip__dnp { font-family: var(--font-banner); font-size: 0.8125rem; color: #FF4D5E; }
-.timeline-tooltip__reason { font-family: var(--font-program); font-size: var(--text-small); color: rgba(200, 195, 185, 0.7); margin-top: 2px; }
+.timeline-tooltip__reason { font-family: var(--font-program); font-size: 0.75rem; color: rgba(200, 195, 185, 0.7); margin-top: 2px; }
 
 /* ─── Moment Markers (icons + labels below the bar) ─────────────────────── */
 
 .legend-timeline__markers {
   position: relative;
   height: 36px;
-  margin-top: var(--space-1);
+  margin-top: 4px;
   overflow: visible;
 }
 
@@ -427,7 +423,7 @@
 /* Label hidden by default — icon only */
 .moment-marker__label {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
+  font-size: 0.625rem;
   color: rgba(200, 195, 185, 0.8);
   white-space: nowrap;
   letter-spacing: 0.02em;
@@ -544,7 +540,7 @@
 
 .legend-timeline__key-label {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: 0.6875rem;
   color: rgba(200, 195, 185, 0.5);
   letter-spacing: 0.02em;
   font-style: italic;
@@ -557,7 +553,6 @@
   display: none;
 }
 
-<<<<<<< HEAD
 /* ── Bar area — fills remaining space, full touch target ── */
 .vtl__bar-area {
   position: relative;
@@ -669,24 +664,6 @@
 }
 
 .vtl__card-number {
-=======
-/* ── Persistent top header — always visible #12 Brady ── */
-.vtl__top-header {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px var(--space-3) 10px;
-  border-bottom: 1px solid rgba(255, 230, 120, 0.06);
-  background: rgba(6, 8, 18, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  height: 58px;
-  box-sizing: border-box;
-}
-
-.vtl__top-number {
->>>>>>> feature/team-walls
   font-family: var(--font-banner);
   font-size: 1.75rem;
   line-height: 0.85;
@@ -694,21 +671,13 @@
   text-shadow:
     0 0 20px rgba(255, 220, 80, 0.3),
     0 0 40px rgba(255, 195, 45, 0.12);
-<<<<<<< HEAD
 }
 
 .vtl__card-name-block {
-=======
-  flex-shrink: 0;
-}
-
-.vtl__top-name-block {
->>>>>>> feature/team-walls
   display: flex;
   flex-direction: column;
   gap: 1px;
   min-width: 0;
-<<<<<<< HEAD
 }
 
 .vtl__card-name {
@@ -813,268 +782,6 @@
   color: rgba(200, 195, 185, 0.3);
   font-style: italic;
   padding-top: 4px;
-=======
-  flex: 1;
-}
-
-.vtl__top-name {
-  font-family: var(--font-banner);
-  font-size: 1rem;
-  color: var(--color-paper);
-  line-height: 1;
-}
-
-.vtl__top-meta {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.5);
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.vtl__top-era {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  color: rgba(255, 230, 120, 0.6);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-/* ── Bar area — fills remaining space, full touch target ── */
-.vtl__bar-area {
-  position: relative;
-  flex: 1 1 auto;
-  display: flex;
-  justify-content: center;
-  min-height: 0;
-  padding: var(--space-3) 0;
-}
-
-.vtl__bar-col {
-  position: relative;
-  width: 65%;
-  max-width: 200px;
-  height: 100%;
-}
-
-.vtl__canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius-lg);
-  pointer-events: none;
-}
-
-/* Era year ticks — along the left edge of the bar */
-.vtl__era-tick {
-  position: absolute;
-  left: -28px;
-  transform: translateY(-50%);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.3);
-  letter-spacing: 0.04em;
-  pointer-events: none;
-}
-
-.vtl__era-tick--active {
-  color: rgba(255, 230, 120, 0.65);
-}
-
-/* Scrub line — thin horizontal indicator, positioned via direct DOM */
-.vtl__scrub-indicator {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 0;
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-  z-index: 5;
-  will-change: top;
-}
-
-.vtl__scrub-line {
-  flex: 1;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 5%,
-    rgba(255, 230, 120, 0.5) 20%,
-    rgba(255, 230, 120, 0.5) 80%,
-    transparent 95%
-  );
-  box-shadow: 0 0 8px rgba(255, 220, 80, 0.25);
-}
-
-/* ── Bottom card — game info only (Brady header is persistent up top) ── */
-.vtl__card {
-  position: relative;
-  z-index: 10;
-  background: rgba(6, 8, 18, 0.95);
-  border-top: 1px solid rgba(255, 230, 120, 0.12);
-  padding: 12px var(--space-3) 14px;
-  height: 110px;
-  box-sizing: border-box;
-  box-shadow:
-    0 -8px 32px rgba(0, 0, 0, 0.7),
-    0 -2px 8px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  flex-shrink: 0;
-  overflow: hidden;
-  touch-action: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Grip bar at top of card — "grab me" indicator */
-.vtl__card-grip {
-  display: flex;
-  justify-content: center;
-  gap: 0;
-  padding: var(--space-2) 0 var(--space-1);
-}
-
-.vtl__card-grip span {
-  display: block;
-  width: 32px;
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(255, 230, 120, 0.25);
-}
-
-.vtl__card-header {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: var(--space-1);
-}
-
-.vtl__card-number {
-  font-family: var(--font-banner);
-  font-size: 1.75rem;
-  line-height: 0.85;
-  color: rgba(255, 230, 120, 0.85);
-  text-shadow:
-    0 0 20px rgba(255, 220, 80, 0.3),
-    0 0 40px rgba(255, 195, 45, 0.12);
-}
-
-.vtl__card-name-block {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
-.vtl__card-name {
-  font-family: var(--font-banner);
-  font-size: 1rem;
-  color: var(--color-paper);
-  line-height: 1;
-}
-
-.vtl__card-meta {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.5);
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Game info */
-.vtl__card-game {
-  animation: vtl-card-in 100ms ease-out;
-}
-
-.vtl__card-matchup {
-  font-family: var(--font-program);
-  font-size: 0.875rem;
-  color: var(--color-paper);
-  line-height: 1.3;
-}
-
-.vtl__card-result {
-  font-family: var(--font-banner);
-  font-size: 0.9375rem;
-}
-
-.vtl__card-result--w { color: rgba(255, 230, 100, 0.95); }
-.vtl__card-result--l { color: #FF4D5E; }
-
-.vtl__card-opponent {
-  color: rgba(200, 195, 185, 0.75);
-}
-
-/* Stats + meta on one row */
-.vtl__card-detail-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-top: 3px;
-}
-
-.vtl__card-stats {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  color: rgba(200, 195, 185, 0.6);
-  letter-spacing: 0.02em;
-}
-
-.vtl__card-meta-line {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.35);
-  letter-spacing: 0.03em;
-}
-
-.vtl__card-glow {
-  color: rgba(200, 195, 185, 0.25);
-}
-
-.vtl__card-moment {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: var(--space-1);
-  padding-top: var(--space-1);
-  border-top: 1px solid rgba(255, 230, 120, 0.1);
-  font-family: var(--font-banner);
-  font-size: var(--text-small);
-  color: rgba(255, 230, 100, 0.9);
-}
-
-.vtl__card-moment--sacred { color: rgba(255, 252, 220, 1); }
-.vtl__card-moment--sacred svg { filter: drop-shadow(0 0 4px rgba(255, 220, 80, 0.6)); }
-.vtl__card-moment--negative { color: rgba(255, 75, 90, 0.9); border-top-color: rgba(255, 75, 90, 0.15); }
-.vtl__card-moment svg { width: 13px; height: 13px; flex-shrink: 0; }
-
-.vtl__card-bye {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
-  color: rgba(200, 195, 185, 0.5);
-}
-
-.vtl__card-dnp {
-  font-family: var(--font-banner);
-  font-size: var(--text-small);
-  color: #FF4D5E;
-}
-
-.vtl__card-hint {
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: rgba(200, 195, 185, 0.3);
-  font-style: italic;
-  padding-top: var(--space-1);
->>>>>>> feature/team-walls
 }
 
 @keyframes vtl-card-in {
