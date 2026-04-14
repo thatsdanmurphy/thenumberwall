@@ -567,7 +567,7 @@ export default function TeamWallPage() {
                     border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
                   }}
                 >
-                  <span className="tw-coach-tile__label">COACH</span>
+                  <span className="tw-coach-tile__label">COACHES</span>
                   <span className="tw-coach-tile__name">
                     {wall.coach_name || <span className="tw-coach-tile__empty">Add name</span>}
                   </span>
@@ -592,7 +592,7 @@ export default function TeamWallPage() {
               {coachView && !selected && (
                 <>
                   <div className="tw-panel-header">
-                    <div className="tw-coach-panel__title">HEAD COACH</div>
+                    <div className="tw-coach-panel__title">COACHES</div>
                     <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditing(false) }} aria-label="Close panel">
                       <X size={14} />
                     </button>
@@ -614,7 +614,7 @@ export default function TeamWallPage() {
                     </div>
                   ) : (
                     <form className="tw-add" onSubmit={handleCoachSave}>
-                      <span className="tw-add__label">EDIT COACH</span>
+                      <span className="tw-add__label">EDIT COACHES</span>
                       <input
                         type="text"
                         className="tnw-input tw-add__input"

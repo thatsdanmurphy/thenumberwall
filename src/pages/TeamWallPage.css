@@ -90,15 +90,15 @@
    micro scoreboard tag). Keeps the coach slot reading as part of the wall. */
 .tw-coach-tile__label {
   font-family:    var(--font-banner);
-  font-size:      0.75rem;
-  letter-spacing: 0.08em;
+  font-size:      0.55rem;
+  letter-spacing: 0.1em;
   color:          var(--ink-low);
   flex-shrink:    0;
   line-height:    1;
 }
 
 @media (min-width: 768px) {
-  .tw-coach-tile__label { font-size: var(--text-small); }
+  .tw-coach-tile__label { font-size: 0.625rem; }
 }
 
 .tw-coach-tile__name {
