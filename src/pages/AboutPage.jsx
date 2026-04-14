@@ -55,6 +55,7 @@ export default function AboutPage() {
           </Link>
         </section>
 
+        {/* Team Walls — Disabled until ready
         <hr className="about-page__rule" />
 
         <section className="about-page__section">
@@ -68,6 +69,7 @@ export default function AboutPage() {
             <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
           </Link>
         </section>
+        */}
 
         <hr className="about-page__rule" />
 

@@ -87,7 +87,7 @@ export default function WallPage() {
               </div>
             </div>
 
-            {/* Team Walls — below city boards */}
+            {/* Team Walls — Disabled until ready
             <div className="wall-page__team-walls">
               <p className="wall-page__cities-label">TEAM WALLS</p>
               <Link to="/walls" className="wall-page__city-card" onClick={() => track('team_walls_open')}>
@@ -96,6 +96,7 @@ export default function WallPage() {
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
             </div>
+            */}
           </div>
 
           <PlayerPanel

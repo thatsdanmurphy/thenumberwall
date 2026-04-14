@@ -7,8 +7,8 @@ import AboutPage      from './pages/AboutPage.jsx'
 import MyWallsPage    from './pages/MyWallsPage.jsx'
 import MyWallPage     from './pages/MyWallPage.jsx'
 import TimelinePage   from './pages/TimelinePage.jsx'
-import TeamWallsPage  from './pages/TeamWallsPage.jsx'
-import TeamWallPage   from './pages/TeamWallPage.jsx'
+// import TeamWallsPage  from './pages/TeamWallsPage.jsx'  // Disabled until ready
+// import TeamWallPage   from './pages/TeamWallPage.jsx'  // Disabled until ready
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
 export default function App() {
@@ -23,8 +23,8 @@ export default function App() {
         <Route path="/my-wall"   element={<MyWallsPage />} />
         <Route path="/my-wall/new" element={<MyWallsPage />} />
         <Route path="/wall/:slug" element={<MyWallPage />} />
-        <Route path="/walls"     element={<TeamWallsPage />} />
-        <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} />
+        {/* <Route path="/walls"     element={<TeamWallsPage />} /> — Disabled until ready */}
+        {/* <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} /> — Disabled until ready */}
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
         <Route path="*"          element={<NotFoundPage />} />
