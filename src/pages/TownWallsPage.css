@@ -1,0 +1,149 @@
+/* TownWallsPage — all walls in one town */
+
+.town-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.town-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) 0 var(--space-2);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.town-page__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.18em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+}
+
+.town-page__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h1);
+  color: var(--color-paper);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.town-page__sub {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--ink-mid);
+  margin: 0;
+}
+
+.town-page__loading,
+.town-page__empty {
+  padding: var(--space-7) var(--space-3);
+  text-align: center;
+  color: var(--ink-mid);
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ── Orgs ─────────────────────────────────────────────────────────────────── */
+
+.town-orgs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.town-org {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+.town-org__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.town-org__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.town-org__titling {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.town-org__name {
+  font-family: var(--font-banner);
+  font-size: var(--text-h3);
+  color: var(--color-paper);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.town-org__type {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.14em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+}
+
+.town-org__walls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.town-wall {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  color: var(--color-paper);
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  cursor: pointer;
+  transition: all var(--motion-hover);
+}
+
+.town-wall:hover {
+  background: var(--surface-3);
+  border-color: var(--border-medium);
+}
+
+.town-wall__icon {
+  color: var(--ink-mid);
+  flex-shrink: 0;
+}
+
+.town-wall__sport {
+  letter-spacing: 0.02em;
+}
+
+.town-page__add {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3) 0;
+}

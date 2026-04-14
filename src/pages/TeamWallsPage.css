@@ -211,3 +211,82 @@
   font-size: var(--text-small);
   color: var(--ink-dim);
 }
+
+/* ── BUILDING NOW enrichments ────────────────────────────────────────────── */
+
+/* Wrapper lets the location chip escape the clickable card, so clicking the
+   town doesn't drill into the wall. */
+.twb-card-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.twb-card__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.twb-card__hot {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px var(--space-1);
+  background: rgba(245, 140, 20, 0.14);
+  border: 1px solid rgba(245, 140, 20, 0.42);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  color: rgba(255, 170, 85, 1);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.twb-card__signals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 2px;
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  color: var(--ink-mid);
+}
+
+.twb-card__signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.twb-card__signal--dim {
+  color: var(--ink-low);
+}
+
+/* Town chip — own affordance, sits below the wall card. Click drills into
+   the town browse, not the wall. */
+.twb-card__town {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px var(--space-2);
+  margin-left: var(--space-3);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: all var(--motion-hover);
+}
+
+.twb-card__town:hover {
+  color: var(--color-paper);
+  border-color: var(--border-soft);
+  background: var(--surface-2);
+}

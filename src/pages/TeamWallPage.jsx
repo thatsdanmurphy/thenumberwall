@@ -9,13 +9,18 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil, Plus } from 'lucide-react'
+import { Loader, X, Pencil, Plus, MoreHorizontal, Trash2, EyeOff, Archive, Undo2, MapPin } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
 import WallGrid   from '../components/WallGrid.jsx'
-import { loadTeamWallByRoute, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall } from '../lib/teamWallStore.js'
+import {
+  loadTeamWallByRoute, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall,
+  isWallCreator, archiveWall, unarchiveWall, retireDaysLeft,
+  deleteOwnEntry, hideEntryAsCreator, canDeleteEntry, updateWallCoach,
+} from '../lib/teamWallStore.js'
+import { getSportMatchedLegends } from '../data/index.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import './WallPage.css'        // shared layout: wall-page__body, wall-page__grid-col
@@ -52,6 +57,18 @@ export default function TeamWallPage() {
   const [schoolSports, setSchoolSports] = useState([])
   const [showSportPicker, setShowSportPicker] = useState(false)
   const [addingSport, setAddingSport]         = useState(false)
+
+  // Coach detail / edit state
+  const [coachView, setCoachView]           = useState(false)  // panel showing coach detail
+  const [coachEditing, setCoachEditing]     = useState(false)
+  const [coachNameDraft, setCoachNameDraft] = useState('')
+  const [coachFactDraft, setCoachFactDraft] = useState('')
+  const [coachSubmitting, setCoachSubmitting] = useState(false)
+
+  // Wall settings menu + retire confirmation
+  const [showWallMenu, setShowWallMenu]   = useState(false)
+  const [confirmRetire, setConfirmRetire] = useState(false)
+  const [retireSubmitting, setRetireSubmitting] = useState(false)
 
   // Edit state — which entry is being edited
   const [editingId, setEditingId]     = useState(null)
@@ -94,6 +111,7 @@ export default function TeamWallPage() {
     setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
     setAddError(null); setAddSuccess(false); setShowAddForm(false)
     setEditingId(null); setYearFilter(null)
+    if (selected) setCoachView(false)
   }, [selected])
 
   // Build entry index: number → [entries]
@@ -110,6 +128,14 @@ export default function TeamWallPage() {
 
   const colorKey       = wall?.color_primary || 'orange'
   const selectedEntries = selected ? (entryIndex.get(selected) || []) : []
+
+  // Sport-matched legend bridge — same number, same sport, from the global
+  // legends dataset. Suppressed if cross-sport (keeps a baseball wall from
+  // surfacing Jordan #23). Only shown on tiles that actually have team entries.
+  const bridgeLegends = useMemo(() => {
+    if (!selected || !sport) return []
+    return getSportMatchedLegends(selected, sport)
+  }, [selected, sport])
 
   // Unique years across entries for this number (for filter chips)
   const uniqueYears = useMemo(() => {
@@ -216,14 +242,17 @@ export default function TeamWallPage() {
     }
   }
 
-  // Inline add sport — creates wall with same school info, navigates
+  // Inline add sport — creates wall with same school info, navigates.
+  // Joins the existing org via school_slug so we don't mint a duplicate.
   async function handleAddSport(sportId) {
     if (addingSport) return
     setAddingSport(true)
     try {
       await createTeamWall({
         school: wall.school,
-        city: wall.city,
+        existingSchoolSlug: wall.school_slug,
+        orgType: wall.org_type || 'public_hs',
+        town:  wall.town,
         state: wall.state,
         sport: sportId,
         colorPrimary: wall.color_primary,
@@ -243,6 +272,92 @@ export default function TeamWallPage() {
       setAddingSport(false)
     }
   }
+
+  // ── Coach tile interactions ──
+  function openCoachPanel() {
+    setSelected(null)
+    setCoachView(true)
+    setCoachEditing(false)
+  }
+
+  function startEditCoach() {
+    setCoachNameDraft(wall.coach_name || '')
+    setCoachFactDraft(wall.coach_fun_fact || '')
+    setCoachEditing(true)
+  }
+
+  async function handleCoachSave(e) {
+    e.preventDefault()
+    if (coachSubmitting) return
+    const nameCheck = checkProfanity(coachNameDraft)
+    if (!nameCheck.clean) { window.alert(nameCheck.reason); return }
+    if (coachFactDraft) {
+      const factCheck = checkProfanity(coachFactDraft)
+      if (!factCheck.clean) { window.alert(factCheck.reason); return }
+    }
+    setCoachSubmitting(true)
+    try {
+      await updateWallCoach(wall.id, { coachName: coachNameDraft, coachFunFact: coachFactDraft })
+      await fetchWall()
+      setCoachEditing(false)
+    } catch (err) {
+      console.error('Coach update error:', err)
+      window.alert('Could not save. Try again.')
+    } finally {
+      setCoachSubmitting(false)
+    }
+  }
+
+  // ── Wall retirement ──
+  async function handleRetire() {
+    if (retireSubmitting) return
+    setRetireSubmitting(true)
+    try {
+      await archiveWall(wall.id)
+      setConfirmRetire(false)
+      setShowWallMenu(false)
+      await fetchWall()
+    } catch (err) {
+      console.error('Retire error:', err)
+    } finally {
+      setRetireSubmitting(false)
+    }
+  }
+
+  async function handleUnretire() {
+    if (retireSubmitting) return
+    setRetireSubmitting(true)
+    try {
+      await unarchiveWall(wall.id)
+      await fetchWall()
+    } catch (err) {
+      console.error('Unretire error:', err)
+    } finally {
+      setRetireSubmitting(false)
+    }
+  }
+
+  // ── Entry deletion ──
+  // Contributors can delete their own. Creator can hide any entry on their wall.
+  async function handleDeleteEntry(entry) {
+    const mine = canDeleteEntry(entry)
+    const msg = mine
+      ? 'Delete your entry? This can\'t be undone.'
+      : 'Hide this entry from the wall? Only the original contributor can restore it.'
+    if (!window.confirm(msg)) return
+    try {
+      if (mine) await deleteOwnEntry(entry.id)
+      else      await hideEntryAsCreator(entry.id, wall.id)
+      await fetchWall()
+    } catch (err) {
+      console.error('Delete entry error:', err)
+      window.alert('Could not delete. Try again.')
+    }
+  }
+
+  const isCreator = isWallCreator(wall)
+  const isArchived = wall?.status === 'archived'
+  const daysLeft = isArchived ? retireDaysLeft(wall) : null
 
   // Close on Escape
   useEffect(() => {
@@ -278,7 +393,108 @@ export default function TeamWallPage() {
         back={{ label: 'Team Walls', onClick: () => navigate('/walls') }}
       />
 
+      {/* Archived banner — visible to everyone on an archived wall */}
+      {isArchived && (
+        <div className="tw-archived-banner" role="status">
+          <Archive size={14} />
+          <span>
+            This wall is being retired.
+            {typeof daysLeft === 'number' && daysLeft > 0 && (
+              <> {daysLeft} day{daysLeft === 1 ? '' : 's'} left to undo.</>
+            )}
+          </span>
+          {isCreator && (
+            <button
+              className="tnw-btn tnw-btn--ghost tw-archived-banner__undo"
+              onClick={handleUnretire}
+              disabled={retireSubmitting}
+            >
+              <Undo2 size={12} /> Undo
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Retire confirm modal */}
+      {confirmRetire && (
+        <div className="tnw-overlay tw-confirm-overlay" onClick={() => setConfirmRetire(false)}>
+          <div className="tw-confirm" onClick={e => e.stopPropagation()}>
+            <h3 className="tw-confirm__title">Retire this wall?</h3>
+            <p className="tw-confirm__body">
+              The wall goes read-only and hides after 7 days. You can undo any time before then.
+            </p>
+            <div className="tw-confirm__actions">
+              <button
+                className="tnw-btn tnw-btn--ghost"
+                onClick={() => setConfirmRetire(false)}
+                disabled={retireSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                className="tnw-btn tnw-btn--secondary tw-confirm__danger"
+                onClick={handleRetire}
+                disabled={retireSubmitting}
+              >
+                {retireSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Retire wall'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="tw-page">
+
+        {/* Town breadcrumb — renders the hierarchy: Town → Org (this wall).
+            Clicking the town opens the town browse. Only present when we
+            have a town_slug (legacy walls predate the migration). */}
+        {wall.town_slug && wall.town && (
+          <button
+            className="tw-town-crumb"
+            onClick={() => navigate(`/walls/town/${wall.town_slug}`)}
+          >
+            <MapPin size={11} />
+            <span>{wall.town}, {wall.state}</span>
+          </button>
+        )}
+
+        {/* Wall settings (creator-only) — floats top-right of the page body */}
+        {isCreator && (
+          <div className="tw-wall-menu">
+            <button
+              className="tw-wall-menu__trigger"
+              onClick={() => setShowWallMenu(p => !p)}
+              aria-label="Wall settings"
+              aria-expanded={showWallMenu}
+            >
+              <MoreHorizontal size={16} />
+            </button>
+            {showWallMenu && (
+              <>
+                <div className="tw-wall-menu__scrim" onClick={() => setShowWallMenu(false)} />
+                <div className="tw-wall-menu__dropdown" role="menu">
+                  {!isArchived && (
+                    <button
+                      className="tw-wall-menu__item tw-wall-menu__item--danger"
+                      onClick={() => { setShowWallMenu(false); setConfirmRetire(true) }}
+                    >
+                      <Archive size={13} /> Retire this wall
+                    </button>
+                  )}
+                  {isArchived && (
+                    <button
+                      className="tw-wall-menu__item"
+                      onClick={() => { setShowWallMenu(false); handleUnretire() }}
+                      disabled={retireSubmitting}
+                    >
+                      <Undo2 size={13} /> Undo retire
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* ── Sports nav — reuses SportsFilter pill styles ── */}
         <div className="sports-filter" role="group" aria-label="Sports at this school">
@@ -343,15 +559,17 @@ export default function TeamWallPage() {
               tileHeatFn={tileHeatFn}
               prefixContent={
                 <button
-                  className="tw-coach-tile"
+                  className={`tw-coach-tile${coachView ? ' tw-coach-tile--active' : ''}`}
+                  onClick={openCoachPanel}
+                  aria-label={wall.coach_name ? `Head coach ${wall.coach_name}` : 'Add head coach'}
                   style={{
                     background: TEAM_PALETTES[colorKey]?.[1]?.bg || 'rgba(255,255,255,0.03)',
                     border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
                   }}
                 >
-                  <span className="tw-coach-tile__label">HC</span>
+                  <span className="tw-coach-tile__label">COACH</span>
                   <span className="tw-coach-tile__name">
-                    {wall.coach_name || <span className="tw-coach-tile__empty">Add</span>}
+                    {wall.coach_name || <span className="tw-coach-tile__empty">Add name</span>}
                   </span>
                 </button>
               }
@@ -363,11 +581,70 @@ export default function TeamWallPage() {
             <div className="player-panel__handle" aria-hidden="true" />
             <div className="player-panel__inner">
 
-              {!selected && (
+              {!selected && !coachView && (
                 <div className="player-panel__idle">
                   <div className="player-panel__idle-wall">PICK A NUMBER.</div>
                   <div className="player-panel__idle-prompt">See who wore it — or add a name.</div>
                 </div>
+              )}
+
+              {/* Coach detail / edit panel */}
+              {coachView && !selected && (
+                <>
+                  <div className="tw-panel-header">
+                    <div className="tw-coach-panel__title">HEAD COACH</div>
+                    <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditing(false) }} aria-label="Close panel">
+                      <X size={14} />
+                    </button>
+                  </div>
+
+                  {!coachEditing ? (
+                    <div className="tw-coach-panel">
+                      <div className="tw-coach-panel__name">
+                        {wall.coach_name || <span className="tw-coach-panel__empty">No coach added yet.</span>}
+                      </div>
+                      {wall.coach_fun_fact && (
+                        <div className="tw-coach-panel__fact">{wall.coach_fun_fact}</div>
+                      )}
+                      {!isArchived && isCreator && (
+                        <button className="tnw-btn tnw-btn--secondary tw-coach-panel__edit" onClick={startEditCoach}>
+                          <Pencil size={12} /> {wall.coach_name ? 'Edit' : 'Add coach'}
+                        </button>
+                      )}
+                      {!isCreator && !wall.coach_name && (
+                        <p className="tw-coach-panel__hint">Only the wall creator can add the coach.</p>
+                      )}
+                    </div>
+                  ) : (
+                    <form className="tw-add" onSubmit={handleCoachSave}>
+                      <span className="tw-add__label">EDIT COACH</span>
+                      <input
+                        type="text"
+                        className="tnw-input tw-add__input"
+                        placeholder="Coach name"
+                        value={coachNameDraft}
+                        onChange={e => setCoachNameDraft(e.target.value)}
+                        autoFocus
+                      />
+                      <input
+                        type="text"
+                        className="tnw-input tw-add__input"
+                        placeholder="Fun fact (optional)"
+                        value={coachFactDraft}
+                        onChange={e => setCoachFactDraft(e.target.value.slice(0, 140))}
+                        maxLength={140}
+                      />
+                      <div className="tw-add__row">
+                        <button type="submit" className="tnw-btn tnw-btn--secondary tw-add__submit" disabled={coachSubmitting}>
+                          {coachSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Save'}
+                        </button>
+                        <button type="button" className="tnw-btn tnw-btn--secondary tw-add__submit" onClick={() => setCoachEditing(false)}>
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </>
               )}
 
               {selected && (
@@ -444,9 +721,21 @@ export default function TeamWallPage() {
                               <div className="player-card__info">
                                 <div className="player-card__name-row">
                                   <span className="player-card__name">{entry.name}</span>
-                                  <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
-                                    <Pencil size={11} />
-                                  </button>
+                                  {!isArchived && (
+                                    <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
+                                      <Pencil size={11} />
+                                    </button>
+                                  )}
+                                  {!isArchived && (canDeleteEntry(entry) || isCreator) && (
+                                    <button
+                                      className="tw-entry__delete"
+                                      onClick={() => handleDeleteEntry(entry)}
+                                      aria-label={canDeleteEntry(entry) ? 'Delete your entry' : 'Hide this entry'}
+                                      title={canDeleteEntry(entry) ? 'Delete your entry' : 'Hide from wall (creator)'}
+                                    >
+                                      {canDeleteEntry(entry) ? <Trash2 size={11} /> : <EyeOff size={11} />}
+                                    </button>
+                                  )}
                                 </div>
                                 <div className="player-card__badges">
                                   {entry.position && <span className="player-card__badge player-card__badge--dim">{entry.position}</span>}
@@ -461,17 +750,40 @@ export default function TeamWallPage() {
                     </div>
                   ) : (
                     <div className="tw-empty-number">
-                      <span className="tw-empty-number__text">
-                        {yearFilter
-                          ? `No one from '${String(yearFilter).slice(-2)} wore #${selected} yet.`
-                          : `Remember who wore #${selected}?`
-                        }
-                      </span>
+                      {yearFilter ? (
+                        <span className="tw-empty-number__text">
+                          No one from '{String(yearFilter).slice(-2)} wore #{selected} yet.
+                        </span>
+                      ) : (
+                        <>
+                          <span className="tw-empty-number__lead">No one's here yet.</span>
+                          <span className="tw-empty-number__text">
+                            Remember who wore #{selected} at {wall.school}? Put a name on it.
+                          </span>
+                        </>
+                      )}
                     </div>
                   )}
 
-                  {/* Add a player — button toggles form */}
-                  {!showAddForm ? (
+                  {/* Sport-matched bridge — same number, same sport, from global legends */}
+                  {bridgeLegends.length > 0 && (
+                    <div className="tw-bridge">
+                      <div className="tw-bridge__title">
+                        ELSEWHERE AT #{selected}
+                      </div>
+                      <ul className="tw-bridge__list">
+                        {bridgeLegends.slice(0, 3).map((legend, i) => (
+                          <li key={`${legend.name}-${i}`} className="tw-bridge__item">
+                            <span className="tw-bridge__name">{legend.name}</span>
+                            {legend.team && <span className="tw-bridge__meta">{legend.team}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Add a player — hidden on archived walls (read-only) */}
+                  {!isArchived && (!showAddForm ? (
                     <button className="player-panel__add-legend" onClick={() => setShowAddForm(true)}>
                       + Add a Player
                     </button>
@@ -497,7 +809,7 @@ export default function TeamWallPage() {
                         <button type="button" className="tnw-btn tnw-btn--secondary tw-add__submit" onClick={() => setShowAddForm(false)}>Cancel</button>
                       </div>
                     </form>
-                  )}
+                  ))}
                 </>
               )}
             </div>

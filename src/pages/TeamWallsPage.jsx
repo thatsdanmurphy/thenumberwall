@@ -7,12 +7,12 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Users, MapPin } from 'lucide-react'
+import { Plus, Search, Users, MapPin, Flame } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
 import CreateTeamWall from '../components/CreateTeamWall.jsx'
-import { getActiveWalls, browseTeamWalls, slugify } from '../lib/teamWallStore.js'
+import { getActiveWallsWithSignals, browseTeamWalls, slugify } from '../lib/teamWallStore.js'
 import { TEAM_PALETTES } from '../data/teamColors.js'
 import './TeamWallsPage.css'
 
@@ -27,7 +27,7 @@ export default function TeamWallsPage() {
 
   useEffect(() => {
     document.title = 'Team Walls | The Number Wall'
-    getActiveWalls(5)
+    getActiveWallsWithSignals(5)
       .then(setActiveWalls)
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -49,6 +49,21 @@ export default function TeamWallsPage() {
 
   function navigateToWall(wall) {
     navigate(`/walls/${wall.school_slug}/${wall.sport}`)
+  }
+
+  // Compact "last active" string. Hours up to 23, then days up to 30, then date.
+  function formatSince(iso) {
+    if (!iso) return null
+    const now = Date.now()
+    const then = new Date(iso).getTime()
+    const mins = Math.floor((now - then) / 60000)
+    if (mins < 1)      return 'just now'
+    if (mins < 60)     return `${mins}m ago`
+    const hrs = Math.floor(mins / 60)
+    if (hrs < 24)      return `${hrs}h ago`
+    const days = Math.floor(hrs / 24)
+    if (days < 30)     return `${days}d ago`
+    return new Date(iso).toLocaleDateString()
   }
 
   const wallsToShow = searchResults !== null ? searchResults : activeWalls
@@ -111,29 +126,64 @@ export default function TeamWallsPage() {
                 const palette = TEAM_PALETTES[wall.color_primary] || TEAM_PALETTES.orange
                 const accent  = palette[3] // "hot" level
                 const sportLabel = wall.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                const since = formatSince(wall.lastActivityAt)
+                // "Hot" if there's been activity in the last 24h
+                const isHot = wall.lastActivityAt
+                  && (Date.now() - new Date(wall.lastActivityAt).getTime()) < 24 * 60 * 60 * 1000
 
                 return (
-                  <button
-                    key={wall.id}
-                    className="twb-card"
-                    onClick={() => navigateToWall(wall)}
-                  >
-                    <div className="twb-card__content">
-                      <span className="twb-card__dot" style={{ background: accent.bg }} />
-                      <div className="twb-card__text">
-                        <span className="twb-card__school">
-                          {wall.school}
-                        </span>
-                        <div className="twb-card__meta">
-                          <span>{sportLabel}</span>
-                        </div>
-                        <div className="twb-card__location">
-                          <MapPin size={11} />
-                          <span>{wall.city}, {wall.state}</span>
+                  <div key={wall.id} className="twb-card-wrap">
+                    <button
+                      className="twb-card"
+                      onClick={() => navigateToWall(wall)}
+                    >
+                      <div className="twb-card__content">
+                        <span className="twb-card__dot" style={{ background: accent.bg }} />
+                        <div className="twb-card__text">
+                          <div className="twb-card__top">
+                            <span className="twb-card__school">{wall.school}</span>
+                            {isHot && (
+                              <span className="twb-card__hot" title="Active in the last 24 hours">
+                                <Flame size={10} /> HOT
+                              </span>
+                            )}
+                          </div>
+                          <div className="twb-card__meta">
+                            <span>{sportLabel}</span>
+                          </div>
+                          <div className="twb-card__signals">
+                            {wall.entryCount > 0 && (
+                              <span className="twb-card__signal">
+                                {wall.entryCount} {wall.entryCount === 1 ? 'name' : 'names'}
+                              </span>
+                            )}
+                            {wall.contributorCount > 0 && (
+                              <span className="twb-card__signal">
+                                <Users size={10} /> {wall.contributorCount}
+                              </span>
+                            )}
+                            {since && (
+                              <span className="twb-card__signal twb-card__signal--dim">
+                                {since}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </button>
+                    </button>
+                    {/* Location as a separate affordance — clicking the town
+                        drills into the town browse, not the wall. */}
+                    {wall.town_slug && (
+                      <button
+                        className="twb-card__town"
+                        onClick={(e) => { e.stopPropagation(); navigate(`/walls/town/${wall.town_slug}`) }}
+                        aria-label={`See all walls in ${wall.town}, ${wall.state}`}
+                      >
+                        <MapPin size={11} />
+                        <span>{wall.town}, {wall.state}</span>
+                      </button>
+                    )}
+                  </div>
                 )
               })}
             </div>
