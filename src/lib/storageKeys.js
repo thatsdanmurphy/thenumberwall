@@ -15,7 +15,8 @@ export const MY_WALL_SLUG   = 'tnw_my_wall_slug'    // current wall URL slug
 // ── Identity (hub profile) ──────────────────────────────────────────────────
 export const IDENTITY_NUMBER = 'tnw_identity_number'
 export const IDENTITY_CITY   = 'tnw_identity_city'
-export const IDENTITY_HERO   = 'tnw_identity_hero'
+export const IDENTITY_HERO    = 'tnw_identity_hero'    // legacy — single hero string
+export const IDENTITY_HEROES  = 'tnw_identity_heroes'  // array of hero names, up to 5
 
 // ── Team Walls ──────────────────────────────────────────────────────────────
 export const FINGERPRINT = 'tnw_fingerprint'         // browser fingerprint UUID

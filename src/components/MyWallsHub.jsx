@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronRight, Plus } from 'lucide-react'
 import { listMyWalls } from '../lib/myWallStore.js'
-import { getIdentity, setIdentityField } from '../lib/identity.js'
+import { getIdentity, setIdentityField, addHero, removeHero, updateHero } from '../lib/identity.js'
+import IdentityTiles from './IdentityTiles.jsx'
 import { wallData, bostonLegends } from '../data/index.js'
 import { TIER_WEIGHT } from '../data/tiers.js'
 import { HUB_WELCOMED, MY_WALL_TOKEN } from '../lib/storageKeys.js'
@@ -286,33 +287,38 @@ export default function MyWallsHub() {
       {/* First-visit welcome placemat */}
       {showWelcome && <WelcomePlacemat onDismiss={dismissWelcome} />}
 
-      {/* Identity section */}
+      {/* Identity section — tiles treat YOU / CITY / HEROES in one visual system */}
       {!showWelcome && (
         <span className="hub-identity-heading">YOUR IDENTITY</span>
       )}
-      <div className="hub-identity-row">
-        <IdentityChip
-          field="number"
-          label="Your Number"
-          emptyPrompt="Claim it"
-          value={identity.number}
-          onSave={handleIdentitySave}
-        />
-        <IdentityChip
-          field="city"
-          label="Your City"
-          emptyPrompt="Rep it"
-          value={identity.city}
-          onSave={handleIdentitySave}
-        />
-        <IdentityChip
-          field="hero"
-          label="Your Hero"
-          emptyPrompt="Name them"
-          value={identity.hero}
-          onSave={handleIdentitySave}
-        />
-      </div>
+      <IdentityTiles
+        identity={identity}
+        heroLookup={ALL_PLAYER_NUMBERS}
+        heroSuggestions={getHeroSuggestions}
+        citySuggestions={getCitySuggestions}
+        onSaveField={handleIdentitySave}
+        onAddHero={(name) => {
+          addHero(name)
+          setIdentity(prev => ({
+            ...prev,
+            heroes: prev.heroes.includes(name) ? prev.heroes : [...prev.heroes, name].slice(0, 5),
+          }))
+        }}
+        onUpdateHero={(oldName, newName) => {
+          updateHero(oldName, newName)
+          setIdentity(prev => ({
+            ...prev,
+            heroes: prev.heroes.map(h => (h === oldName ? newName : h)),
+          }))
+        }}
+        onRemoveHero={(name) => {
+          removeHero(name)
+          setIdentity(prev => ({
+            ...prev,
+            heroes: prev.heroes.filter(h => h !== name),
+          }))
+        }}
+      />
 
       <div className="hub-divider" />
 
