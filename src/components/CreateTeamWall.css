@@ -201,6 +201,188 @@
   to   { transform: rotate(360deg); }
 }
 
+/* ── Hint text ──────────────────────────────────────── */
+
+.ctw-hint {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--ink-mid);
+  margin: 0 0 var(--space-2) 0;
+  line-height: 1.5;
+}
+
+/* ── Org picker (Step 2) ────────────────────────────── */
+
+.ctw-org-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.ctw-org-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition: all var(--motion-hover);
+}
+
+.ctw-org-card:hover {
+  border-color: var(--border-medium);
+  background: var(--surface-3);
+}
+
+.ctw-org-card--active {
+  border-color: var(--border-strong);
+  background: var(--surface-3);
+}
+
+.ctw-org-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.ctw-org-card__name {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--color-paper);
+  font-weight: 500;
+}
+
+.ctw-org-card__check {
+  color: var(--color-paper);
+  flex-shrink: 0;
+}
+
+.ctw-org-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-scoreboard);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+}
+
+.ctw-org-card__type {
+  color: var(--ink-mid);
+}
+
+.ctw-org-card__sports::before {
+  content: "·";
+  margin-right: var(--space-2);
+  color: var(--ink-dim);
+}
+
+.ctw-add-org-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-small);
+}
+
+.ctw-back-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-small);
+  margin-bottom: var(--space-1);
+}
+
+/* ── Dedupe suggestions ─────────────────────────────── */
+
+.ctw-dedupe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--surface-1);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.ctw-dedupe__title {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-1) 0;
+}
+
+.ctw-dedupe__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: var(--space-1) 0;
+  cursor: pointer;
+  color: var(--color-paper);
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  transition: color var(--motion-hover);
+}
+
+.ctw-dedupe__item:hover {
+  color: var(--color-accent, var(--color-paper));
+}
+
+.ctw-dedupe__type {
+  font-family: var(--font-scoreboard);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-low);
+  text-transform: uppercase;
+}
+
+/* ── Org type pills ─────────────────────────────────── */
+
+.ctw-type-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ctw-type-pill {
+  font-family: var(--font-scoreboard);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-low);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all var(--motion-hover);
+}
+
+.ctw-type-pill:hover {
+  color: var(--ink-mid);
+  border-color: var(--border-medium);
+}
+
+.ctw-type-pill--active {
+  color: var(--color-paper);
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+}
+
 /* ── Animations ─────────────────────────────────────── */
 
 /* ctw-fadeIn removed — uses shared tnw-overlayIn keyframe from global.css */

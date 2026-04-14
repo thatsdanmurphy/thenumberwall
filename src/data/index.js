@@ -107,6 +107,25 @@ export const BC_TILE_NUMBERS = Array.from(bcIndex.keys()).sort((a, b) => {
   return n(a) - n(b)
 })
 
+// ─── Sport-matched bridge ──────────────────────────────────────────────────
+// Team walls surface legends who wore the same number IN THE SAME SPORT.
+// A baseball team wall only bridges to baseball legends; a hockey wall only
+// to hockey. Cross-sport matches (Jordan #23 on a baseball wall) are
+// suppressed — they'd feel random at the high-school level.
+//
+// Sport IDs on team walls are lowercase ("baseball"); legend data is
+// capitalised ("Baseball"). Match case-insensitively.
+
+export function getSportMatchedLegends(number, sport) {
+  if (!number || !sport) return []
+  const entries = globalIndex.get(String(number)) || []
+  const target  = sport.toLowerCase()
+  return entries.filter(e =>
+    e.tier !== 'UNWRITTEN' &&
+    (e.sport || '').toLowerCase() === target
+  )
+}
+
 // ─── Filtered index ────────────────────────────────────────────────────────
 // Returns a new Map with entries filtered to the given sport IDs.
 // UNWRITTEN placeholder rows are always preserved so tiles exist.
