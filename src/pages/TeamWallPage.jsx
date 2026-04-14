@@ -61,8 +61,9 @@ export default function TeamWallPage() {
   // Coach detail / edit state
   const [coachView, setCoachView]           = useState(false)  // panel showing coach detail
   const [coachEditing, setCoachEditing]     = useState(false)
-  const [coachNameDraft, setCoachNameDraft] = useState('')
-  const [coachFactDraft, setCoachFactDraft] = useState('')
+  const [coachNameDraft, setCoachNameDraft]   = useState('')
+  const [coachYearsDraft, setCoachYearsDraft] = useState('')
+  const [coachFactDraft, setCoachFactDraft]   = useState('')
   const [coachSubmitting, setCoachSubmitting] = useState(false)
 
   // Wall settings menu + retire confirmation
@@ -282,6 +283,7 @@ export default function TeamWallPage() {
 
   function startEditCoach() {
     setCoachNameDraft(wall.coach_name || '')
+    setCoachYearsDraft(wall.coach_years || '')
     setCoachFactDraft(wall.coach_fun_fact || '')
     setCoachEditing(true)
   }
@@ -297,7 +299,7 @@ export default function TeamWallPage() {
     }
     setCoachSubmitting(true)
     try {
-      await updateWallCoach(wall.id, { coachName: coachNameDraft, coachFunFact: coachFactDraft })
+      await updateWallCoach(wall.id, { coachName: coachNameDraft, coachYears: coachYearsDraft, coachFunFact: coachFactDraft })
       await fetchWall()
       setCoachEditing(false)
     } catch (err) {
@@ -561,16 +563,13 @@ export default function TeamWallPage() {
                 <button
                   className={`tw-coach-tile${coachView ? ' tw-coach-tile--active' : ''}`}
                   onClick={openCoachPanel}
-                  aria-label={wall.coach_name ? `Head coach ${wall.coach_name}` : 'Add head coach'}
+                  aria-label={wall.coach_name ? `View coach ${wall.coach_name}` : 'Add coach'}
                   style={{
                     background: TEAM_PALETTES[colorKey]?.[1]?.bg || 'rgba(255,255,255,0.03)',
                     border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
                   }}
                 >
-                  <span className="tw-coach-tile__label">COACHES</span>
-                  <span className="tw-coach-tile__name">
-                    {wall.coach_name || <span className="tw-coach-tile__empty">Add name</span>}
-                  </span>
+                  <span className="tw-coach-tile__label">COACH</span>
                 </button>
               }
             />
@@ -603,6 +602,9 @@ export default function TeamWallPage() {
                       <div className="tw-coach-panel__name">
                         {wall.coach_name || <span className="tw-coach-panel__empty">No coach added yet.</span>}
                       </div>
+                      {wall.coach_years && (
+                        <div className="tw-coach-panel__years">{wall.coach_years}</div>
+                      )}
                       {wall.coach_fun_fact && (
                         <div className="tw-coach-panel__fact">{wall.coach_fun_fact}</div>
                       )}
@@ -614,7 +616,7 @@ export default function TeamWallPage() {
                     </div>
                   ) : (
                     <form className="tw-add" onSubmit={handleCoachSave}>
-                      <span className="tw-add__label">EDIT COACHES</span>
+                      <span className="tw-add__label">EDIT COACH</span>
                       <input
                         type="text"
                         className="tnw-input tw-add__input"
@@ -622,6 +624,14 @@ export default function TeamWallPage() {
                         value={coachNameDraft}
                         onChange={e => setCoachNameDraft(e.target.value)}
                         autoFocus
+                      />
+                      <input
+                        type="text"
+                        className="tnw-input tw-add__input"
+                        placeholder="Years coached (e.g. 1982–94)"
+                        value={coachYearsDraft}
+                        onChange={e => setCoachYearsDraft(e.target.value.slice(0, 40))}
+                        maxLength={40}
                       />
                       <input
                         type="text"
