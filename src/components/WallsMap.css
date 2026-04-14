@@ -17,12 +17,14 @@
   width: 100%;
 }
 
-/* State outlines — readable at a glance, with enough contrast to feel like
-   a real map, not a ghost. */
+/* Country silhouette — state polygons share one fill with a matching stroke,
+   so internal borders disappear and the USA reads as a single shape. This is
+   what makes the map feel like a backdrop rather than an atlas. */
 .walls-map__state {
-  fill:          rgba(255, 255, 255, 0.06);
-  stroke:        rgba(255, 255, 255, 0.28);
-  stroke-width:  0.7;
+  fill:          rgba(255, 255, 255, 0.09);
+  stroke:        rgba(255, 255, 255, 0.09);
+  stroke-width:  0.5;
+  stroke-linejoin: round;
   transition:    fill 200ms ease;
 }
 

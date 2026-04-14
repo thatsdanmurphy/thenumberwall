@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil, Plus, MoreHorizontal, Trash2, EyeOff, Archive, Undo2, MapPin } from 'lucide-react'
+import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
@@ -69,8 +69,7 @@ export default function TeamWallPage() {
   const [coachFactDraft, setCoachFactDraft]   = useState('')
   const [coachSubmitting, setCoachSubmitting] = useState(false)
 
-  // Wall settings menu + retire confirmation
-  const [showWallMenu, setShowWallMenu]   = useState(false)
+  // Retire confirmation (menu lives at the bottom of the grid now)
   const [confirmRetire, setConfirmRetire] = useState(false)
   const [retireSubmitting, setRetireSubmitting] = useState(false)
 
@@ -499,55 +498,17 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
-        {/* Town breadcrumb — renders the hierarchy: Town → Org (this wall).
-            Clicking the town opens the town browse. Only present when we
-            have a town_slug (legacy walls predate the migration). */}
+        {/* Town breadcrumb — name first, pin after. Reads like a caption
+            ("Brookline, MA 📍") rather than a navigational chevron. Clicking
+            opens the town browse. Only when we have a town_slug. */}
         {wall.town_slug && wall.town && (
           <button
             className="tw-town-crumb"
             onClick={() => navigate(`/walls/town/${wall.town_slug}`)}
           >
-            <MapPin size={11} />
             <span>{wall.town}, {wall.state}</span>
+            <MapPin size={11} />
           </button>
-        )}
-
-        {/* Wall settings (creator-only) — floats top-right of the page body */}
-        {isCreator && (
-          <div className="tw-wall-menu">
-            <button
-              className="tw-wall-menu__trigger"
-              onClick={() => setShowWallMenu(p => !p)}
-              aria-label="Wall settings"
-              aria-expanded={showWallMenu}
-            >
-              <MoreHorizontal size={16} />
-            </button>
-            {showWallMenu && (
-              <>
-                <div className="tw-wall-menu__scrim" onClick={() => setShowWallMenu(false)} />
-                <div className="tw-wall-menu__dropdown" role="menu">
-                  {!isArchived && (
-                    <button
-                      className="tw-wall-menu__item tw-wall-menu__item--danger"
-                      onClick={() => { setShowWallMenu(false); setConfirmRetire(true) }}
-                    >
-                      <Archive size={13} /> Retire this wall
-                    </button>
-                  )}
-                  {isArchived && (
-                    <button
-                      className="tw-wall-menu__item"
-                      onClick={() => { setShowWallMenu(false); handleUnretire() }}
-                      disabled={retireSubmitting}
-                    >
-                      <Undo2 size={13} /> Undo retire
-                    </button>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
         )}
 
         {/* ── Sports nav — reuses SportsFilter pill styles ── */}
@@ -621,10 +582,43 @@ export default function TeamWallPage() {
                     border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
                   }}
                 >
-                  <span className="tw-coach-tile__label">COACH</span>
+                  {/* Text color pulls from the team-color heat palette — same
+                      mapping the number tiles use. Count of coaches drives heat
+                      level, matching how entry counts drive number tile text. */}
+                  <span
+                    className="tw-coach-tile__label"
+                    style={{ color: getTeamTileTextColor(colorKey, coaches.length) }}
+                  >
+                    COACH
+                  </span>
                 </button>
               }
             />
+
+            {/* Creator-only footer under the grid. Retiring the wall isn't a
+                top-chrome action — it's an ending, and it reads better as a
+                quiet link at the bottom of what the creator built. */}
+            {isCreator && !isArchived && (
+              <div className="tw-grid-footer">
+                <button
+                  className="tw-grid-footer__link"
+                  onClick={() => setConfirmRetire(true)}
+                >
+                  <Archive size={11} /> Retire this wall
+                </button>
+              </div>
+            )}
+            {isCreator && isArchived && (
+              <div className="tw-grid-footer">
+                <button
+                  className="tw-grid-footer__link"
+                  onClick={handleUnretire}
+                  disabled={retireSubmitting}
+                >
+                  <Undo2 size={11} /> Undo retire
+                </button>
+              </div>
+            )}
           </div>
 
           {/* ── Panel ─────────────────────────────────────────── */}
@@ -643,7 +637,10 @@ export default function TeamWallPage() {
               {coachView && !selected && (
                 <>
                   <div className="tw-panel-header">
-                    <div className="tw-coach-panel__title">COACHES</div>
+                    <div
+                      className="tw-coach-panel__title"
+                      style={{ color: getTeamTileTextColor(colorKey, coaches.length) }}
+                    >COACHES</div>
                     <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditingId(null) }} aria-label="Close panel">
                       <X size={14} />
                     </button>
@@ -887,8 +884,17 @@ export default function TeamWallPage() {
                       <ul className="tw-bridge__list">
                         {bridgeLegends.slice(0, 3).map((legend, i) => (
                           <li key={`${legend.name}-${i}`} className="tw-bridge__item">
-                            <span className="tw-bridge__name">{legend.name}</span>
-                            {legend.team && <span className="tw-bridge__meta">{legend.team}</span>}
+                            {/* Click-through: main wall's view of this number,
+                                so the user sees how the legend sits in the
+                                league-wide history. */}
+                            <button
+                              className="tw-bridge__link"
+                              onClick={() => navigate(`/number/${selected}`)}
+                              aria-label={`Open #${selected} on the main wall`}
+                            >
+                              <span className="tw-bridge__name">{legend.name}</span>
+                              {legend.team && <span className="tw-bridge__meta">{legend.team}</span>}
+                            </button>
                           </li>
                         ))}
                       </ul>

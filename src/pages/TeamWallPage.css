@@ -152,29 +152,8 @@
   color: var(--ink-mid);
 }
 
-/* Add-a-Player button reads bolder on team walls — contribution is a
-   first-class act here, not a quiet afterthought. Sits above the bridge. */
-.tw-page .player-panel__add-legend {
-  margin-top:    var(--space-4);
-  margin-bottom: var(--space-2);
-  font-size:     var(--text-caption);
-  letter-spacing: 0.16em;
-  color:         var(--color-accent);
-  padding:       var(--space-3) 0;
-  border-top:    1px solid var(--border-soft);
-  border-bottom: 1px solid var(--border-soft);
-}
-
-.tw-page .player-panel__add-legend:hover {
-  color: var(--color-accent);
-  background: rgba(232, 124, 42, 0.06);
-}
-
-/* Bridge sits below add-player — restyled for rhythm */
-.tw-page .tw-bridge {
-  margin-top:  var(--space-4);
-  padding-top: var(--space-3);
-}
+/* Add Player uses the shared .player-panel__add-legend style from the main
+   wall — no team-wall override. Keep the experience identical across walls. */
 
 .tw-entry__edit {
   background: none;
@@ -319,85 +298,34 @@
   background: var(--surface-2);
 }
 
-/* ── Wall settings menu (creator-only) ────────────────────────────────────── */
+/* ── Grid footer — creator-only retire link under the wall grid ──────────── */
 
-.tw-wall-menu {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-3);
-  z-index: 20;
-}
-
-.tw-page { position: relative; }
-
-.tw-wall-menu__trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: var(--surface-1);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  color: var(--ink-mid);
-  cursor: pointer;
-  transition: all var(--motion-hover);
-}
-
-.tw-wall-menu__trigger:hover {
-  color: var(--color-paper);
-  border-color: var(--border-medium);
-}
-
-.tw-wall-menu__scrim {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-}
-
-.tw-wall-menu__dropdown {
-  position: absolute;
-  top: calc(100% + var(--space-1));
-  right: 0;
-  min-width: 180px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-1);
-  z-index: 2;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+.tw-grid-footer {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  justify-content: flex-end;
+  padding: var(--space-2) var(--space-1) 0;
+  margin-top: var(--space-2);
 }
 
-.tw-wall-menu__item {
+.tw-grid-footer__link {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  width: 100%;
-  padding: var(--space-2) var(--space-3);
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: var(--color-paper);
-  text-align: left;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
   cursor: pointer;
-  transition: background var(--motion-hover);
+  transition: color var(--motion-hover);
 }
 
-.tw-wall-menu__item:hover {
-  background: var(--surface-3);
-}
-
-.tw-wall-menu__item--danger {
-  color: #ff8a8a;
-}
-
-.tw-wall-menu__item--danger:hover {
-  background: rgba(255, 107, 107, 0.10);
+.tw-grid-footer__link:hover {
+  color: var(--color-paper);
 }
 
 /* ── Archived banner ──────────────────────────────────────────────────────── */
@@ -623,7 +551,27 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-2);
+  padding: 0;
+}
+
+/* Each bridge row is a button to the main wall's view of this number. Button
+   resets so the row still reads as text, not chrome — but with hover affordance. */
+.tw-bridge__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
   padding: var(--space-1) 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: color var(--motion-hover);
+}
+
+.tw-bridge__link:hover .tw-bridge__name {
+  color: var(--color-heat, #e87c2a);
 }
 
 .tw-bridge__name {
