@@ -18,7 +18,8 @@ import WallGrid   from '../components/WallGrid.jsx'
 import {
   loadTeamWallByRoute, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall,
   isWallCreator, archiveWall, unarchiveWall, retireDaysLeft,
-  deleteOwnEntry, hideEntryAsCreator, canDeleteEntry, updateWallCoach,
+  deleteOwnEntry, hideEntryAsCreator, canDeleteEntry,
+  listWallCoaches, addWallCoach, updateWallCoach, deleteOwnCoach, hideCoachAsCreator,
 } from '../lib/teamWallStore.js'
 import { getSportMatchedLegends } from '../data/index.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
@@ -58,9 +59,11 @@ export default function TeamWallPage() {
   const [showSportPicker, setShowSportPicker] = useState(false)
   const [addingSport, setAddingSport]         = useState(false)
 
-  // Coach detail / edit state
-  const [coachView, setCoachView]           = useState(false)  // panel showing coach detail
-  const [coachEditing, setCoachEditing]     = useState(false)
+  // Coach state — multi-row
+  const [coachView, setCoachView]             = useState(false)  // panel showing coach list
+  const [coaches, setCoaches]                 = useState([])
+  const [coachesLoaded, setCoachesLoaded]     = useState(false)
+  const [coachEditingId, setCoachEditingId]   = useState(null)   // null | 'new' | coachId
   const [coachNameDraft, setCoachNameDraft]   = useState('')
   const [coachYearsDraft, setCoachYearsDraft] = useState('')
   const [coachFactDraft, setCoachFactDraft]   = useState('')
@@ -275,22 +278,43 @@ export default function TeamWallPage() {
   }
 
   // ── Coach tile interactions ──
-  function openCoachPanel() {
-    setSelected(null)
-    setCoachView(true)
-    setCoachEditing(false)
+  async function refreshCoaches() {
+    if (!wall) return
+    try {
+      const list = await listWallCoaches(wall.id)
+      setCoaches(list)
+      setCoachesLoaded(true)
+    } catch (err) {
+      console.error('Could not load coaches:', err)
+      setCoachesLoaded(true)
+    }
   }
 
-  function startEditCoach() {
-    setCoachNameDraft(wall.coach_name || '')
-    setCoachYearsDraft(wall.coach_years || '')
-    setCoachFactDraft(wall.coach_fun_fact || '')
-    setCoachEditing(true)
+  async function openCoachPanel() {
+    setSelected(null)
+    setCoachView(true)
+    setCoachEditingId(null)
+    if (!coachesLoaded) await refreshCoaches()
+  }
+
+  function startAddCoach() {
+    setCoachNameDraft('')
+    setCoachYearsDraft('')
+    setCoachFactDraft('')
+    setCoachEditingId('new')
+  }
+
+  function startEditCoach(coach) {
+    setCoachNameDraft(coach.name || '')
+    setCoachYearsDraft(coach.years || '')
+    setCoachFactDraft(coach.fun_fact || '')
+    setCoachEditingId(coach.id)
   }
 
   async function handleCoachSave(e) {
     e.preventDefault()
     if (coachSubmitting) return
+    if (!coachNameDraft.trim()) return
     const nameCheck = checkProfanity(coachNameDraft)
     if (!nameCheck.clean) { window.alert(nameCheck.reason); return }
     if (coachFactDraft) {
@@ -299,14 +323,42 @@ export default function TeamWallPage() {
     }
     setCoachSubmitting(true)
     try {
-      await updateWallCoach(wall.id, { coachName: coachNameDraft, coachYears: coachYearsDraft, coachFunFact: coachFactDraft })
-      await fetchWall()
-      setCoachEditing(false)
+      if (coachEditingId === 'new') {
+        await addWallCoach(wall.id, {
+          name: coachNameDraft,
+          years: coachYearsDraft,
+          funFact: coachFactDraft,
+        })
+      } else {
+        await updateWallCoach(coachEditingId, {
+          name: coachNameDraft,
+          years: coachYearsDraft,
+          funFact: coachFactDraft,
+        })
+      }
+      await refreshCoaches()
+      setCoachEditingId(null)
     } catch (err) {
-      console.error('Coach update error:', err)
+      console.error('Coach save error:', err)
       window.alert('Could not save. Try again.')
     } finally {
       setCoachSubmitting(false)
+    }
+  }
+
+  async function handleCoachDelete(coach) {
+    const mine = coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null)
+    const msg = mine
+      ? `Delete ${coach.name}?`
+      : `Hide ${coach.name} from this wall? (creator action)`
+    if (!window.confirm(msg)) return
+    try {
+      if (mine) await deleteOwnCoach(coach.id)
+      else      await hideCoachAsCreator(coach.id)
+      await refreshCoaches()
+    } catch (err) {
+      console.error('Coach delete error:', err)
+      window.alert('Could not remove coach.')
     }
   }
 
@@ -587,70 +639,95 @@ export default function TeamWallPage() {
                 </div>
               )}
 
-              {/* Coach detail / edit panel */}
+              {/* Coach detail / edit panel — multi-row */}
               {coachView && !selected && (
                 <>
                   <div className="tw-panel-header">
                     <div className="tw-coach-panel__title">COACHES</div>
-                    <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditing(false) }} aria-label="Close panel">
+                    <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditingId(null) }} aria-label="Close panel">
                       <X size={14} />
                     </button>
                   </div>
 
-                  {!coachEditing ? (
-                    <div className="tw-coach-panel">
-                      <div className="tw-coach-panel__name">
-                        {wall.coach_name || <span className="tw-coach-panel__empty">No coach added yet.</span>}
+                  <div className="tw-coach-panel">
+                    {/* Coach list */}
+                    {coaches.length > 0 ? (
+                      <div className="tw-coach-list">
+                        {coaches.map((coach, i) => (
+                          coachEditingId === coach.id ? (
+                            <form key={coach.id} className="tw-add" onSubmit={handleCoachSave}>
+                              <span className="tw-add__label">EDIT COACH</span>
+                              <input type="text" className="tnw-input tw-add__input" placeholder="Coach name"
+                                value={coachNameDraft} onChange={e => setCoachNameDraft(e.target.value)} autoFocus />
+                              <input type="text" className="tnw-input tw-add__input" placeholder="Years coached (e.g. 1982–94)"
+                                value={coachYearsDraft} onChange={e => setCoachYearsDraft(e.target.value.slice(0, 40))} maxLength={40} />
+                              <input type="text" className="tnw-input tw-add__input" placeholder="Fun fact (optional)"
+                                value={coachFactDraft} onChange={e => setCoachFactDraft(e.target.value.slice(0, 140))} maxLength={140} />
+                              <div className="tw-add__row">
+                                <button type="submit" className="tnw-btn tnw-btn--secondary tw-add__submit" disabled={coachSubmitting || !coachNameDraft.trim()}>
+                                  {coachSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Save'}
+                                </button>
+                                <button type="button" className="tnw-btn tnw-btn--secondary tw-add__submit" onClick={() => setCoachEditingId(null)}>Cancel</button>
+                              </div>
+                            </form>
+                          ) : (
+                            <div key={coach.id} className="tw-coach-card" style={i === 0 ? {
+                              background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
+                              borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
+                            } : undefined}>
+                              <div className="tw-coach-card__head">
+                                <div className="tw-coach-card__name">{coach.name}</div>
+                                {!isArchived && (
+                                  <div className="tw-coach-card__actions">
+                                    <button className="tw-entry__edit" onClick={() => startEditCoach(coach)} aria-label="Edit coach">
+                                      <Pencil size={13} />
+                                    </button>
+                                    {(coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) || isCreator) && (
+                                      <button className="tw-entry__delete" onClick={() => handleCoachDelete(coach)} aria-label="Remove coach">
+                                        {coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) ? <Trash2 size={13} /> : <EyeOff size={13} />}
+                                      </button>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              {coach.years && <div className="tw-coach-card__years">{coach.years}</div>}
+                              {coach.fun_fact && <div className="tw-coach-card__fact">{coach.fun_fact}</div>}
+                            </div>
+                          )
+                        ))}
                       </div>
-                      {wall.coach_years && (
-                        <div className="tw-coach-panel__years">{wall.coach_years}</div>
-                      )}
-                      {wall.coach_fun_fact && (
-                        <div className="tw-coach-panel__fact">{wall.coach_fun_fact}</div>
-                      )}
-                      {!isArchived && (
-                        <button className="tnw-btn tnw-btn--secondary tw-coach-panel__edit" onClick={startEditCoach}>
-                          <Pencil size={12} /> {wall.coach_name ? 'Edit' : 'Add coach'}
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <form className="tw-add" onSubmit={handleCoachSave}>
-                      <span className="tw-add__label">EDIT COACH</span>
-                      <input
-                        type="text"
-                        className="tnw-input tw-add__input"
-                        placeholder="Coach name"
-                        value={coachNameDraft}
-                        onChange={e => setCoachNameDraft(e.target.value)}
-                        autoFocus
-                      />
-                      <input
-                        type="text"
-                        className="tnw-input tw-add__input"
-                        placeholder="Years coached (e.g. 1982–94)"
-                        value={coachYearsDraft}
-                        onChange={e => setCoachYearsDraft(e.target.value.slice(0, 40))}
-                        maxLength={40}
-                      />
-                      <input
-                        type="text"
-                        className="tnw-input tw-add__input"
-                        placeholder="Fun fact (optional)"
-                        value={coachFactDraft}
-                        onChange={e => setCoachFactDraft(e.target.value.slice(0, 140))}
-                        maxLength={140}
-                      />
-                      <div className="tw-add__row">
-                        <button type="submit" className="tnw-btn tnw-btn--secondary tw-add__submit" disabled={coachSubmitting}>
-                          {coachSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Save'}
-                        </button>
-                        <button type="button" className="tnw-btn tnw-btn--secondary tw-add__submit" onClick={() => setCoachEditing(false)}>
-                          Cancel
-                        </button>
+                    ) : (
+                      <div className="tw-coach-panel__empty-state">
+                        {coachesLoaded ? 'No coaches added yet.' : <Loader size={14} className="tw-add__spinner" />}
                       </div>
-                    </form>
-                  )}
+                    )}
+
+                    {/* Add another coach — always available unless form is open */}
+                    {!isArchived && coachEditingId !== 'new' && (
+                      <button className="tnw-btn tnw-btn--secondary tw-coach-panel__edit" onClick={startAddCoach}>
+                        <Plus size={14} /> {coaches.length > 0 ? 'Add another coach' : 'Add coach'}
+                      </button>
+                    )}
+
+                    {/* Add-new form */}
+                    {coachEditingId === 'new' && (
+                      <form className="tw-add" onSubmit={handleCoachSave}>
+                        <span className="tw-add__label">ADD COACH</span>
+                        <input type="text" className="tnw-input tw-add__input" placeholder="Coach name"
+                          value={coachNameDraft} onChange={e => setCoachNameDraft(e.target.value)} autoFocus />
+                        <input type="text" className="tnw-input tw-add__input" placeholder="Years coached (e.g. 1982–94)"
+                          value={coachYearsDraft} onChange={e => setCoachYearsDraft(e.target.value.slice(0, 40))} maxLength={40} />
+                        <input type="text" className="tnw-input tw-add__input" placeholder="Fun fact (optional)"
+                          value={coachFactDraft} onChange={e => setCoachFactDraft(e.target.value.slice(0, 140))} maxLength={140} />
+                        <div className="tw-add__row">
+                          <button type="submit" className="tnw-btn tnw-btn--secondary tw-add__submit" disabled={coachSubmitting || !coachNameDraft.trim()}>
+                            {coachSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Add'}
+                          </button>
+                          <button type="button" className="tnw-btn tnw-btn--secondary tw-add__submit" onClick={() => setCoachEditingId(null)}>Cancel</button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
                 </>
               )}
 
@@ -730,7 +807,7 @@ export default function TeamWallPage() {
                                   <span className="player-card__name">{entry.name}</span>
                                   {!isArchived && (
                                     <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
-                                      <Pencil size={11} />
+                                      <Pencil size={14} />
                                     </button>
                                   )}
                                   {!isArchived && (canDeleteEntry(entry) || isCreator) && (
@@ -772,23 +849,6 @@ export default function TeamWallPage() {
                     </div>
                   )}
 
-                  {/* Sport-matched bridge — same number, same sport, from global legends */}
-                  {bridgeLegends.length > 0 && (
-                    <div className="tw-bridge">
-                      <div className="tw-bridge__title">
-                        ELSEWHERE AT #{selected}
-                      </div>
-                      <ul className="tw-bridge__list">
-                        {bridgeLegends.slice(0, 3).map((legend, i) => (
-                          <li key={`${legend.name}-${i}`} className="tw-bridge__item">
-                            <span className="tw-bridge__name">{legend.name}</span>
-                            {legend.team && <span className="tw-bridge__meta">{legend.team}</span>}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
                   {/* Add a player — hidden on archived walls (read-only) */}
                   {!isArchived && (!showAddForm ? (
                     <button className="player-panel__add-legend" onClick={() => setShowAddForm(true)}>
@@ -817,6 +877,23 @@ export default function TeamWallPage() {
                       </div>
                     </form>
                   ))}
+
+                  {/* Sport-matched bridge — same number, same sport, from global legends */}
+                  {bridgeLegends.length > 0 && (
+                    <div className="tw-bridge">
+                      <div className="tw-bridge__title">
+                        LEGENDS WHO WORE #{selected}
+                      </div>
+                      <ul className="tw-bridge__list">
+                        {bridgeLegends.slice(0, 3).map((legend, i) => (
+                          <li key={`${legend.name}-${i}`} className="tw-bridge__item">
+                            <span className="tw-bridge__name">{legend.name}</span>
+                            {legend.team && <span className="tw-bridge__meta">{legend.team}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </>
               )}
             </div>

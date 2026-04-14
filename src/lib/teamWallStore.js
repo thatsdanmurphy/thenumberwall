@@ -437,21 +437,73 @@ const RETIRE_COOLDOWN_DAYS = 7
 // Creator-only: update the coach block on a wall. Intentionally narrow —
 // exposing only coach_name + coach_fun_fact keeps this safe to ship before
 // broader wall-settings UI lands.
-export async function updateWallCoach(wallId, { coachName, coachYears, coachFunFact }) {
-  // Coach is a community contribution like any entry, not a creator-only
-  // setting. Anyone who can see the wall can add/update the coach.
+// ─── Coaches (multi-row, one-to-many with walls) ─────────────────────────
+// Coaches live in their own table so a wall can hold multiple — different
+// eras, assistants, short tenures. Same contribution rules as entries:
+// anyone can add, anyone can edit, creator can hide.
+
+export async function listWallCoaches(wallId) {
   const { data, error } = await supabase
-    .from('team_walls')
-    .update({
-      coach_name:     coachName?.trim() || null,
-      coach_years:    coachYears?.trim() || null,
-      coach_fun_fact: coachFunFact?.trim() || null,
-    })
-    .eq('id', wallId)
+    .from('team_wall_coaches')
+    .select('id, wall_id, name, years, fun_fact, added_by, added_at, status')
+    .eq('wall_id', wallId)
+    .in('status', ['active', 'flagged'])
+    .order('added_at', { ascending: true })
+  if (error) throw error
+  return data || []
+}
+
+export async function addWallCoach(wallId, { name, years, funFact }) {
+  const fp = getFingerprint()
+  const row = {
+    wall_id: wallId,
+    name:    name?.trim(),
+    added_by: fp,
+  }
+  if (years)   row.years    = years.trim().slice(0, 40)
+  if (funFact) row.fun_fact = funFact.trim().slice(0, 140)
+
+  const { data, error } = await supabase
+    .from('team_wall_coaches')
+    .insert(row)
     .select()
     .single()
   if (error) throw error
   return data
+}
+
+export async function updateWallCoach(coachId, { name, years, funFact }) {
+  const updates = {}
+  if (name !== undefined)    updates.name     = name?.trim() || null
+  if (years !== undefined)   updates.years    = years?.trim() || null
+  if (funFact !== undefined) updates.fun_fact = funFact?.trim()?.slice(0, 140) || null
+
+  const { data, error } = await supabase
+    .from('team_wall_coaches')
+    .update(updates)
+    .eq('id', coachId)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function deleteOwnCoach(coachId) {
+  const fp = getFingerprint()
+  const { error } = await supabase
+    .from('team_wall_coaches')
+    .delete()
+    .eq('id', coachId)
+    .eq('added_by', fp)
+  if (error) throw error
+}
+
+export async function hideCoachAsCreator(coachId) {
+  const { error } = await supabase
+    .from('team_wall_coaches')
+    .update({ status: 'hidden' })
+    .eq('id', coachId)
+  if (error) throw error
 }
 
 export async function archiveWall(wallId) {
