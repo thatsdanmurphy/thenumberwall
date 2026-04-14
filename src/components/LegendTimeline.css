@@ -98,7 +98,7 @@
 .legend-timeline__era-labels {
   position: relative;
   height: 38px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   overflow: visible;
 }
 
@@ -123,7 +123,7 @@
 
 .era-label__name {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(200, 195, 185, 0.5);
   white-space: nowrap;
   overflow: visible;
@@ -138,7 +138,7 @@
 
 .era-label__tagline {
   font-family: var(--font-program);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: rgba(200, 195, 185, 0.55);
   font-style: italic;
   white-space: nowrap;
@@ -160,7 +160,7 @@
 
 .legend-timeline__toggle {
   display: flex;
-  gap: 4px;
+  gap: var(--space-1);
   margin-bottom: var(--space-3);
 }
 
@@ -170,11 +170,11 @@
   gap: 5px;
   padding: 5px 12px;
   border: 1px solid rgba(200, 195, 185, 0.12);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: transparent;
   color: rgba(200, 195, 185, 0.4);
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.03em;
   cursor: pointer;
   transition: all 150ms ease-out;
@@ -197,7 +197,7 @@
   position: relative;
   width: 100%;
   height: 100px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: rgb(3, 3, 12);
   box-shadow:
@@ -219,7 +219,7 @@
   display: flex;
   width: 100%;
   height: 100px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: rgb(3, 3, 12);
   gap: 1px;
@@ -311,7 +311,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(200, 195, 185, 0.45);
   letter-spacing: 0.05em;
   box-sizing: border-box;
@@ -324,7 +324,7 @@
   transform: translate(-50%, -100%);
   background: rgba(6, 8, 18, 0.95);
   border: 1px solid rgba(255, 230, 120, 0.1);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 10px 14px;
   pointer-events: none;
   z-index: 10;
@@ -346,13 +346,13 @@
 
 .timeline-tooltip__week {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(200, 195, 185, 0.75);
 }
 
 .timeline-tooltip__type {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: rgba(255, 220, 100, 0.9);
   letter-spacing: 0.06em;
   font-weight: 600;
@@ -362,7 +362,7 @@
   font-family: var(--font-program);
   font-size: 0.875rem;
   color: var(--color-paper);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
 }
 
 .timeline-tooltip__result { font-family: var(--font-banner); font-size: 0.9375rem; }
@@ -372,17 +372,17 @@
 
 .timeline-tooltip__stats {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: rgba(200, 195, 185, 0.75);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
 }
 
 .timeline-tooltip__moment {
   font-family: var(--font-banner);
   font-size: 0.875rem;
   color: rgba(255, 230, 100, 0.95);
-  margin-top: 4px;
-  padding-top: 4px;
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
   border-top: 1px solid rgba(255, 230, 120, 0.1);
 }
 
@@ -390,21 +390,21 @@
 
 .timeline-tooltip__glow {
   font-family: var(--font-scoreboard);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: rgba(200, 195, 185, 0.45);
-  margin-top: 4px;
+  margin-top: var(--space-1);
 }
 
 .timeline-tooltip__bye { font-family: var(--font-scoreboard); font-size: 0.8125rem; color: rgba(200, 195, 185, 0.7); }
 .timeline-tooltip__dnp { font-family: var(--font-banner); font-size: 0.8125rem; color: #FF4D5E; }
-.timeline-tooltip__reason { font-family: var(--font-program); font-size: 0.75rem; color: rgba(200, 195, 185, 0.7); margin-top: 2px; }
+.timeline-tooltip__reason { font-family: var(--font-program); font-size: var(--text-small); color: rgba(200, 195, 185, 0.7); margin-top: 2px; }
 
 /* ─── Moment Markers (icons + labels below the bar) ─────────────────────── */
 
 .legend-timeline__markers {
   position: relative;
   height: 36px;
-  margin-top: 4px;
+  margin-top: var(--space-1);
   overflow: visible;
 }
 
@@ -423,7 +423,7 @@
 /* Label hidden by default — icon only */
 .moment-marker__label {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
+  font-size: var(--text-label);
   color: rgba(200, 195, 185, 0.8);
   white-space: nowrap;
   letter-spacing: 0.02em;
@@ -540,7 +540,7 @@
 
 .legend-timeline__key-label {
   font-family: var(--font-program);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: rgba(200, 195, 185, 0.5);
   letter-spacing: 0.02em;
   font-style: italic;
