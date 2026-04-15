@@ -636,6 +636,9 @@ export default function LegendTimeline({ timeline }) {
   const scrubIndicatorRef = useRef(null) // direct DOM ref for scrub position
   const vScrubRafRef = useRef(null)      // rAF throttle for mobile scrub
   const pendingScrubIdx = useRef(null)   // pending index for throttled state update
+  const pillRefs = useRef([])            // persistent-pill DOM nodes (mobile)
+  const PILL_H = 34                      // approx height of a docked pill (px)
+  const PILL_DOCK_Y = -14                // pill hangs into the top card when docked
 
   // Animation phases as refs — avoids re-renders on every frame
   const breathRef = useRef(0)
@@ -722,6 +725,8 @@ export default function LegendTimeline({ timeline }) {
   activeIndexRef.current = activeIndex
   const gamesRef = useRef(games)
   gamesRef.current = games
+  const momentMarkersRef = useRef(momentMarkers)
+  momentMarkersRef.current = momentMarkers
 
   useEffect(() => {
     let running = true
@@ -840,7 +845,56 @@ export default function LegendTimeline({ timeline }) {
     const mid = (positions[0] + positions[1]) / 2
     viewport.scrollTop = barCol.offsetTop + mid
     vInitializedRef.current = true
-  }, [vGamePositions])
+    // Place pills in their initial positions immediately
+    requestAnimationFrame(() => positionPills())
+  }, [vGamePositions, positionPills])
+
+  // ── Position the persistent pills on every scroll frame ──
+  // Each pill rides with its game midpoint. When it reaches the top of the
+  // viewport (the scrub line), it docks. Next pill pushes the docked one up.
+  const positionPills = useCallback(() => {
+    const viewport = vScrollRef.current
+    const positions = vGamePositionsRef.current
+    if (!viewport || !positions) return
+    const barCol = viewport.querySelector('.vtl__bar-col')
+    if (!barCol) return
+    const barColTop = barCol.offsetTop
+    const scrollTop = viewport.scrollTop
+    // Pills are rendered in momentMarkers order. They're already sorted by
+    // gameIdx because momentMarkers iterates games sequentially.
+    const markers = momentMarkersRef.current || []
+    for (let i = 0; i < markers.length; i++) {
+      const el = pillRefs.current[i]
+      if (!el) continue
+      const m = markers[i]
+      const natural = barColTop + (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2 - PILL_H / 2
+      const viewY = natural - scrollTop
+      let y
+      let docked = false
+      if (viewY >= 0) {
+        y = viewY
+      } else {
+        // Above viewport — candidate for docking at top
+        const next = markers[i + 1]
+        if (next) {
+          const nextNatural = barColTop + (positions[next.gameIdx] + positions[next.gameIdx + 1]) / 2 - PILL_H / 2
+          const nextViewY = nextNatural - scrollTop
+          if (nextViewY >= PILL_H) {
+            y = PILL_DOCK_Y
+            docked = true
+          } else {
+            // Next pill is arriving — push this one up and off
+            y = nextViewY - PILL_H + PILL_DOCK_Y
+          }
+        } else {
+          y = PILL_DOCK_Y
+          docked = true
+        }
+      }
+      el.style.transform = `translate(-50%, ${y}px)`
+      el.classList.toggle('vtl__pill--docked', docked)
+    }
+  }, [])
 
   const handleVScroll = useCallback(() => {
     const viewport = vScrollRef.current
@@ -870,10 +924,11 @@ export default function LegendTimeline({ timeline }) {
           setHoveredIndex(i)
           setPinnedIndex(i)
         }
+        positionPills()
         vScrubRafRef.current = null
       })
     }
-  }, [])
+  }, [positionPills])
 
   // Mobile: tap a moment marker — scroll that game to the scrub line
   const handleVMomentClick = useCallback((gameIdx, e) => {
@@ -1127,17 +1182,7 @@ export default function LegendTimeline({ timeline }) {
           ) : (
             <div className="vtl__card-hint">Scroll the bar to explore</div>
           )}
-          {/* Interlock: the active game's moment icon+label straddles the scrub line,
-              visually layering onto the top card. */}
-          {activeGame?.moments?.length > 0 && (
-            <div
-              className={`vtl__active-token ${activeGame.moments[0].use_sacred_color ? 'vtl__active-token--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__active-token--negative' : ''}`}
-              key={`token-${activeIndex}`}
-            >
-              {getMomentIcon(activeGame.moments[0])}
-              <span>{activeGame.moments[0].moment_name}</span>
-            </div>
-          )}
+          {/* (Persistent pills live on the timeline and dock to the scrub line — see below) */}
         </div>
 
         {/* Bar area — scrub line at top edge; games scroll up past it */}
@@ -1155,19 +1200,6 @@ export default function LegendTimeline({ timeline }) {
                 ref={vCanvasRef}
                 className="vtl__canvas"
               />
-              {/* Moment icon markers — tappable, staggered when too close to avoid overlap */}
-              {vGamePositions && staggerVerticalMarkers(momentMarkers, vGamePositions).map(m => (
-                <div
-                  key={`vm-${m.gameIdx}`}
-                  className={`vtl__moment-marker ${m.isSacred ? 'vtl__moment-marker--sacred' : ''} ${m.isNegative ? 'vtl__moment-marker--negative' : ''} ${pinnedIndex === m.gameIdx ? 'vtl__moment-marker--pinned' : ''}`}
-                  style={{ top: `${m.top}px` }}
-                  onClick={(e) => handleVMomentClick(m.gameIdx, e)}
-                >
-                  <span className="vtl__moment-marker__line" />
-                  <span className="vtl__moment-marker__icon">{m.icon}</span>
-                  <span className="vtl__moment-marker__label">{m.label}</span>
-                </div>
-              ))}
               {/* Era year ticks along the bar edge */}
               {vGamePositions && eras.map(era => {
                 const top = vGamePositions[era.startIdx]
@@ -1199,6 +1231,21 @@ export default function LegendTimeline({ timeline }) {
           {/* Scrub line pinned at top of bar-area = bottom edge of top card */}
           <div className="vtl__scrub-indicator" ref={scrubIndicatorRef}>
             <div className="vtl__scrub-line" />
+          </div>
+
+          {/* Persistent pills — one per moment. Ride with timeline, dock at top. */}
+          <div className="vtl__pills-layer" aria-hidden={false}>
+            {momentMarkers.map((m, i) => (
+              <div
+                key={`pill-${m.gameIdx}`}
+                ref={el => (pillRefs.current[i] = el)}
+                className={`vtl__pill ${m.isSacred ? 'vtl__pill--sacred' : ''} ${m.isNegative ? 'vtl__pill--negative' : ''}`}
+                onClick={(e) => handleVMomentClick(m.gameIdx, e)}
+              >
+                <span className="vtl__pill-icon">{m.icon}</span>
+                <span className="vtl__pill-label">{m.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

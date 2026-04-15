@@ -3,3 +3,31 @@
   background: var(--color-night);
   padding: var(--space-6) 0;
 }
+
+/* Mobile — timeline takes the whole viewport. Header/footer hide so there is
+   only ONE scroll source (the inner bar-scroll). */
+@media (max-width: 768px) {
+  .timeline-page {
+    min-height: 0;
+    height: 100dvh;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Hide surrounding chrome so the body doesn't also scroll */
+  body:has(.timeline-page) .app-header,
+  body:has(.timeline-page) .app-footer {
+    display: none;
+  }
+  body:has(.timeline-page),
+  html:has(.timeline-page) {
+    overflow: hidden;
+    height: 100dvh;
+  }
+  body:has(.timeline-page) .app-shell,
+  body:has(.timeline-page) .app-shell__inner {
+    min-height: 0;
+    height: 100dvh;
+    padding: 0;
+  }
+}

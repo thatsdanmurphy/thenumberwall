@@ -688,12 +688,13 @@
   margin-top: 2px;
 }
 
-/* ── Bar area — scrollable viewport with fixed center scrub line ── */
+/* ── Bar area — scrollable viewport with fixed center scrub line ──
+   overflow visible so the docked pill can interlock with the top card. */
 .vtl__bar-area {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .vtl__bar-scroll {
@@ -1004,7 +1005,113 @@
   to { opacity: 1; }
 }
 
-/* ── Interlock: active moment token crossing the scrub line ── */
+/* ── Persistent pills layer ──
+   One pill per moment. Pills ride with the timeline and dock at the scrub
+   line when they reach it; the next pill pushes the docked one out of the
+   way. Positions applied via JS (transform: translate(-50%, y)).
+   NOTE: this is a new element — the design system's existing .your-pick__chip
+   uses --radius-sm (non-pill). The 999px pill form is introduced here for
+   the "now showing" treatment and should be added to the pattern library. */
+.vtl__pills-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 6;
+}
+
+.vtl__pill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  /* transform set via JS: translate(-50%, y) */
+  transform: translate(-50%, -9999px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  /* More L/R padding per user feedback — roomy pill */
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(20, 22, 30, 0.92);
+  border: 1px solid rgba(232, 124, 42, 0.4);
+  box-shadow:
+    0 0 14px rgba(232, 124, 42, 0.22),
+    0 0 28px rgba(232, 124, 42, 0.1);
+  font-family: var(--font-banner);
+  font-size: 0.8125rem;
+  color: rgba(255, 210, 160, 0.98);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  max-width: 88vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+  transition: box-shadow 160ms ease-out, border-color 160ms ease-out;
+}
+
+.vtl__pill-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(232, 124, 42, 0.35));
+}
+
+.vtl__pill-icon svg { width: 100%; height: 100%; }
+
+.vtl__pill-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Docked state — pill sitting at the scrub line (now showing) */
+.vtl__pill--docked {
+  box-shadow:
+    0 0 20px rgba(232, 124, 42, 0.4),
+    0 0 40px rgba(232, 124, 42, 0.18);
+  border-color: rgba(232, 124, 42, 0.65);
+}
+
+/* Sacred variant — reserved for canonical moments */
+.vtl__pill--sacred {
+  background: rgba(30, 22, 10, 0.96);
+  border-color: rgba(255, 230, 120, 0.55);
+  color: rgba(255, 250, 220, 1);
+  box-shadow:
+    0 0 14px rgba(255, 220, 80, 0.4),
+    0 0 28px rgba(255, 195, 45, 0.18);
+}
+
+.vtl__pill--sacred .vtl__pill-icon {
+  filter: drop-shadow(0 0 6px rgba(255, 230, 120, 0.7));
+}
+
+.vtl__pill--sacred.vtl__pill--docked {
+  box-shadow:
+    0 0 22px rgba(255, 220, 80, 0.6),
+    0 0 46px rgba(255, 195, 45, 0.3);
+  border-color: rgba(255, 230, 120, 0.85);
+}
+
+.vtl__pill--negative {
+  border-color: rgba(255, 90, 100, 0.5);
+  color: rgba(255, 180, 185, 0.95);
+  box-shadow:
+    0 0 14px rgba(255, 75, 90, 0.3),
+    0 0 28px rgba(255, 75, 90, 0.12);
+}
+
+.vtl__pill--negative.vtl__pill--docked {
+  box-shadow:
+    0 0 20px rgba(255, 75, 90, 0.5),
+    0 0 40px rgba(255, 75, 90, 0.22);
+}
+
+/* ── Interlock: active moment token crossing the scrub line (legacy) ── */
 .vtl__active-token {
   position: absolute;
   left: 50%;
@@ -1086,7 +1193,7 @@
   justify-content: center;
   text-align: center;
   font-family: var(--font-banner);
-  color: rgba(245, 247, 250, 0.88);
+  color: var(--ink-dim, rgba(255, 255, 255, 0.35));
   font-size: 1.5rem;
   line-height: 1.4;
   letter-spacing: 0.005em;
@@ -1097,7 +1204,7 @@
   margin-top: 18px;
   font-family: var(--font-scoreboard);
   font-size: var(--text-caption);
-  color: rgba(232, 124, 42, 0.7);
+  color: rgba(200, 195, 185, 0.35);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-style: normal;
@@ -1129,7 +1236,7 @@
   padding: 0 var(--space-4);
   text-align: center;
   font-family: var(--font-banner);
-  color: rgba(245, 247, 250, 0.92);
+  color: var(--ink-dim, rgba(255, 255, 255, 0.35));
   font-size: 2rem;
   line-height: 1.35;
 }
@@ -1139,7 +1246,7 @@
   margin-top: 20px;
   font-family: var(--font-scoreboard);
   font-size: var(--text-caption);
-  color: rgba(232, 124, 42, 0.7);
+  color: rgba(200, 195, 185, 0.35);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-style: normal;
@@ -1186,6 +1293,15 @@
     -webkit-user-select: none;
     user-select: none;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Unify background across every mobile region — no seams */
+  .legend-timeline,
+  .vtl__top-card,
+  .vtl__bar-area,
+  .vtl__bar-scroll,
+  .vtl__bar-col {
+    background: var(--color-night);
   }
 }
 
