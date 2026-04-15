@@ -3,26 +3,29 @@
  *
  *   ┌────────┐  ┌────────┐  ┌────────┐
  *   │ NUMBER │  │  CITY  │  │  HERO  │
- *   │   18   │  │ BOSTON │  │ BRADY  │
- *   │ blue   │  │ orange │  │ yellow │
+ *   │   18   │  │ BOSTON │  │   12   │
+ *   │ blue   │  │ orange │  │ BRADY  │
  *   └────────┘  └────────┘  └────────┘
  *
  * Each slot has three parts:
  *   1. Top eyebrow     — MY NUMBER / MY CITY / MY HERO
  *   2. Hero-sized value — the big thing the user sees first
- *   3. Bottom eyebrow  — one line of context (state, team, a sliver of meaning)
+ *   3. Bottom eyebrow  — one line of context (descriptor OR, for HERO, the name)
  *
- * Colour tells you which slot you're in at a glance:
+ * Hero is special: the big value is the jersey number and the sub-line is
+ * the player's name. Both are editable — clicking either opens a single
+ * search input that accepts a number OR a name and resolves against
+ * wallData via searchHeroes().
+ *
+ * Colour:
  *   Number → sacred blue   (your identity)
  *   City   → heat orange   (where your teams play)
  *   Hero   → blaze yellow  (the one you'd never trade)
- *
- * Hero is stored as an array (up to 5) for backcompat; this view surfaces
- * the first hero and lets you replace it. The full roster lives elsewhere.
  */
 
 import { useState, useEffect } from 'react'
 import { Plus } from 'lucide-react'
+import { searchHeroes } from '../data/index.js'
 import './IdentityTiles.css'
 
 export default function IdentityTiles({
@@ -45,12 +48,12 @@ export default function IdentityTiles({
 
 // ── Shared slot shell ──────────────────────────────────────────────────────
 
-function Slot({ variant, label, subLabel, filled, interactive, children, onClick, ariaLabel }) {
+function Slot({ variant, label, subLabel, filled, interactive, children, onClick, ariaLabel, modifier }) {
   const Tag = interactive ? 'button' : 'div'
   return (
     <Tag
       type={interactive ? 'button' : undefined}
-      className={`id-slot id-slot--${variant}${filled ? ' id-slot--filled' : ' id-slot--empty'}`}
+      className={`id-slot id-slot--${variant}${filled ? ' id-slot--filled' : ' id-slot--empty'}${modifier ? ' ' + modifier : ''}`}
       onClick={onClick}
       aria-label={ariaLabel}
     >
@@ -112,6 +115,9 @@ function NumberSlot({ value, onSave }) {
 }
 
 // ── Slot 2: City (orange) ──────────────────────────────────────────────────
+// `id-slot--autosize` lets the cell grow wider than 1fr when the value is
+// long (Edmonton, Nashville, Indianapolis) rather than clipping with an
+// ellipsis. The triptych still reads as three; the balance just shifts.
 
 function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   const [editing, setEditing] = useState(false)
@@ -131,10 +137,11 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   }
 
   const sub = value ? 'WHERE YOUR TEAMS PLAY' : 'PICK A CITY'
+  const modifier = value && value.length > 7 ? 'id-slot--autosize' : ''
 
   if (editing) {
     return (
-      <Slot variant="city" label="MY CITY" subLabel={sub} filled>
+      <Slot variant="city" label="MY CITY" subLabel={sub} filled modifier="id-slot--autosize">
         <input
           className="id-slot__input id-slot__input--big"
           type="text"
@@ -170,7 +177,7 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   }
 
   return (
-    <Slot variant="city" label="MY CITY" subLabel={sub} filled interactive
+    <Slot variant="city" label="MY CITY" subLabel={sub} filled interactive modifier={modifier}
           onClick={() => setEditing(true)} ariaLabel={`Edit my city (${value})`}>
       <span className="id-slot__value">{value}</span>
     </Slot>
@@ -178,41 +185,94 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
 }
 
 // ── Slot 3: Hero (yellow) ──────────────────────────────────────────────────
+// Big value is the jersey number; the bottom sub-line carries the player's
+// name. Editing opens ONE input that searches wallData bi-directionally —
+// typing "12" finds Brady, typing "brady" finds #12. Picking a suggestion
+// commits both number and name at once.
 
 function HeroSlot({ value, onSave }) {
   const [editing, setEditing] = useState(false)
-  const [draft, setDraft]     = useState(value || '')
-  useEffect(() => { setDraft(value || '') }, [value])
+  const [draft, setDraft]     = useState('')
+  const [results, setResults] = useState([])
 
-  function commit() {
-    const next = draft.trim().slice(0, 24)
-    onSave(next || null)
-    setEditing(false)
+  const heroNumber = value?.number || null
+  const heroName   = value?.name   || null
+
+  function openEdit() {
+    setDraft(heroName || '')
+    setResults(heroName ? searchHeroes(heroName) : [])
+    setEditing(true)
   }
 
-  const sub = value ? 'THE ONE YOU\u2019D NEVER TRADE' : 'PICK A LEGEND'
+  function onDraftChange(v) {
+    setDraft(v)
+    setResults(searchHeroes(v))
+  }
+
+  function commitPick(pick) {
+    onSave(pick ? { name: pick.name, number: pick.number } : null)
+    setEditing(false)
+    setResults([])
+  }
+
+  function commitFree() {
+    // Free-text fallback: if the draft is a plain number we store just the
+    // number; if text, we store as name with unknown number. Picking from
+    // the dropdown is the preferred path.
+    const q = draft.trim().slice(0, 40)
+    if (!q) { commitPick(null); return }
+    const isNum = /^\d{1,2}$/.test(q)
+    if (isNum) {
+      onSave({ name: heroName || q, number: q })
+    } else {
+      onSave({ name: q, number: heroNumber })
+    }
+    setEditing(false)
+    setResults([])
+  }
+
+  const sub = heroName ? heroName.toUpperCase() : 'THE ONE YOU\u2019D NEVER TRADE'
+  const hasValue = !!(heroNumber || heroName)
 
   if (editing) {
     return (
-      <Slot variant="hero" label="MY HERO" subLabel={sub} filled>
+      <Slot variant="hero" label="MY HERO" subLabel="SEARCH BY NUMBER OR NAME" filled>
         <input
           className="id-slot__input id-slot__input--big"
           type="text"
           value={draft}
-          onChange={e => setDraft(e.target.value.slice(0, 24))}
-          onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') setEditing(false) }}
-          onBlur={commit}
-          placeholder="Your hero"
+          onChange={e => onDraftChange(e.target.value.slice(0, 40))}
+          onKeyDown={e => {
+            if (e.key === 'Enter') { if (results[0]) commitPick(results[0]); else commitFree() }
+            if (e.key === 'Escape') setEditing(false)
+          }}
+          onBlur={() => setTimeout(() => { if (editing) commitFree() }, 180)}
+          placeholder="12 or Brady"
           autoFocus
         />
+        {results.length > 0 && (
+          <div className="id-slot__suggestions">
+            {results.map(r => (
+              <button
+                key={`${r.number}-${r.name}`}
+                className="id-slot__suggestion id-slot__suggestion--hero"
+                onMouseDown={e => { e.preventDefault(); commitPick(r) }}
+              >
+                <span className="id-slot__suggestion-num">#{r.number}</span>
+                <span className="id-slot__suggestion-name">{r.name}</span>
+                {r.team && <span className="id-slot__suggestion-team">{r.team}</span>}
+              </button>
+            ))}
+          </div>
+        )}
       </Slot>
     )
   }
 
-  if (!value) {
+  if (!hasValue) {
     return (
-      <Slot variant="hero" label="MY HERO" subLabel={sub} filled={false} interactive
-            onClick={() => setEditing(true)} ariaLabel="Set my hero">
+      <Slot variant="hero" label="MY HERO" subLabel="PICK A LEGEND" filled={false} interactive
+            onClick={openEdit} ariaLabel="Set my hero">
         <Plus size={22} strokeWidth={2.5} className="id-slot__plus" />
       </Slot>
     )
@@ -220,8 +280,9 @@ function HeroSlot({ value, onSave }) {
 
   return (
     <Slot variant="hero" label="MY HERO" subLabel={sub} filled interactive
-          onClick={() => setEditing(true)} ariaLabel={`Edit my hero (${value})`}>
-      <span className="id-slot__value">{value}</span>
+          onClick={openEdit} ariaLabel={`Edit my hero (${heroName || heroNumber})`}
+          modifier="id-slot--hero-filled">
+      <span className="id-slot__value">{heroNumber || '?'}</span>
     </Slot>
   )
 }

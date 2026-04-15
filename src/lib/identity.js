@@ -34,13 +34,25 @@ export function getIdentity() {
   }
 }
 
+// Heroes normalise to objects of shape { name, number }. Strings from legacy
+// storage become { name: str, number: null } at read time so the UI never
+// has to branch.
+function normaliseHero(h) {
+  if (!h) return null
+  if (typeof h === 'string') return { name: h, number: null }
+  if (typeof h === 'object' && h.name) {
+    return { name: h.name, number: h.number ? String(h.number) : null }
+  }
+  return null
+}
+
 function readHeroes() {
   // Prefer the new array key
   const raw = localStorage.getItem(IDENTITY_HEROES)
   if (raw) {
     try {
       const arr = JSON.parse(raw)
-      if (Array.isArray(arr)) return arr.filter(Boolean).slice(0, MAX_HEROES)
+      if (Array.isArray(arr)) return arr.map(normaliseHero).filter(Boolean).slice(0, MAX_HEROES)
     } catch {
       // fall through to legacy read
     }
@@ -48,7 +60,7 @@ function readHeroes() {
   // Legacy: single hero string. If present, seed the array and persist.
   const legacy = localStorage.getItem(IDENTITY_HERO)
   if (legacy) {
-    const seeded = [legacy]
+    const seeded = [{ name: legacy, number: null }]
     localStorage.setItem(IDENTITY_HEROES, JSON.stringify(seeded))
     return seeded
   }
@@ -84,22 +96,28 @@ export function setIdentityField(field, value) {
   }
 }
 
-export function addHero(name) {
-  if (!name) return
+// addHero accepts either a string (name only) or a { name, number } object.
+export function addHero(hero) {
+  const h = typeof hero === 'string' ? { name: hero, number: null } : hero
+  if (!h || !h.name) return
   const heroes = readHeroes()
-  if (heroes.includes(name)) return
+  if (heroes.some(x => x.name === h.name)) return
   if (heroes.length >= MAX_HEROES) return
-  heroes.push(name)
+  heroes.push({ name: h.name, number: h.number ? String(h.number) : null })
   localStorage.setItem(IDENTITY_HEROES, JSON.stringify(heroes))
 }
 
-export function removeHero(name) {
-  const heroes = readHeroes().filter(h => h !== name)
+export function removeHero(hero) {
+  const name = typeof hero === 'string' ? hero : hero?.name
+  if (!name) return
+  const heroes = readHeroes().filter(h => h.name !== name)
   localStorage.setItem(IDENTITY_HEROES, JSON.stringify(heroes))
 }
 
-export function updateHero(oldName, newName) {
-  if (!newName) return
-  const heroes = readHeroes().map(h => h === oldName ? newName : h)
+export function updateHero(oldHero, newHero) {
+  const oldName = typeof oldHero === 'string' ? oldHero : oldHero?.name
+  const next = typeof newHero === 'string' ? { name: newHero, number: null } : newHero
+  if (!next || !next.name) return
+  const heroes = readHeroes().map(h => h.name === oldName ? { name: next.name, number: next.number ? String(next.number) : null } : h)
   localStorage.setItem(IDENTITY_HEROES, JSON.stringify(heroes))
 }

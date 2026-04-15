@@ -144,6 +144,33 @@ export function buildFilteredIndex(baseData, sportFilter) {
 
 export const TILE_NUMBERS = ['0', '00', ...Array.from({ length: 99 }, (_, i) => String(i + 1))]
 
+// ─── Hero search ───────────────────────────────────────────────────────────
+// Bi-directional lookup for the identity hero slot. Users can type a jersey
+// number ("12") or a partial name ("brady") — both resolve against wallData
+// and return { number, name } candidates ranked by tier weight.
+
+export function searchHeroes(query, limit = 6) {
+  const q = (query || '').trim().toLowerCase()
+  if (!q) return []
+  const isNumeric = /^\d{1,2}$/.test(q)
+  const pool = wallData.filter(e => e.tier !== 'UNWRITTEN' && e.name)
+  const matches = pool.filter(e => {
+    if (isNumeric) return String(e.number) === q
+    return e.name.toLowerCase().includes(q)
+  })
+  matches.sort((a, b) => (TIER_WEIGHT[b.tier] || 0) - (TIER_WEIGHT[a.tier] || 0))
+  const seen = new Set()
+  const out = []
+  for (const m of matches) {
+    const key = `${m.number}|${m.name}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    out.push({ number: String(m.number), name: m.name, sport: m.sport, team: m.team })
+    if (out.length >= limit) break
+  }
+  return out
+}
+
 // ─── Heat level ────────────────────────────────────────────────────────────
 // Derives a heat step (0–5) from the entries on a tile.
 // Tier weights imported from data/tiers.js (single source of truth).

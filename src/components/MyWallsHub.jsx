@@ -75,13 +75,14 @@ export default function MyWallsHub() {
     setIdentity(prev => ({ ...prev, [field]: value }))
   }
 
-  // Hero is backed by an array (up to 5) for backcompat. The identity row
-  // surfaces the first slot — saving replaces that slot, clearing removes it.
+  // Hero is backed by an array of { name, number } (up to 5) for backcompat.
+  // The identity row surfaces the first slot — saving replaces it, null clears.
   function handleHeroSave(next) {
     const current = (identity.heroes && identity.heroes[0]) || null
     if (current) removeHero(current)
     if (next) addHero(next)
-    const heroes = next ? [next, ...(identity.heroes || []).filter(h => h !== current && h !== next)] : (identity.heroes || []).filter(h => h !== current)
+    const rest = (identity.heroes || []).filter(h => h?.name !== current?.name && h?.name !== next?.name)
+    const heroes = next ? [next, ...rest] : rest
     setIdentity(prev => ({ ...prev, heroes }))
   }
 

@@ -42,9 +42,23 @@
   --id-yellow-glow-hi: rgba(245, 193, 53, 0.32);
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Each slot can grow past 1fr when its content needs the room (long city
+     names like Nashville or Indianapolis). The :has() rules below let a
+     slot carrying a long value opt into `auto` width and rebalance the
+     row rather than clipping the value with an ellipsis. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-2);
   padding: var(--space-2) 0 var(--space-3);
+}
+
+.id-row:has(.id-slot--number.id-slot--autosize) {
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, 1fr);
+}
+.id-row:has(.id-slot--city.id-slot--autosize) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr);
+}
+.id-row:has(.id-slot--hero.id-slot--autosize) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, auto);
 }
 
 @media (min-width: 768px) {
@@ -122,17 +136,23 @@ button.id-slot.id-slot--empty:hover {
   opacity: 0.75;
 }
 
-/* Hero-sized value — shared across all three slots */
+/* Hero-sized value — shared across all three slots. No ellipsis — slots
+   carrying long values (Nashville, Indianapolis) opt into autosize via a
+   modifier on the slot so the grid widens instead of the text clipping. */
 .id-slot__value {
   font-family: var(--font-banner);
   font-size: clamp(1.75rem, 6vw, 2.75rem);
   line-height: 1;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   max-width: 100%;
   display: inline-block;
+}
+
+.id-slot--autosize {
+  /* Breathing room so a long word isn't cramped to the cell edge. */
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
 }
 
 .id-slot__input--big {
@@ -205,6 +225,15 @@ button.id-slot--hero.id-slot--filled:hover {
   text-shadow: 0 0 14px var(--id-yellow-edge);
 }
 
+/* When the hero slot is filled, the sub-line is the player's name — that
+   reads as a proper noun, not a descriptor, so brighten it and drop the
+   heavy scoreboard tracking. */
+.id-slot--hero-filled .id-slot__sublabel {
+  color: var(--color-paper);
+  letter-spacing: var(--tracking-wider);
+  opacity: 0.95;
+}
+
 /* ── Suggestions dropdown ──────────────────────────────────────────────── */
 
 .id-slot__suggestions {
@@ -239,6 +268,36 @@ button.id-slot--hero.id-slot--filled:hover {
 
 .id-slot__suggestion:first-child { border-top: none; }
 .id-slot__suggestion:hover { background: var(--surface-1); }
+
+/* Hero suggestions read as mini player rows: #NN on the left, name in the
+   middle, team on the right. */
+.id-slot__suggestion--hero {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.id-slot__suggestion-num {
+  font-family: var(--font-banner);
+  color: var(--color-blaze);
+  font-size: 1rem;
+  min-width: 2.25em;
+}
+.id-slot__suggestion-name {
+  font-family: var(--font-program);
+  color: var(--color-paper);
+  font-size: var(--text-small);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.id-slot__suggestion-team {
+  font-family: var(--font-scoreboard);
+  color: var(--color-muted);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
 
 /* ── Responsive ─────────────────────────────────────────────────────────
    On narrow screens the triptych still reads as three, just tighter. */
