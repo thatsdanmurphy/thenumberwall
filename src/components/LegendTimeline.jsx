@@ -632,7 +632,6 @@ export default function LegendTimeline({ timeline }) {
   const vCanvasRef = useRef(null)       // vertical mobile canvas
   const containerRef = useRef(null)
   const rafRef = useRef(null)
-  const scrubRef = useRef(false)
   const scrubIndicatorRef = useRef(null) // direct DOM ref for scrub position
   const vScrubRafRef = useRef(null)      // rAF throttle for mobile scrub
   const pendingScrubIdx = useRef(null)   // pending index for throttled state update
@@ -807,123 +806,62 @@ export default function LegendTimeline({ timeline }) {
     if (pinnedIndex !== null) setPinnedIndex(null)
   }, [pinnedIndex])
 
-  // ── Mobile scrub handlers ──
-  // Edge acceleration: finger near top/bottom auto-animates to start/end
-  const edgeAnimRef = useRef(null)
+  // ── Mobile scroll handler ──
+  // Bar is taller than screen; user scrolls; game at viewport center is "selected"
+  const vScrollRef = useRef(null)  // scrollable viewport element
+  const vInitializedRef = useRef(false)
 
-  const applyScrubIndex = useCallback((idx) => {
+  // On first render after positions are computed, scroll so game 0 is at center
+  useEffect(() => {
+    if (vInitializedRef.current) return
+    const viewport = vScrollRef.current
+    const positions = vGamePositionsRef.current
+    if (!viewport || !positions) return
+    // Content coords: bar-col starts after padding-top. We want the bar-col's
+    // game[0] (at positions[0]) to align with viewport center. Since bar-col is
+    // offset by padding-top inside the scroll content, scrollTop=0 already puts
+    // padding-top at the top of the viewport. Viewport center = scrollTop + H/2.
+    // We want centerY (in content coords) = paddingTop + positions[0].
+    // So scrollTop = paddingTop + positions[0] - H/2.
+    // Easier: just read the bar-col's offsetTop.
+    const barCol = viewport.querySelector('.vtl__bar-col')
+    if (!barCol) return
+    const offset = barCol.offsetTop + positions[0]
+    viewport.scrollTop = offset - viewport.clientHeight / 2
+    vInitializedRef.current = true
+  }, [vGamePositions])
+
+  const handleVScroll = useCallback(() => {
+    const viewport = vScrollRef.current
     const positions = vGamePositionsRef.current
     const n = gamesRef.current.length
-    if (idx < 0 || idx >= n || !positions) return
-    // Instant: move scrub line via direct DOM
-    const scrubEl = scrubIndicatorRef.current
-    if (scrubEl) {
-      const py = (positions[idx] + positions[idx + 1]) / 2
-      scrubEl.style.top = `${py}px`
+    if (!viewport || !positions || n === 0) return
+    const barCol = viewport.querySelector('.vtl__bar-col')
+    if (!barCol) return
+
+    // Convert viewport center → bar-col content coordinates
+    const centerInContent = viewport.scrollTop + viewport.clientHeight / 2
+    const centerY = centerInContent - barCol.offsetTop
+
+    // Binary search for game whose span contains centerY
+    let lo = 0, hi = n - 1
+    while (lo < hi) {
+      const m = (lo + hi) >> 1
+      if (positions[m + 1] <= centerY) lo = m + 1; else hi = m
     }
-    // Throttled: update card via React
-    pendingScrubIdx.current = idx
+    lo = Math.max(0, Math.min(n - 1, lo))
+
+    pendingScrubIdx.current = lo
     if (!vScrubRafRef.current) {
       vScrubRafRef.current = requestAnimationFrame(() => {
         const i = pendingScrubIdx.current
         if (i !== null) {
           setHoveredIndex(i)
           setPinnedIndex(i)
-          setVGamePositions(vGamePositionsRef.current)
         }
         vScrubRafRef.current = null
       })
     }
-  }, [])
-
-  // Track latest touch Y so edge-accel loop can respond to finger lingering
-  const lastTouchYRef = useRef(null)
-  const edgeDirectionRef = useRef(0)  // -1 up, +1 down, 0 none
-
-  const runEdgeLoop = useCallback(() => {
-    if (!scrubRef.current) { edgeAnimRef.current = null; return }
-    const canvas = vCanvasRef.current
-    if (!canvas) { edgeAnimRef.current = null; return }
-    const rect = canvas.getBoundingClientRect()
-    const h = rect.height
-    const n = gamesRef.current.length
-    const edgeZone = h * 0.18
-    const touchY = lastTouchYRef.current
-    if (touchY == null) { edgeAnimRef.current = null; return }
-    const relY = touchY - rect.top
-
-    let dir = 0, speed = 0
-    if (relY < edgeZone) {
-      dir = -1
-      // closer to top = faster; up to ~20 games/frame at the very edge
-      const t = Math.max(0, Math.min(1, 1 - relY / edgeZone))
-      speed = Math.max(1, Math.round(t * t * 20))
-    } else if (relY > h - edgeZone) {
-      dir = 1
-      const t = Math.max(0, Math.min(1, 1 - (h - relY) / edgeZone))
-      speed = Math.max(1, Math.round(t * t * 20))
-    }
-
-    if (dir === 0) { edgeAnimRef.current = null; edgeDirectionRef.current = 0; return }
-
-    const cur = pendingScrubIdx.current ?? (dir < 0 ? 0 : n - 1)
-    const next = Math.max(0, Math.min(n - 1, cur + dir * speed))
-    applyScrubIndex(next)
-    edgeDirectionRef.current = dir
-    edgeAnimRef.current = requestAnimationFrame(runEdgeLoop)
-  }, [applyScrubIndex])
-
-  const vScrubToIndex = useCallback((touchY) => {
-    const canvas = vCanvasRef.current
-    const positions = vGamePositionsRef.current
-    if (!canvas || !positions) return
-    lastTouchYRef.current = touchY
-    const rect = canvas.getBoundingClientRect()
-    const relY = touchY - rect.top
-    const h = rect.height
-    const n = gamesRef.current.length
-    const edgeZone = h * 0.18
-
-    // If in edge zone, ensure edge loop is running
-    if (relY < edgeZone || relY > h - edgeZone) {
-      if (!edgeAnimRef.current) {
-        edgeAnimRef.current = requestAnimationFrame(runEdgeLoop)
-      }
-      return
-    }
-
-    // Out of edge zone — cancel any edge animation
-    if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
-    edgeDirectionRef.current = 0
-
-    // Normal zone — direct position mapping
-    const y = Math.max(0, Math.min(relY, h - 1))
-    let lo = 0, hi = n - 1
-    while (lo < hi) {
-      const m = (lo + hi) >> 1
-      if (positions[m + 1] <= y) lo = m + 1; else hi = m
-    }
-    applyScrubIndex(lo)
-  }, [applyScrubIndex, runEdgeLoop])
-
-  const handleVTouchStart = useCallback((e) => {
-    e.preventDefault()
-    scrubRef.current = true
-    const touch = e.touches[0]
-    vScrubToIndex(touch.clientY)
-  }, [vScrubToIndex])
-
-  const handleVTouchMove = useCallback((e) => {
-    e.preventDefault()
-    const touch = e.touches[0]
-    vScrubToIndex(touch.clientY)
-  }, [vScrubToIndex])
-
-  const handleVTouchEnd = useCallback(() => {
-    scrubRef.current = false
-    lastTouchYRef.current = null
-    edgeDirectionRef.current = 0
-    if (edgeAnimRef.current) { cancelAnimationFrame(edgeAnimRef.current); edgeAnimRef.current = null }
   }, [])
 
   // Click on a moment marker — pin tooltip to that game
@@ -1092,12 +1030,7 @@ export default function LegendTimeline({ timeline }) {
       </div>
 
       {/* ── Mobile Vertical Glow Timeline ──────────────────────────────── */}
-      <div
-        className="vtl"
-        onTouchStart={handleVTouchStart}
-        onTouchMove={handleVTouchMove}
-        onTouchEnd={handleVTouchEnd}
-      >
+      <div className="vtl">
         {/* Persistent top header — always shows Brady #12 */}
         <div className="vtl__top-header">
           <span className="vtl__top-number">12</span>
@@ -1112,36 +1045,38 @@ export default function LegendTimeline({ timeline }) {
           )}
         </div>
 
-        {/* Bar fills remaining space — touch anywhere to scrub */}
+        {/* Bar area — scrollable viewport with fixed center scrub line */}
         <div className="vtl__bar-area">
-          <div className="vtl__bar-col">
-            <canvas
-              ref={vCanvasRef}
-              className="vtl__canvas"
-            />
-            {/* Era year ticks along the bar edge */}
-            {vGamePositions && eras.map(era => {
-              const top = vGamePositions[era.startIdx]
-              return (
-                <div
-                  key={era.id}
-                  className={`vtl__era-tick ${activeEra?.id === era.id ? 'vtl__era-tick--active' : ''}`}
-                  style={{ top: `${top}px` }}
-                >
-                  {era.seasons.length === 1 ? era.seasons[0] : `'${String(era.seasons[0]).slice(2)}`}
-                </div>
-              )
-            })}
-          </div>
-          {/* Scrub line — always visible, positioned via ref for zero-lag */}
           <div
-            ref={scrubIndicatorRef}
-            className="vtl__scrub-indicator"
-            style={{ top: activeIndex !== null && vGamePositions
-              ? `${(vGamePositions[activeIndex] + vGamePositions[activeIndex + 1]) / 2}px`
-              : '20px'
-            }}
+            ref={vScrollRef}
+            className="vtl__bar-scroll"
+            onScroll={handleVScroll}
           >
+            <div
+              className="vtl__bar-col"
+              style={{ height: `${Math.max(gamesRef.current.length * 5, 600)}px` }}
+            >
+              <canvas
+                ref={vCanvasRef}
+                className="vtl__canvas"
+              />
+              {/* Era year ticks along the bar edge */}
+              {vGamePositions && eras.map(era => {
+                const top = vGamePositions[era.startIdx]
+                return (
+                  <div
+                    key={era.id}
+                    className={`vtl__era-tick ${activeEra?.id === era.id ? 'vtl__era-tick--active' : ''}`}
+                    style={{ top: `${top}px` }}
+                  >
+                    {era.seasons.length === 1 ? era.seasons[0] : `'${String(era.seasons[0]).slice(2)}`}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+          {/* Fixed center scrub line — whatever scrolls past it is selected */}
+          <div className="vtl__scrub-indicator" ref={scrubIndicatorRef}>
             <div className="vtl__scrub-line" />
           </div>
         </div>
