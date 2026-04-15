@@ -747,6 +747,7 @@ export default function LegendTimeline({ timeline }) {
   useEffect(() => {
     let running = true
     let lastPositionSync = 0
+    let lastVerticalDraw = 0
 
     function tick(time) {
       if (!running) return
@@ -760,9 +761,13 @@ export default function LegendTimeline({ timeline }) {
         if (gx) gamePositionsRef.current = gx
       }
 
-      // Draw vertical canvas
+      // Draw vertical canvas — throttled. The mobile bar can be 3000+px tall
+      // and the per-pixel gradient loop is expensive, so redrawing it at 60fps
+      // stutters scroll on low-power devices. 50ms ≈ 20fps is smooth enough
+      // for the subtle breath animation and doesn't fight the scroll thread.
       const vCanvas = vCanvasRef.current
-      if (vCanvas && vCanvas.getBoundingClientRect().height > 0) {
+      if (vCanvas && vCanvas.getBoundingClientRect().height > 0 && time - lastVerticalDraw > 50) {
+        lastVerticalDraw = time
         const gy = drawVerticalTimeline(vCanvas, gamesRef.current, activeIndexRef.current, breathRef.current)
         if (gy) vGamePositionsRef.current = gy
       }
@@ -980,11 +985,15 @@ export default function LegendTimeline({ timeline }) {
     if (!vScrubRafRef.current) {
       vScrubRafRef.current = requestAnimationFrame(() => {
         const i = pendingScrubIdx.current
-        if (i !== null) {
+        // Pills repaint every frame (cheap — just transforms on ~8 DOM
+        // nodes). Only kick off a React re-render when the active game
+        // index actually changes, so we don't stutter the scroll with
+        // per-frame setState on a 300-game canvas.
+        positionPills()
+        if (i !== null && i !== activeIndexRef.current) {
           setHoveredIndex(i)
           setPinnedIndex(i)
         }
-        positionPills()
         vScrubRafRef.current = null
       })
     }
