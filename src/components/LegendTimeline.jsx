@@ -394,9 +394,9 @@ function drawVerticalTimeline(canvas, games, hoveredIndex, breathPhase) {
     if (mom?.length > 0) {
       const isSacred = mom.some(m => m.use_sacred_color)
       const maxAbs = Math.max(...mom.map(m => Math.abs(m.intensity || 0)))
-      if (isSacred) s = 7.0
-      else if (maxAbs >= 7) s = 5.5
-      else if (maxAbs >= 3) s = 3.0
+      if (isSacred) s = 10.0
+      else if (maxAbs >= 7) s = 8.0
+      else if (maxAbs >= 3) s = 4.0
     }
     // Dock magnification on hover
     if (hoveredIndex !== null) {
@@ -872,60 +872,66 @@ export default function LegendTimeline({ timeline }) {
     const barColTop = barCol.offsetTop
     const scrollTop = viewport.scrollTop
     const markers = momentMarkersRef.current || []
+    const n = gamesRef.current.length
 
-    // First pass: compute natural Y and state for each marker.
+    // Find the CURRENT game — whichever game's span contains the scrub line
+    // (at viewport y=0, i.e. centerY in content coords). This is the same
+    // calculation `handleVScroll` uses to set the top card, so pill state
+    // and top-card state stay locked together.
+    const centerY = scrollTop - barColTop
+    let lo = 0, hi = n - 1
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1
+      if (positions[mid + 1] <= centerY) lo = mid + 1; else hi = mid
+    }
+    const currentGameIdx = Math.max(0, Math.min(n - 1, lo))
+
+    // Compute per-marker viewport Y (bottom of pill position, relative to
+    // the scrub line). Used only for RIDING layout — state is driven by
+    // currentGameIdx, not by Y.
     const placements = markers.map(m => {
       const natural = barColTop + (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2 - PILL_H / 2
-      const viewY = natural - scrollTop
-      return { naturalY: viewY, viewY }
+      return { naturalY: natural - scrollTop }
     })
 
-    // Second pass: stagger RIDING pills. Walk bottom-up (largest viewY first)
-    // and ensure each pill is at least PILL_SEP above the one below it so
-    // tightly-spaced moments don't visually overlap while approaching.
-    const ridingIdxs = placements
+    // Stagger RIDING pills (gameIdx > currentGameIdx) so tightly-spaced
+    // moments like Helmet Catch → ACL don't overlap on approach.
+    const riding = placements
       .map((p, i) => ({ i, y: p.naturalY }))
-      .filter(p => p.y >= 0)
-      .sort((a, b) => b.y - a.y) // descending — furthest from scrub first
+      .filter(p => markers[p.i].gameIdx > currentGameIdx && p.y > 0)
+      .sort((a, b) => b.y - a.y)
     let lastY = Infinity
-    for (const r of ridingIdxs) {
+    for (const r of riding) {
       if (lastY - placements[r.i].naturalY < PILL_SEP) {
-        // Too close to the pill below — push this one further up (smaller y).
         placements[r.i].naturalY = lastY - PILL_SEP
       }
       lastY = placements[r.i].naturalY
     }
 
-    // Third pass: apply styles. Only the MOST-RECENTLY-CROSSED moment may
-    // dock; older ones stay hidden even inside their PILL_HOLD_PX window.
-    // This prevents the old pill from resurfacing after yielding to a newer
-    // moment (the "Helmet Catch reappears while top card shows a later
-    // game" bug).
+    // Apply styles. Pill state is bound to the current game:
+    //   marker.gameIdx === currentGameIdx → DOCKED on scrub
+    //   marker.gameIdx  >  currentGameIdx → RIDING at naturalY
+    //   marker.gameIdx  <  currentGameIdx → HIDDEN
+    // This makes the pill a perfect mirror of what the top card is showing.
     for (let i = 0; i < markers.length; i++) {
       const el = pillRefs.current[i]
       if (!el) continue
+      const m = markers[i]
       const p = placements[i]
-      const next = placements[i + 1]
-      const nextCrossed = next && next.naturalY <= 0
-      const nextApproaching = next && next.naturalY > 0 && next.naturalY < PILL_HANDOFF_PX
+      let y = PILL_DOCK_Y
+      let docked = false
+      let visible = true
 
-      let y, docked = false, visible = true
-      if (p.naturalY >= 0) {
-        // Riding up toward the scrub line.
-        y = p.naturalY
-      } else if (
-        p.naturalY >= -PILL_HOLD_PX &&
-        !nextCrossed &&
-        !nextApproaching
-      ) {
-        // Just crossed — dock on the line with gravity/stick.
+      if (m.gameIdx === currentGameIdx) {
         y = PILL_DOCK_Y
         docked = true
+      } else if (m.gameIdx > currentGameIdx) {
+        y = Math.max(p.naturalY, PILL_DOCK_Y)
+        docked = false
       } else {
-        // Well past, or a newer moment has crossed / is close — vanish.
         visible = false
-        y = PILL_DOCK_Y
       }
+
       el.style.transform = `translate(-50%, ${y}px)`
       el.style.opacity = visible ? '' : '0'
       el.style.pointerEvents = visible ? '' : 'none'
@@ -1248,7 +1254,7 @@ export default function LegendTimeline({ timeline }) {
           >
             <div
               className="vtl__bar-col"
-              style={{ height: `${Math.max(gamesRef.current.length * 5, 600)}px` }}
+              style={{ height: `${Math.max(gamesRef.current.length * 11, 600)}px` }}
             >
               <canvas
                 ref={vCanvasRef}

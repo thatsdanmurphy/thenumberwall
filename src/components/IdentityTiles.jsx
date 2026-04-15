@@ -77,7 +77,7 @@ function NumberSlot({ value, onSave }) {
     setEditing(false)
   }
 
-  const sub = value ? 'THE ONE YOU\u2019D WEAR' : 'PICK A NUMBER'
+  const sub = value ? 'THE ONE THAT\u2019S YOURS' : 'PICK A NUMBER'
 
   if (editing) {
     return (
@@ -137,11 +137,15 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   }
 
   const sub = value ? 'WHERE YOUR TEAMS PLAY' : 'PICK A CITY'
-  const modifier = value && value.length > 7 ? 'id-slot--autosize' : ''
+  // Autosize only when the actual text is long enough to need it. When
+  // editing, track the draft so the cell grows with the word being typed
+  // — not just because the tile is active.
+  const len = (editing ? draft : value || '').length
+  const modifier = len > 7 ? 'id-slot--autosize' : ''
 
   if (editing) {
     return (
-      <Slot variant="city" label="MY CITY" subLabel={sub} filled modifier="id-slot--autosize">
+      <Slot variant="city" label="MY CITY" subLabel={sub} filled modifier={modifier}>
         <input
           className="id-slot__input id-slot__input--big"
           type="text"
@@ -247,7 +251,7 @@ function HeroSlot({ value, onSave }) {
             if (e.key === 'Escape') setEditing(false)
           }}
           onBlur={() => setTimeout(() => { if (editing) commitFree() }, 180)}
-          placeholder="12 or Brady"
+          placeholder="00 or a name"
           autoFocus
         />
         {results.length > 0 && (
