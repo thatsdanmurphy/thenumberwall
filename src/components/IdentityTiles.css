@@ -1,11 +1,10 @@
-/* IdentityTiles — Triptych layout.
-   Three slots share a common `--id-row-h` so the row reads as one object even
+/* IdentityTiles — Two-slot layout.
+   Slots share a common `--id-row-h` so the row reads as one object even
    though each slot takes the shape its data asks for:
      · Number  — square
      · City    — wide field
-     · Heroes  — wide field containing pill-chips
-   All slots use the same shell (border, radius, label overline, hover), which
-   is what makes the row feel like one system. */
+   Both slots use the same shell (border, radius, label overline, hover),
+   which is what makes the row feel like one system. */
 
 .id-row {
   /* Row-scoped tokens. Kept local (not in global.css) because these dimensions
@@ -13,14 +12,12 @@
      because global.css doesn't ship a heat-glow token yet — if/when it does,
      swap these refs in one place. */
   --id-row-h:        64px;
-  --id-chip-h:       26px;
   --id-heat-bg:      rgba(232, 124, 42, 0.14);
   --id-heat-bg-fade: rgba(232, 124, 42, 0.04);
   --id-heat-edge:    rgba(232, 124, 42, 0.45);
   --id-heat-edge-hi: rgba(232, 124, 42, 0.75);
   --id-heat-glow:    rgba(232, 124, 42, 0.20);
   --id-heat-glow-hi: rgba(232, 124, 42, 0.30);
-  --id-focus-ring:   rgba(255, 255, 255, 0.18);
 
   display: flex;
   align-items: stretch;
@@ -76,7 +73,7 @@ button.id-slot:hover {
   background: var(--surface-1);
 }
 
-/* Slot-level label — micro overline, consistent across all three slots.
+/* Slot-level label — micro overline, consistent across both slots.
    Lives inside the tile so the row has no captions floating below it. */
 .id-slot__label {
   font-family: var(--font-scoreboard);
@@ -190,159 +187,7 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
   padding: 0;
 }
 
-/* ── Variant: Heroes — wide field of pill chips ────────────────────────── */
-
-.id-slot--heroes {
-  flex: 2 1 280px;
-  min-width: 220px;
-}
-
-.id-slot--heroes .id-slot__body {
-  gap: 6px;
-  overflow: hidden;
-}
-
-.id-heroes {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: visible;
-  padding: 2px 0;
-  scrollbar-width: none;
-}
-
-.id-heroes::-webkit-scrollbar { display: none; }
-
-/* ── Pill chip — the atom of the heroes roster ─────────────────────────── */
-
-.id-chip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  height: var(--id-chip-h);
-  padding: 0 var(--space-2);
-  border-radius: 999px;   /* pill — no token in global.css for full-radius */
-  background: var(--surface-2);
-  border: 1px solid var(--border-soft);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: var(--tracking-wide);
-  color: var(--color-paper);
-  white-space: nowrap;
-  flex-shrink: 0;
-  cursor: default;
-  transition: background var(--motion-hover), border-color var(--motion-hover);
-}
-
-.id-chip__num {
-  font-family: var(--font-banner);
-  font-size: var(--text-caption);
-  letter-spacing: -0.01em;
-  color: var(--color-heat);
-  text-shadow: 0 0 6px var(--id-heat-edge);
-  line-height: 1;
-}
-
-.id-chip__name {
-  font-family: var(--font-banner);
-  font-size: var(--text-caption);
-  letter-spacing: 0.04em;
-  color: var(--color-paper);
-  line-height: 1;
-}
-
-.id-chip--unresolved .id-chip__num {
-  color: var(--color-muted);
-  text-shadow: none;
-}
-
-.id-chip--unresolved .id-chip__name {
-  color: var(--color-muted);
-}
-
-.id-chip--filled:hover {
-  border-color: var(--border-medium);
-  background: var(--surface-3, rgba(255,255,255,0.05));
-}
-
-.id-chip__remove {
-  margin-left: 2px;
-  width: 14px;
-  height: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--color-muted);
-  cursor: pointer;
-  padding: 0;
-  opacity: 0;
-  transition: opacity var(--motion-hover), background var(--motion-hover), color var(--motion-hover);
-}
-
-.id-chip:hover .id-chip__remove,
-.id-chip:focus-within .id-chip__remove {
-  opacity: 1;
-}
-
-.id-chip__remove:hover {
-  background: var(--color-heat);
-  color: var(--color-paper);
-}
-
-/* Add chip — dashed, ghost. "Add a hero" when empty, "Add" after the first. */
-.id-chip--add {
-  background: transparent;
-  border: 1px dashed var(--border-soft);
-  color: var(--color-muted);
-  cursor: pointer;
-  padding: 0 10px;
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  letter-spacing: 0.02em;
-  text-transform: none;
-}
-
-.id-chip--add:hover {
-  border-style: solid;
-  border-color: var(--border-medium);
-  color: var(--color-paper);
-}
-
-.id-chip--add-lead { padding: 0 12px; }
-
-/* Editing chip — input lives inside a chip-shaped shell */
-.id-chip--editing {
-  padding: 0 var(--space-1) 0 var(--space-2);
-  background: var(--surface-2);
-  border: 1px solid var(--color-paper);
-  box-shadow: 0 0 0 2px var(--id-focus-ring);
-}
-
-.id-chip__input {
-  width: 120px;
-  height: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: var(--color-paper);
-  letter-spacing: 0.02em;
-  padding: 0;
-}
-
-.id-chip__input::placeholder {
-  color: var(--color-muted);
-  opacity: 0.7;
-}
-
-/* ── Suggestions dropdown — city + hero ────────────────────────────────── */
+/* ── Suggestions dropdown ──────────────────────────────────────────────── */
 
 .id-slot__suggestions {
   position: absolute;
@@ -357,11 +202,6 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
   overflow: hidden;
   z-index: 10;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-.id-slot__suggestions--chip {
-  top: calc(100% + 6px);
-  min-width: 220px;
 }
 
 .id-slot__suggestion {
@@ -383,17 +223,9 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 .id-slot__suggestion:first-child { border-top: none; }
 .id-slot__suggestion:hover { background: var(--surface-1); }
 
-.id-slot__suggestion-num {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.1em;
-  color: var(--color-muted);
-}
-
-/* ── Responsive — narrow stacks city + heroes below number ─────────────── */
+/* ── Responsive — narrow stacks city below number ──────────────────────── */
 
 @media (max-width: 520px) {
   .id-row { gap: var(--space-2); }
-  .id-slot--city   { flex-basis: calc(100% - var(--id-row-h) - var(--space-2)); }
-  .id-slot--heroes { flex-basis: 100%; }
+  .id-slot--city { flex-basis: calc(100% - var(--id-row-h) - var(--space-2)); }
 }
