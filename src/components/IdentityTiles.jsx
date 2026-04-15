@@ -1,30 +1,30 @@
 /**
- * IdentityTiles — the top section of the MyWalls hub.
+ * IdentityTiles — Triptych layout for the MyWalls hub.
  *
- * Treats user identity the way the rest of the site treats everything else:
- * as tiles on a wall. Three slots:
- *   - Your number: one <WallTile>, your personal glow
- *   - Your city: one wide "tile" using the same visual tokens, text instead
- *     of a digit
- *   - Your heroes: up to 5 tiles, each showing the hero's number. Name
- *     appears as a caption below the row.
+ * Three slots sharing a common height, each shaped for its data:
+ *   ┌────┐ ┌──────────────┐ ┌─────────────────────────────┐
+ *   │ 18 │ │ BROOKLINE,MA │ │ #4 ORR · #77 BOURQUE · +ADD │
+ *   └────┘ └──────────────┘ └─────────────────────────────┘
+ *    square      field                 roster
  *
- * Click any tile to edit. Empty slots show a dashed "+" tile inviting input.
+ * Why this shape:
+ *   Number is one short value → square tile.
+ *   City is one medium-wide value → wide field.
+ *   Heroes is 1..N pairs of (number, name) → pill-chip roster.
  *
- * Data model: identity.heroes is an array of names (migrated from legacy
- * single-hero key). See lib/identity.js.
+ * Earlier attempts jammed heroes into square tiles and dropped the name
+ * underneath as a caption — names didn't fit and containers were different
+ * heights. The Triptych lets each slot take its natural shape while a shared
+ * `--id-row-height` keeps the row looking like one thing.
+ *
+ * Voice: "my" throughout. MY NUMBER · MY CITY · MY HEROES.
  */
 
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Plus, X } from 'lucide-react'
-import WallTile from './WallTile.jsx'
 import { MAX_HEROES } from '../lib/identity.js'
 import './IdentityTiles.css'
 
-/**
- * Resolve a hero name → number via the shared player lookup.
- * Accepts a lookup map from the parent so we don't build it twice.
- */
 function resolveHero(name, lookup) {
   if (!name || !lookup) return null
   const q = name.trim().toLowerCase()
@@ -38,65 +38,65 @@ function resolveHero(name, lookup) {
   return partial ? partial[1] : null
 }
 
+// "Bobby Orr" → "ORR". Keeps the roster readable at small sizes; full name
+// stays in the title attribute for hover disclosure.
+function lastNameUpper(full) {
+  if (!full) return ''
+  const parts = full.trim().split(/\s+/)
+  return parts[parts.length - 1].toUpperCase()
+}
+
 export default function IdentityTiles({
   identity,
   heroLookup,
   heroSuggestions,
   citySuggestions,
-  onSaveField,    // (field, value) — field: 'number' | 'city'
-  onAddHero,      // (name)
-  onUpdateHero,   // (oldName, newName)
-  onRemoveHero,   // (name)
+  onSaveField,
+  onAddHero,
+  onUpdateHero,    // kept in API; not yet wired — remove-and-readd handles rename
+  onRemoveHero,
 }) {
   const { number, city, heroes } = identity
 
   return (
-    <section className="id-tiles" aria-label="Your identity">
-      <div className="id-tiles__row">
-        {/* ── Your Number ──────────────────────────────────────────── */}
-        <div className="id-tiles__slot">
-          <EditableNumberTile
-            value={number}
-            onSave={v => onSaveField('number', v)}
-          />
-          <span className="id-tiles__caption">YOU</span>
-        </div>
-
-        {/* ── Your City ────────────────────────────────────────────── */}
-        <div className="id-tiles__slot id-tiles__slot--city">
-          <EditableCityCell
-            value={city}
-            suggestions={citySuggestions}
-            onSave={v => onSaveField('city', v)}
-          />
-          <span className="id-tiles__caption">YOUR CITY</span>
-        </div>
-
-        {/* ── Your Heroes ──────────────────────────────────────────── */}
-        <div className="id-tiles__slot id-tiles__slot--heroes">
-          <HeroesRow
-            heroes={heroes}
-            heroLookup={heroLookup}
-            heroSuggestions={heroSuggestions}
-            onAdd={onAddHero}
-            onUpdate={onUpdateHero}
-            onRemove={onRemoveHero}
-          />
-          <span className="id-tiles__caption">
-            {heroes.length === 0 ? 'YOUR HEROES' : heroes.join(' · ')}
-          </span>
-        </div>
-      </div>
+    <section className="id-row" aria-label="My identity">
+      <NumberSlot value={number} onSave={v => onSaveField('number', v)} />
+      <CitySlot   value={city}   suggestions={citySuggestions} onSave={v => onSaveField('city', v)} />
+      <HeroesSlot
+        heroes={heroes}
+        heroLookup={heroLookup}
+        heroSuggestions={heroSuggestions}
+        onAdd={onAddHero}
+        onRemove={onRemoveHero}
+      />
     </section>
   )
 }
 
-// ─── Number tile ───────────────────────────────────────────────────────────
+// ── Shared slot shell ──────────────────────────────────────────────────────
+// All three slots render through this so borders, radii, hover, label
+// treatment stay perfectly in sync. Variant drives sizing + accent color.
 
-function EditableNumberTile({ value, onSave }) {
+function Slot({ variant, label, filled, interactive, children, onClick, ariaLabel }) {
+  const Tag = interactive ? 'button' : 'div'
+  return (
+    <Tag
+      type={interactive ? 'button' : undefined}
+      className={`id-slot id-slot--${variant}${filled ? ' id-slot--filled' : ' id-slot--empty'}`}
+      onClick={onClick}
+      aria-label={ariaLabel}
+    >
+      <span className="id-slot__label">{label}</span>
+      <div className="id-slot__body">{children}</div>
+    </Tag>
+  )
+}
+
+// ── Slot 1: Number ─────────────────────────────────────────────────────────
+
+function NumberSlot({ value, onSave }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft]     = useState(value || '')
-
   useEffect(() => { setDraft(value || '') }, [value])
 
   function commit() {
@@ -107,9 +107,9 @@ function EditableNumberTile({ value, onSave }) {
 
   if (editing) {
     return (
-      <div className="id-tile id-tile--editing">
+      <Slot variant="number" label="MY NUMBER" filled>
         <input
-          className="id-tile__input"
+          className="id-slot__input id-slot__input--number"
           type="text"
           value={draft}
           onChange={e => setDraft(e.target.value.replace(/[^0-9]/g, '').slice(0, 2))}
@@ -119,36 +119,33 @@ function EditableNumberTile({ value, onSave }) {
           autoFocus
           inputMode="numeric"
         />
-      </div>
+      </Slot>
     )
   }
 
   if (!value) {
     return (
-      <button
-        className="id-tile id-tile--empty"
-        onClick={() => setEditing(true)}
-        aria-label="Set your number"
-      >
-        <Plus size={18} strokeWidth={2.5} />
-      </button>
+      <Slot variant="number" label="MY NUMBER" filled={false} interactive
+            onClick={() => setEditing(true)} ariaLabel="Set my number">
+        <Plus size={18} strokeWidth={2.5} className="id-slot__plus" />
+      </Slot>
     )
   }
 
   return (
-    <div onClick={() => setEditing(true)} className="id-tile id-tile--wrap">
-      <WallTile number={value} entries={[]} isActive={false} onClick={() => setEditing(true)} />
-    </div>
+    <Slot variant="number" label="MY NUMBER" filled interactive
+          onClick={() => setEditing(true)} ariaLabel={`Edit my number (${value})`}>
+      <span className="id-slot__number-value">{value}</span>
+    </Slot>
   )
 }
 
-// ─── City cell (wide, tile-styled text) ───────────────────────────────────
+// ── Slot 2: City ───────────────────────────────────────────────────────────
 
-function EditableCityCell({ value, suggestions: suggestionFn, onSave }) {
+function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft]     = useState(value || '')
   const [suggestions, setSuggestions] = useState([])
-
   useEffect(() => { setDraft(value || '') }, [value])
 
   function commit(override) {
@@ -157,7 +154,6 @@ function EditableCityCell({ value, suggestions: suggestionFn, onSave }) {
     setEditing(false)
     setSuggestions([])
   }
-
   function onDraftChange(v) {
     setDraft(v)
     setSuggestions(suggestionFn ? suggestionFn(v) : [])
@@ -165,9 +161,9 @@ function EditableCityCell({ value, suggestions: suggestionFn, onSave }) {
 
   if (editing) {
     return (
-      <div className="id-tile id-tile--city id-tile--editing">
+      <Slot variant="city" label="MY CITY" filled>
         <input
-          className="id-tile__input id-tile__input--city"
+          className="id-slot__input id-slot__input--city"
           type="text"
           value={draft}
           onChange={e => onDraftChange(e.target.value.slice(0, 24))}
@@ -177,48 +173,44 @@ function EditableCityCell({ value, suggestions: suggestionFn, onSave }) {
           autoFocus
         />
         {suggestions.length > 0 && (
-          <div className="id-tile__suggestions">
+          <div className="id-slot__suggestions">
             {suggestions.map(s => (
               <button
                 key={s}
-                className="id-tile__suggestion"
+                className="id-slot__suggestion"
                 onMouseDown={e => { e.preventDefault(); commit(s) }}
               >{s}</button>
             ))}
           </div>
         )}
-      </div>
+      </Slot>
     )
   }
 
   if (!value) {
     return (
-      <button
-        className="id-tile id-tile--city id-tile--empty"
-        onClick={() => setEditing(true)}
-        aria-label="Set your city"
-      >
-        <Plus size={18} strokeWidth={2.5} />
-      </button>
+      <Slot variant="city" label="MY CITY" filled={false} interactive
+            onClick={() => setEditing(true)} ariaLabel="Set my city">
+        <span className="id-slot__prompt">+ Add city</span>
+      </Slot>
     )
   }
 
   return (
-    <button
-      className="id-tile id-tile--city id-tile--filled"
-      onClick={() => setEditing(true)}
-    >
-      <span className="id-tile__city-name">{value}</span>
-    </button>
+    <Slot variant="city" label="MY CITY" filled interactive
+          onClick={() => setEditing(true)} ariaLabel={`Edit my city (${value})`}>
+      <span className="id-slot__city-value">{value}</span>
+    </Slot>
   )
 }
 
-// ─── Heroes row (up to MAX_HEROES tiles + add button) ─────────────────────
+// ── Slot 3: Heroes roster ──────────────────────────────────────────────────
 
-function HeroesRow({ heroes, heroLookup, heroSuggestions, onAdd, onUpdate, onRemove }) {
+function HeroesSlot({ heroes, heroLookup, heroSuggestions, onAdd, onRemove }) {
   const [adding, setAdding] = useState(false)
   const [draft, setDraft]   = useState('')
   const [suggestions, setSuggestions] = useState([])
+  const inputRef = useRef(null)
 
   function commitAdd(value) {
     const name = (value !== undefined ? value : draft).trim()
@@ -227,100 +219,97 @@ function HeroesRow({ heroes, heroLookup, heroSuggestions, onAdd, onUpdate, onRem
     setAdding(false)
     setSuggestions([])
   }
-
   function onDraftChange(v) {
     setDraft(v)
     setSuggestions(heroSuggestions ? heroSuggestions(v) : [])
   }
 
+  const canAddMore = heroes.length < MAX_HEROES
+  const isEmpty    = heroes.length === 0 && !adding
+
   return (
-    <div className="id-heroes">
-      {heroes.map(name => (
-        <HeroTile
-          key={name}
-          name={name}
-          number={resolveHero(name, heroLookup)}
-          onRemove={() => onRemove(name)}
-        />
-      ))}
+    <Slot variant="heroes"
+          label={heroes.length > 0 ? `MY HEROES · ${heroes.length}` : 'MY HEROES'}
+          filled={heroes.length > 0}>
+      <div className="id-heroes">
+        {heroes.map(name => {
+          const num = resolveHero(name, heroLookup)
+          return (
+            <HeroChip
+              key={name}
+              name={name}
+              number={num}
+              onRemove={() => onRemove(name)}
+            />
+          )
+        })}
 
-      {adding && (
-        <div className="id-tile id-tile--editing id-tile--hero">
-          <input
-            className="id-tile__input"
-            type="text"
-            value={draft}
-            onChange={e => onDraftChange(e.target.value.slice(0, 40))}
-            onKeyDown={e => { if (e.key === 'Enter') commitAdd(); if (e.key === 'Escape') { setAdding(false); setDraft('') } }}
-            onBlur={() => setTimeout(() => { if (!draft) setAdding(false) }, 200)}
-            placeholder="Name"
-            autoFocus
-          />
-          {suggestions.length > 0 && (
-            <div className="id-tile__suggestions">
-              {suggestions.map(s => (
-                <button
-                  key={s.name}
-                  className="id-tile__suggestion"
-                  onMouseDown={e => { e.preventDefault(); commitAdd(s.name) }}
-                >
-                  <span>{s.name}</span>
-                  <span className="id-tile__suggestion-num">#{s.number}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+        {adding && (
+          <div className="id-chip id-chip--editing">
+            <input
+              ref={inputRef}
+              className="id-chip__input"
+              type="text"
+              value={draft}
+              onChange={e => onDraftChange(e.target.value.slice(0, 40))}
+              onKeyDown={e => {
+                if (e.key === 'Enter') commitAdd()
+                if (e.key === 'Escape') { setAdding(false); setDraft(''); setSuggestions([]) }
+              }}
+              onBlur={() => setTimeout(() => { if (!draft) { setAdding(false); setSuggestions([]) } }, 200)}
+              placeholder="Name"
+              autoFocus
+            />
+            {suggestions.length > 0 && (
+              <div className="id-slot__suggestions id-slot__suggestions--chip">
+                {suggestions.map(s => (
+                  <button
+                    key={s.name}
+                    className="id-slot__suggestion"
+                    onMouseDown={e => { e.preventDefault(); commitAdd(s.name) }}
+                  >
+                    <span>{s.name}</span>
+                    <span className="id-slot__suggestion-num">#{s.number}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-      {!adding && heroes.length < MAX_HEROES && (
-        <button
-          className="id-tile id-tile--hero id-tile--empty"
-          onClick={() => setAdding(true)}
-          aria-label="Add a hero"
-        >
-          <Plus size={16} strokeWidth={2.5} />
-        </button>
-      )}
-    </div>
-  )
-}
-
-function HeroTile({ name, number, onRemove }) {
-  const [hover, setHover] = useState(false)
-
-  if (!number) {
-    // Unresolved hero (name doesn't match any player in our data)
-    return (
-      <div
-        className="id-tile id-tile--hero id-tile--unresolved"
-        title={`${name} (not found)`}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-      >
-        <span className="id-tile__unresolved">?</span>
-        {hover && (
-          <button className="id-tile__remove" onClick={e => { e.stopPropagation(); onRemove() }} aria-label="Remove hero">
-            <X size={10} />
+        {!adding && canAddMore && (
+          <button
+            className={`id-chip id-chip--add${isEmpty ? ' id-chip--add-lead' : ''}`}
+            onClick={() => setAdding(true)}
+            aria-label="Add a hero"
+          >
+            <Plus size={13} strokeWidth={2.5} />
+            <span>{isEmpty ? 'Add a hero' : 'Add'}</span>
           </button>
         )}
       </div>
-    )
-  }
+    </Slot>
+  )
+}
 
+function HeroChip({ name, number, onRemove }) {
+  const display = lastNameUpper(name)
+  const unresolved = !number
   return (
-    <div
-      className="id-tile id-tile--wrap id-tile--hero"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+    <span
+      className={`id-chip id-chip--filled${unresolved ? ' id-chip--unresolved' : ''}`}
       title={name}
     >
-      <WallTile number={number} entries={[]} isActive={false} onClick={() => {}} />
-      {hover && (
-        <button className="id-tile__remove" onClick={e => { e.stopPropagation(); onRemove() }} aria-label={`Remove ${name}`}>
-          <X size={10} />
-        </button>
-      )}
-    </div>
+      <span className="id-chip__num">{unresolved ? '?' : `#${number}`}</span>
+      <span className="id-chip__name">{display}</span>
+      <button
+        type="button"
+        className="id-chip__remove"
+        onClick={e => { e.stopPropagation(); onRemove() }}
+        aria-label={`Remove ${name}`}
+      >
+        <X size={10} />
+      </button>
+    </span>
   )
 }

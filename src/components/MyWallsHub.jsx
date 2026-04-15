@@ -86,18 +86,20 @@ function WelcomePlacemat({ onDismiss }) {
         <p className="hub-welcome__hook">Every fan has a number.</p>
         <h2 className="hub-welcome__heading">WHAT'S YOURS?</h2>
         <div className="hub-welcome__slots">
+          {/* Preview labels match the live identity row (MY NUMBER etc.) so
+              the placemat reads as a preview, not a different system. */}
           <div className="hub-welcome__slot hub-welcome__slot--number">
-            <span className="hub-welcome__slot-label">YOUR NUMBER</span>
+            <span className="hub-welcome__slot-label">MY NUMBER</span>
             <span className="hub-welcome__slot-value">#12</span>
             <span className="hub-welcome__slot-sub">Brady</span>
           </div>
           <div className="hub-welcome__slot hub-welcome__slot--city">
-            <span className="hub-welcome__slot-label">YOUR CITY</span>
+            <span className="hub-welcome__slot-label">MY CITY</span>
             <span className="hub-welcome__slot-value">Boston</span>
             <span className="hub-welcome__slot-sub">Massachusetts</span>
           </div>
           <div className="hub-welcome__slot hub-welcome__slot--hero">
-            <span className="hub-welcome__slot-label">YOUR HERO</span>
+            <span className="hub-welcome__slot-label">MY HERO</span>
             <span className="hub-welcome__slot-value hub-welcome__slot-value--big">Brady</span>
           </div>
         </div>
@@ -287,10 +289,9 @@ export default function MyWallsHub() {
       {/* First-visit welcome placemat */}
       {showWelcome && <WelcomePlacemat onDismiss={dismissWelcome} />}
 
-      {/* Identity section — tiles treat YOU / CITY / HEROES in one visual system */}
-      {!showWelcome && (
-        <span className="hub-identity-heading">YOUR IDENTITY</span>
-      )}
+      {/* Identity section — Triptych: number (square) + city (field) +
+          heroes (roster of pill-chips). Each slot has its own MY ___ label
+          inside the tile, so no outer heading is needed. */}
       <IdentityTiles
         identity={identity}
         heroLookup={ALL_PLAYER_NUMBERS}
@@ -327,7 +328,7 @@ export default function MyWallsHub() {
         <p className="hub-loading">Loading walls...</p>
       ) : walls.length > 0 ? (
         <>
-          <span className="hub-section-label">YOUR WALLS</span>
+          <span className="hub-section-label">MY WALLS</span>
           <div className="hub-wall-list">
             {walls.map(w => {
               const isPersonal = !w.theme

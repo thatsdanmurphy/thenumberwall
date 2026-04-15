@@ -1,108 +1,138 @@
-/* IdentityTiles — hub-level identity as WallTiles.
-   Layout: a single row of three slots (number / city / heroes).
-   Reuses WallTile for all numeric tiles. City and empty states mirror the
-   tile's visual language (square-ish, soft border, subtle glow) so the row
-   reads as "your identity, expressed in the site's vocabulary." */
+/* IdentityTiles — Triptych layout.
+   Three slots share a common `--id-row-h` so the row reads as one object even
+   though each slot takes the shape its data asks for:
+     · Number  — square
+     · City    — wide field
+     · Heroes  — wide field containing pill-chips
+   All slots use the same shell (border, radius, label overline, hover), which
+   is what makes the row feel like one system. */
 
-.id-tiles {
-  padding: var(--space-4) 0 var(--space-3);
-}
+.id-row {
+  /* Shared height token — scoped to the row so we can retune without touching
+     each slot. Bumps slightly on wider screens to give heroes more room. */
+  --id-row-h: 64px;
 
-.id-tiles__row {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: var(--space-3);
   flex-wrap: wrap;
+  padding: var(--space-3) 0 var(--space-2);
 }
 
-.id-tiles__slot {
+@media (min-width: 768px) {
+  .id-row { --id-row-h: 68px; }
+}
+
+/* ── Shared slot shell ─────────────────────────────────────────────────── */
+
+.id-slot {
+  position: relative;
+  height: var(--id-row-h);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.id-tiles__slot--city {
-  flex: 1 1 160px;
-  min-width: 140px;
-}
-
-.id-tiles__slot--heroes {
-  flex: 1 1 220px;
-  min-width: 0;
-}
-
-.id-tiles__caption {
-  display: block;
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* ── Tile base — shared shell for non-WallTile variants (empty, city, editing)
-   Mirrors the WallTile border/radius/glow so the row reads as one system. */
-
-.id-tile {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  cursor: pointer;
-  background: none;
-  color: inherit;
+  justify-content: space-between;
+  padding: 6px var(--space-2) 7px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  cursor: default;
   font: inherit;
-  padding: 0;
+  color: inherit;
+  text-align: left;
   transition:
     background var(--motion-hover),
     border-color var(--motion-hover),
-    box-shadow 200ms ease;
+    box-shadow var(--motion-hover);
 }
 
-/* ── Square tile dims (number, hero) ──────────────────────────────────── */
+button.id-slot { cursor: pointer; }
 
-.id-tile--empty,
-.id-tile--editing {
-  aspect-ratio: 1 / 1;
-  min-width: 44px;
-  width: 44px;
+button.id-slot:hover {
+  background: var(--surface-2);
+  border-color: var(--border-medium);
 }
 
-/* Wrap preserves the tile's own 36px min; ensures click target alignment */
-.id-tile--wrap {
-  display: inline-flex;
-  position: relative;
-}
-
-/* ── Empty state — dashed, paper-tone, "+" icon ───────────────────────── */
-
-.id-tile--empty {
-  border: 1px dashed var(--border-subtle);
+.id-slot--empty {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border-subtle);
   color: var(--color-muted);
 }
 
-.id-tile--empty:hover {
-  border-color: var(--color-paper);
+.id-slot--empty:hover {
+  border-style: solid;
   color: var(--color-paper);
+  border-color: var(--border-medium);
   background: var(--surface-1);
 }
 
-/* ── Editing state — input sits inside tile-shaped shell ──────────────── */
-
-.id-tile--editing {
-  border: 1px solid var(--color-paper);
-  background: var(--surface-1);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+/* Slot-level label — micro overline, consistent across all three slots.
+   Lives inside the tile so the row has no captions floating below it. */
+.id-slot__label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.id-tile__input {
+.id-slot__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* ── Variant: Number — square ──────────────────────────────────────────── */
+
+.id-slot--number {
+  flex: 0 0 var(--id-row-h);
+  width: var(--id-row-h);
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+}
+
+.id-slot--number .id-slot__label {
+  /* Center label over the big digit in a square tile */
+  align-self: center;
+}
+
+.id-slot--number .id-slot__body {
+  justify-content: center;
+}
+
+.id-slot--number.id-slot--filled {
+  /* Burns a personal glow around the user's number — it's the emotional core
+     of the identity row. */
+  background: linear-gradient(180deg,
+    rgba(232, 124, 42, 0.14) 0%,
+    rgba(232, 124, 42, 0.04) 100%);
+  border-color: rgba(232, 124, 42, 0.45);
+  box-shadow: 0 0 18px rgba(232, 124, 42, 0.20);
+}
+
+.id-slot--number.id-slot--filled:hover {
+  border-color: rgba(232, 124, 42, 0.75);
+  box-shadow: 0 0 22px rgba(232, 124, 42, 0.30);
+}
+
+.id-slot__number-value {
+  font-family: var(--font-banner);
+  font-size: 1.55rem;
+  line-height: 1;
+  color: var(--color-heat);
+  letter-spacing: -0.01em;
+  text-shadow: 0 0 10px rgba(232, 124, 42, 0.45);
+}
+
+@media (min-width: 768px) {
+  .id-slot__number-value { font-size: 1.75rem; }
+}
+
+.id-slot__input--number {
   width: 100%;
   height: 100%;
   background: transparent;
@@ -110,145 +140,211 @@
   outline: none;
   text-align: center;
   font-family: var(--font-banner);
-  font-size: var(--text-h3);
-  color: var(--color-paper);
+  font-size: 1.55rem;
+  color: var(--color-heat);
   letter-spacing: -0.01em;
-  padding: 0 4px;
-}
-
-.id-tile__input::placeholder {
-  color: var(--color-muted);
-  opacity: 0.6;
-}
-
-/* ── City cell — wide, tile-styled text ──────────────────────────────── */
-
-.id-tile--city {
-  width: 100%;
-  min-width: 140px;
-  height: 44px;
-  padding: 0 var(--space-3);
-}
-
-.id-tile--city.id-tile--filled {
-  border: 1px solid rgba(232, 124, 42, 0.32);
-  background: linear-gradient(
-    180deg,
-    rgba(232, 124, 42, 0.12) 0%,
-    rgba(232, 124, 42, 0.04) 100%
-  );
-  box-shadow: 0 0 14px rgba(232, 124, 42, 0.18);
-  justify-content: flex-start;
-}
-
-.id-tile--city.id-tile--filled:hover {
-  border-color: rgba(232, 124, 42, 0.55);
-  box-shadow: 0 0 18px rgba(232, 124, 42, 0.28);
-}
-
-.id-tile--city.id-tile--empty {
-  justify-content: flex-start;
-  padding-left: var(--space-3);
-  aspect-ratio: auto;
-}
-
-.id-tile--city.id-tile--editing {
-  aspect-ratio: auto;
-  padding: 0 var(--space-2);
-  border-color: rgba(232, 124, 42, 0.55);
-  box-shadow: 0 0 0 2px rgba(232, 124, 42, 0.22);
-}
-
-.id-tile__input--city {
-  text-align: left;
-  font-family: var(--font-banner);
-  font-size: var(--text-h3);
-  color: rgba(255, 190, 120, 0.95);
-  letter-spacing: 0.01em;
   padding: 0;
 }
 
-.id-tile__city-name {
+.id-slot__plus { color: var(--color-muted); }
+button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
+
+/* ── Variant: City — wide field ────────────────────────────────────────── */
+
+.id-slot--city {
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+
+.id-slot__city-value {
   font-family: var(--font-banner);
-  font-size: var(--text-h3);
-  color: rgba(255, 190, 120, 0.95);
+  font-size: var(--text-h4, 1.15rem);
+  color: var(--color-paper);
   letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  text-align: left;
 }
 
-/* ── Heroes row ──────────────────────────────────────────────────────── */
+.id-slot__prompt {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  letter-spacing: 0.02em;
+}
+
+.id-slot__input--city {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-banner);
+  font-size: var(--text-h4, 1.15rem);
+  color: var(--color-paper);
+  letter-spacing: 0.01em;
+  padding: 0;
+}
+
+/* ── Variant: Heroes — wide field of pill chips ────────────────────────── */
+
+.id-slot--heroes {
+  flex: 2 1 280px;
+  min-width: 220px;
+}
+
+.id-slot--heroes .id-slot__body {
+  gap: 6px;
+  overflow: hidden;
+}
 
 .id-heroes {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 2px 0;
+  scrollbar-width: none;
 }
 
-.id-tile--hero {
-  flex-shrink: 0;
-}
+.id-heroes::-webkit-scrollbar { display: none; }
 
-.id-tile--hero.id-tile--empty,
-.id-tile--hero.id-tile--editing {
-  width: 40px;
-  min-width: 40px;
-}
+/* ── Pill chip — the atom of the heroes roster ─────────────────────────── */
 
-/* Unresolved hero — name doesn't match a known player. Render as ghost tile
-   with a "?" so the user knows we couldn't place them on the wall yet. */
-.id-tile--unresolved {
-  aspect-ratio: 1 / 1;
-  width: 40px;
-  min-width: 40px;
-  border: 1px dashed var(--border-subtle);
-  color: var(--color-muted);
-  background: var(--surface-1);
-}
-
-.id-tile__unresolved {
-  font-family: var(--font-banner);
-  font-size: var(--text-h3);
-  color: var(--color-muted);
-}
-
-/* ── Remove button (hero hover) ──────────────────────────────────────── */
-
-.id-tile__remove {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 16px;
-  height: 16px;
-  display: flex;
+.id-chip {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
   background: var(--surface-2);
   border: 1px solid var(--border-subtle);
-  border-radius: 50%;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
   color: var(--color-paper);
-  cursor: pointer;
-  padding: 0;
-  z-index: 4;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: default;
   transition: background var(--motion-hover), border-color var(--motion-hover);
 }
 
-.id-tile__remove:hover {
-  background: var(--color-heat, #e87c2a);
-  border-color: var(--color-heat, #e87c2a);
+.id-chip__num {
+  font-family: var(--font-banner);
+  font-size: 0.78rem;
+  letter-spacing: -0.01em;
+  color: var(--color-heat);
+  text-shadow: 0 0 6px rgba(232, 124, 42, 0.45);
+  line-height: 1;
 }
 
-/* ── Suggestions dropdown (city + hero editing) ──────────────────────── */
+.id-chip__name {
+  font-family: var(--font-banner);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-paper);
+  line-height: 1;
+}
 
-.id-tile__suggestions {
+.id-chip--unresolved .id-chip__num {
+  color: var(--color-muted);
+  text-shadow: none;
+}
+
+.id-chip--unresolved .id-chip__name {
+  color: var(--color-muted);
+}
+
+.id-chip--filled:hover {
+  border-color: var(--border-medium);
+  background: var(--surface-3, rgba(255,255,255,0.05));
+}
+
+.id-chip__remove {
+  margin-left: 2px;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  transition: opacity var(--motion-hover), background var(--motion-hover), color var(--motion-hover);
+}
+
+.id-chip:hover .id-chip__remove,
+.id-chip:focus-within .id-chip__remove {
+  opacity: 1;
+}
+
+.id-chip__remove:hover {
+  background: var(--color-heat);
+  color: var(--color-paper);
+}
+
+/* Add chip — dashed, ghost. "Add a hero" when empty, "Add" after the first. */
+.id-chip--add {
+  background: transparent;
+  border: 1px dashed var(--border-subtle);
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 0 10px;
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.id-chip--add:hover {
+  border-style: solid;
+  border-color: var(--border-medium);
+  color: var(--color-paper);
+}
+
+.id-chip--add-lead { padding: 0 12px; }
+
+/* Editing chip — input lives inside a chip-shaped shell */
+.id-chip--editing {
+  padding: 0 4px 0 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--color-paper);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+}
+
+.id-chip__input {
+  width: 120px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-paper);
+  letter-spacing: 0.02em;
+  padding: 0;
+}
+
+.id-chip__input::placeholder {
+  color: var(--color-muted);
+  opacity: 0.7;
+}
+
+/* ── Suggestions dropdown — city + hero ────────────────────────────────── */
+
+.id-slot__suggestions {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  min-width: max(100%, 180px);
+  min-width: max(100%, 200px);
   background: var(--surface-raised, rgba(22, 22, 26, 0.96));
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -259,7 +355,12 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-.id-tile__suggestion {
+.id-slot__suggestions--chip {
+  top: calc(100% + 6px);
+  min-width: 220px;
+}
+
+.id-slot__suggestion {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -275,29 +376,20 @@
   cursor: pointer;
 }
 
-.id-tile__suggestion:first-child { border-top: none; }
+.id-slot__suggestion:first-child { border-top: none; }
+.id-slot__suggestion:hover { background: var(--surface-1); }
 
-.id-tile__suggestion:hover {
-  background: var(--surface-1);
-}
-
-.id-tile__suggestion-num {
+.id-slot__suggestion-num {
   font-family: var(--font-scoreboard);
   font-size: var(--text-micro);
   letter-spacing: 0.1em;
   color: var(--color-muted);
 }
 
-/* ── Responsive — stack city + heroes below number on narrow screens ─── */
+/* ── Responsive — narrow stacks city + heroes below number ─────────────── */
 
-@media (max-width: 480px) {
-  .id-tiles__row {
-    gap: var(--space-2);
-  }
-  .id-tiles__slot--city {
-    flex-basis: 100%;
-  }
-  .id-tiles__slot--heroes {
-    flex-basis: 100%;
-  }
+@media (max-width: 520px) {
+  .id-row { gap: var(--space-2); }
+  .id-slot--city   { flex-basis: calc(100% - var(--id-row-h) - var(--space-2)); }
+  .id-slot--heroes { flex-basis: 100%; }
 }
