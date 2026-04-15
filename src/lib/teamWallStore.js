@@ -390,9 +390,20 @@ export async function updateTeamEntry(entryId, { name, position, funFact, gradYe
     .update(updates)
     .eq('id', entryId)
     .select()
-    .single()
+    .maybeSingle()
 
-  if (error) throw error
+  if (error) {
+    // Surface a clean, user-facing message instead of raw PostgREST text.
+    // PGRST116 ("Cannot coerce the result to a single JSON object") fires
+    // when RLS returns 0 rows — typically the editor isn't the creator.
+    if (error.code === 'PGRST116' || /coerce the result/i.test(error.message || '')) {
+      throw new Error("Couldn't save — you can only edit entries you added.")
+    }
+    throw new Error(error.message || "Couldn't save changes.")
+  }
+  if (!data) {
+    throw new Error("Couldn't save — you can only edit entries you added.")
+  }
   return data
 }
 
@@ -454,6 +465,20 @@ const RETIRE_COOLDOWN_DAYS = 7
 // eras, assistants, short tenures. Same contribution rules as entries:
 // anyone can add, anyone can edit, creator can hide.
 
+// Normalise Supabase errors on the coaches table into user-facing strings.
+// Common cases: migration v2.2 hasn't run (schema cache miss), or RLS
+// blocked the write and returned 0 rows.
+function coachError(error, fallback) {
+  const msg = error?.message || ''
+  if (/schema cache/i.test(msg) || error?.code === 'PGRST205') {
+    return new Error("Coaches aren't set up yet on this wall. Try again in a moment.")
+  }
+  if (error?.code === 'PGRST116' || /coerce the result/i.test(msg)) {
+    return new Error("Couldn't save — you can only edit coaches you added.")
+  }
+  return new Error(msg || fallback)
+}
+
 export async function listWallCoaches(wallId) {
   const { data, error } = await supabase
     .from('team_wall_coaches')
@@ -461,7 +486,12 @@ export async function listWallCoaches(wallId) {
     .eq('wall_id', wallId)
     .in('status', ['active', 'flagged'])
     .order('added_at', { ascending: true })
-  if (error) throw error
+  if (error) {
+    // Treat "table missing" as an empty list so the UI renders cleanly while
+    // the migration is pending, instead of crashing the coach panel.
+    if (/schema cache/i.test(error.message || '') || error.code === 'PGRST205') return []
+    throw coachError(error, 'Could not load coaches.')
+  }
   return data || []
 }
 
@@ -479,8 +509,8 @@ export async function addWallCoach(wallId, { name, years, funFact }) {
     .from('team_wall_coaches')
     .insert(row)
     .select()
-    .single()
-  if (error) throw error
+    .maybeSingle()
+  if (error) throw coachError(error, "Couldn't add coach.")
   return data
 }
 
@@ -495,8 +525,9 @@ export async function updateWallCoach(coachId, { name, years, funFact }) {
     .update(updates)
     .eq('id', coachId)
     .select()
-    .single()
-  if (error) throw error
+    .maybeSingle()
+  if (error) throw coachError(error, "Couldn't save coach.")
+  if (!data)  throw new Error("Couldn't save — you can only edit coaches you added.")
   return data
 }
 
