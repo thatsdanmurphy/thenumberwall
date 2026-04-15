@@ -8,9 +8,19 @@
    is what makes the row feel like one system. */
 
 .id-row {
-  /* Shared height token — scoped to the row so we can retune without touching
-     each slot. Bumps slightly on wider screens to give heroes more room. */
-  --id-row-h: 64px;
+  /* Row-scoped tokens. Kept local (not in global.css) because these dimensions
+     only apply to the identity row. Raw rgba on the heat color lives here
+     because global.css doesn't ship a heat-glow token yet — if/when it does,
+     swap these refs in one place. */
+  --id-row-h:        64px;
+  --id-chip-h:       26px;
+  --id-heat-bg:      rgba(232, 124, 42, 0.14);
+  --id-heat-bg-fade: rgba(232, 124, 42, 0.04);
+  --id-heat-edge:    rgba(232, 124, 42, 0.45);
+  --id-heat-edge-hi: rgba(232, 124, 42, 0.75);
+  --id-heat-glow:    rgba(232, 124, 42, 0.20);
+  --id-heat-glow-hi: rgba(232, 124, 42, 0.30);
+  --id-focus-ring:   rgba(255, 255, 255, 0.18);
 
   display: flex;
   align-items: stretch;
@@ -34,7 +44,7 @@
   padding: 6px var(--space-2) 7px;
   border-radius: var(--radius-sm);
   background: var(--surface-1);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-soft);
   cursor: default;
   font: inherit;
   color: inherit;
@@ -55,7 +65,7 @@ button.id-slot:hover {
 .id-slot--empty {
   background: transparent;
   border-style: dashed;
-  border-color: var(--border-subtle);
+  border-color: var(--border-soft);
   color: var(--color-muted);
 }
 
@@ -71,7 +81,7 @@ button.id-slot:hover {
 .id-slot__label {
   font-family: var(--font-scoreboard);
   font-size: var(--text-micro);
-  letter-spacing: 0.16em;
+  letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   color: var(--color-muted);
   line-height: 1;
@@ -107,29 +117,23 @@ button.id-slot:hover {
 .id-slot--number.id-slot--filled {
   /* Burns a personal glow around the user's number — it's the emotional core
      of the identity row. */
-  background: linear-gradient(180deg,
-    rgba(232, 124, 42, 0.14) 0%,
-    rgba(232, 124, 42, 0.04) 100%);
-  border-color: rgba(232, 124, 42, 0.45);
-  box-shadow: 0 0 18px rgba(232, 124, 42, 0.20);
+  background: linear-gradient(180deg, var(--id-heat-bg) 0%, var(--id-heat-bg-fade) 100%);
+  border-color: var(--id-heat-edge);
+  box-shadow: 0 0 18px var(--id-heat-glow);
 }
 
 .id-slot--number.id-slot--filled:hover {
-  border-color: rgba(232, 124, 42, 0.75);
-  box-shadow: 0 0 22px rgba(232, 124, 42, 0.30);
+  border-color: var(--id-heat-edge-hi);
+  box-shadow: 0 0 22px var(--id-heat-glow-hi);
 }
 
 .id-slot__number-value {
   font-family: var(--font-banner);
-  font-size: 1.55rem;
+  font-size: var(--text-h1);
   line-height: 1;
   color: var(--color-heat);
   letter-spacing: -0.01em;
-  text-shadow: 0 0 10px rgba(232, 124, 42, 0.45);
-}
-
-@media (min-width: 768px) {
-  .id-slot__number-value { font-size: 1.75rem; }
+  text-shadow: 0 0 10px var(--id-heat-edge);
 }
 
 .id-slot__input--number {
@@ -140,7 +144,7 @@ button.id-slot:hover {
   outline: none;
   text-align: center;
   font-family: var(--font-banner);
-  font-size: 1.55rem;
+  font-size: var(--text-h1);
   color: var(--color-heat);
   letter-spacing: -0.01em;
   padding: 0;
@@ -158,7 +162,7 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 
 .id-slot__city-value {
   font-family: var(--font-banner);
-  font-size: var(--text-h4, 1.15rem);
+  font-size: var(--text-h2);
   color: var(--color-paper);
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -180,7 +184,7 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
   border: none;
   outline: none;
   font-family: var(--font-banner);
-  font-size: var(--text-h4, 1.15rem);
+  font-size: var(--text-h2);
   color: var(--color-paper);
   letter-spacing: 0.01em;
   padding: 0;
@@ -217,15 +221,15 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 26px;
-  padding: 0 8px;
-  border-radius: 999px;
+  gap: var(--space-1);
+  height: var(--id-chip-h);
+  padding: 0 var(--space-2);
+  border-radius: 999px;   /* pill — no token in global.css for full-radius */
   background: var(--surface-2);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-soft);
   font-family: var(--font-scoreboard);
   font-size: var(--text-micro);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-wide);
   color: var(--color-paper);
   white-space: nowrap;
   flex-shrink: 0;
@@ -235,16 +239,16 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 
 .id-chip__num {
   font-family: var(--font-banner);
-  font-size: 0.78rem;
+  font-size: var(--text-caption);
   letter-spacing: -0.01em;
   color: var(--color-heat);
-  text-shadow: 0 0 6px rgba(232, 124, 42, 0.45);
+  text-shadow: 0 0 6px var(--id-heat-edge);
   line-height: 1;
 }
 
 .id-chip__name {
   font-family: var(--font-banner);
-  font-size: 0.72rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.04em;
   color: var(--color-paper);
   line-height: 1;
@@ -294,7 +298,7 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 /* Add chip — dashed, ghost. "Add a hero" when empty, "Add" after the first. */
 .id-chip--add {
   background: transparent;
-  border: 1px dashed var(--border-subtle);
+  border: 1px dashed var(--border-soft);
   color: var(--color-muted);
   cursor: pointer;
   padding: 0 10px;
@@ -314,10 +318,10 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 
 /* Editing chip — input lives inside a chip-shaped shell */
 .id-chip--editing {
-  padding: 0 4px 0 10px;
+  padding: 0 var(--space-1) 0 var(--space-2);
   background: var(--surface-2);
   border: 1px solid var(--color-paper);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 0 2px var(--id-focus-ring);
 }
 
 .id-chip__input {
@@ -346,7 +350,7 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
   left: 0;
   min-width: max(100%, 200px);
   background: var(--surface-raised, rgba(22, 22, 26, 0.96));
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
   display: flex;
   flex-direction: column;
@@ -368,7 +372,7 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
   padding: var(--space-2) var(--space-3);
   background: transparent;
   border: none;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--border-soft);
   color: var(--color-paper);
   font-family: var(--font-program);
   font-size: var(--text-small);
