@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin } from 'lucide-react'
+import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
@@ -73,6 +73,9 @@ export default function TeamWallPage() {
   const [confirmRetire, setConfirmRetire] = useState(false)
   const [retireSubmitting, setRetireSubmitting] = useState(false)
 
+  // Share copy-state (matches main wall's player-panel__share pattern)
+  const [copied, setCopied] = useState(false)
+
   // Edit state — which entry is being edited
   const [editingId, setEditingId]     = useState(null)
   const [editName, setEditName]       = useState('')
@@ -108,6 +111,15 @@ export default function TeamWallPage() {
   useEffect(() => {
     if (wall) document.title = `${wall.school} ${sportLabel} | The Number Wall`
   }, [wall, sportLabel])
+
+  // Load coaches on mount so the tile's empty-vs-populated treatment is
+  // correct at first paint — don't wait for the user to open the panel.
+  useEffect(() => {
+    if (!wall || coachesLoaded) return
+    listWallCoaches(wall.id)
+      .then(list => { setCoaches(list); setCoachesLoaded(true) })
+      .catch(err => { console.error('Could not load coaches:', err); setCoachesLoaded(true) })
+  }, [wall, coachesLoaded])
 
   // Reset forms when selecting a different number
   useEffect(() => {
@@ -207,12 +219,21 @@ export default function TeamWallPage() {
   }
 
   function handleShare() {
-    const url = window.location.href
+    // Prompt framing mirrors main wall: "do you remember the rest of the team?"
+    // share flow lives in the team wall panel header, paired with close (X).
+    const url = selected
+      ? `${window.location.origin}${window.location.pathname}#${selected}`
+      : window.location.href
+    const title = selected
+      ? `#${selected} at ${wall.school} ${sportLabel} — who else do you remember?`
+      : `${wall.school} ${sportLabel}`
     if (navigator.share) {
-      navigator.share({ title: `${wall.school} ${sportLabel}`, url }).catch(() => {})
+      navigator.share({ title, url }).catch(() => {})
     } else {
       navigator.clipboard.writeText(url).catch(() => {})
     }
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1800)
   }
 
   function startEditing(entry) {
@@ -368,7 +389,6 @@ export default function TeamWallPage() {
     try {
       await archiveWall(wall.id)
       setConfirmRetire(false)
-      setShowWallMenu(false)
       await fetchWall()
     } catch (err) {
       console.error('Retire error:', err)
@@ -572,27 +592,36 @@ export default function TeamWallPage() {
               onSelect={handleGridSelect}
               numbers={TEAM_TILE_NUMBERS}
               tileHeatFn={tileHeatFn}
-              prefixContent={
-                <button
-                  className={`tw-coach-tile${coachView ? ' tw-coach-tile--active' : ''}`}
-                  onClick={openCoachPanel}
-                  aria-label={wall.coach_name ? `View coach ${wall.coach_name}` : 'Add coach'}
-                  style={{
-                    background: TEAM_PALETTES[colorKey]?.[1]?.bg || 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
-                  }}
-                >
-                  {/* Text color pulls from the team-color heat palette — same
-                      mapping the number tiles use. Count of coaches drives heat
-                      level, matching how entry counts drive number tile text. */}
-                  <span
-                    className="tw-coach-tile__label"
-                    style={{ color: getTeamTileTextColor(colorKey, coaches.length) }}
+              prefixContent={(() => {
+                // Empty → unwritten treatment (dashed, dim). Populated → team
+                // color bg + glowing team-color text like a heat-scaled number
+                // tile. Label is always "COACHES" (plural) per Dan's feedback.
+                const hasCoaches = coaches.length > 0
+                const tileStyle = hasCoaches
+                  ? {
+                      background: TEAM_PALETTES[colorKey]?.[1]?.bg || 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
+                    }
+                  : undefined
+                const labelColor = hasCoaches
+                  ? getTeamTileTextColor(colorKey, coaches.length)
+                  : undefined
+                return (
+                  <button
+                    className={`tw-coach-tile${coachView ? ' tw-coach-tile--active' : ''}${hasCoaches ? '' : ' tw-coach-tile--empty wall-tile--unwritten'}`}
+                    onClick={openCoachPanel}
+                    aria-label={hasCoaches ? 'View coaches' : 'Add coach'}
+                    style={tileStyle}
                   >
-                    COACH
-                  </span>
-                </button>
-              }
+                    <span
+                      className="tw-coach-tile__label"
+                      style={labelColor ? { color: labelColor } : undefined}
+                    >
+                      COACHES
+                    </span>
+                  </button>
+                )
+              })()}
             />
 
             {/* Creator-only footer under the grid. Retiring the wall isn't a
@@ -730,7 +759,9 @@ export default function TeamWallPage() {
 
               {selected && (
                 <>
-                  {/* Number + close */}
+                  {/* Number + share + close. Share lives left of close so the
+                      pairing matches the main wall (ExternalLink → X) — a user
+                      crossing between walls sees the same chrome. */}
                   <div className="tw-panel-header">
                     <div
                       className="player-panel__number"
@@ -741,9 +772,18 @@ export default function TeamWallPage() {
                     >
                       #{selected}
                     </div>
-                    <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
-                      <X size={14} />
-                    </button>
+                    <div className="player-panel__header-actions">
+                      <button
+                        className={`player-panel__share${copied ? ' player-panel__share--copied' : ''}`}
+                        onClick={handleShare}
+                        aria-label={`Share #${selected}`}
+                      >
+                        {copied ? <Check size={14} /> : <ExternalLink size={14} />}
+                      </button>
+                      <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
+                        <X size={14} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Year filter chips — show when entries span 2+ years */}

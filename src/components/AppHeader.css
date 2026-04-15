@@ -106,7 +106,10 @@
   font-family:     var(--font-program);
   font-size: var(--text-small);
   font-weight:     500;
-  color:           var(--ink-low);
+  /* Frosty gray matches the About link + back-chevron so the nav row reads as
+     one coherent tier, not two. Dan: "we have frosty grays and regular grays
+     …let's make them all frosty." */
+  color:           var(--color-muted);
   letter-spacing:  0.04em;
   background:      none;
   border:          none;

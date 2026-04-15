@@ -276,7 +276,9 @@
 /* ── Town crumb — hierarchy breadcrumb under the school title ─────────────── */
 
 .tw-town-crumb {
-  align-self: flex-start;
+  /* Right-aligned caption — reads "…at Brookline, MA 📍" tucked to the edge of
+     the content column, not floating indented in the left margin. */
+  align-self: flex-end;
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -286,7 +288,7 @@
   border-radius: var(--radius-sm);
   font-family: var(--font-program);
   font-size: var(--text-caption);
-  color: var(--ink-low);
+  color: var(--color-muted);
   cursor: pointer;
   transition: all var(--motion-hover);
   margin-bottom: var(--space-1);
