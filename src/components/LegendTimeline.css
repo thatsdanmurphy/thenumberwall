@@ -1049,8 +1049,11 @@
   pointer-events: auto;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  will-change: transform;
-  transition: box-shadow 160ms ease-out, border-color 160ms ease-out;
+  will-change: transform, opacity;
+  transition:
+    box-shadow 160ms ease-out,
+    border-color 160ms ease-out,
+    opacity 180ms ease-out;
 }
 
 .vtl__pill-icon {

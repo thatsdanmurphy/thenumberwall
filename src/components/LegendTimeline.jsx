@@ -638,7 +638,18 @@ export default function LegendTimeline({ timeline }) {
   const pendingScrubIdx = useRef(null)   // pending index for throttled state update
   const pillRefs = useRef([])            // persistent-pill DOM nodes (mobile)
   const PILL_H = 34                      // approx height of a docked pill (px)
-  const PILL_DOCK_Y = -14                // pill hangs into the top card when docked
+  // Space below the scrub line. Dan wanted breathing room above the docked
+  // pill so it doesn't kiss the top card — this is the gap between the card
+  // bottom (scrub line) and the pill's top when docked.
+  const PILL_DOCK_Y = 14
+  // How long (in pixels of scroll) a pill lingers as "docked" after its game
+  // has passed the scrub line before disappearing. Short so a pill doesn't
+  // claim the identity of dozens of quiet games after its moment.
+  const PILL_HOLD_PX = 48
+  // Minimum vertical separation between two natural-position pills. When two
+  // moments sit close together (Helmet Catch → ACL; Deflategate → Butler),
+  // we push the later one down so they don't overlap on approach.
+  const PILL_SEP = PILL_H + 12
 
   // Animation phases as refs — avoids re-renders on every frame
   const breathRef = useRef(0)
@@ -832,14 +843,21 @@ export default function LegendTimeline({ timeline }) {
   const vInitializedRef = useRef(false)
 
   // ── Position the persistent pills on every scroll frame ──
-  // Each pill rides with its game midpoint. When it reaches the top of the
-  // viewport (the scrub line), it docks. Next pill pushes the docked one up.
+  // Three states per pill:
+  //   1. RIDING  — game hasn't reached the scrub yet → natural position,
+  //                staggered vertically against close neighbours so Helmet
+  //                Catch and ACL (or Deflategate and Butler) don't stack.
+  //   2. DOCKED  — game is crossing or just crossed the scrub line → snap
+  //                to PILL_DOCK_Y (below the scrub, with breathing room
+  //                above) for a short window (PILL_HOLD_PX of scroll).
+  //   3. GONE    — scrolled well past → hidden, so the moment doesn't
+  //                claim identity over the dozens of quiet games that
+  //                follow.
   //
   // NOTE: declared BEFORE the init-scroll effect below — that effect lists
   // positionPills in its deps, and `const` hoisting leaves it in the
-  // temporal dead zone until this line executes. Out of order = TDZ
-  // ReferenceError on every render = ErrorBoundary fallback ("wall went
-  // dark"). Keep this above the useEffect that references it.
+  // temporal dead zone until this line executes. Keep this above the
+  // useEffect that references it.
   const positionPills = useCallback(() => {
     const viewport = vScrollRef.current
     const positions = vGamePositionsRef.current
@@ -848,38 +866,52 @@ export default function LegendTimeline({ timeline }) {
     if (!barCol) return
     const barColTop = barCol.offsetTop
     const scrollTop = viewport.scrollTop
-    // Pills are rendered in momentMarkers order. They're already sorted by
-    // gameIdx because momentMarkers iterates games sequentially.
     const markers = momentMarkersRef.current || []
+
+    // First pass: compute natural Y and state for each marker.
+    const placements = markers.map(m => {
+      const natural = barColTop + (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2 - PILL_H / 2
+      const viewY = natural - scrollTop
+      return { naturalY: viewY, viewY }
+    })
+
+    // Second pass: stagger RIDING pills. Walk bottom-up (largest viewY first)
+    // and ensure each pill is at least PILL_SEP above the one below it so
+    // tightly-spaced moments don't visually overlap while approaching.
+    const ridingIdxs = placements
+      .map((p, i) => ({ i, y: p.naturalY }))
+      .filter(p => p.y >= 0)
+      .sort((a, b) => b.y - a.y) // descending — furthest from scrub first
+    let lastY = Infinity
+    for (const r of ridingIdxs) {
+      if (lastY - placements[r.i].naturalY < PILL_SEP) {
+        // Too close to the pill below — push this one further up (smaller y).
+        placements[r.i].naturalY = lastY - PILL_SEP
+      }
+      lastY = placements[r.i].naturalY
+    }
+
+    // Third pass: apply styles.
     for (let i = 0; i < markers.length; i++) {
       const el = pillRefs.current[i]
       if (!el) continue
-      const m = markers[i]
-      const natural = barColTop + (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2 - PILL_H / 2
-      const viewY = natural - scrollTop
-      let y
-      let docked = false
-      if (viewY >= 0) {
-        y = viewY
+      const p = placements[i]
+      let y, docked = false, visible = true
+      if (p.naturalY >= 0) {
+        // Riding up toward the scrub line.
+        y = p.naturalY
+      } else if (p.naturalY >= -PILL_HOLD_PX) {
+        // Just crossed — dock briefly so the moment registers.
+        y = PILL_DOCK_Y
+        docked = true
       } else {
-        // Above viewport — candidate for docking at top
-        const next = markers[i + 1]
-        if (next) {
-          const nextNatural = barColTop + (positions[next.gameIdx] + positions[next.gameIdx + 1]) / 2 - PILL_H / 2
-          const nextViewY = nextNatural - scrollTop
-          if (nextViewY >= PILL_H) {
-            y = PILL_DOCK_Y
-            docked = true
-          } else {
-            // Next pill is arriving — push this one up and off
-            y = nextViewY - PILL_H + PILL_DOCK_Y
-          }
-        } else {
-          y = PILL_DOCK_Y
-          docked = true
-        }
+        // Well past — vanish.
+        visible = false
+        y = PILL_DOCK_Y
       }
       el.style.transform = `translate(-50%, ${y}px)`
+      el.style.opacity = visible ? '' : '0'
+      el.style.pointerEvents = visible ? '' : 'none'
       el.classList.toggle('vtl__pill--docked', docked)
     }
   }, [])
