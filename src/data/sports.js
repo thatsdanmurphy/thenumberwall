@@ -62,3 +62,63 @@ export const SPORT_EMOJI = {
   Hockey:     '\u{1F3D2}',
   Soccer:     '\u26BD',
 }
+
+// ── Positions by sport ───────────────────────────────────────────────────
+// Canonical short codes so a team wall doesn't end up mixing "LD", "D",
+// "Defense", and "Defence" for the same role. Free-text "Other…" remains
+// available via PositionPicker so obscure or multi-role tags still work.
+export const POSITIONS_BY_SPORT = {
+  football:     ['QB', 'RB', 'FB', 'WR', 'TE', 'OL', 'C', 'G', 'T', 'DL', 'DE', 'DT', 'LB', 'CB', 'S', 'K', 'P', 'LS', 'KR'],
+  basketball:   ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F'],
+  hockey:       ['C', 'LW', 'RW', 'D', 'G'],
+  baseball:     ['P', 'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH', 'OF', 'IF', 'UT'],
+  softball:     ['P', 'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DP', 'OF', 'IF', 'UT'],
+  soccer:       ['GK', 'CB', 'FB', 'LB', 'RB', 'DM', 'CM', 'AM', 'LW', 'RW', 'ST'],
+  lacrosse:     ['A', 'M', 'D', 'G', 'LSM', 'FOGO', 'SSDM'],
+  volleyball:   ['S', 'OH', 'MB', 'OPP', 'L', 'DS'],
+  field_hockey: ['GK', 'D', 'M', 'F'],
+  rugby:        ['Prop', 'Hook', 'Lock', 'Flank', 'No. 8', 'SH', 'FH', 'Centre', 'Wing', 'FB'],
+  water_polo:   ['GK', 'CF', 'CB', 'Driver', 'Wing', 'Point'],
+}
+
+// Normalise common free-text variants to canonical codes so legacy entries
+// fold into the picker's selection cleanly.
+const POSITION_ALIASES = {
+  // Hockey
+  'defense': 'D', 'defence': 'D', 'left defense': 'D', 'right defense': 'D',
+  'ld': 'D', 'rd': 'D',
+  'center': 'C', 'centre': 'C', 'centerman': 'C',
+  'left wing': 'LW', 'right wing': 'RW', 'winger': 'LW',
+  'goalie': 'G', 'goaltender': 'G',
+  // Football
+  'quarterback': 'QB', 'running back': 'RB', 'halfback': 'RB', 'hb': 'RB',
+  'fullback': 'FB', 'wide receiver': 'WR', 'tight end': 'TE',
+  'offensive line': 'OL', 'o-line': 'OL', 'offense': 'OL',
+  'defensive line': 'DL', 'd-line': 'DL', 'defensive end': 'DE',
+  'defensive tackle': 'DT', 'linebacker': 'LB', 'cornerback': 'CB',
+  'safety': 'S', 'strong safety': 'S', 'free safety': 'S',
+  'kicker': 'K', 'punter': 'P', 'long snapper': 'LS',
+  // Basketball
+  'point guard': 'PG', 'shooting guard': 'SG', 'small forward': 'SF',
+  'power forward': 'PF', 'guard': 'G', 'forward': 'F',
+  // Baseball / softball
+  'pitcher': 'P', 'catcher': 'C', 'first base': '1B', 'second base': '2B',
+  'shortstop': 'SS', 'third base': '3B', 'left field': 'LF',
+  'center field': 'CF', 'right field': 'RF', 'designated hitter': 'DH',
+  'outfield': 'OF', 'infield': 'IF', 'utility': 'UT',
+  // Soccer
+  'goalkeeper': 'GK', 'keeper': 'GK', 'centre back': 'CB',
+  'full back': 'FB', 'midfielder': 'CM', 'midfield': 'CM',
+  'striker': 'ST', 'forward': 'ST',
+}
+
+export function normalisePosition(raw) {
+  if (!raw) return ''
+  const lower = String(raw).trim().toLowerCase()
+  return POSITION_ALIASES[lower] || raw.trim()
+}
+
+export function getPositionsForSport(sportId) {
+  if (!sportId) return []
+  return POSITIONS_BY_SPORT[sportId.toLowerCase()] || []
+}

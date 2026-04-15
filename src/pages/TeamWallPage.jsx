@@ -11,6 +11,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
+import PositionPicker from '../components/PositionPicker.jsx'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
@@ -83,6 +84,8 @@ export default function TeamWallPage() {
   const [editGradYear, setEditGradYear] = useState('')
   const [editFunFact, setEditFunFact] = useState('')
   const [editSubmitting, setEditSubmitting] = useState(false)
+  const [editError, setEditError]           = useState(null)
+  const [coachError, setCoachError]         = useState(null)
 
   const fetchWall = useCallback(async () => {
     try {
@@ -242,13 +245,19 @@ export default function TeamWallPage() {
     setEditPosition(entry.position || '')
     setEditGradYear(entry.grad_year ? String(entry.grad_year) : '')
     setEditFunFact(entry.fun_fact || '')
+    setEditError(null)
   }
 
   async function handleEditSave(e) {
     e.preventDefault()
     if (!editName.trim() || editSubmitting) return
+    setEditError(null)
     const nameCheck = checkProfanity(editName)
-    if (!nameCheck.clean) { setAddError(nameCheck.reason); return }
+    if (!nameCheck.clean) { setEditError(nameCheck.reason); return }
+    if (editFunFact) {
+      const factCheck = checkProfanity(editFunFact)
+      if (!factCheck.clean) { setEditError(factCheck.reason); return }
+    }
     setEditSubmitting(true)
     try {
       await updateTeamEntry(editingId, {
@@ -257,10 +266,13 @@ export default function TeamWallPage() {
         gradYear: editGradYear ? Number(editGradYear) : null,
         funFact: editFunFact.trim() || null,
       })
-      setEditingId(null)
       await fetchWall()
+      // Close only after a successful save + refresh, so the form sticks
+      // around with a visible error if something fails.
+      setEditingId(null)
     } catch (err) {
-      console.error(err)
+      console.error('Edit save error:', err)
+      setEditError(err?.message || 'Could not save changes. Try again.')
     } finally {
       setEditSubmitting(false)
     }
@@ -321,6 +333,7 @@ export default function TeamWallPage() {
     setCoachNameDraft('')
     setCoachYearsDraft('')
     setCoachFactDraft('')
+    setCoachError(null)
     setCoachEditingId('new')
   }
 
@@ -328,6 +341,7 @@ export default function TeamWallPage() {
     setCoachNameDraft(coach.name || '')
     setCoachYearsDraft(coach.years || '')
     setCoachFactDraft(coach.fun_fact || '')
+    setCoachError(null)
     setCoachEditingId(coach.id)
   }
 
@@ -335,11 +349,12 @@ export default function TeamWallPage() {
     e.preventDefault()
     if (coachSubmitting) return
     if (!coachNameDraft.trim()) return
+    setCoachError(null)
     const nameCheck = checkProfanity(coachNameDraft)
-    if (!nameCheck.clean) { window.alert(nameCheck.reason); return }
+    if (!nameCheck.clean) { setCoachError(nameCheck.reason); return }
     if (coachFactDraft) {
       const factCheck = checkProfanity(coachFactDraft)
-      if (!factCheck.clean) { window.alert(factCheck.reason); return }
+      if (!factCheck.clean) { setCoachError(factCheck.reason); return }
     }
     setCoachSubmitting(true)
     try {
@@ -360,7 +375,7 @@ export default function TeamWallPage() {
       setCoachEditingId(null)
     } catch (err) {
       console.error('Coach save error:', err)
-      window.alert('Could not save. Try again.')
+      setCoachError(err?.message || 'Could not save coach. Try again.')
     } finally {
       setCoachSubmitting(false)
     }
@@ -683,6 +698,7 @@ export default function TeamWallPage() {
                           coachEditingId === coach.id ? (
                             <form key={coach.id} className="tw-add" onSubmit={handleCoachSave}>
                               <span className="tw-add__label">EDIT COACH</span>
+                              {coachError && <span className="tw-add__error">{coachError}</span>}
                               <input type="text" className="tnw-input tw-add__input" placeholder="Coach name"
                                 value={coachNameDraft} onChange={e => setCoachNameDraft(e.target.value)} autoFocus />
                               <input type="text" className="tnw-input tw-add__input" placeholder="Years coached (e.g. 1982–94)"
@@ -739,6 +755,7 @@ export default function TeamWallPage() {
                     {coachEditingId === 'new' && (
                       <form className="tw-add" onSubmit={handleCoachSave}>
                         <span className="tw-add__label">ADD COACH</span>
+                        {coachError && <span className="tw-add__error">{coachError}</span>}
                         <input type="text" className="tnw-input tw-add__input" placeholder="Coach name"
                           value={coachNameDraft} onChange={e => setCoachNameDraft(e.target.value)} autoFocus />
                         <input type="text" className="tnw-input tw-add__input" placeholder="Years coached (e.g. 1982–94)"
@@ -815,11 +832,11 @@ export default function TeamWallPage() {
                           /* Inline edit form */
                           <form key={entry.id} className="tw-add" onSubmit={handleEditSave}>
                             <span className="tw-add__label">EDIT</span>
+                            {editError && <span className="tw-add__error">{editError}</span>}
                             <input type="text" className="tnw-input tw-add__input" placeholder="Name"
                               value={editName} onChange={e => setEditName(e.target.value)} autoFocus />
                             <div className="tw-add__row">
-                              <input type="text" className="tnw-input tw-add__input tw-add__input--half" placeholder="Position"
-                                value={editPosition} onChange={e => setEditPosition(e.target.value)} maxLength={20} />
+                              <PositionPicker sport={sport} value={editPosition} onChange={setEditPosition} />
                               <input type="text" className="tnw-input tw-add__input tw-add__input--half" placeholder="Grad year"
                                 value={editGradYear} onChange={e => setEditGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
                                 inputMode="numeric" maxLength={4} />
@@ -898,8 +915,7 @@ export default function TeamWallPage() {
                       <input type="text" className="tnw-input tw-add__input" placeholder="Name"
                         value={addName} onChange={e => setAddName(e.target.value)} autoFocus />
                       <div className="tw-add__row">
-                        <input type="text" className="tnw-input tw-add__input tw-add__input--half" placeholder="Position"
-                          value={addPosition} onChange={e => setAddPosition(e.target.value)} maxLength={20} />
+                        <PositionPicker sport={sport} value={addPosition} onChange={setAddPosition} />
                         <input type="text" className="tnw-input tw-add__input tw-add__input--half" placeholder="Grad year"
                           value={addGradYear} onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
                           inputMode="numeric" maxLength={4} />

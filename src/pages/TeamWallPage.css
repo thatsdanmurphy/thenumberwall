@@ -248,6 +248,40 @@
   min-width: 0;
 }
 
+/* PositionPicker — sport-aware <select> + Other… free-text escape.
+   Sits in a tw-add__row alongside the grad-year half-input; shares the
+   same flex slot and visual density. */
+.tw-position-picker {
+  flex:      1;
+  min-width: 0;
+  display:   flex;
+  gap:       var(--space-1);
+  align-items: stretch;
+}
+.tw-position-picker__select {
+  /* Native select — keep the tnw-input look but restore the caret */
+  appearance: auto;
+  -webkit-appearance: menulist;
+  cursor: pointer;
+}
+.tw-position-picker__back {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color:          var(--ink-dim);
+  background:     transparent;
+  border:         1px solid var(--border-soft);
+  border-radius:  var(--radius-sm);
+  padding:        0 var(--space-2);
+  cursor:         pointer;
+  white-space:    nowrap;
+}
+.tw-position-picker__back:hover {
+  color:        var(--color-paper);
+  border-color: var(--border-strong, var(--border-soft));
+}
+
 /* Inherits .tnw-btn .tnw-btn--secondary; compact density for inline form. */
 .tw-add__submit {
   align-self:     flex-start;
