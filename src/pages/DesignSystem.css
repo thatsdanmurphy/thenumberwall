@@ -1,0 +1,565 @@
+/* Design System page
+   Rule: everything here uses tokens. No raw rem, no raw rgba, no raw px for
+   spacing. The page is also the test — if a token drifts, a swatch breaks
+   visibly. */
+
+.ds-page {
+  max-width: var(--grid-max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--grid-margin) var(--space-8);
+  color: var(--color-paper);
+}
+
+/* ── Banner ────────────────────────────────────────────────────────────── */
+
+.ds-banner {
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: var(--space-6);
+}
+
+.ds-banner__eyebrow {
+  display: inline-block;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  border: 1px solid var(--color-heat);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.ds-banner__title {
+  font-family: var(--font-banner);
+  font-size: 2.25rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--color-paper);
+  margin-bottom: var(--space-1);
+}
+
+.ds-banner__sub {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-h2);
+  color: var(--color-heat);
+  letter-spacing: 0;
+  font-weight: 400;
+  text-shadow: 0 0 18px rgba(232, 124, 42, 0.4);
+  margin-bottom: var(--space-3);
+}
+
+.ds-banner__lede {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-mid);
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.ds-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--border-faint);
+}
+
+.ds-toc a {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color var(--motion-hover);
+}
+
+.ds-toc a:hover { color: var(--color-paper); }
+
+.ds-toc__home {
+  margin-left: auto;
+  color: var(--color-heat) !important;
+}
+
+/* ── Section ──────────────────────────────────────────────────────────── */
+
+.ds-section {
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.ds-section__header {
+  margin-bottom: var(--space-5);
+}
+
+.ds-section__eyebrow {
+  display: inline-block;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-heat);
+  margin-bottom: var(--space-2);
+}
+
+.ds-section__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h1);
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  margin-bottom: var(--space-2);
+}
+
+.ds-section__intro {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-mid);
+  max-width: 64ch;
+  line-height: 1.6;
+}
+
+.ds-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Subsection ────────────────────────────────────────────────────────── */
+
+.ds-sub__head {
+  margin-bottom: var(--space-3);
+}
+
+.ds-sub__title {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-paper);
+  margin-bottom: var(--space-1);
+}
+
+.ds-sub__note {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  max-width: 64ch;
+  line-height: 1.55;
+}
+
+.ds-sub__body {
+  padding-top: var(--space-2);
+}
+
+/* ── Inline code label ─────────────────────────────────────────────────── */
+
+.ds-code {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-caption);
+  color: var(--color-paper);
+  background: var(--surface-2);
+  padding: 2px var(--space-1);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* ── Swatch grid ──────────────────────────────────────────────────────── */
+
+.ds-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.ds-swatch-grid--alpha {
+  background:
+    linear-gradient(45deg, var(--surface-1) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--surface-1) 25%, transparent 25%);
+  background-size: 16px 16px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-faint);
+}
+
+.ds-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-swatch__chip {
+  height: 56px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+}
+
+.ds-swatch__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ds-swatch__note {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+/* ── Ink grid ─────────────────────────────────────────────────────────── */
+
+.ds-ink-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+  background: var(--surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-faint);
+}
+
+.ds-ink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ds-ink__sample {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  margin-bottom: var(--space-2);
+}
+
+/* ── Font grid ────────────────────────────────────────────────────────── */
+
+.ds-font-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ds-font {
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ds-font__sample {
+  font-size: var(--text-h1);
+  color: var(--color-paper);
+  line-height: 1.2;
+}
+
+.ds-font__meta {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── Type ramp ────────────────────────────────────────────────────────── */
+
+.ds-ramp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ds-ramp__row {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--border-faint);
+}
+
+.ds-ramp__name {
+  justify-self: start;
+}
+
+.ds-ramp__sample {
+  font-family: var(--font-banner);
+  color: var(--color-paper);
+  line-height: 1.1;
+}
+
+.ds-ramp__note {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  justify-self: end;
+  text-align: right;
+}
+
+/* ── Letter-spacing ───────────────────────────────────────────────────── */
+
+.ds-track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-track__row {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.ds-track__sample {
+  font-family: var(--font-banner);
+  font-size: var(--text-h2);
+  color: var(--color-paper);
+}
+
+/* ── Spacing ──────────────────────────────────────────────────────────── */
+
+.ds-space {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-space__row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.ds-space__bar {
+  height: 12px;
+  background: var(--color-heat);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Radii ────────────────────────────────────────────────────────────── */
+
+.ds-radii {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.ds-radii__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 120px;
+}
+
+.ds-radii__box {
+  width: 80px;
+  height: 80px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-medium);
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+.ds-motion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-motion__row {
+  display: grid;
+  grid-template-columns: 140px 180px 1fr;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.ds-motion__demo {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-paper);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+
+.ds-motion__demo:hover {
+  background: var(--color-heat);
+  border-color: var(--color-heat);
+}
+
+/* ── Primitives demos ─────────────────────────────────────────────────── */
+
+.ds-tiles {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.ds-tile-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ds-tile-demo__tile {
+  width: 64px;
+  height: 64px;
+}
+
+.ds-button-row,
+.ds-input-row,
+.ds-tabs-demo {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--space-3);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+}
+
+.ds-tabs-demo {
+  border-bottom: 1px solid var(--border-soft);
+  border-radius: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+}
+
+.ds-input-row .tnw-input {
+  max-width: 280px;
+}
+
+.ds-eyebrow-demo {
+  padding: var(--space-3);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+}
+
+/* ── Compositions ─────────────────────────────────────────────────────── */
+
+.ds-comp {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+.ds-tile-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--space-2);
+  max-width: 560px;
+}
+
+/* ── Voice / Don'ts rules ─────────────────────────────────────────────── */
+
+.ds-voice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ds-rule {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-left: 3px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+}
+
+.ds-rule--do    { border-left-color: var(--color-sacred); }
+.ds-rule--dont  { border-left-color: var(--color-heat); }
+
+.ds-rule__pill {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  font-weight: 700;
+  text-align: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  align-self: flex-start;
+}
+
+.ds-rule__pill--do {
+  background: rgba(200, 220, 255, 0.15);
+  color: var(--color-sacred);
+}
+
+.ds-rule__pill--dont {
+  background: rgba(232, 124, 42, 0.15);
+  color: var(--color-heat);
+}
+
+.ds-rule__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ds-rule__label {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--color-paper);
+  font-weight: 600;
+}
+
+.ds-rule__body {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--ink-mid);
+  line-height: 1.55;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+
+.ds-footer {
+  padding-top: var(--space-6);
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+}
+
+.ds-footer__line {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-body);
+  color: var(--color-heat);
+  letter-spacing: 0;
+  text-shadow: 0 0 14px rgba(232, 124, 42, 0.35);
+}
+
+/* ── Responsive squeezes ─────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .ds-ramp__row,
+  .ds-track__row,
+  .ds-space__row,
+  .ds-motion__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .ds-ramp__note,
+  .ds-motion__row .ds-swatch__note {
+    justify-self: start;
+    text-align: left;
+  }
+  .ds-tile-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -10,6 +10,7 @@ import TimelinePage   from './pages/TimelinePage.jsx'
 import TeamWallsPage  from './pages/TeamWallsPage.jsx'
 import TeamWallPage   from './pages/TeamWallPage.jsx'
 import TownWallsPage  from './pages/TownWallsPage.jsx'
+import DesignSystem   from './pages/DesignSystem.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
 export default function App() {
@@ -29,6 +30,8 @@ export default function App() {
         <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} />
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
+        {/* Hidden internal reference — no nav link. Bookmark /design. */}
+        <Route path="/design"    element={<DesignSystem />} />
         <Route path="*"          element={<NotFoundPage />} />
       </Routes>
     </ErrorBoundary>

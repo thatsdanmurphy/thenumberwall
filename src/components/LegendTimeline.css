@@ -553,19 +553,29 @@
   display: none;
 }
 
-/* ── Persistent top header — always visible #12 Brady ── */
-.vtl__top-header {
+/* ── Unified top card — Brady identity + live game details ── */
+.vtl__top-card {
   flex-shrink: 0;
+  padding: 14px var(--space-3) 14px;
+  border-bottom: 1px solid rgba(255, 230, 120, 0.1);
+  background: rgba(6, 8, 18, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-sizing: border-box;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 230, 120, 0.05);
+}
+
+.vtl__top-card-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px var(--space-3) 10px;
-  border-bottom: 1px solid rgba(255, 230, 120, 0.06);
-  background: rgba(6, 8, 18, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  height: 58px;
-  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+.vtl__top-card-game {
+  animation: vtl-card-in 120ms ease-out;
 }
 
 .vtl__top-number {
@@ -698,27 +708,7 @@
     0 0 24px rgba(255, 195, 45, 0.3);
 }
 
-/* ── Bottom card — game info only (Brady header is persistent up top) ── */
-.vtl__card {
-  position: relative;
-  z-index: 10;
-  background: rgba(6, 8, 18, 0.95);
-  border-top: 1px solid rgba(255, 230, 120, 0.12);
-  padding: 12px var(--space-3) 14px;
-  height: 110px;
-  box-sizing: border-box;
-  box-shadow:
-    0 -8px 32px rgba(0, 0, 0, 0.7),
-    0 -2px 8px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  flex-shrink: 0;
-  overflow: hidden;
-  touch-action: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+/* (Legacy .vtl__card bottom-card styles removed — top card now holds all game info) */
 
 /* Grip bar at top of card — "grab me" indicator */
 .vtl__card-grip {

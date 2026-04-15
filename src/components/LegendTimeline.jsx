@@ -1031,17 +1031,58 @@ export default function LegendTimeline({ timeline }) {
 
       {/* ── Mobile Vertical Glow Timeline ──────────────────────────────── */}
       <div className="vtl">
-        {/* Persistent top header — always shows Brady #12 */}
-        <div className="vtl__top-header">
-          <span className="vtl__top-number">12</span>
-          <div className="vtl__top-name-block">
-            <span className="vtl__top-name">{timeline.player_name}</span>
-            <span className="vtl__top-meta">
-              {timeline.position} · {timeline.career_span} · {timeline.total_games} games
-            </span>
+        {/* Unified top card — Brady identity + live game details */}
+        <div className="vtl__top-card">
+          <div className="vtl__top-card-header">
+            <span className="vtl__top-number">12</span>
+            <div className="vtl__top-name-block">
+              <span className="vtl__top-name">{timeline.player_name}</span>
+              <span className="vtl__top-meta">
+                {timeline.position} · {timeline.career_span} · {timeline.total_games} games
+              </span>
+            </div>
+            {activeEra && (
+              <span className="vtl__top-era">{activeEra.label}</span>
+            )}
           </div>
-          {activeEra && (
-            <span className="vtl__top-era">{activeEra.label}</span>
+          {activeGame ? (
+            <div className="vtl__top-card-game">
+              {activeGame.is_bye ? (
+                <div className="vtl__card-bye">Bye Week · {activeGame.season}</div>
+              ) : activeGame.is_dnp ? (
+                <div className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''} · {activeGame.season}</div>
+              ) : (
+                <>
+                  <div className="vtl__card-matchup">
+                    <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
+                      {activeGame.result}
+                    </span>
+                    {' '}{activeGame.score}
+                    <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
+                  </div>
+                  <div className="vtl__card-detail-row">
+                    {activeGame.stats?.pass_yards != null && (
+                      <span className="vtl__card-stats">
+                        {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
+                        {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
+                      </span>
+                    )}
+                    <span className="vtl__card-meta-line">
+                      {activeGame.week} · {activeGame.season}
+                      <span className="vtl__card-glow"> · {activeGame.glow_score?.toFixed(1)}</span>
+                    </span>
+                  </div>
+                  {activeGame.moments?.length > 0 && (
+                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
+                      {getMomentIcon(activeGame.moments[0])}
+                      <span>{activeGame.moments[0].moment_name}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="vtl__card-hint">Scroll the bar to explore</div>
           )}
         </div>
 
@@ -1079,49 +1120,6 @@ export default function LegendTimeline({ timeline }) {
           <div className="vtl__scrub-indicator" ref={scrubIndicatorRef}>
             <div className="vtl__scrub-line" />
           </div>
-        </div>
-
-        {/* Bottom card — game info only (no Brady duplicate) */}
-        <div className="vtl__card">
-          {activeGame ? (
-            <div className="vtl__card-game">
-              {activeGame.is_bye ? (
-                <div className="vtl__card-bye">Bye Week · {activeGame.season}</div>
-              ) : activeGame.is_dnp ? (
-                <div className="vtl__card-dnp">DNP{activeGame.dnp_reason ? ` — ${activeGame.dnp_reason}` : ''} · {activeGame.season}</div>
-              ) : (
-                <>
-                  <div className="vtl__card-matchup">
-                    <span className={`vtl__card-result vtl__card-result--${activeGame.result?.toLowerCase()}`}>
-                      {activeGame.result}
-                    </span>
-                    {' '}{activeGame.score}
-                    <span className="vtl__card-opponent"> vs {activeGame.opponent}</span>
-                  </div>
-                  <div className="vtl__card-detail-row">
-                    {activeGame.stats?.pass_yards != null && (
-                      <span className="vtl__card-stats">
-                        {activeGame.stats.pass_yards} yds · {activeGame.stats.pass_td || 0} TD · {activeGame.stats.interceptions || 0} INT
-                        {activeGame.stats.passer_rating ? ` · ${activeGame.stats.passer_rating.toFixed(1)} rtg` : ''}
-                      </span>
-                    )}
-                    <span className="vtl__card-meta-line">
-                      {activeGame.week} · {activeGame.season}
-                      <span className="vtl__card-glow"> · {activeGame.glow_score?.toFixed(1)}</span>
-                    </span>
-                  </div>
-                  {activeGame.moments?.length > 0 && (
-                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
-                      {getMomentIcon(activeGame.moments[0])}
-                      <span>{activeGame.moments[0].moment_name}</span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="vtl__card-hint">Touch the bar, slide to explore</div>
-          )}
         </div>
       </div>
     </div>
