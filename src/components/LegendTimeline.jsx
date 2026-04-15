@@ -999,7 +999,12 @@ export default function LegendTimeline({ timeline }) {
     }
   }, [positionPills])
 
-  // Mobile: tap a moment marker — scroll that game to the scrub line
+  // Mobile: tap a moment marker — smooth-scroll that game to the scrub.
+  // Native `behavior: 'smooth'` stutters hard on iOS Safari when the canvas
+  // rAF loop is also running, so we animate scrollTop by hand with an
+  // ease-out cubic. Each tap cancels the previous animation so rapid taps
+  // feel responsive instead of queueing up.
+  const vScrollAnimRef = useRef(null)
   const handleVMomentClick = useCallback((gameIdx, e) => {
     if (e) e.stopPropagation()
     const viewport = vScrollRef.current
@@ -1008,7 +1013,28 @@ export default function LegendTimeline({ timeline }) {
     const barCol = viewport.querySelector('.vtl__bar-col')
     if (!barCol) return
     const mid = (positions[gameIdx] + positions[gameIdx + 1]) / 2
-    viewport.scrollTo({ top: barCol.offsetTop + mid, behavior: 'smooth' })
+    const target = barCol.offsetTop + mid
+    const start = viewport.scrollTop
+    const delta = target - start
+    if (Math.abs(delta) < 1) return
+
+    if (vScrollAnimRef.current) cancelAnimationFrame(vScrollAnimRef.current)
+    // Scale duration with distance but clamp — short hops stay snappy,
+    // long jumps don't feel endless. 280–560ms is the sweet spot.
+    const duration = Math.max(280, Math.min(560, 280 + Math.abs(delta) * 0.12))
+    const t0 = performance.now()
+    const ease = t => 1 - Math.pow(1 - t, 3) // ease-out cubic
+
+    function step(now) {
+      const t = Math.min(1, (now - t0) / duration)
+      viewport.scrollTop = start + delta * ease(t)
+      if (t < 1) {
+        vScrollAnimRef.current = requestAnimationFrame(step)
+      } else {
+        vScrollAnimRef.current = null
+      }
+    }
+    vScrollAnimRef.current = requestAnimationFrame(step)
   }, [])
 
   // Click on a moment marker — pin tooltip to that game

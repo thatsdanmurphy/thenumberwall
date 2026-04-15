@@ -137,11 +137,12 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   }
 
   const sub = value ? 'WHERE YOUR TEAMS PLAY' : 'PICK A CITY'
-  // Autosize only when the actual text is long enough to need it. When
-  // editing, track the draft so the cell grows with the word being typed
-  // — not just because the tile is active.
+  // City cells stay at 1fr — no grid reflow. Long words (Nashville,
+  // Indianapolis) shrink the value via `id-slot--shrink` instead of
+  // widening the tile. Keeps the triptych balanced and the sublabel
+  // hint text uncovered.
   const len = (editing ? draft : value || '').length
-  const modifier = len > 7 ? 'id-slot--autosize' : ''
+  const modifier = len > 9 ? 'id-slot--shrink-sm' : len > 6 ? 'id-slot--shrink' : ''
 
   if (editing) {
     return (
@@ -240,7 +241,7 @@ function HeroSlot({ value, onSave }) {
 
   if (editing) {
     return (
-      <Slot variant="hero" label="MY HERO" subLabel="SEARCH BY NUMBER OR NAME" filled>
+      <Slot variant="hero" label="MY HERO" subLabel={sub} filled>
         <input
           className="id-slot__input id-slot__input--big"
           type="text"
@@ -251,7 +252,7 @@ function HeroSlot({ value, onSave }) {
             if (e.key === 'Escape') setEditing(false)
           }}
           onBlur={() => setTimeout(() => { if (editing) commitFree() }, 180)}
-          placeholder="00 or a name"
+          placeholder="00"
           autoFocus
         />
         {results.length > 0 && (

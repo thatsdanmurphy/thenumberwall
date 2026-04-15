@@ -42,23 +42,13 @@
   --id-yellow-glow-hi: rgba(245, 193, 53, 0.32);
 
   display: grid;
-  /* Each slot can grow past 1fr when its content needs the room (long city
-     names like Nashville or Indianapolis). The :has() rules below let a
-     slot carrying a long value opt into `auto` width and rebalance the
-     row rather than clipping the value with an ellipsis. */
+  /* All three slots stay balanced at 1fr. When a value is too long to fit
+     (Nashville, Indianapolis), the value itself shrinks via the
+     `.id-slot--shrink` / `--shrink-sm` modifiers below — we never reflow
+     the triptych or clip with an ellipsis. */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-2);
   padding: var(--space-2) 0 var(--space-3);
-}
-
-.id-row:has(.id-slot--number.id-slot--autosize) {
-  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, 1fr);
-}
-.id-row:has(.id-slot--city.id-slot--autosize) {
-  grid-template-columns: minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr);
-}
-.id-row:has(.id-slot--hero.id-slot--autosize) {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, auto);
 }
 
 @media (min-width: 768px) {
@@ -149,10 +139,15 @@ button.id-slot.id-slot--empty:hover {
   display: inline-block;
 }
 
-.id-slot--autosize {
-  /* Breathing room so a long word isn't cramped to the cell edge. */
-  padding-left: var(--space-3);
-  padding-right: var(--space-3);
+/* Shrink the big value (not the cell) when the word is long. Keeps the
+   triptych balanced and leaves the sublabel visible. */
+.id-slot--shrink .id-slot__value,
+.id-slot--shrink .id-slot__input--big {
+  font-size: clamp(1.375rem, 4.6vw, 2.125rem);
+}
+.id-slot--shrink-sm .id-slot__value,
+.id-slot--shrink-sm .id-slot__input--big {
+  font-size: clamp(1.125rem, 3.8vw, 1.75rem);
 }
 
 .id-slot__input--big {
