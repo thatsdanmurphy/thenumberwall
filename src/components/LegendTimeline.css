@@ -553,10 +553,12 @@
   display: none;
 }
 
-/* ── Unified top card — Brady identity + live game details ── */
+/* ── Unified top card — Brady identity + live game details ──
+   Fixed height so the card never reflows across moments/bye/DNP states. */
 .vtl__top-card {
   flex-shrink: 0;
-  padding: 14px var(--space-3) 14px;
+  height: 150px;
+  padding: 14px var(--space-3) 12px;
   border-bottom: 1px solid rgba(255, 230, 120, 0.1);
   background: rgba(6, 8, 18, 0.95);
   backdrop-filter: blur(16px);
@@ -565,6 +567,9 @@
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.4),
     0 1px 0 rgba(255, 230, 120, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .vtl__top-card-header {
@@ -572,10 +577,17 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 .vtl__top-card-game {
   animation: vtl-card-in 120ms ease-out;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 3px;
 }
 
 .vtl__top-number {
