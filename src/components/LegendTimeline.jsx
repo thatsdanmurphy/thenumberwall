@@ -947,9 +947,9 @@ export default function LegendTimeline({ timeline }) {
                 {draft.year} Draft · Rd {draft.round} · Pick {draft.pick}
               </p>
             )}
+            <p className="legend-timeline__voice">{timeline.voice_line}</p>
           </div>
         </div>
-        <p className="legend-timeline__voice">{timeline.voice_line}</p>
       </div>
 
       {/* The Bar */}

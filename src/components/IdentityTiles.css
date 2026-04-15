@@ -1,51 +1,75 @@
-/* IdentityTiles — Two-slot layout.
-   Slots share a common `--id-row-h` so the row reads as one object even
-   though each slot takes the shape its data asks for:
-     · Number  — square
-     · City    — wide field
-   Both slots use the same shell (border, radius, label overline, hover),
-   which is what makes the row feel like one system. */
+/* IdentityTiles — 3-slot triptych.
+   One row, three slots, unified shell. Each slot announces its meaning
+   with a coloured glow and a pair of eyebrows bracketing a hero-sized
+   value:
+
+       MY NUMBER           MY CITY             MY HERO
+         18                 BOSTON              BRADY
+       THE ONE YOU'D WEAR  WHERE YOUR TEAMS    THE ONE YOU'D
+                           PLAY                NEVER TRADE
+
+   Colours are load-bearing:
+     Number → sacred blue   (--color-sacred)
+     City   → heat orange   (--color-heat)
+     Hero   → blaze yellow  (--color-blaze)
+*/
 
 .id-row {
-  /* Row-scoped tokens. Kept local (not in global.css) because these dimensions
-     only apply to the identity row. Raw rgba on the heat color lives here
-     because global.css doesn't ship a heat-glow token yet — if/when it does,
-     swap these refs in one place. */
-  --id-row-h:        64px;
-  --id-heat-bg:      rgba(232, 124, 42, 0.14);
-  --id-heat-bg-fade: rgba(232, 124, 42, 0.04);
-  --id-heat-edge:    rgba(232, 124, 42, 0.45);
-  --id-heat-edge-hi: rgba(232, 124, 42, 0.75);
-  --id-heat-glow:    rgba(232, 124, 42, 0.20);
-  --id-heat-glow-hi: rgba(232, 124, 42, 0.30);
+  --id-row-h: 120px;
 
-  display: flex;
-  align-items: stretch;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-  padding: var(--space-3) 0 var(--space-2);
+  /* Sacred (blue) glow — number */
+  --id-blue-bg:      rgba(200, 220, 255, 0.06);
+  --id-blue-bg-fade: rgba(200, 220, 255, 0.02);
+  --id-blue-edge:    rgba(200, 220, 255, 0.35);
+  --id-blue-edge-hi: rgba(200, 220, 255, 0.65);
+  --id-blue-glow:    rgba(200, 220, 255, 0.18);
+  --id-blue-glow-hi: rgba(200, 220, 255, 0.28);
+
+  /* Heat (orange) glow — city */
+  --id-orange-bg:      rgba(232, 124, 42, 0.10);
+  --id-orange-bg-fade: rgba(232, 124, 42, 0.02);
+  --id-orange-edge:    rgba(232, 124, 42, 0.40);
+  --id-orange-edge-hi: rgba(232, 124, 42, 0.70);
+  --id-orange-glow:    rgba(232, 124, 42, 0.20);
+  --id-orange-glow-hi: rgba(232, 124, 42, 0.30);
+
+  /* Blaze (yellow) glow — hero */
+  --id-yellow-bg:      rgba(245, 193, 53, 0.10);
+  --id-yellow-bg-fade: rgba(245, 193, 53, 0.02);
+  --id-yellow-edge:    rgba(245, 193, 53, 0.42);
+  --id-yellow-edge-hi: rgba(245, 193, 53, 0.70);
+  --id-yellow-glow:    rgba(245, 193, 53, 0.22);
+  --id-yellow-glow-hi: rgba(245, 193, 53, 0.32);
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-2) 0 var(--space-3);
 }
 
 @media (min-width: 768px) {
-  .id-row { --id-row-h: 68px; }
+  .id-row {
+    --id-row-h: 144px;
+    gap: var(--space-3);
+  }
 }
 
 /* ── Shared slot shell ─────────────────────────────────────────────────── */
 
 .id-slot {
   position: relative;
-  height: var(--id-row-h);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 6px var(--space-2) 7px;
-  border-radius: var(--radius-sm);
+  min-height: var(--id-row-h);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-md);
   background: var(--surface-1);
   border: 1px solid var(--border-soft);
   cursor: default;
   font: inherit;
   color: inherit;
-  text-align: left;
+  text-align: center;
   transition:
     background var(--motion-hover),
     border-color var(--motion-hover),
@@ -54,11 +78,6 @@
 
 button.id-slot { cursor: pointer; }
 
-button.id-slot:hover {
-  background: var(--surface-2);
-  border-color: var(--border-medium);
-}
-
 .id-slot--empty {
   background: transparent;
   border-style: dashed;
@@ -66,15 +85,13 @@ button.id-slot:hover {
   color: var(--color-muted);
 }
 
-.id-slot--empty:hover {
+button.id-slot.id-slot--empty:hover {
   border-style: solid;
   color: var(--color-paper);
-  border-color: var(--border-medium);
   background: var(--surface-1);
 }
 
-/* Slot-level label — micro overline, consistent across both slots.
-   Lives inside the tile so the row has no captions floating below it. */
+/* Top eyebrow */
 .id-slot__label {
   font-family: var(--font-scoreboard);
   font-size: var(--text-micro);
@@ -85,106 +102,107 @@ button.id-slot:hover {
   white-space: nowrap;
 }
 
+/* Body — the big value sits here, centered */
 .id-slot__body {
-  flex: 1;
   display: flex;
   align-items: center;
-  min-width: 0;
-}
-
-/* ── Variant: Number — square ──────────────────────────────────────────── */
-
-.id-slot--number {
-  flex: 0 0 var(--id-row-h);
-  width: var(--id-row-h);
-  padding-left: 0;
-  padding-right: 0;
-  align-items: center;
-}
-
-.id-slot--number .id-slot__label {
-  /* Center label over the big digit in a square tile */
-  align-self: center;
-}
-
-.id-slot--number .id-slot__body {
   justify-content: center;
+  min-width: 0;
+  padding: var(--space-1) 0;
 }
 
-.id-slot--number.id-slot--filled {
-  /* Burns a personal glow around the user's number — it's the emotional core
-     of the identity row. */
-  background: linear-gradient(180deg, var(--id-heat-bg) 0%, var(--id-heat-bg-fade) 100%);
-  border-color: var(--id-heat-edge);
-  box-shadow: 0 0 18px var(--id-heat-glow);
+/* Bottom eyebrow — the descriptor */
+.id-slot__sublabel {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  line-height: 1.2;
+  opacity: 0.75;
 }
 
-.id-slot--number.id-slot--filled:hover {
-  border-color: var(--id-heat-edge-hi);
-  box-shadow: 0 0 22px var(--id-heat-glow-hi);
-}
-
-.id-slot__number-value {
+/* Hero-sized value — shared across all three slots */
+.id-slot__value {
   font-family: var(--font-banner);
-  font-size: var(--text-h1);
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
   line-height: 1;
-  color: var(--color-heat);
-  letter-spacing: -0.01em;
-  text-shadow: 0 0 10px var(--id-heat-edge);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
 }
 
-.id-slot__input--number {
+.id-slot__input--big {
   width: 100%;
-  height: 100%;
   background: transparent;
   border: none;
   outline: none;
   text-align: center;
   font-family: var(--font-banner);
-  font-size: var(--text-h1);
-  color: var(--color-heat);
-  letter-spacing: -0.01em;
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
+  color: inherit;
+  letter-spacing: 0.01em;
   padding: 0;
 }
 
-.id-slot__plus { color: var(--color-muted); }
+.id-slot__plus {
+  color: var(--color-muted);
+  transition: color var(--motion-hover);
+}
 button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 
-/* ── Variant: City — wide field ────────────────────────────────────────── */
+/* ── Variant: Number (blue) ────────────────────────────────────────────── */
 
-.id-slot--city {
-  flex: 1 1 180px;
-  min-width: 160px;
+.id-slot--number.id-slot--filled {
+  background: linear-gradient(180deg, var(--id-blue-bg) 0%, var(--id-blue-bg-fade) 100%);
+  border-color: var(--id-blue-edge);
+  box-shadow: 0 0 22px var(--id-blue-glow);
+}
+button.id-slot--number.id-slot--filled:hover {
+  border-color: var(--id-blue-edge-hi);
+  box-shadow: 0 0 28px var(--id-blue-glow-hi);
+}
+.id-slot--number .id-slot__value,
+.id-slot--number .id-slot__input--big {
+  color: var(--color-sacred);
+  text-shadow: 0 0 14px var(--id-blue-edge);
 }
 
-.id-slot__city-value {
-  font-family: var(--font-banner);
-  font-size: var(--text-h2);
-  color: var(--color-paper);
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
+/* ── Variant: City (orange) ────────────────────────────────────────────── */
+
+.id-slot--city.id-slot--filled {
+  background: linear-gradient(180deg, var(--id-orange-bg) 0%, var(--id-orange-bg-fade) 100%);
+  border-color: var(--id-orange-edge);
+  box-shadow: 0 0 22px var(--id-orange-glow);
+}
+button.id-slot--city.id-slot--filled:hover {
+  border-color: var(--id-orange-edge-hi);
+  box-shadow: 0 0 28px var(--id-orange-glow-hi);
+}
+.id-slot--city .id-slot__value,
+.id-slot--city .id-slot__input--big {
+  color: var(--color-heat);
+  text-shadow: 0 0 14px var(--id-orange-edge);
 }
 
-.id-slot__prompt {
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: var(--color-muted);
-  letter-spacing: 0.02em;
-}
+/* ── Variant: Hero (yellow) ────────────────────────────────────────────── */
 
-.id-slot__input--city {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: var(--font-banner);
-  font-size: var(--text-h2);
-  color: var(--color-paper);
-  letter-spacing: 0.01em;
-  padding: 0;
+.id-slot--hero.id-slot--filled {
+  background: linear-gradient(180deg, var(--id-yellow-bg) 0%, var(--id-yellow-bg-fade) 100%);
+  border-color: var(--id-yellow-edge);
+  box-shadow: 0 0 22px var(--id-yellow-glow);
+}
+button.id-slot--hero.id-slot--filled:hover {
+  border-color: var(--id-yellow-edge-hi);
+  box-shadow: 0 0 28px var(--id-yellow-glow-hi);
+}
+.id-slot--hero .id-slot__value,
+.id-slot--hero .id-slot__input--big {
+  color: var(--color-blaze);
+  text-shadow: 0 0 14px var(--id-yellow-edge);
 }
 
 /* ── Suggestions dropdown ──────────────────────────────────────────────── */
@@ -207,7 +225,6 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 .id-slot__suggestion {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   background: transparent;
@@ -223,9 +240,16 @@ button.id-slot:hover .id-slot__plus { color: var(--color-paper); }
 .id-slot__suggestion:first-child { border-top: none; }
 .id-slot__suggestion:hover { background: var(--surface-1); }
 
-/* ── Responsive — narrow stacks city below number ──────────────────────── */
+/* ── Responsive ─────────────────────────────────────────────────────────
+   On narrow screens the triptych still reads as three, just tighter. */
 
 @media (max-width: 520px) {
-  .id-row { gap: var(--space-2); }
-  .id-slot--city { flex-basis: calc(100% - var(--id-row-h) - var(--space-2)); }
+  .id-row {
+    --id-row-h: 104px;
+    gap: var(--space-1);
+  }
+  .id-slot { padding: var(--space-2) var(--space-1); }
+  .id-slot__value,
+  .id-slot__input--big { font-size: clamp(1.5rem, 8vw, 2.25rem); }
+  .id-slot__sublabel { font-size: 0.625rem; }
 }

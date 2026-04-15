@@ -28,26 +28,26 @@
   font-size: 4.5rem;
   line-height: 0.85;
   flex-shrink: 0;
-  color: rgba(255, 230, 120, 0.85);
+  color: rgba(232, 124, 42, 0.95);
   text-shadow:
-    0 0 30px rgba(255, 220, 80, 0.35),
-    0 0 60px rgba(255, 195, 45, 0.15),
-    0 0 100px rgba(255, 195, 45, 0.08);
+    0 0 30px rgba(232, 124, 42, 0.35),
+    0 0 60px rgba(232, 124, 42, 0.15),
+    0 0 100px rgba(232, 124, 42, 0.08);
   animation: number-glow 4s ease-in-out infinite alternate;
 }
 
 @keyframes number-glow {
   0% {
     text-shadow:
-      0 0 30px rgba(255, 220, 80, 0.3),
-      0 0 60px rgba(255, 195, 45, 0.12),
-      0 0 100px rgba(255, 195, 45, 0.06);
+      0 0 30px rgba(232, 124, 42, 0.3),
+      0 0 60px rgba(232, 124, 42, 0.12),
+      0 0 100px rgba(232, 124, 42, 0.06);
   }
   100% {
     text-shadow:
-      0 0 35px rgba(255, 220, 80, 0.45),
-      0 0 70px rgba(255, 195, 45, 0.2),
-      0 0 120px rgba(255, 195, 45, 0.1);
+      0 0 35px rgba(232, 124, 42, 0.45),
+      0 0 70px rgba(232, 124, 42, 0.2),
+      0 0 120px rgba(232, 124, 42, 0.1);
   }
 }
 
@@ -91,11 +91,10 @@
   font-family: var(--font-program);
   font-size: 0.9375rem;
   color: rgba(200, 195, 185, 0.7);
-  margin: 0;
+  margin: var(--space-2) 0 0 0;
   line-height: 1.5;
   font-style: italic;
   max-width: 520px;
-  padding-left: calc(4.5rem + var(--space-3));  /* align under name, past the number */
 }
 
 /* ─── Bar Wrap ───────────────────────────────────────────────────────────── */
@@ -636,14 +635,15 @@
 
 .vtl__top-number {
   font-family: var(--font-banner);
-  font-size: 1.75rem;
+  font-size: 2.75rem;
   line-height: 0.85;
   color: rgba(232, 124, 42, 0.95);
   text-shadow:
-    0 0 20px rgba(232, 124, 42, 0.3),
-    0 0 40px rgba(232, 124, 42, 0.12);
+    0 0 24px rgba(232, 124, 42, 0.35),
+    0 0 48px rgba(232, 124, 42, 0.15);
   flex-shrink: 0;
 }
+
 
 .vtl__top-name-block {
   display: flex;
@@ -655,7 +655,7 @@
 
 .vtl__top-name {
   font-family: var(--font-banner);
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: var(--color-paper);
   line-height: 1;
 }
@@ -1190,7 +1190,7 @@
 }
 
 @media (min-width: 1024px) {
-  .legend-timeline__number { font-size: 5.5rem; text-shadow: 0 0 40px rgba(255, 220, 80, 0.4), 0 0 80px rgba(255, 195, 45, 0.18), 0 0 140px rgba(255, 195, 45, 0.1); }
+  .legend-timeline__number { font-size: 5.5rem; text-shadow: 0 0 40px rgba(232, 124, 42, 0.4), 0 0 80px rgba(232, 124, 42, 0.18), 0 0 140px rgba(232, 124, 42, 0.1); }
   .legend-timeline__name { font-size: 2.25rem; }
   .legend-timeline__bar { height: 120px; }
 }

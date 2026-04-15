@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronRight, Plus } from 'lucide-react'
 import { listMyWalls } from '../lib/myWallStore.js'
-import { getIdentity, setIdentityField } from '../lib/identity.js'
+import { getIdentity, setIdentityField, addHero, removeHero } from '../lib/identity.js'
 import IdentityTiles from './IdentityTiles.jsx'
 import { HUB_WELCOMED, MY_WALL_TOKEN } from '../lib/storageKeys.js'
 import { getCitySuggestions } from '../lib/cities.js'
@@ -75,6 +75,16 @@ export default function MyWallsHub() {
     setIdentity(prev => ({ ...prev, [field]: value }))
   }
 
+  // Hero is backed by an array (up to 5) for backcompat. The identity row
+  // surfaces the first slot — saving replaces that slot, clearing removes it.
+  function handleHeroSave(next) {
+    const current = (identity.heroes && identity.heroes[0]) || null
+    if (current) removeHero(current)
+    if (next) addHero(next)
+    const heroes = next ? [next, ...(identity.heroes || []).filter(h => h !== current && h !== next)] : (identity.heroes || []).filter(h => h !== current)
+    setIdentity(prev => ({ ...prev, heroes }))
+  }
+
   function handlePromptSelect(prompt) {
     setShowModal(false)
     // Navigate to onboarding with prompt pre-selected
@@ -113,12 +123,19 @@ export default function MyWallsHub() {
       {/* First-visit welcome placemat */}
       {showWelcome && <WelcomePlacemat onDismiss={dismissWelcome} />}
 
-      {/* Identity section — Number (square) + City (field). Each slot has its
-          own MY ___ label inside the tile, so no outer heading is needed. */}
+      {/* Identity section — triptych of Number (blue) / City (orange) / Hero
+          (yellow). Each slot has a top eyebrow, a hero-sized value, and a
+          bottom eyebrow descriptor. The section header sits above as an
+          anchor so the row reads as a named part of the hub, not floating UI. */}
+      <header className="hub-identity-header">
+        <span className="hub-identity-header__eyebrow">MY IDENTITY</span>
+        <h2 className="hub-identity-header__title">What&rsquo;s yours?</h2>
+      </header>
       <IdentityTiles
         identity={identity}
         citySuggestions={getCitySuggestions}
         onSaveField={handleIdentitySave}
+        onSaveHero={handleHeroSave}
       />
 
       <div className="hub-divider" />

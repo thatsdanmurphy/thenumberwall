@@ -1,20 +1,24 @@
 /**
- * IdentityTiles — Two-slot identity row for the MyWalls hub.
+ * IdentityTiles — Three-slot identity triptych for the MyWalls hub.
  *
- *   ┌────┐ ┌──────────────┐
- *   │ 18 │ │ BROOKLINE,MA │
- *   └────┘ └──────────────┘
- *    square      field
+ *   ┌────────┐  ┌────────┐  ┌────────┐
+ *   │ NUMBER │  │  CITY  │  │  HERO  │
+ *   │   18   │  │ BOSTON │  │ BRADY  │
+ *   │ blue   │  │ orange │  │ yellow │
+ *   └────────┘  └────────┘  └────────┘
  *
- * Number is one short value → square tile.
- * City is one medium-wide value → wide field.
+ * Each slot has three parts:
+ *   1. Top eyebrow     — MY NUMBER / MY CITY / MY HERO
+ *   2. Hero-sized value — the big thing the user sees first
+ *   3. Bottom eyebrow  — one line of context (state, team, a sliver of meaning)
  *
- * Slots share `--id-row-h` so the row reads as one object even though each
- * slot takes the shape its data asks for. Hero was part of this row in an
- * earlier pass — cut because the wall itself is where heroes live. Identity
- * is just number + city; the walls below it are how you express the rest.
+ * Colour tells you which slot you're in at a glance:
+ *   Number → sacred blue   (your identity)
+ *   City   → heat orange   (where your teams play)
+ *   Hero   → blaze yellow  (the one you'd never trade)
  *
- * Voice: "my" throughout. MY NUMBER · MY CITY.
+ * Hero is stored as an array (up to 5) for backcompat; this view surfaces
+ * the first hero and lets you replace it. The full roster lives elsewhere.
  */
 
 import { useState, useEffect } from 'react'
@@ -25,22 +29,23 @@ export default function IdentityTiles({
   identity,
   citySuggestions,
   onSaveField,
+  onSaveHero,
 }) {
-  const { number, city } = identity
+  const { number, city, heroes } = identity
+  const hero = heroes && heroes.length ? heroes[0] : null
 
   return (
     <section className="id-row" aria-label="My identity">
       <NumberSlot value={number} onSave={v => onSaveField('number', v)} />
       <CitySlot   value={city}   suggestions={citySuggestions} onSave={v => onSaveField('city', v)} />
+      <HeroSlot   value={hero}   onSave={onSaveHero} />
     </section>
   )
 }
 
 // ── Shared slot shell ──────────────────────────────────────────────────────
-// Both slots render through this so borders, radii, hover, label treatment
-// stay perfectly in sync. Variant drives sizing + accent color.
 
-function Slot({ variant, label, filled, interactive, children, onClick, ariaLabel }) {
+function Slot({ variant, label, subLabel, filled, interactive, children, onClick, ariaLabel }) {
   const Tag = interactive ? 'button' : 'div'
   return (
     <Tag
@@ -51,11 +56,12 @@ function Slot({ variant, label, filled, interactive, children, onClick, ariaLabe
     >
       <span className="id-slot__label">{label}</span>
       <div className="id-slot__body">{children}</div>
+      {subLabel && <span className="id-slot__sublabel">{subLabel}</span>}
     </Tag>
   )
 }
 
-// ── Slot 1: Number ─────────────────────────────────────────────────────────
+// ── Slot 1: Number (blue) ──────────────────────────────────────────────────
 
 function NumberSlot({ value, onSave }) {
   const [editing, setEditing] = useState(false)
@@ -68,11 +74,13 @@ function NumberSlot({ value, onSave }) {
     setEditing(false)
   }
 
+  const sub = value ? 'THE ONE YOU\u2019D WEAR' : 'PICK A NUMBER'
+
   if (editing) {
     return (
-      <Slot variant="number" label="MY NUMBER" filled>
+      <Slot variant="number" label="MY NUMBER" subLabel={sub} filled>
         <input
-          className="id-slot__input id-slot__input--number"
+          className="id-slot__input id-slot__input--big"
           type="text"
           value={draft}
           onChange={e => setDraft(e.target.value.replace(/[^0-9]/g, '').slice(0, 2))}
@@ -88,22 +96,22 @@ function NumberSlot({ value, onSave }) {
 
   if (!value) {
     return (
-      <Slot variant="number" label="MY NUMBER" filled={false} interactive
+      <Slot variant="number" label="MY NUMBER" subLabel={sub} filled={false} interactive
             onClick={() => setEditing(true)} ariaLabel="Set my number">
-        <Plus size={18} strokeWidth={2.5} className="id-slot__plus" />
+        <Plus size={22} strokeWidth={2.5} className="id-slot__plus" />
       </Slot>
     )
   }
 
   return (
-    <Slot variant="number" label="MY NUMBER" filled interactive
+    <Slot variant="number" label="MY NUMBER" subLabel={sub} filled interactive
           onClick={() => setEditing(true)} ariaLabel={`Edit my number (${value})`}>
-      <span className="id-slot__number-value">{value}</span>
+      <span className="id-slot__value">{value}</span>
     </Slot>
   )
 }
 
-// ── Slot 2: City ───────────────────────────────────────────────────────────
+// ── Slot 2: City (orange) ──────────────────────────────────────────────────
 
 function CitySlot({ value, suggestions: suggestionFn, onSave }) {
   const [editing, setEditing] = useState(false)
@@ -122,11 +130,13 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
     setSuggestions(suggestionFn ? suggestionFn(v) : [])
   }
 
+  const sub = value ? 'WHERE YOUR TEAMS PLAY' : 'PICK A CITY'
+
   if (editing) {
     return (
-      <Slot variant="city" label="MY CITY" filled>
+      <Slot variant="city" label="MY CITY" subLabel={sub} filled>
         <input
-          className="id-slot__input id-slot__input--city"
+          className="id-slot__input id-slot__input--big"
           type="text"
           value={draft}
           onChange={e => onDraftChange(e.target.value.slice(0, 24))}
@@ -152,17 +162,66 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
 
   if (!value) {
     return (
-      <Slot variant="city" label="MY CITY" filled={false} interactive
+      <Slot variant="city" label="MY CITY" subLabel={sub} filled={false} interactive
             onClick={() => setEditing(true)} ariaLabel="Set my city">
-        <span className="id-slot__prompt">+ Add city</span>
+        <Plus size={22} strokeWidth={2.5} className="id-slot__plus" />
       </Slot>
     )
   }
 
   return (
-    <Slot variant="city" label="MY CITY" filled interactive
+    <Slot variant="city" label="MY CITY" subLabel={sub} filled interactive
           onClick={() => setEditing(true)} ariaLabel={`Edit my city (${value})`}>
-      <span className="id-slot__city-value">{value}</span>
+      <span className="id-slot__value">{value}</span>
+    </Slot>
+  )
+}
+
+// ── Slot 3: Hero (yellow) ──────────────────────────────────────────────────
+
+function HeroSlot({ value, onSave }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft]     = useState(value || '')
+  useEffect(() => { setDraft(value || '') }, [value])
+
+  function commit() {
+    const next = draft.trim().slice(0, 24)
+    onSave(next || null)
+    setEditing(false)
+  }
+
+  const sub = value ? 'THE ONE YOU\u2019D NEVER TRADE' : 'PICK A LEGEND'
+
+  if (editing) {
+    return (
+      <Slot variant="hero" label="MY HERO" subLabel={sub} filled>
+        <input
+          className="id-slot__input id-slot__input--big"
+          type="text"
+          value={draft}
+          onChange={e => setDraft(e.target.value.slice(0, 24))}
+          onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') setEditing(false) }}
+          onBlur={commit}
+          placeholder="Your hero"
+          autoFocus
+        />
+      </Slot>
+    )
+  }
+
+  if (!value) {
+    return (
+      <Slot variant="hero" label="MY HERO" subLabel={sub} filled={false} interactive
+            onClick={() => setEditing(true)} ariaLabel="Set my hero">
+        <Plus size={22} strokeWidth={2.5} className="id-slot__plus" />
+      </Slot>
+    )
+  }
+
+  return (
+    <Slot variant="hero" label="MY HERO" subLabel={sub} filled interactive
+          onClick={() => setEditing(true)} ariaLabel={`Edit my hero (${value})`}>
+      <span className="id-slot__value">{value}</span>
     </Slot>
   )
 }

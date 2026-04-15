@@ -1522,6 +1522,33 @@
   background: var(--surface-2);
 }
 
+/* ─── Identity section header ──────────────────────────────────────────── */
+
+.hub-identity-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-4) 0 var(--space-1);
+}
+
+.hub-identity-header__eyebrow {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  line-height: 1;
+}
+
+.hub-identity-header__title {
+  font-family: var(--font-banner);
+  font-size: 1.375rem;
+  letter-spacing: 0.01em;
+  color: var(--color-paper);
+  margin: 0;
+  line-height: 1.1;
+}
+
 /* ─── Section label ────────────────────────────────────────────────────── */
 
 .hub-section-label {
