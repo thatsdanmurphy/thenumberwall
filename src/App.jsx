@@ -17,6 +17,7 @@ import NotFoundPage   from './pages/NotFoundPage.jsx'
 import BehindTheCurtainsLayout from './pages/behindthecurtains/BehindTheCurtainsLayout.jsx'
 import BehindTheCurtainsHome   from './pages/behindthecurtains/Home.jsx'
 import BehindTheCurtainsStub   from './pages/behindthecurtains/Stub.jsx'
+import Sitemap                 from './pages/behindthecurtains/Sitemap.jsx'
 
 export default function App() {
   return (
@@ -43,23 +44,7 @@ export default function App() {
         <Route path="/behindthecurtains" element={<BehindTheCurtainsLayout />}>
           <Route index element={<BehindTheCurtainsHome />} />
           <Route path="design" element={<DesignSystem />} />
-          <Route
-            path="sitemap"
-            element={
-              <BehindTheCurtainsStub
-                eyebrow="02 · Sitemap"
-                title="EVERY ROUTE, EVERY PAGE"
-                lede="One visual map of the whole product. Every page a user can reach, drawn in place and clickable. Flows painted on top as coloured threads so you can see exactly how someone gets from the front door to a wall they built themselves."
-                plan={[
-                  'Interactive graph of every route in App.jsx, grouped by section',
-                  'Click a node to open that page in a side preview',
-                  'Overlay selectable flows (first visit, build a wall, claim a team) as highlighted paths',
-                  'Depth indicator — how many clicks from the front door',
-                  'A living artefact: the sitemap reads from the router, so new routes show up automatically',
-                ]}
-              />
-            }
-          />
+          <Route path="sitemap" element={<Sitemap />} />
           <Route
             path="flows"
             element={

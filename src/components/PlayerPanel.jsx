@@ -85,7 +85,9 @@ function shareNumber(number) {
 }
 
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
-function PlayerCard({ entry, isTop = false }) {
+// Exported so the Design System page can render the real card (reuse discipline —
+// the DS must mirror the build, not a parallel sketch).
+export function PlayerCard({ entry, isTop = false }) {
   const navigate       = useNavigate()
   const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')

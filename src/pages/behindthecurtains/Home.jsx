@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 import { SECTIONS } from './BehindTheCurtainsLayout.jsx'
 
 // Only /design is live in v1. The rest are sketches — on purpose.
-const LIVE = new Set(['/behindthecurtains/design'])
+const LIVE = new Set(['/behindthecurtains/design', '/behindthecurtains/sitemap'])
 
 export default function BehindTheCurtainsHome() {
   return (

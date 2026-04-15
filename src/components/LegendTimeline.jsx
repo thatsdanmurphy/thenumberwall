@@ -638,17 +638,22 @@ export default function LegendTimeline({ timeline }) {
   const pendingScrubIdx = useRef(null)   // pending index for throttled state update
   const pillRefs = useRef([])            // persistent-pill DOM nodes (mobile)
   const PILL_H = 34                      // approx height of a docked pill (px)
-  // Space below the scrub line. Dan wanted breathing room above the docked
-  // pill so it doesn't kiss the top card — this is the gap between the card
-  // bottom (scrub line) and the pill's top when docked.
-  const PILL_DOCK_Y = 14
-  // How long (in pixels of scroll) a pill lingers as "docked" after its game
-  // has passed the scrub line before disappearing. Short so a pill doesn't
-  // claim the identity of dozens of quiet games after its moment.
-  const PILL_HOLD_PX = 48
+  // Docked pills center ON the scrub line (Dan: "I liked when they were on
+  // the line"). Centering means translating up by half the pill height.
+  const PILL_DOCK_Y = -Math.round(PILL_H / 2)
+  // How long (in pixels of scroll) a pill lingers as "docked" on the scrub
+  // line before vanishing. Longer window = more "gravity/stick" per Dan's
+  // request. The handoff rule below trims this early when the next moment
+  // is approaching, so adjacent moments (Helmet Catch→ACL, Deflategate→
+  // Butler) don't pile up.
+  const PILL_HOLD_PX = 90
+  // If the next pill's naturalY is within this many px of the scrub line
+  // (i.e. it's close to docking), the currently docked pill yields early.
+  // Keeps tightly-spaced moments from visually overlapping at the dock.
+  const PILL_HANDOFF_PX = 42
   // Minimum vertical separation between two natural-position pills. When two
-  // moments sit close together (Helmet Catch → ACL; Deflategate → Butler),
-  // we push the later one down so they don't overlap on approach.
+  // moments sit close together we push the later one down so they don't
+  // overlap on approach.
   const PILL_SEP = PILL_H + 12
 
   // Animation phases as refs — avoids re-renders on every frame
@@ -891,21 +896,25 @@ export default function LegendTimeline({ timeline }) {
       lastY = placements[r.i].naturalY
     }
 
-    // Third pass: apply styles.
+    // Third pass: apply styles. Walk in order so we can check if the NEXT
+    // moment is approaching the scrub — if so, current docked pill yields.
     for (let i = 0; i < markers.length; i++) {
       const el = pillRefs.current[i]
       if (!el) continue
       const p = placements[i]
+      const next = placements[i + 1]
+      const nextApproaching = next && next.naturalY >= 0 && next.naturalY < PILL_HANDOFF_PX
+
       let y, docked = false, visible = true
       if (p.naturalY >= 0) {
         // Riding up toward the scrub line.
         y = p.naturalY
-      } else if (p.naturalY >= -PILL_HOLD_PX) {
-        // Just crossed — dock briefly so the moment registers.
+      } else if (p.naturalY >= -PILL_HOLD_PX && !nextApproaching) {
+        // Just crossed — dock on the line with gravity/stick.
         y = PILL_DOCK_Y
         docked = true
       } else {
-        // Well past — vanish.
+        // Well past, or yielding to an incoming moment — vanish.
         visible = false
         y = PILL_DOCK_Y
       }

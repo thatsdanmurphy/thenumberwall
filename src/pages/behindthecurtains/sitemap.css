@@ -1,0 +1,328 @@
+/* Sitemap — /behindthecurtains/sitemap
+   Tokens only. The page takes visual cues from the DesignSystem page so the
+   two feel like siblings, but the unit of content here is the route card. */
+
+.sm-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Banner ────────────────────────────────────────────────────────────── */
+
+.sm-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.sm-banner__eyebrow {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.sm-banner__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h1);
+  letter-spacing: 0.01em;
+  color: var(--color-paper);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.sm-banner__lede {
+  font-family: var(--font-program);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+  max-width: 64ch;
+  margin: 0;
+}
+
+.sm-banner__lede em {
+  color: var(--color-paper);
+  font-style: italic;
+}
+
+.sm-code {
+  font-family: var(--font-scoreboard);
+  font-size: 0.875em;
+  padding: 2px 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+  color: var(--color-heat);
+  margin: 0 4px;
+}
+
+/* Pulse strip — live counts of live vs sketch vs total */
+
+.sm-pulse {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  font-family: var(--font-scoreboard);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+}
+
+.sm-pulse__num {
+  font-family: var(--font-banner);
+  font-size: 1.75rem;
+  color: var(--color-paper);
+  letter-spacing: 0.02em;
+}
+
+.sm-pulse__num--live  { color: var(--color-heat); }
+.sm-pulse__num--draft { color: var(--color-muted); }
+
+.sm-pulse__label {
+  font-size: var(--text-label);
+  color: var(--color-muted);
+}
+
+.sm-pulse__sep {
+  color: var(--border-soft);
+  padding: 0 var(--space-1);
+}
+
+/* TOC */
+
+.sm-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.sm-toc a {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+}
+
+.sm-toc a:hover {
+  color: var(--color-heat);
+  border-color: var(--color-heat);
+}
+
+.sm-toc__home {
+  margin-left: auto;
+}
+
+/* ── Group ─────────────────────────────────────────────────────────────── */
+
+.sm-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sm-group__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sm-group__title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sm-group__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h2);
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.sm-group__count {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.sm-group__lede {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 64ch;
+}
+
+.sm-group__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ── Route card ────────────────────────────────────────────────────────── */
+
+.sm-route {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  transition: border-color 120ms ease;
+}
+
+.sm-route:hover { border-color: var(--color-heat); }
+
+/* Disabled and Redirect get a slightly quieter treatment — present but muted */
+.sm-route--disabled,
+.sm-route--redirect {
+  opacity: 0.72;
+  border-style: dashed;
+}
+
+.sm-route__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.sm-route__path {
+  font-family: var(--font-scoreboard);
+  font-size: 0.8125rem;
+  color: var(--color-heat);
+  background: var(--surface-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.sm-route__status {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.sm-route__status--live {
+  color: var(--color-heat);
+  border-color: var(--color-heat);
+  background: rgba(232, 124, 42, 0.08);
+}
+
+.sm-route__status--draft {
+  color: var(--color-muted);
+  border-color: var(--border-soft);
+}
+
+.sm-route__status--disabled {
+  color: var(--color-muted);
+  border-color: var(--border-faint);
+}
+
+.sm-route__status--redirect {
+  color: var(--color-sacred);
+  border-color: var(--color-sacred);
+  background: rgba(74, 163, 255, 0.06);
+}
+
+.sm-route__name {
+  font-family: var(--font-banner);
+  font-size: 1.0625rem;
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  line-height: 1.15;
+}
+
+.sm-route__desc {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.sm-route__open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  align-self: flex-start;
+  margin-top: auto;
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  text-decoration: none;
+}
+
+.sm-route__open:hover { border-color: var(--color-heat); }
+
+.sm-route__example {
+  font-family: var(--font-scoreboard);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  padding: 0 var(--space-1);
+  border-left: 1px solid var(--border-faint);
+  border-right: 1px solid var(--border-faint);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+
+.sm-footer {
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+}
+
+.sm-footer__line {
+  font-family: var(--font-handwritten);
+  font-size: 1rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ── Squeeze ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .sm-page {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+    gap: var(--space-5);
+  }
+  .sm-group__title-row { flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+  .sm-toc__home { margin-left: 0; }
+}

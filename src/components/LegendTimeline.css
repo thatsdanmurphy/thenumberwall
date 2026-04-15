@@ -568,8 +568,10 @@
    Fixed height so the card never reflows across moments/bye/DNP states. */
 .vtl__top-card {
   flex-shrink: 0;
-  height: 200px;
-  padding: 12px var(--space-3) 16px;
+  height: 220px;
+  /* Extra padding-bottom so docked pills (centered on the scrub line just
+     below) don't visually kiss the game details above. */
+  padding: 12px var(--space-3) 32px;
   background: transparent;
   box-sizing: border-box;
   display: flex;

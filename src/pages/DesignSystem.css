@@ -592,13 +592,7 @@
   position: relative;
   width: 112px;
   height: 112px;
-  background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.02) 0 6px,
-      transparent 6px 12px
-    ),
-    var(--surface-2);
+  background: var(--surface-2);
   border: 1px dashed var(--border-soft);
   border-radius: var(--radius-sm);
   display: flex;
@@ -923,260 +917,74 @@
   .ds-grid-bp__tokens { margin-left: 0; }
 }
 
-/* ── Composition: player card ────────────────────────────────────────── */
+/* ── Composition: player card (real component) ──────────────────────── */
+/* The .player-card styles live in PlayerPanel.css — we render the real
+   component here, so we only need a container layout. */
 
 .ds-comp--cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-3);
   padding: var(--space-4);
 }
 
-.ds-player-card {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: var(--space-3);
-  padding: var(--space-3);
+/* ── Composition: panel / timeline note frames ──────────────────────── */
+
+.ds-comp--panel-note,
+.ds-comp--timeline-note {
+  padding: var(--space-4);
+}
+
+.ds-panel-note {
+  padding: var(--space-4);
   background: var(--surface-1);
-  border: 1px solid var(--border-soft);
+  border: 1px dashed var(--border-soft);
   border-radius: var(--radius-md);
-  align-items: center;
-}
-
-.ds-player-card__num {
-  font-family: var(--font-banner);
-  font-size: 2rem;
-  line-height: 1;
-  color: var(--color-heat);
-  text-align: center;
-  padding: var(--space-1) 0;
-  border-right: 1px dashed var(--border-faint);
-  letter-spacing: 0.02em;
-}
-
-.ds-player-card__num--sacred { color: var(--color-sacred); }
-
-.ds-player-card__body {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+  gap: var(--space-3);
 }
 
-.ds-player-card__name {
-  font-family: var(--font-banner);
-  font-size: 1rem;
-  letter-spacing: 0.03em;
-  color: var(--color-paper);
-  line-height: 1.1;
+.ds-panel-note__line {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  line-height: 1.5;
 }
 
-.ds-player-card__meta {
-  display: flex;
+.ds-panel-note__cta {
+  display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.ds-player-card__flag {
-  display: inline-block;
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: var(--tracking-widest);
-  color: var(--color-sacred);
-  margin-top: 4px;
-}
-
-/* ── Composition: player panel ───────────────────────────────────────── */
-
-.ds-comp--panel {
-  padding: var(--space-4);
-  display: flex;
-  justify-content: center;
-}
-
-.ds-panel-demo {
-  width: 100%;
-  max-width: 420px;
-  padding: var(--space-4);
-  background: var(--color-surface);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.ds-panel-demo__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.ds-panel-demo__eyebrow {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-widest);
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.ds-panel-demo__close {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-3);
   background: transparent;
   border: 1px solid var(--border-soft);
-  color: var(--color-paper);
-  width: 28px;
-  height: 28px;
   border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-}
-
-.ds-panel-demo__num {
-  font-family: var(--font-banner);
-  font-size: 3.5rem;
-  line-height: 1;
-  color: var(--color-heat);
-  letter-spacing: 0.02em;
-  text-align: center;
-  padding: var(--space-2) 0;
-  border-bottom: 1px dashed var(--border-faint);
-  text-shadow: 0 0 24px rgba(232, 124, 42, 0.45);
-}
-
-.ds-panel-demo__stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-/* ── Composition: locals row ─────────────────────────────────────────── */
-
-.ds-comp--locals {
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.ds-locals-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: var(--space-3);
-  align-items: center;
-  padding: var(--space-2) var(--space-3);
-  background: var(--surface-1);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
-
-.ds-locals-row:hover { border-color: var(--color-heat); }
-
-.ds-locals-row__tile {
-  display: flex;
-}
-
-.ds-locals-row__body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.ds-locals-row__title {
   font-family: var(--font-scoreboard);
   font-size: var(--text-label);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  color: var(--color-paper);
+  color: var(--color-heat);
+  text-decoration: none;
 }
 
-.ds-locals-row__list {
-  font-family: var(--font-program);
-  font-size: 0.875rem;
-  color: var(--color-muted);
-  line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.ds-panel-note__cta:hover {
+  border-color: var(--color-heat);
 }
 
-.ds-locals-row__arrow {
-  color: var(--color-muted);
-}
-
-/* ── Composition: city map ───────────────────────────────────────────── */
+/* ── Composition: USA map (real component) ──────────────────────────── */
 
 .ds-comp--map {
   padding: var(--space-4);
 }
 
-.ds-map-demo {
-  display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: var(--space-4);
-  align-items: stretch;
-}
-
-@media (max-width: 640px) {
-  .ds-map-demo { grid-template-columns: 1fr; }
-}
-
-.ds-map-demo__canvas {
-  position: relative;
+.ds-map-live {
   background: var(--surface-1);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
-  min-height: 180px;
+  padding: var(--space-3);
   overflow: hidden;
-}
-
-.ds-map-demo__svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.ds-map-demo__pin {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -100%);
-  color: var(--color-heat);
-  filter: drop-shadow(0 0 12px rgba(232, 124, 42, 0.7));
-}
-
-.ds-map-demo__card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  background: var(--surface-2);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-}
-
-.ds-map-demo__label {
-  font-family: var(--font-banner);
-  font-size: 1.25rem;
-  letter-spacing: 0.03em;
-  color: var(--color-paper);
-}
-
-.ds-map-demo__count {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-widest);
-  color: var(--color-heat);
 }
 
 /* ── Responsive squeezes ─────────────────────────────────────────────── */

@@ -22,9 +22,32 @@ import {
 } from 'lucide-react'
 import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
 import WallTile from '../components/WallTile.jsx'
+import { PlayerCard } from '../components/PlayerPanel.jsx'
+import WallsMap from '../components/WallsMap.jsx'
 import { TEAM_PALETTES } from '../data/teamColors.js'
 import { HEAT_TILES, SACRED_TILE } from '../data/index.js'
 import './DesignSystem.css'
+
+// Mock legend entries for the Player card composition — shaped like real entries
+// so we exercise the real component, not a simplified clone.
+const DS_PLAYER_ENTRIES = [
+  {
+    name: 'Tom Brady', sport: 'football', team: 'New England Patriots',
+    role: 'QB · 2000–2019', tier: 'SACRED',
+    stat: '7', statLabel: 'RINGS',
+    funFact: 'Drafted 199th overall. Retired with more Super Bowl wins than any franchise.',
+  },
+  {
+    name: 'Ted Williams', sport: 'baseball', team: 'Boston Red Sox',
+    role: 'LF · 1939–1960', tier: 'SACRED',
+    stat: '.406', statLabel: 'AVG · 1941',
+  },
+  {
+    name: 'Bobby Orr', sport: 'hockey', team: 'Boston Bruins',
+    role: 'D · 1966–1976', tier: 'LEGEND',
+    stat: '8', statLabel: 'NORRIS',
+  },
+]
 
 // ── Foundation tokens (names must match global.css) ────────────────────────
 
@@ -510,6 +533,19 @@ export default function DesignSystem() {
               </div>
               <span className="ds-swatch__note">Selected</span>
             </div>
+            <div className="ds-tile-demo">
+              <div className="ds-tile-demo__wrap">
+                <WallTile
+                  number={7}
+                  entries={[{ tier: 'LIT' }, { tier: 'LIT' }]}
+                  isActive={false}
+                  isDebating={true}
+                  debateVariant="pulse-2"
+                  onClick={() => {}}
+                />
+              </div>
+              <span className="ds-swatch__note">Pulsing · contested</span>
+            </div>
           </div>
         </SubSection>
 
@@ -601,131 +637,59 @@ export default function DesignSystem() {
 
         <SubSection
           title="Player card"
-          note="How a legend reads at a glance inside a panel. Number leads, name follows, one line of metadata. The sport icon sits with the metadata, never the number."
+          note="How a legend reads inside the panel. Rendered from the real PlayerCard component exported by PlayerPanel.jsx — if this looks wrong, the product looks wrong."
         >
           <div className="ds-comp ds-comp--cards">
-            <div className="ds-player-card">
-              <div className="ds-player-card__num">12</div>
-              <div className="ds-player-card__body">
-                <div className="ds-player-card__name">TOM BRADY</div>
-                <div className="ds-player-card__meta">
-                  <FaFootballBall size={12} />
-                  <span>Patriots · QB · 2000–2019</span>
-                </div>
-              </div>
-            </div>
-            <div className="ds-player-card">
-              <div className="ds-player-card__num ds-player-card__num--sacred">9</div>
-              <div className="ds-player-card__body">
-                <div className="ds-player-card__name">TED WILLIAMS</div>
-                <div className="ds-player-card__meta">
-                  <FaBaseballBall size={12} />
-                  <span>Red Sox · LF · 1939–1960</span>
-                </div>
-                <div className="ds-player-card__flag">SACRED</div>
-              </div>
-            </div>
-            <div className="ds-player-card">
-              <div className="ds-player-card__num">4</div>
-              <div className="ds-player-card__body">
-                <div className="ds-player-card__name">BOBBY ORR</div>
-                <div className="ds-player-card__meta">
-                  <FaHockeyPuck size={12} />
-                  <span>Bruins · D · 1966–1976</span>
-                </div>
-              </div>
-            </div>
+            {DS_PLAYER_ENTRIES.map((entry, i) => (
+              <PlayerCard key={entry.name} entry={entry} isTop={i === 0} />
+            ))}
           </div>
         </SubSection>
 
         <SubSection
           title="Player panel"
-          note="What opens when a tile is selected. The number echoes the tile that was tapped. Stacked cards when a number has more than one legend."
+          note="The bottom-sheet overlay that opens when a tile is selected. It's a fixed, viewport-anchored surface (slides up on mobile, docks right on desktop), so it can't render honestly inline here. See it live by clicking any tile on the main wall."
         >
-          <div className="ds-comp ds-comp--panel">
-            <div className="ds-panel-demo">
-              <div className="ds-panel-demo__head">
-                <span className="ds-panel-demo__eyebrow">NUMBER 12 · BOSTON</span>
-                <button className="ds-panel-demo__close" aria-label="Close"><X size={16} /></button>
+          <div className="ds-comp ds-comp--panel-note">
+            <div className="ds-panel-note">
+              <div className="ds-panel-note__line">
+                Composed of: heat-echoed #number · subtitle · optional contested
+                nudge or YourNumberPick vote mechanic · stack of PlayerCards ·
+                "Add a Legend" affordance.
               </div>
-              <div className="ds-panel-demo__num">12</div>
-              <div className="ds-panel-demo__stack">
-                <div className="ds-player-card">
-                  <div className="ds-player-card__num">12</div>
-                  <div className="ds-player-card__body">
-                    <div className="ds-player-card__name">TOM BRADY</div>
-                    <div className="ds-player-card__meta">
-                      <FaFootballBall size={12} />
-                      <span>Patriots · QB · 2000–2019</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="ds-player-card">
-                  <div className="ds-player-card__num">12</div>
-                  <div className="ds-player-card__body">
-                    <div className="ds-player-card__name">JERRY YORK</div>
-                    <div className="ds-player-card__meta">
-                      <FaHockeyPuck size={12} />
-                      <span>BC · coach · 1994–2022</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Link to="/" className="ds-panel-note__cta">
+                See it live on the wall <ChevronRight size={14} />
+              </Link>
             </div>
           </div>
         </SubSection>
 
         <SubSection
-          title="Locals row"
-          note="The row pattern used to surface a short, dense list of picks tied to a place, team, or theme. A tile anchors the row; the right side fills with names."
+          title="Legend Timeline"
+          note="Game-by-game career waveform for the pantheon. Each game is a glow score (indigo void → sacred gold). Eras overlay as chapter labels. First subject: Brady. Lives at /timeline/:id."
         >
-          <div className="ds-comp ds-comp--locals">
-            <div className="ds-locals-row">
-              <div className="ds-locals-row__tile">
-                <DemoTile style={HEAT_TILES[3]} number={7} size={56} />
+          <div className="ds-comp ds-comp--timeline-note">
+            <div className="ds-panel-note">
+              <div className="ds-panel-note__line">
+                Composed of: era ribbon · glow-scored waveform (per-game) ·
+                sacred-gold moment markers (rings, records, defining games) ·
+                vote affordance on moments (future). Rendered from a single
+                timeline JSON per player.
               </div>
-              <div className="ds-locals-row__body">
-                <span className="ds-locals-row__title">LOCALS · NUMBER 7</span>
-                <span className="ds-locals-row__list">
-                  Phil Esposito · Ray Bourque · John Havlicek · Trot Nixon
-                </span>
-              </div>
-              <ChevronRight size={18} className="ds-locals-row__arrow" />
-            </div>
-            <div className="ds-locals-row">
-              <div className="ds-locals-row__tile">
-                <DemoTile style={SACRED_TILE} number={4} size={56} />
-              </div>
-              <div className="ds-locals-row__body">
-                <span className="ds-locals-row__title">SACRED · NUMBER 4</span>
-                <span className="ds-locals-row__list">
-                  Bobby Orr · Lou Gehrig · Dan Marino · Brett Favre
-                </span>
-              </div>
-              <ChevronRight size={18} className="ds-locals-row__arrow" />
+              <Link to="/timeline/brady_tom" className="ds-panel-note__cta">
+                Open Brady's timeline <ChevronRight size={14} />
+              </Link>
             </div>
           </div>
         </SubSection>
 
         <SubSection
-          title="City map"
-          note="The map view for a town or school. A single pin anchors the place, a short stack of the town's legends lives alongside. Used on /walls/town/:slug and the towns index."
+          title="USA map · team walls"
+          note="Stylized US map used on the TeamWalls hub. Each active wall lights a glowing dot at its town; multiple walls in one town stack into a single node whose glow scales with count. Zero-state: one pulsing seed on Boston."
         >
           <div className="ds-comp ds-comp--map">
-            <div className="ds-map-demo">
-              <div className="ds-map-demo__canvas">
-                <svg viewBox="0 0 240 140" className="ds-map-demo__svg" aria-hidden="true">
-                  <path d="M10 110 Q40 90 70 100 T130 95 T200 105 L230 120 L230 140 L10 140 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" />
-                  <path d="M20 80 Q60 60 100 70 T180 70 T230 80" fill="none" stroke="rgba(255,255,255,0.08)" strokeDasharray="3 4" />
-                </svg>
-                <span className="ds-map-demo__pin">
-                  <MapPin size={22} />
-                </span>
-              </div>
-              <div className="ds-map-demo__card">
-                <span className="ds-map-demo__label">MILTON, MA</span>
-                <span className="ds-map-demo__count">14 LEGENDS</span>
-              </div>
+            <div className="ds-map-live">
+              <WallsMap />
             </div>
           </div>
         </SubSection>
