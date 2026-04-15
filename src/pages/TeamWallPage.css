@@ -86,22 +86,26 @@
   outline-offset: -1px;
 }
 
-/* Matches .wall-tile__number typography scale so COACH reads as part of
-   the number grid, not a caption underneath it. */
+/* Scoreboard overline, not banner. Numbers own banner scale; the coach
+   tile is a pass-through entry, so it uses the same small-caps treatment
+   as every other label in the system. Keeps the tile present without
+   shouting louder than the numbers it sits next to. */
 .tw-coach-tile__label {
-  font-family:    var(--font-banner);
-  font-size:      1rem;
-  letter-spacing: 0.02em;
-  color:          var(--color-paper);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color:          var(--color-muted);
   line-height:    1;
+  transition:     color var(--motion-hover);
 }
 
-@media (min-width: 768px) {
-  .tw-coach-tile__label { font-size: var(--text-h2); }
+.tw-coach-tile:hover .tw-coach-tile__label {
+  color: var(--color-paper);
 }
 
-@media (min-width: 1024px) {
-  .tw-coach-tile__label { font-size: var(--text-h1); }
+.tw-coach-tile--active .tw-coach-tile__label {
+  color: var(--color-paper);
 }
 
 /* Body layout: uses shared wall-page__body + wall-page__grid-col from WallPage.css */
