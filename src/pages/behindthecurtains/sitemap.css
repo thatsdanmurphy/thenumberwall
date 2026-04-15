@@ -1,6 +1,6 @@
 /* Sitemap — /behindthecurtains/sitemap
-   Tokens only. The page takes visual cues from the DesignSystem page so the
-   two feel like siblings, but the unit of content here is the route card. */
+   Tree/mapping view. Each route is a box; parent→child shown with an arrow
+   and a children stack flowing right. Tokens only. */
 
 .sm-page {
   max-width: 1200px;
@@ -47,23 +47,7 @@
   margin: 0;
 }
 
-.sm-banner__lede em {
-  color: var(--color-paper);
-  font-style: italic;
-}
-
-.sm-code {
-  font-family: var(--font-scoreboard);
-  font-size: 0.875em;
-  padding: 2px 6px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--radius-sm);
-  color: var(--color-heat);
-  margin: 0 4px;
-}
-
-/* Pulse strip — live counts of live vs sketch vs total */
+/* Pulse strip — live counts */
 
 .sm-pulse {
   display: flex;
@@ -121,11 +105,15 @@
   border-color: var(--color-heat);
 }
 
-.sm-toc__home {
-  margin-left: auto;
-}
+.sm-toc__home { margin-left: auto; }
 
-/* ── Group ─────────────────────────────────────────────────────────────── */
+/* ── Groups ────────────────────────────────────────────────────────────── */
+
+.sm-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
 
 .sm-group {
   display: flex;
@@ -171,50 +159,94 @@
   max-width: 64ch;
 }
 
-.sm-group__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
-
-/* ── Route card ────────────────────────────────────────────────────────── */
-
-.sm-route {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  background: var(--surface-1);
+/* Canvas — the tree lives here. Slight inset + dotted backdrop so the
+   mapping reads as a visual workspace, not another card grid. */
+.sm-group__canvas {
+  padding: var(--space-4);
+  background:
+    radial-gradient(circle, var(--border-faint) 1px, transparent 1px) 0 0 / 18px 18px,
+    var(--surface-1);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
-  transition: border-color 120ms ease;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-.sm-route:hover { border-color: var(--color-heat); }
+/* ── Node (recursive tree) ─────────────────────────────────────────────── */
 
-/* Disabled and Redirect get a slightly quieter treatment — present but muted */
-.sm-route--disabled,
-.sm-route--redirect {
+.sm-node {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.sm-node__self {
+  flex-shrink: 0;
+}
+
+.sm-node__kids {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.sm-node__arrow {
+  color: var(--color-muted);
+  margin-top: 24px;          /* line up with the box's path row */
+  flex-shrink: 0;
+}
+
+.sm-node__kids-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  padding-left: var(--space-2);
+  border-left: 1px dashed var(--border-faint);
+}
+
+/* ── Route box ─────────────────────────────────────────────────────────── */
+
+.sm-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  width: 240px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.sm-box:hover { border-color: var(--color-heat); }
+
+.sm-box--disabled,
+.sm-box--redirect {
   opacity: 0.72;
   border-style: dashed;
 }
 
-.sm-route__head {
+.sm-box__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
 }
 
-.sm-route__path {
+.sm-box__path {
   font-family: var(--font-scoreboard);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: var(--color-heat);
-  background: var(--surface-2);
+  background: var(--surface-1);
   border: 1px solid var(--border-faint);
   border-radius: var(--radius-sm);
-  padding: 2px 8px;
+  padding: 1px 6px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -222,83 +254,79 @@
   flex: 1;
 }
 
-.sm-route__status {
+.sm-box__status {
   font-family: var(--font-scoreboard);
   font-size: var(--text-micro);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  padding: 2px 8px;
+  padding: 1px 6px;
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   white-space: nowrap;
 }
 
-.sm-route__status--live {
+.sm-box__status--live {
   color: var(--color-heat);
   border-color: var(--color-heat);
   background: rgba(232, 124, 42, 0.08);
 }
 
-.sm-route__status--draft {
+.sm-box__status--draft {
   color: var(--color-muted);
   border-color: var(--border-soft);
 }
 
-.sm-route__status--disabled {
+.sm-box__status--disabled {
   color: var(--color-muted);
   border-color: var(--border-faint);
 }
 
-.sm-route__status--redirect {
+.sm-box__status--redirect {
   color: var(--color-sacred);
   border-color: var(--color-sacred);
   background: rgba(74, 163, 255, 0.06);
 }
 
-.sm-route__name {
+.sm-box__name {
   font-family: var(--font-banner);
-  font-size: 1.0625rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.02em;
   color: var(--color-paper);
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
-.sm-route__desc {
+.sm-box__desc {
   font-family: var(--font-program);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--color-muted);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
-.sm-route__open {
+.sm-box__open {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  align-self: flex-start;
-  margin-top: auto;
-  padding: var(--space-1) var(--space-2);
-  background: transparent;
-  border: 1px solid var(--border-soft);
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border-faint);
   border-radius: var(--radius-sm);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-widest);
-  text-transform: uppercase;
-  color: var(--color-heat);
+  color: var(--color-muted);
+  background: var(--surface-1);
   text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
 }
 
-.sm-route__open:hover { border-color: var(--color-heat); }
+.sm-box:hover .sm-box__open {
+  opacity: 1;
+}
 
-.sm-route__example {
-  font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
-  color: var(--color-muted);
-  padding: 0 var(--space-1);
-  border-left: 1px solid var(--border-faint);
-  border-right: 1px solid var(--border-faint);
-  text-transform: none;
-  letter-spacing: 0;
+.sm-box__open:hover {
+  color: var(--color-heat);
+  border-color: var(--color-heat);
 }
 
 /* ── Footer ────────────────────────────────────────────────────────────── */
@@ -318,6 +346,27 @@
 
 /* ── Squeeze ───────────────────────────────────────────────────────────── */
 
+@media (max-width: 760px) {
+  /* On narrow viewports, children stack under parent with a left rail
+     instead of flowing right. Keeps the mapping readable without a
+     horizontal scroll dominating the page. */
+  .sm-node {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sm-node__kids {
+    flex-direction: column;
+    padding-left: var(--space-4);
+  }
+  .sm-node__arrow {
+    display: none;
+  }
+  .sm-node__kids-list {
+    padding-left: var(--space-3);
+  }
+  .sm-box { width: 100%; }
+}
+
 @media (max-width: 640px) {
   .sm-page {
     padding: var(--space-4) var(--space-3) var(--space-5);
@@ -325,4 +374,5 @@
   }
   .sm-group__title-row { flex-direction: column; align-items: flex-start; gap: var(--space-1); }
   .sm-toc__home { margin-left: 0; }
+  .sm-group__canvas { padding: var(--space-3); }
 }

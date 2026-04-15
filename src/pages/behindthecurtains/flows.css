@@ -1,8 +1,10 @@
 /* Flows — /behindthecurtains/flows
-   Tokens only. Sibling to Sitemap; same banner rhythm, different content unit. */
+   Tokens only. Mapping view: each flow is a horizontal track of step-boxes
+   connected by arrows. Thumbnails are stylized glyphs drawn in product
+   tokens — not screenshots. Sibling to Sitemap in banner rhythm. */
 
 .fl-page {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-5) var(--space-4) var(--space-6);
   display: flex;
@@ -51,7 +53,7 @@
   font-style: italic;
 }
 
-/* Pulse strip — status counts */
+/* Pulse strip */
 
 .fl-pulse {
   display: flex;
@@ -191,74 +193,148 @@
   max-width: 64ch;
 }
 
-/* ── Steps ─────────────────────────────────────────────────────────────── */
+/* ── Canvas + Track ────────────────────────────────────────────────────── */
 
-.fl-flow__steps {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.fl-flow__canvas {
+  padding: var(--space-4);
+  background:
+    radial-gradient(circle, var(--border-faint) 1px, transparent 1px) 0 0 / 18px 18px,
+    var(--surface-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.fl-flow__track {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  min-width: min-content;
+}
+
+.fl-flow__track-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.fl-flow__connector {
+  color: var(--color-muted);
+  margin-top: 90px;          /* align with thumb middle */
+  margin-left: var(--space-2);
+  margin-right: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ── Step box ──────────────────────────────────────────────────────────── */
+
+.fl-step {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  border-left: 1px dashed var(--border-faint);
-  padding-left: var(--space-4);
+  transition: border-color 120ms ease;
 }
 
-.fl-flow__step {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-3);
-  align-items: flex-start;
+.fl-step:hover { border-color: var(--color-heat); }
+
+.fl-step__thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
 }
 
-.fl-flow__step-n {
+.fl-step__n {
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-2);
   font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
+  font-size: var(--text-micro);
   letter-spacing: var(--tracking-widest);
   color: var(--color-heat);
-  line-height: 1.4;
-  padding-top: 2px;
-  min-width: 28px;
+  z-index: 1;
 }
 
-.fl-flow__step-body {
+.fl-thumb__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fl-step__body {
+  padding: var(--space-2) var(--space-3) var(--space-3);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  min-width: 0;
 }
 
-.fl-flow__step-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.fl-flow__action {
+.fl-step__action {
   font-family: var(--font-banner);
   font-size: 0.9375rem;
   letter-spacing: 0.02em;
   color: var(--color-paper);
+  line-height: 1.2;
 }
 
-.fl-flow__arrow { color: var(--color-muted); flex-shrink: 0; }
-
-.fl-flow__state {
+.fl-step__state {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: 0.8125rem;
   color: var(--color-muted);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
-.fl-flow__step-note {
+.fl-step__note {
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+  border-top: 1px dashed var(--border-faint);
   font-family: var(--font-handwritten);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--color-paper);
-  margin: 2px 0 0;
   opacity: 0.85;
 }
+
+/* ── Thumbnail primitives ──────────────────────────────────────────────── */
+/* All drawn in tokens. These classes style the inner SVG shapes inside
+   the various Thumb* components in Flows.jsx. */
+
+.fl-thumb__tile       { fill: var(--surface-1); stroke: var(--border-faint); stroke-width: 0.3; }
+.fl-thumb__tile--lit  { fill: var(--color-heat); stroke: none; }
+
+.fl-thumb__panel  { fill: var(--surface-1); stroke: var(--border-soft); stroke-width: 0.5; }
+.fl-thumb__card   { fill: var(--surface-2); stroke: var(--border-faint); stroke-width: 0.3; }
+.fl-thumb__card--picked { fill: var(--color-heat); stroke: none; }
+.fl-thumb__accent { fill: var(--color-heat); }
+.fl-thumb__line   { fill: var(--color-muted); opacity: 0.6; }
+.fl-thumb__ghost rect { fill: var(--border-faint); }
+
+.fl-thumb__wave {
+  stroke: var(--color-heat);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fl-thumb__tick { stroke: var(--border-faint); stroke-width: 0.4; stroke-dasharray: 1 2; }
+.fl-thumb__peak { fill: var(--color-heat); }
+
+.fl-thumb__map { fill: var(--surface-1); stroke: var(--border-soft); stroke-width: 0.6; }
+.fl-thumb__dot { fill: var(--color-muted); opacity: 0.55; }
+.fl-thumb__dot-pulse      { fill: var(--color-heat); }
+.fl-thumb__dot-pulse-ring { fill: var(--color-heat); opacity: 0.25; }
+
+.fl-thumb__scrim { fill: var(--surface-2); opacity: 0.55; }
+
+.fl-thumb__link rect { fill: var(--color-muted); opacity: 0.8; }
 
 /* ── Foot: weight + start ──────────────────────────────────────────────── */
 
@@ -342,4 +418,6 @@
   }
   .fl-flow__title-row { flex-direction: column; align-items: flex-start; gap: var(--space-1); }
   .fl-toc__home { margin-left: 0; }
+  .fl-flow__canvas { padding: var(--space-3); }
+  .fl-step { width: 180px; }
 }
