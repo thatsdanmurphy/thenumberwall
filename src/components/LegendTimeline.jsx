@@ -377,8 +377,8 @@ function drawVerticalTimeline(canvas, games, hoveredIndex, breathPhase) {
   const w = rect.width, h = rect.height, n = games.length
   if (n === 0 || h === 0) return null
 
-  ctx.fillStyle = 'rgb(3, 3, 12)'
-  ctx.fillRect(0, 0, w, h)
+  // Transparent clear — canvas blends into page bg, no visible container edge
+  ctx.clearRect(0, 0, w, h)
 
   const smoothed = smoothGlowScores(games, 3)
   const midX = w / 2
@@ -1126,6 +1126,21 @@ export default function LegendTimeline({ timeline }) {
                 ref={vCanvasRef}
                 className="vtl__canvas"
               />
+              {/* Moment icon markers — one per game with a moment */}
+              {vGamePositions && momentMarkers.map(m => {
+                const top = (vGamePositions[m.gameIdx] + vGamePositions[m.gameIdx + 1]) / 2
+                return (
+                  <div
+                    key={`vm-${m.gameIdx}`}
+                    className={`vtl__moment-marker ${m.isSacred ? 'vtl__moment-marker--sacred' : ''} ${m.isNegative ? 'vtl__moment-marker--negative' : ''}`}
+                    style={{ top: `${top}px` }}
+                  >
+                    <span className="vtl__moment-marker__line" />
+                    <span className="vtl__moment-marker__icon">{m.icon}</span>
+                    <span className="vtl__moment-marker__label">{m.label}</span>
+                  </div>
+                )
+              })}
               {/* Era year ticks along the bar edge */}
               {vGamePositions && eras.map(era => {
                 const top = vGamePositions[era.startIdx]

@@ -730,8 +730,8 @@
 
 .vtl__bar-col {
   position: relative;
-  width: 55%;
-  max-width: 180px;
+  width: 78%;
+  max-width: 280px;
   flex-shrink: 0;
   /* height is set inline based on game count */
 }
@@ -740,8 +740,72 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: var(--radius-lg);
+  background: transparent;
   pointer-events: none;
+}
+
+/* Mobile moment markers — icon + label along the right edge of the bar */
+.vtl__moment-marker {
+  position: absolute;
+  right: -6px;
+  transform: translate(100%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 40vw;
+}
+
+.vtl__moment-marker__line {
+  width: 10px;
+  height: 1px;
+  background: linear-gradient(to right, rgba(255, 230, 120, 0.5), rgba(255, 230, 120, 0.15));
+  flex-shrink: 0;
+}
+
+.vtl__moment-marker__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 230, 120, 0.85);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 195, 45, 0.4));
+}
+
+.vtl__moment-marker__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.vtl__moment-marker__label {
+  font-family: var(--font-scoreboard);
+  font-size: 9px;
+  letter-spacing: 0.03em;
+  color: rgba(200, 195, 185, 0.55);
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vtl__moment-marker--sacred .vtl__moment-marker__icon {
+  color: rgba(255, 245, 180, 1);
+  filter: drop-shadow(0 0 6px rgba(255, 230, 120, 0.8)) drop-shadow(0 0 12px rgba(255, 195, 45, 0.5));
+}
+
+.vtl__moment-marker--sacred .vtl__moment-marker__label {
+  color: rgba(255, 230, 120, 0.85);
+}
+
+.vtl__moment-marker--negative .vtl__moment-marker__icon {
+  color: rgba(255, 120, 130, 0.85);
+  filter: drop-shadow(0 0 4px rgba(255, 75, 90, 0.5));
+}
+
+.vtl__moment-marker--negative .vtl__moment-marker__label {
+  color: rgba(255, 140, 150, 0.55);
 }
 
 /* Era year ticks — along the left edge of the bar */
