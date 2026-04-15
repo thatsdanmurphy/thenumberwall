@@ -568,10 +568,11 @@
    Fixed height so the card never reflows across moments/bye/DNP states. */
 .vtl__top-card {
   flex-shrink: 0;
-  height: 220px;
-  /* Extra padding-bottom so docked pills (centered on the scrub line just
-     below) don't visually kiss the game details above. */
-  padding: 12px var(--space-3) 32px;
+  height: 244px;
+  /* Top padding opens space above the career minimap; bottom padding keeps
+     the docked pill (centered on the scrub line below) from visually
+     kissing the game details above. */
+  padding: 22px var(--space-3) 32px;
   background: transparent;
   box-sizing: border-box;
   display: flex;
@@ -586,7 +587,9 @@
   position: relative;
   width: 100%;
   height: 8px;
-  margin-bottom: 10px;
+  /* Breathing room above and below the career overview strip so the header
+     doesn't feel congested against the site header or the identity row. */
+  margin: 8px 0 18px;
   border-radius: 4px;
   overflow: visible;
   flex-shrink: 0;

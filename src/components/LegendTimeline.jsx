@@ -394,9 +394,9 @@ function drawVerticalTimeline(canvas, games, hoveredIndex, breathPhase) {
     if (mom?.length > 0) {
       const isSacred = mom.some(m => m.use_sacred_color)
       const maxAbs = Math.max(...mom.map(m => Math.abs(m.intensity || 0)))
-      if (isSacred) s = 5.0
-      else if (maxAbs >= 7) s = 3.5
-      else if (maxAbs >= 3) s = 2.0
+      if (isSacred) s = 7.0
+      else if (maxAbs >= 7) s = 5.5
+      else if (maxAbs >= 3) s = 3.0
     }
     // Dock magnification on hover
     if (hoveredIndex !== null) {
@@ -896,25 +896,33 @@ export default function LegendTimeline({ timeline }) {
       lastY = placements[r.i].naturalY
     }
 
-    // Third pass: apply styles. Walk in order so we can check if the NEXT
-    // moment is approaching the scrub — if so, current docked pill yields.
+    // Third pass: apply styles. Only the MOST-RECENTLY-CROSSED moment may
+    // dock; older ones stay hidden even inside their PILL_HOLD_PX window.
+    // This prevents the old pill from resurfacing after yielding to a newer
+    // moment (the "Helmet Catch reappears while top card shows a later
+    // game" bug).
     for (let i = 0; i < markers.length; i++) {
       const el = pillRefs.current[i]
       if (!el) continue
       const p = placements[i]
       const next = placements[i + 1]
-      const nextApproaching = next && next.naturalY >= 0 && next.naturalY < PILL_HANDOFF_PX
+      const nextCrossed = next && next.naturalY <= 0
+      const nextApproaching = next && next.naturalY > 0 && next.naturalY < PILL_HANDOFF_PX
 
       let y, docked = false, visible = true
       if (p.naturalY >= 0) {
         // Riding up toward the scrub line.
         y = p.naturalY
-      } else if (p.naturalY >= -PILL_HOLD_PX && !nextApproaching) {
+      } else if (
+        p.naturalY >= -PILL_HOLD_PX &&
+        !nextCrossed &&
+        !nextApproaching
+      ) {
         // Just crossed — dock on the line with gravity/stick.
         y = PILL_DOCK_Y
         docked = true
       } else {
-        // Well past, or yielding to an incoming moment — vanish.
+        // Well past, or a newer moment has crossed / is close — vanish.
         visible = false
         y = PILL_DOCK_Y
       }
