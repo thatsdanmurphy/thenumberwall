@@ -674,19 +674,27 @@ export default function LegendTimeline({ timeline }) {
     return markers
   }, [games])
 
-  // Assign tiers once we know pixel positions — avoids label overlap
+  // Assign tiers once we know pixel positions — avoids label overlap.
+  // Horizontal spread + tier stacking so every icon is individually tappable.
   const tieredMarkers = useMemo(() => {
     if (!gamePositions || momentMarkers.length === 0) return momentMarkers
-    const MIN_GAP = 100 // px minimum horizontal distance before staggering
+    const MIN_GAP = 130 // px minimum horizontal distance before staggering
+    const NUDGE = 14    // if same tier would collide, nudge x by this many px
     const placed = []
     return momentMarkers.map(m => {
-      const cx = (gamePositions[m.gameIdx] + gamePositions[m.gameIdx + 1]) / 2
-      // Find lowest tier that doesn't collide with already-placed markers
+      let cx = (gamePositions[m.gameIdx] + gamePositions[m.gameIdx + 1]) / 2
       let tier = 0
-      for (let t = 0; t < 3; t++) {
+      for (let t = 0; t < 5; t++) {
         const conflict = placed.some(p => p.tier === t && Math.abs(p.cx - cx) < MIN_GAP)
         if (!conflict) { tier = t; break }
         tier = t + 1
+      }
+      // Final guarantee: if still overlapping at this tier (rare), nudge horizontally
+      // so tap targets don't stack on the same pixel.
+      const sameTierNear = placed.filter(p => p.tier === tier && Math.abs(p.cx - cx) < 40)
+      if (sameTierNear.length > 0) {
+        const dir = sameTierNear.every(p => p.cx <= cx) ? 1 : -1
+        cx += dir * NUDGE * (sameTierNear.length)
       }
       const entry = { ...m, tier, cx }
       placed.push(entry)
@@ -818,23 +826,19 @@ export default function LegendTimeline({ timeline }) {
   const vScrollRef = useRef(null)  // scrollable viewport element
   const vInitializedRef = useRef(false)
 
-  // On first render after positions are computed, scroll so game 0 is at center
+  // On first render after positions are computed, align game 0 with the scrub line
+  // (scrub is at top of bar-area). scrollTop=0 puts bar-col top at viewport top,
+  // which is exactly where the scrub line sits.
   useEffect(() => {
     if (vInitializedRef.current) return
     const viewport = vScrollRef.current
     const positions = vGamePositionsRef.current
     if (!viewport || !positions) return
-    // Content coords: bar-col starts after padding-top. We want the bar-col's
-    // game[0] (at positions[0]) to align with viewport center. Since bar-col is
-    // offset by padding-top inside the scroll content, scrollTop=0 already puts
-    // padding-top at the top of the viewport. Viewport center = scrollTop + H/2.
-    // We want centerY (in content coords) = paddingTop + positions[0].
-    // So scrollTop = paddingTop + positions[0] - H/2.
-    // Easier: just read the bar-col's offsetTop.
     const barCol = viewport.querySelector('.vtl__bar-col')
     if (!barCol) return
-    const offset = barCol.offsetTop + positions[0]
-    viewport.scrollTop = offset - viewport.clientHeight / 2
+    // Scrub at y=0 of viewport. game[0] midpoint should align to it.
+    const mid = (positions[0] + positions[1]) / 2
+    viewport.scrollTop = barCol.offsetTop + mid
     vInitializedRef.current = true
   }, [vGamePositions])
 
@@ -846,8 +850,8 @@ export default function LegendTimeline({ timeline }) {
     const barCol = viewport.querySelector('.vtl__bar-col')
     if (!barCol) return
 
-    // Convert viewport center → bar-col content coordinates
-    const centerInContent = viewport.scrollTop + viewport.clientHeight / 2
+    // Scrub line is at TOP of viewport (y=0) — not center.
+    const centerInContent = viewport.scrollTop
     const centerY = centerInContent - barCol.offsetTop
 
     // Binary search for game whose span contains centerY
@@ -869,6 +873,18 @@ export default function LegendTimeline({ timeline }) {
         vScrubRafRef.current = null
       })
     }
+  }, [])
+
+  // Mobile: tap a moment marker — scroll that game to the scrub line
+  const handleVMomentClick = useCallback((gameIdx, e) => {
+    if (e) e.stopPropagation()
+    const viewport = vScrollRef.current
+    const positions = vGamePositionsRef.current
+    if (!viewport || !positions) return
+    const barCol = viewport.querySelector('.vtl__bar-col')
+    if (!barCol) return
+    const mid = (positions[gameIdx] + positions[gameIdx + 1]) / 2
+    viewport.scrollTo({ top: barCol.offsetTop + mid, behavior: 'smooth' })
   }, [])
 
   // Click on a moment marker — pin tooltip to that game
@@ -917,7 +933,7 @@ export default function LegendTimeline({ timeline }) {
 
   return (
     <div className="legend-timeline">
-      {/* Header */}
+      {/* Header — Pick 199 lives as third line under name, left-aligned (no right chip) */}
       <div className="legend-timeline__header">
         <div className="legend-timeline__number-row">
           <span className="legend-timeline__number">12</span>
@@ -926,13 +942,12 @@ export default function LegendTimeline({ timeline }) {
             <p className="legend-timeline__meta">
               {timeline.position} · {timeline.career_span} · {timeline.total_games} games
             </p>
+            {draft && draft.pick && (
+              <p className="legend-timeline__draft-line">
+                {draft.year} Draft · Rd {draft.round} · Pick {draft.pick}
+              </p>
+            )}
           </div>
-          {draft && (
-            <div className="legend-timeline__draft-chip">
-              <span className="legend-timeline__draft-chip-top">Rd {draft.round} · Pick {draft.pick}</span>
-              <span className="legend-timeline__draft-chip-bot">{draft.year} Draft</span>
-            </div>
-          )}
         </div>
         <p className="legend-timeline__voice">{timeline.voice_line}</p>
       </div>
@@ -982,7 +997,7 @@ export default function LegendTimeline({ timeline }) {
               <div
                 key={i}
                 className={`moment-marker ${m.isSacred ? 'moment-marker--sacred' : ''} ${m.isNegative ? 'moment-marker--negative' : ''} ${isPinned ? 'moment-marker--pinned' : ''}`}
-                style={{ left: `${m.cx}px` }}
+                style={{ left: `${m.cx}px`, top: `${(m.tier || 0) * 22}px` }}
                 onClick={() => handleMomentClick(m.gameIdx)}
               >
                 <div className="moment-marker__line" />
@@ -1065,10 +1080,12 @@ export default function LegendTimeline({ timeline }) {
               <span className="vtl__top-meta">
                 {timeline.position} · {timeline.career_span} · {timeline.total_games} games
               </span>
+              {draft && draft.pick && (
+                <span className="vtl__top-draft">
+                  {draft.year} Draft · Rd {draft.round} · Pick {draft.pick}
+                </span>
+              )}
             </div>
-            {activeEra && (
-              <span className="vtl__top-era">{activeEra.label}</span>
-            )}
           </div>
           {activeGame ? (
             <div className="vtl__top-card-game">
@@ -1094,13 +1111,14 @@ export default function LegendTimeline({ timeline }) {
                     )}
                     <span className="vtl__card-meta-line">
                       {activeGame.week} · {activeGame.season}
-                      <span className="vtl__card-glow"> · {activeGame.glow_score?.toFixed(1)}</span>
+                      {activeEra ? ` · ${activeEra.label}` : ''}
                     </span>
                   </div>
-                  {activeGame.moments?.length > 0 && (
-                    <div className={`vtl__card-moment ${activeGame.moments[0].use_sacred_color ? 'vtl__card-moment--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__card-moment--negative' : ''}`}>
-                      {getMomentIcon(activeGame.moments[0])}
-                      <span>{activeGame.moments[0].moment_name}</span>
+                  {/* Empty-state narration when this game isn't a named moment —
+                      every game adds to the story. */}
+                  {!(activeGame.moments?.length > 0) && (
+                    <div className="vtl__card-empty">
+                      {narrateQuietGame(activeGame)}
                     </div>
                   )}
                 </>
@@ -1109,9 +1127,20 @@ export default function LegendTimeline({ timeline }) {
           ) : (
             <div className="vtl__card-hint">Scroll the bar to explore</div>
           )}
+          {/* Interlock: the active game's moment icon+label straddles the scrub line,
+              visually layering onto the top card. */}
+          {activeGame?.moments?.length > 0 && (
+            <div
+              className={`vtl__active-token ${activeGame.moments[0].use_sacred_color ? 'vtl__active-token--sacred' : ''} ${activeGame.moments[0].intensity < 0 ? 'vtl__active-token--negative' : ''}`}
+              key={`token-${activeIndex}`}
+            >
+              {getMomentIcon(activeGame.moments[0])}
+              <span>{activeGame.moments[0].moment_name}</span>
+            </div>
+          )}
         </div>
 
-        {/* Bar area — scrollable viewport with fixed center scrub line */}
+        {/* Bar area — scrub line at top edge; games scroll up past it */}
         <div className="vtl__bar-area">
           <div
             ref={vScrollRef}
@@ -1126,21 +1155,19 @@ export default function LegendTimeline({ timeline }) {
                 ref={vCanvasRef}
                 className="vtl__canvas"
               />
-              {/* Moment icon markers — one per game with a moment */}
-              {vGamePositions && momentMarkers.map(m => {
-                const top = (vGamePositions[m.gameIdx] + vGamePositions[m.gameIdx + 1]) / 2
-                return (
-                  <div
-                    key={`vm-${m.gameIdx}`}
-                    className={`vtl__moment-marker ${m.isSacred ? 'vtl__moment-marker--sacred' : ''} ${m.isNegative ? 'vtl__moment-marker--negative' : ''}`}
-                    style={{ top: `${top}px` }}
-                  >
-                    <span className="vtl__moment-marker__line" />
-                    <span className="vtl__moment-marker__icon">{m.icon}</span>
-                    <span className="vtl__moment-marker__label">{m.label}</span>
-                  </div>
-                )
-              })}
+              {/* Moment icon markers — tappable, staggered when too close to avoid overlap */}
+              {vGamePositions && staggerVerticalMarkers(momentMarkers, vGamePositions).map(m => (
+                <div
+                  key={`vm-${m.gameIdx}`}
+                  className={`vtl__moment-marker ${m.isSacred ? 'vtl__moment-marker--sacred' : ''} ${m.isNegative ? 'vtl__moment-marker--negative' : ''} ${pinnedIndex === m.gameIdx ? 'vtl__moment-marker--pinned' : ''}`}
+                  style={{ top: `${m.top}px`, paddingLeft: `${m.indent}px` }}
+                  onClick={(e) => handleVMomentClick(m.gameIdx, e)}
+                >
+                  <span className="vtl__moment-marker__line" />
+                  <span className="vtl__moment-marker__icon">{m.icon}</span>
+                  <span className="vtl__moment-marker__label">{m.label}</span>
+                </div>
+              ))}
               {/* Era year ticks along the bar edge */}
               {vGamePositions && eras.map(era => {
                 const top = vGamePositions[era.startIdx]
@@ -1155,13 +1182,79 @@ export default function LegendTimeline({ timeline }) {
                 )
               })}
             </div>
+            {/* Tribute — fills the space past the last game */}
+            <div className="vtl__tribute">
+              Every Sunday is a brick in the cathedral.<br />
+              23 years. 382 games. One GOAT.
+              <em>— The Number Wall</em>
+            </div>
+            {/* Did we miss a moment? */}
+            <div className="vtl__miss">
+              Did we miss a moment?{' '}
+              <a href="mailto:hello@thenumberwall.com?subject=Brady%20Timeline%20—%20A%20moment%20we%20missed">
+                Reach out
+              </a>
+            </div>
           </div>
-          {/* Fixed center scrub line — whatever scrolls past it is selected */}
+          {/* Scrub line pinned at top of bar-area = bottom edge of top card */}
           <div className="vtl__scrub-indicator" ref={scrubIndicatorRef}>
             <div className="vtl__scrub-line" />
           </div>
         </div>
       </div>
+
+      {/* Desktop tribute + footer — mirrors mobile */}
+      <div className="legend-timeline__tribute">
+        Every Sunday is a brick in the cathedral.<br />
+        23 years. 382 games. One GOAT.
+        <em>— The Number Wall</em>
+      </div>
+      <div className="legend-timeline__miss">
+        Did we miss a moment?{' '}
+        <a href="mailto:hello@thenumberwall.com?subject=Brady%20Timeline%20—%20A%20moment%20we%20missed">
+          Reach out
+        </a>
+      </div>
     </div>
   )
+}
+
+// ── Empty-state narration for a game with no named moment ──
+// Every game adds to the story — this picks a line from the game's shape.
+function narrateQuietGame(g) {
+  if (g?.is_bye) return 'Bye week. The league catches its breath.'
+  if (g?.is_dnp) return 'Sidelined. The story waits.'
+  const y = g?.stats?.pass_yards
+  const td = g?.stats?.pass_td
+  const int = g?.stats?.interceptions
+  const result = g?.result
+  if (result === 'W' && td >= 3) return `${td} TDs. Another brick in the cathedral.`
+  if (result === 'W' && y >= 300) return `${y} yards. Handled.`
+  if (result === 'W' && y != null) return `Win. ${y ?? '—'} through the air. Quiet execution.`
+  if (result === 'L' && int >= 2) return `${int} picks. Even GOATs have Sundays like this.`
+  if (result === 'L') return 'A loss. It gets put away and the week resets.'
+  if (result === 'T') return 'A tie. Football in its oldest form.'
+  return 'Another Sunday. Another game in the ledger.'
+}
+
+// ── Stagger mobile markers when their vertical positions collide ──
+// Different moments that fall within 26px of each other get indented to the right
+// in a round-robin so every icon is tappable. Mutates a lightweight copy.
+function staggerVerticalMarkers(markers, positions) {
+  const MIN_GAP = 26
+  const INDENTS = [0, 48, 96]
+  const placed = []
+  return markers.map(m => {
+    const top = (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2
+    let indent = 0
+    for (let i = 0; i < INDENTS.length; i++) {
+      const slot = INDENTS[i]
+      const conflict = placed.some(p => p.indent === slot && Math.abs(p.top - top) < MIN_GAP)
+      if (!conflict) { indent = slot; break }
+      indent = INDENTS[(i + 1) % INDENTS.length]
+    }
+    const entry = { ...m, top, indent }
+    placed.push(entry)
+    return entry
+  })
 }

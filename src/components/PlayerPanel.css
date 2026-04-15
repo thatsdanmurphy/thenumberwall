@@ -736,3 +736,28 @@
 .player-panel__add-legend:hover {
   color: rgba(232, 124, 42, 0.70);
 }
+
+/* ── Legend Timeline CTA — surfaces on player cards with full-career timelines ── */
+.player-card__timeline-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  padding: 6px 10px;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 230, 120, 0.85);
+  background: rgba(255, 230, 120, 0.06);
+  border: 1px solid rgba(255, 230, 120, 0.22);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.player-card__timeline-cta:hover {
+  background: rgba(255, 230, 120, 0.12);
+  color: rgba(255, 250, 220, 1);
+  border-color: rgba(255, 230, 120, 0.45);
+}

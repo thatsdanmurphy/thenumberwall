@@ -77,34 +77,13 @@
   color: rgba(200, 195, 185, 0.4);
 }
 
-/* Draft chip — right-aligned tag next to the name lockup */
-.legend-timeline__draft-chip {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 230, 120, 0.15);
-  border-radius: 6px;
-  background: rgba(255, 230, 120, 0.03);
-  align-self: center;
-}
-
-.legend-timeline__draft-chip-top {
-  font-family: var(--font-banner);
-  font-size: 0.8125rem;
-  color: rgba(255, 230, 120, 0.75);
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.legend-timeline__draft-chip-bot {
+/* Draft line — sits left-aligned under the meta row, as a third line */
+.legend-timeline__draft-line {
   font-family: var(--font-scoreboard);
-  font-size: 0.625rem;
-  color: rgba(200, 195, 185, 0.45);
-  line-height: 1;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: rgba(255, 230, 120, 0.55);
+  margin: 3px 0 0 0;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -590,19 +569,15 @@
    Fixed height so the card never reflows across moments/bye/DNP states. */
 .vtl__top-card {
   flex-shrink: 0;
-  height: 172px;
-  padding: 10px var(--space-3) 12px;
-  border-bottom: 1px solid rgba(255, 230, 120, 0.1);
-  background: rgba(6, 8, 18, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  height: 180px;
+  padding: 10px var(--space-3) 14px;
+  background: transparent;
   box-sizing: border-box;
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255, 230, 120, 0.05);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
 }
 
 /* Career overview mini-strip — thin horizontal glow band + dot tracker */
@@ -704,6 +679,15 @@
   flex-shrink: 0;
 }
 
+.vtl__top-draft {
+  font-family: var(--font-scoreboard);
+  font-size: 10px;
+  color: rgba(255, 230, 120, 0.55);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
 /* ── Bar area — scrollable viewport with fixed center scrub line ── */
 .vtl__bar-area {
   position: relative;
@@ -720,9 +704,12 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   display: flex;
-  justify-content: center;
-  /* top/bottom padding lets first/last game reach center line */
-  padding: 45dvh 0;
+  flex-direction: column;
+  align-items: center;
+  /* Scrub line sits at TOP of bar-area (bottom edge of top card).
+     game[0] aligns with it at scrollTop=0; bottom gets tribute + footer which double
+     as the scroll room that lets the last game reach the scrub line. */
+  padding: 0;
   box-sizing: border-box;
   scrollbar-width: none;
 }
@@ -730,8 +717,8 @@
 
 .vtl__bar-col {
   position: relative;
-  width: 78%;
-  max-width: 280px;
+  width: 52%;
+  max-width: 170px;
   flex-shrink: 0;
   /* height is set inline based on game count */
 }
@@ -744,21 +731,29 @@
   pointer-events: none;
 }
 
-/* Mobile moment markers — icon + label along the right edge of the bar */
+/* Mobile moment markers — icon + label along the right edge of the bar. Tappable. */
 .vtl__moment-marker {
   position: absolute;
-  right: -6px;
+  right: -10px;
   transform: translate(100%, -50%);
   display: flex;
   align-items: center;
-  gap: 4px;
-  pointer-events: none;
+  gap: 6px;
+  pointer-events: auto;
   white-space: nowrap;
-  max-width: 40vw;
+  max-width: 48vw;
+  padding: 6px 4px;
+  margin: -6px -4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vtl__moment-marker:active .vtl__moment-marker__icon {
+  transform: scale(1.15);
 }
 
 .vtl__moment-marker__line {
-  width: 10px;
+  width: 12px;
   height: 1px;
   background: linear-gradient(to right, rgba(255, 230, 120, 0.5), rgba(255, 230, 120, 0.15));
   flex-shrink: 0;
@@ -768,11 +763,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
-  color: rgba(255, 230, 120, 0.85);
+  width: 24px;
+  height: 24px;
+  color: rgba(255, 230, 120, 0.9);
   flex-shrink: 0;
   filter: drop-shadow(0 0 4px rgba(255, 195, 45, 0.4));
+  transition: transform 120ms ease-out;
 }
 
 .vtl__moment-marker__icon svg {
@@ -782,12 +778,13 @@
 
 .vtl__moment-marker__label {
   font-family: var(--font-scoreboard);
-  font-size: 9px;
-  letter-spacing: 0.03em;
-  color: rgba(200, 195, 185, 0.55);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(200, 195, 185, 0.7);
   text-transform: uppercase;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .vtl__moment-marker--sacred .vtl__moment-marker__icon {
@@ -824,10 +821,10 @@
   color: rgba(255, 230, 120, 0.65);
 }
 
-/* Scrub line — fixed at center of bar-area. Games scroll past it. */
+/* Scrub line — at TOP of bar-area = bottom edge of top card. Games scroll up past it. */
 .vtl__scrub-indicator {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   right: 0;
   height: 0;
@@ -1004,6 +1001,160 @@
   to { opacity: 1; }
 }
 
+/* ── Interlock: active moment token crossing the scrub line ── */
+.vtl__active-token {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(20, 22, 30, 0.95);
+  border: 1px solid rgba(255, 230, 120, 0.35);
+  box-shadow:
+    0 0 14px rgba(255, 195, 45, 0.35),
+    0 0 28px rgba(255, 195, 45, 0.15);
+  font-family: var(--font-banner);
+  font-size: 0.7rem;
+  color: rgba(255, 240, 180, 0.95);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  max-width: 85vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 4;
+  animation: vtl-token-in 180ms ease-out;
+}
+
+.vtl__active-token svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 195, 45, 0.5));
+}
+
+.vtl__active-token--sacred {
+  background: rgba(30, 22, 10, 0.98);
+  border-color: rgba(255, 230, 120, 0.7);
+  color: rgba(255, 250, 220, 1);
+  box-shadow:
+    0 0 16px rgba(255, 220, 80, 0.6),
+    0 0 34px rgba(255, 195, 45, 0.3);
+}
+
+.vtl__active-token--negative {
+  border-color: rgba(255, 90, 100, 0.5);
+  color: rgba(255, 180, 185, 0.95);
+  box-shadow:
+    0 0 14px rgba(255, 75, 90, 0.35),
+    0 0 28px rgba(255, 75, 90, 0.15);
+}
+
+@keyframes vtl-token-in {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── Empty-state copy when active game has no named moment ── */
+.vtl__card-empty {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: rgba(200, 195, 185, 0.55);
+  line-height: 1.45;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* ── Tribute at bottom of scroll — fills space past last game.
+   Tall top padding = scroll room letting last game reach the scrub line. ── */
+.vtl__tribute {
+  width: 100%;
+  max-width: 520px;
+  padding: calc(100dvh - 320px) var(--space-3) 20px;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: var(--font-banner);
+  color: rgba(255, 230, 120, 0.75);
+  font-size: 1.1rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.vtl__tribute em {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: rgba(200, 195, 185, 0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+/* ── "Did we miss a moment?" footer ── */
+.vtl__miss {
+  width: 100%;
+  padding: 18px var(--space-3) 40px;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(200, 195, 185, 0.4);
+}
+
+.vtl__miss a {
+  color: rgba(255, 230, 120, 0.75);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 230, 120, 0.3);
+}
+
+/* Desktop tribute/miss */
+.legend-timeline__tribute {
+  max-width: 720px;
+  margin: 80px auto 0;
+  padding: 0 var(--space-4);
+  text-align: center;
+  font-family: var(--font-banner);
+  color: rgba(255, 230, 120, 0.8);
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+.legend-timeline__tribute em {
+  display: block;
+  margin-top: 18px;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  color: rgba(200, 195, 185, 0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+.legend-timeline__miss {
+  max-width: 720px;
+  margin: 30px auto 60px;
+  padding: 0 var(--space-4);
+  text-align: center;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(200, 195, 185, 0.4);
+}
+
+.legend-timeline__miss a {
+  color: rgba(255, 230, 120, 0.75);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 230, 120, 0.3);
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
@@ -1023,7 +1174,7 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    touch-action: none;
+    background: var(--color-night);
     -webkit-user-select: none;
     user-select: none;
     padding-bottom: env(safe-area-inset-bottom, 0px);

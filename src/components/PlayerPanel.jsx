@@ -1,12 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { track } from '@vercel/analytics'
-import { Award, Check, ExternalLink, X } from 'lucide-react'
+import { Award, Check, ExternalLink, X, ArrowRight } from 'lucide-react'
 import { getSportIcon } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { pickKey } from '../lib/storageKeys.js'
 import associationsData from '../data/associations.json'
 import './PlayerPanel.css'
+
+// Players with a full-career Legend Timeline. Name-matched (case-insensitive).
+// When a card renders for one of these, show a "View career timeline" CTA.
+const TIMELINE_PLAYERS = {
+  'tom brady': 'brady_tom',
+}
 
 // Group debates by number — multiple debates can share a number (e.g. #7 global + #7 Soccer)
 const ASSOC_MAP = {}
@@ -85,6 +91,7 @@ function PlayerCard({ entry, isTop = false }) {
   const teamBadgeStyle = teamAccent
     ? { background: teamAccent.bg, borderColor: teamAccent.border, color: teamAccent.text }
     : {}
+  const timelineId     = TIMELINE_PLAYERS[(entry.name || '').toLowerCase()]
 
   return (
     <div className={`player-card${isTop ? ' player-card--top' : ''}`}>
@@ -116,6 +123,23 @@ function PlayerCard({ entry, isTop = false }) {
 
       {entry.funFact && (
         <div className="player-card__fact">{entry.funFact}</div>
+      )}
+
+      {timelineId && (
+        <a
+          className="player-card__timeline-cta"
+          href={`/timeline/${timelineId}`}
+          onClick={(e) => {
+            try { track('timeline_open_from_card', { player: entry.name }) } catch {}
+            // Use pushState so BrowserRouter picks up the new route without a reload
+            e.preventDefault()
+            window.history.pushState({}, '', `/timeline/${timelineId}`)
+            window.dispatchEvent(new PopStateEvent('popstate'))
+          }}
+        >
+          <span>View his career timeline</span>
+          <ArrowRight size={14} />
+        </a>
       )}
     </div>
   )
