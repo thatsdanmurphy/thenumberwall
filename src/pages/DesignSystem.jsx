@@ -74,6 +74,15 @@ const RADII = [
   { name: '--radius-xl', note: 'Hero panels' },
 ]
 
+// Grid — page grid (12 col) + tile-wall grid (responsive column count).
+// The tile wall is the signature layout — density over generous tap targets.
+const BREAKPOINTS = [
+  { label: 'Mobile',  range: '< 768px',    wallCols: 5,  pageCols: 4,  margin: '24px' },
+  { label: 'Tablet',  range: '768px+',     wallCols: 8,  pageCols: 8,  margin: '48px' },
+  { label: 'Desktop', range: '1024px+',    wallCols: 10, pageCols: 12, margin: '64px' },
+  { label: 'Wide',    range: '1280px+',    wallCols: 12, pageCols: 12, margin: '96px' },
+]
+
 // ── Tile language: the soul of the product ────────────────────────────────
 // Six heat levels + sacred + selected. These are the meaning-carrying
 // elements — everything else is scaffolding around them.
@@ -334,6 +343,60 @@ export default function DesignSystem() {
                 <span className="ds-swatch__note">{r.note}</span>
               </div>
             ))}
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Grid"
+          note="Two grids, one system. The page grid (12 columns max) holds everything. The tile wall is its own grid — the column count ramps with screen width so the 102-tile field stays visible at any size. Density wins over generous tap targets; seeing the whole wall is the experience."
+        >
+          <div className="ds-grid-bps">
+            {BREAKPOINTS.map(bp => (
+              <div key={bp.label} className="ds-grid-bp">
+                <div className="ds-grid-bp__head">
+                  <span className="ds-grid-bp__label">{bp.label}</span>
+                  <span className="ds-swatch__note">{bp.range}</span>
+                </div>
+
+                <div className="ds-grid-bp__row">
+                  <span className="ds-grid-bp__row-label">Tile wall</span>
+                  <div
+                    className="ds-grid-bp__tiles"
+                    style={{ gridTemplateColumns: `repeat(${bp.wallCols}, 1fr)` }}
+                  >
+                    {Array.from({ length: bp.wallCols }).map((_, i) => (
+                      <span key={i} className="ds-grid-bp__tile" />
+                    ))}
+                  </div>
+                  <code className="ds-code">{bp.wallCols} cols</code>
+                </div>
+
+                <div className="ds-grid-bp__row">
+                  <span className="ds-grid-bp__row-label">Page grid</span>
+                  <div
+                    className="ds-grid-bp__cols"
+                    style={{ gridTemplateColumns: `repeat(${bp.pageCols}, 1fr)` }}
+                  >
+                    {Array.from({ length: bp.pageCols }).map((_, i) => (
+                      <span key={i} className="ds-grid-bp__col" />
+                    ))}
+                  </div>
+                  <code className="ds-code">{bp.pageCols} cols · {bp.margin}</code>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="ds-grid-tokens">
+            <TokenRow name="--grid-max-width" note="1280px — page caps here on wide screens">
+              <span className="ds-token-swatch" style={{ width: 80, height: 8, background: 'var(--color-heat)' }} />
+            </TokenRow>
+            <TokenRow name="--grid-gutter" note="24px between columns at every breakpoint">
+              <span className="ds-token-swatch" style={{ width: 'var(--grid-gutter)', height: 8, background: 'var(--color-heat)' }} />
+            </TokenRow>
+            <TokenRow name="--grid-margin" note="Responsive page margin · 24 / 48 / 64 / 96">
+              <span className="ds-token-swatch" style={{ width: 'var(--grid-margin)', height: 8, background: 'var(--color-heat)' }} />
+            </TokenRow>
           </div>
         </SubSection>
       </Section>

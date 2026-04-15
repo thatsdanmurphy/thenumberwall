@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import ErrorBoundary  from './components/ErrorBoundary.jsx'
 import WallPage       from './pages/WallPage.jsx'
 import BostonPage     from './pages/BostonPage.jsx'
@@ -12,6 +12,11 @@ import TeamWallPage   from './pages/TeamWallPage.jsx'
 import TownWallsPage  from './pages/TownWallsPage.jsx'
 import DesignSystem   from './pages/DesignSystem.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
+
+// Behind The Curtains — the internal hub. Hidden from main nav, bookmarkable.
+import BehindTheCurtainsLayout from './pages/behindthecurtains/BehindTheCurtainsLayout.jsx'
+import BehindTheCurtainsHome   from './pages/behindthecurtains/Home.jsx'
+import BehindTheCurtainsStub   from './pages/behindthecurtains/Stub.jsx'
 
 export default function App() {
   return (
@@ -30,8 +35,118 @@ export default function App() {
         <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} />
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
-        {/* Hidden internal reference — no nav link. Bookmark /design. */}
-        <Route path="/design"    element={<DesignSystem />} />
+
+        {/* Legacy redirect — /design now lives under /behindthecurtains/design */}
+        <Route path="/design" element={<Navigate to="/behindthecurtains/design" replace />} />
+
+        {/* Behind The Curtains — internal hub. Bookmark /behindthecurtains. */}
+        <Route path="/behindthecurtains" element={<BehindTheCurtainsLayout />}>
+          <Route index element={<BehindTheCurtainsHome />} />
+          <Route path="design" element={<DesignSystem />} />
+          <Route
+            path="sitemap"
+            element={
+              <BehindTheCurtainsStub
+                eyebrow="02 · Sitemap"
+                title="EVERY ROUTE, EVERY PAGE"
+                lede="One visual map of the whole product. Every page a user can reach, drawn in place and clickable. Flows painted on top as coloured threads so you can see exactly how someone gets from the front door to a wall they built themselves."
+                plan={[
+                  'Interactive graph of every route in App.jsx, grouped by section',
+                  'Click a node to open that page in a side preview',
+                  'Overlay selectable flows (first visit, build a wall, claim a team) as highlighted paths',
+                  'Depth indicator — how many clicks from the front door',
+                  'A living artefact: the sitemap reads from the router, so new routes show up automatically',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="flows"
+            element={
+              <BehindTheCurtainsStub
+                eyebrow="03 · Flows"
+                title="THE JOURNEYS THAT MATTER"
+                lede="A flow is a user moving through layouts with intent. This page holds the handful of flows the product is built around — documented with screens, decisions, and the moments that carry weight."
+                plan={[
+                  'First visit → claim identity → build first wall',
+                  'Boston fan → explore city wall → tap a sacred tile',
+                  'Team alumni → find school → fill in years',
+                  'Returning user → hub → continue a wall',
+                  'Each flow: screens in order, annotations on the decisions, links into the sitemap',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="engineering"
+            element={
+              <BehindTheCurtainsStub
+                eyebrow="04 · Engineering"
+                title="HOW IT'S BUILT"
+                lede="The stack, the conventions, and the trade-offs. Not documentation for strangers — a reference for future-you at 11pm trying to remember why something is shaped the way it is."
+                plan={[
+                  'Stack: React 19 + Vite + React Router 6, Supabase backend, Vercel deploys',
+                  'Repo shape: src/pages, src/components, src/data, src/lib, src/styles',
+                  'Data conventions: /02_Product/thenumberwall-build/src/data/*.js (see data-garden skill)',
+                  'Backend notes: Supabase tables, RLS, what each row means',
+                  'Build-order principle: compose → modify → tokenize. No raw rgba/rem/px.',
+                  'Deploy: git push to main → Vercel',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="marketing"
+            element={
+              <BehindTheCurtainsStub
+                eyebrow="05 · Marketing"
+                title="HOW IT REACHES PEOPLE"
+                lede="The audience, the voice, the channels. Subscribers, captured interest, and what we've said out loud."
+                plan={[
+                  'Kit connection + subscriber list snapshot',
+                  'Voice principles (what The Number Wall sounds like)',
+                  'Outbound: posts, pitches, pieces written',
+                  'Inbound: where traffic comes from, who reached out',
+                  'Campaigns: one card per push, with date, channel, and outcome',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="research"
+            element={
+              <BehindTheCurtainsStub
+                eyebrow="06 · Research"
+                title="WHAT WE'VE LEARNED"
+                lede="Every conversation, test, and reaction that shaped the product. The goal isn't a research library — it's a short, honest record of what users actually did and said, and what we changed as a result."
+                plan={[
+                  'Log: date, participant shape (fan / alum / parent / cold), format (live / async)',
+                  'Key findings, with links to the commits that acted on them',
+                  'Patterns: things multiple people said that changed the design',
+                  'Open questions: what we still do not know',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="analytics"
+            element={
+              <BehindTheCurtainsStub
+                eyebrow="07 · Analytics"
+                title="WHAT IT'S DOING"
+                lede="Vercel data rendered the way we think — not the way their default dashboard thinks. Tied into the sitemap so each page shows its own pulse."
+                plan={[
+                  'Traffic per page, layered onto the sitemap nodes',
+                  'First-visit vs returning split',
+                  'Top flows actually walked (vs the ones we intended)',
+                  'Heat drop-off: where people exit',
+                  'Deferred: build this after we have enough traffic to say anything true',
+                ]}
+              />
+            }
+          />
+        </Route>
+
         <Route path="*"          element={<NotFoundPage />} />
       </Routes>
     </ErrorBoundary>

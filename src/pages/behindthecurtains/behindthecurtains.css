@@ -1,0 +1,302 @@
+/* Behind The Curtains — shared hub styles.
+   Rule: tokens only. This shell is part of the product, not a sketch. */
+
+.btc-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: var(--color-night);
+  color: var(--color-paper);
+}
+
+@media (max-width: 900px) {
+  .btc-shell { grid-template-columns: 1fr; }
+}
+
+/* ── Nav ─────────────────────────────────────────────────────────────── */
+
+.btc-nav {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  padding: var(--space-5) var(--space-4);
+  border-right: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  background: var(--surface-1);
+}
+
+@media (max-width: 900px) {
+  .btc-nav {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+  }
+}
+
+.btc-nav__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  text-decoration: none;
+  color: inherit;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px dashed var(--border-faint);
+}
+
+.btc-nav__eyebrow {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+}
+
+.btc-nav__title {
+  font-family: var(--font-banner);
+  font-size: 1.25rem;
+  letter-spacing: 0.03em;
+  line-height: 1.05;
+  color: var(--color-paper);
+}
+
+.btc-nav__sub {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-small);
+  color: var(--color-heat);
+}
+
+.btc-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.btc-nav__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--color-paper);
+  border: 1px solid transparent;
+  transition: background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.btc-nav__item:hover {
+  background: var(--surface-2);
+  border-color: var(--border-soft);
+}
+
+.btc-nav__item.is-active {
+  background: var(--surface-2);
+  border-color: var(--color-heat);
+}
+
+.btc-nav__item-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+
+.btc-nav__item-note {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  line-height: 1.3;
+}
+
+.btc-nav__return {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px dashed var(--border-faint);
+  transition: color var(--motion-hover);
+}
+
+.btc-nav__return:hover { color: var(--color-paper); }
+
+/* ── Main ────────────────────────────────────────────────────────────── */
+
+.btc-main {
+  min-width: 0;
+}
+
+/* ── Home ────────────────────────────────────────────────────────────── */
+
+.btc-home {
+  max-width: 920px;
+  padding: var(--space-7) var(--space-5);
+  margin: 0 auto;
+}
+
+.btc-home__eyebrow {
+  display: inline-block;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  border: 1px solid var(--color-heat);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.btc-home__title {
+  font-family: var(--font-banner);
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.btc-home__sub {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-h2);
+  color: var(--color-heat);
+  margin-bottom: var(--space-4);
+  text-shadow: 0 0 18px rgba(232, 124, 42, 0.4);
+}
+
+.btc-home__lede {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-mid);
+  max-width: 64ch;
+  line-height: 1.6;
+  margin-bottom: var(--space-6);
+}
+
+.btc-home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.btc-home__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--motion-hover), background var(--motion-hover);
+}
+
+.btc-home__card:hover {
+  border-color: var(--color-heat);
+  background: var(--surface-2);
+}
+
+.btc-home__card-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+
+.btc-home__card-note {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.btc-home__card-status {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-muted);
+  margin-top: var(--space-2);
+}
+
+.btc-home__card-status.is-live { color: var(--color-heat); }
+
+/* ── Stub page ───────────────────────────────────────────────────────── */
+
+.btc-stub {
+  max-width: 720px;
+  padding: var(--space-7) var(--space-5);
+  margin: 0 auto;
+}
+
+.btc-stub__eyebrow {
+  display: inline-block;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  border: 1px solid var(--color-heat);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.btc-stub__title {
+  font-family: var(--font-banner);
+  font-size: 2rem;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: var(--space-4);
+}
+
+.btc-stub__lede {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-mid);
+  line-height: 1.6;
+  margin-bottom: var(--space-5);
+  max-width: 60ch;
+}
+
+.btc-stub__plan {
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-left: 3px solid var(--color-heat);
+  border-radius: var(--radius-sm);
+}
+
+.btc-stub__plan-head {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  margin-bottom: var(--space-2);
+}
+
+.btc-stub__plan-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.btc-stub__plan-item {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--color-paper);
+  line-height: 1.5;
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--border-soft);
+}

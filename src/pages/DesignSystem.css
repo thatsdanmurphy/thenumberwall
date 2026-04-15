@@ -813,6 +813,105 @@
   gap: var(--space-1);
 }
 
+/* ── Grid (breakpoint visualiser) ────────────────────────────────────── */
+
+.ds-grid-bps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ds-grid-bp {
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ds-grid-bp__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--border-faint);
+}
+
+.ds-grid-bp__label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+
+.ds-grid-bp__row {
+  display: grid;
+  grid-template-columns: 100px 1fr 110px;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.ds-grid-bp__row-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Tile wall preview — small tile-shaped squares */
+.ds-grid-bp__tiles {
+  display: grid;
+  gap: 4px;
+}
+
+.ds-grid-bp__tile {
+  aspect-ratio: 1 / 1;
+  background: rgba(232, 124, 42, 0.18);
+  border: 1px solid rgba(232, 124, 42, 0.35);
+  border-radius: 2px;
+  min-height: 14px;
+}
+
+/* Page grid preview — thin column bars */
+.ds-grid-bp__cols {
+  display: grid;
+  gap: 4px;
+  height: 28px;
+}
+
+.ds-grid-bp__col {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-soft);
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .ds-grid-bp__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
+
+.ds-grid-tokens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-3);
+}
+
+.ds-token-swatch {
+  display: inline-block;
+  border-radius: 2px;
+}
+
 /* ── Responsive squeezes ─────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
