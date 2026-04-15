@@ -1,121 +1,116 @@
 /**
  * DESIGN SYSTEM — /design
  *
- * Hidden route (not in nav) documenting The Number Wall's atoms, primitives,
- * and compositions live. Everything here reads from the actual tokens and
- * primitives the product uses — if a token drifts, this page breaks
- * visibly first.
+ * Hidden reference documenting The Number Wall's atoms, primitives, and
+ * heat language. Everything renders live from the actual tokens and data
+ * files the product ships — if the system drifts, this page breaks
+ * visibly first. That's the point: the page is both the spec and the lint.
  *
- * Structure:
- *   1. Foundations  — color, type, space, radius, motion
- *   2. Primitives   — WallTile, buttons, inputs, tabs, identity slot
- *   3. Compositions — identity row, tile row, panel header
- *   4. Voice        — when to use banner vs scoreboard vs handwritten
- *   5. Don'ts       — the things that have broken the system before
- *
- * Rule for editing this page: never hardcode values. Every swatch, ramp step,
- * and example pulls from `--token` vars. If you're tempted to type "0.5rem"
- * or "#E87C2A", stop — the token is the truth.
+ * Structure (every section earns its place — if we can't explain why it
+ * exists in one line, it doesn't belong):
+ *   1. Foundations    — the raw material: palette, layers, type, space, radius
+ *   2. Tile language  — the soul of the product: heat, sacred, team palettes
+ *   3. Primitives     — the atoms at real scale: tiles, buttons, inputs
+ *   4. Iconography    — the line-art vocabulary
+ *   5. Compositions   — the recipes the product leans on
  */
 
 import { Link } from 'react-router-dom'
+import {
+  ChevronLeft, ChevronRight, ArrowLeft, X, Plus, Pencil, Trash2, Search,
+  Check, Undo2, Flame, Star, Trophy, Shield, Zap, Map, MapPin, Users, Award,
+  ExternalLink, Diamond,
+} from 'lucide-react'
 import WallTile from '../components/WallTile.jsx'
-import IdentityTiles from '../components/IdentityTiles.jsx'
-import { getCitySuggestions } from '../lib/cities.js'
+import { TEAM_PALETTES } from '../data/teamColors.js'
+import { HEAT_TILES, SACRED_TILE } from '../data/index.js'
 import './DesignSystem.css'
 
-// ── Token data (source of truth — names must match global.css) ─────────────
+// ── Foundation tokens (names must match global.css) ────────────────────────
 
-const COLOR_CORE = [
-  { name: '--color-night',   swatch: 'var(--color-night)',   note: 'Canvas background' },
-  { name: '--color-surface', swatch: 'var(--color-surface)', note: 'Elevated panel' },
-  { name: '--color-paper',   swatch: 'var(--color-paper)',   note: 'Default type' },
-  { name: '--color-muted',   swatch: 'var(--color-muted)',   note: 'Frosty secondary' },
-  { name: '--color-heat',    swatch: 'var(--color-heat)',    note: 'Energy, CTAs' },
-  { name: '--color-blaze',   swatch: 'var(--color-blaze)',   note: 'Hover of heat' },
-  { name: '--color-sacred',  swatch: 'var(--color-sacred)',  note: 'Focus, honored' },
-  { name: '--color-action',  swatch: 'var(--color-action)',  note: 'Pure action white' },
+const PALETTE = [
+  { name: '--color-night',   note: 'The canvas. Every screen sits on this.' },
+  { name: '--color-surface', note: 'One step up from canvas — elevated panels.' },
+  { name: '--color-paper',   note: 'Primary type. Clean, not pure white.' },
+  { name: '--color-muted',   note: 'Frosty gray. Labels, secondary type.' },
+  { name: '--color-heat',    note: 'Energy. CTAs, selection, your own number.' },
+  { name: '--color-blaze',   note: 'Heat on hover — a warmer step.' },
+  { name: '--color-sacred',  note: 'Honored, focused, iconic. Ice blue.' },
 ]
 
-const COLOR_TEAM = [
-  { name: '--color-team-sox',      swatch: 'var(--color-team-sox)',      note: 'Sox' },
-  { name: '--color-team-bruins',   swatch: 'var(--color-team-bruins)',   note: 'Bruins' },
-  { name: '--color-team-celtics',  swatch: 'var(--color-team-celtics)',  note: 'Celtics' },
-  { name: '--color-team-patriots', swatch: 'var(--color-team-patriots)', note: 'Patriots' },
-]
-
-const SURFACES = [
-  { name: '--surface-1', swatch: 'var(--surface-1)', note: 'Barely-there card' },
-  { name: '--surface-2', swatch: 'var(--surface-2)', note: 'Resting input' },
-  { name: '--surface-3', swatch: 'var(--surface-3)', note: 'Hover surface' },
-  { name: '--surface-4', swatch: 'var(--surface-4)', note: 'Active / pressed' },
-]
-
-const BORDERS = [
-  { name: '--border-faint',  swatch: 'var(--border-faint)',  note: 'Dividers' },
-  { name: '--border-soft',   swatch: 'var(--border-soft)',   note: 'Default edge' },
-  { name: '--border-medium', swatch: 'var(--border-medium)', note: 'Buttons' },
-  { name: '--border-strong', swatch: 'var(--border-strong)', note: 'Hover / focus' },
-]
-
-const INKS = [
-  { name: '--ink-dim',  swatch: 'var(--ink-dim)',  note: 'Placeholder' },
-  { name: '--ink-low',  swatch: 'var(--ink-low)',  note: 'Secondary label' },
-  { name: '--ink-mid',  swatch: 'var(--ink-mid)',  note: 'Body on dim surface' },
-  { name: '--ink-high', swatch: 'var(--ink-high)', note: 'Body, default' },
-]
-
-const TYPE_RAMP = [
-  { name: '--text-h1',      size: 'var(--text-h1)',      note: 'Modal titles · major headings', sample: 'Every fan has a number.' },
-  { name: '--text-h2',      size: 'var(--text-h2)',      note: 'Section heads',                 sample: 'THIS IS YOUR WALL' },
-  { name: '--text-body',    size: 'var(--text-body)',    note: 'Base body copy · inputs',       sample: 'Claim your identity.' },
-  { name: '--text-small',   size: 'var(--text-small)',   note: 'Dense body · secondary text',   sample: 'Your personal wall' },
-  { name: '--text-caption', size: 'var(--text-caption)', note: 'Pills · chips · badges',        sample: '3 PICKS' },
-  { name: '--text-label',   size: 'var(--text-label)',   note: 'Eyebrow · all-caps labels',     sample: 'MY NUMBER' },
-  { name: '--text-micro',   size: 'var(--text-micro)',   note: 'Smallest labels · stat tags',   sample: 'COACHES' },
+const LAYERS = [
+  { surface: '--surface-1', border: '--border-faint',  note: 'Barely-there card / section divider' },
+  { surface: '--surface-2', border: '--border-soft',   note: 'Resting input / default edge' },
+  { surface: '--surface-3', border: '--border-medium', note: 'Hover surface / button edge' },
+  { surface: '--surface-4', border: '--border-strong', note: 'Active / pressed / hover-focus edge' },
 ]
 
 const FONTS = [
-  { name: '--font-banner',      sample: 'NUMBER WALL',          note: 'Archivo Black — identity marks, big numbers' },
-  { name: '--font-program',     sample: 'The game is about to begin.', note: 'Inter — body copy, UI' },
-  { name: '--font-scoreboard',  sample: 'HEAT  ·  SACRED  ·  WRITTEN', note: 'IBM Plex Mono — labels, overlines, buttons' },
-  { name: '--font-handwritten', sample: "You're already one.",   note: 'Rock Salt — tagline, moments of warmth' },
+  { name: '--font-banner',      sample: 'NUMBER WALL',                     note: 'Archivo Black — identity, big numbers, names in all caps. Monumental.' },
+  { name: '--font-program',     sample: 'The game is about to begin.',     note: 'Inter — body copy, inputs, reading. Neutral.' },
+  { name: '--font-scoreboard',  sample: 'HEAT  ·  SACRED  ·  WRITTEN',     note: 'IBM Plex Mono — every label, overline, and button. Always uppercase, always tracked.' },
+  { name: '--font-handwritten', sample: "You're already one.",             note: 'Rock Salt — taglines and warmth moments. Used sparingly or it loses its meaning.' },
 ]
 
-const TRACKING = [
-  { name: '--tracking-normal', value: '0' },
-  { name: '--tracking-wide',   value: '0.10em' },
-  { name: '--tracking-wider',  value: '0.14em' },
-  { name: '--tracking-widest', value: '0.18em' },
+const TYPE_RAMP = [
+  { name: '--text-h1',      sample: 'Every fan has a number.', note: 'Modal titles · major headings' },
+  { name: '--text-h2',      sample: 'THIS IS YOUR WALL',        note: 'Section heads' },
+  { name: '--text-body',    sample: 'Claim your identity.',     note: 'Body copy · inputs' },
+  { name: '--text-small',   sample: 'Your personal wall',       note: 'Dense body · secondary' },
+  { name: '--text-caption', sample: '3 PICKS',                  note: 'Pills · chips · badges' },
+  { name: '--text-label',   sample: 'MY NUMBER',                note: 'Eyebrow · all-caps labels' },
+  { name: '--text-micro',   sample: 'COACHES',                  note: 'Smallest labels · stat tags' },
 ]
 
-const SPACE = [1, 2, 3, 4, 5, 6, 7, 8].map(n => ({
+const SPACE = [1, 2, 3, 4, 5, 6, 7, 8].map((n, i) => ({
   name: `--space-${n}`,
-  value: [4, 8, 16, 24, 32, 48, 64, 96][n - 1] + 'px',
+  value: [4, 8, 16, 24, 32, 48, 64, 96][i] + 'px',
 }))
 
 const RADII = [
-  { name: '--radius-sm', note: 'Inputs · buttons · tiles' },
-  { name: '--radius-md', note: 'Cards · chips' },
-  { name: '--radius-lg', note: 'Large surfaces · empty CTAs' },
+  { name: '--radius-sm', note: 'Inputs, buttons, tiles' },
+  { name: '--radius-md', note: 'Cards, chips' },
+  { name: '--radius-lg', note: 'Large surfaces, empty CTAs' },
   { name: '--radius-xl', note: 'Hero panels' },
 ]
 
-const MOTION = [
-  { name: '--motion-hover',  note: 'Color, border on hover', value: '180ms ease-out' },
-  { name: '--motion-reveal', note: 'Panels, modals',         value: '250ms ease-in-out' },
-  { name: '--motion-heat',   note: 'Heat crossfade',         value: '300ms ease-in-out' },
-  { name: '--motion-color',  note: 'Accent transitions',     value: '200ms ease-out' },
+// ── Tile language: the soul of the product ────────────────────────────────
+// Six heat levels + sacred + selected. These are the meaning-carrying
+// elements — everything else is scaffolding around them.
+
+const HEAT_LEVELS = [
+  { level: 0, label: 'Unwritten', copy: 'No legend has lived here yet.' },
+  { level: 1, label: 'Ember',     copy: 'One voice. A beginning.' },
+  { level: 2, label: 'Warm',      copy: 'Two or three. A pattern.' },
+  { level: 3, label: 'Hot',       copy: 'Four to six. A conversation.' },
+  { level: 4, label: 'Blazing',   copy: 'Seven to nine. A hot topic.' },
+  { level: 5, label: 'Inferno',   copy: 'Ten or more. The number is on fire.' },
 ]
 
-// ── Primitive demo: tile heat states ───────────────────────────────────────
-// Each entry array simulates what WallTile would render on the real wall.
+// ── Icon vocabulary — curated from the set actually used in the app ────────
 
-const TILE_EXAMPLES = [
-  { label: 'Unwritten', number: 88, entries: [{ tier: 'UNWRITTEN' }] },
-  { label: 'Lit',       number: 7,  entries: [{ tier: 'LIT' }] },
-  { label: 'Hot',       number: 19, entries: [{ tier: 'HOT' }, { tier: 'LIT' }] },
-  { label: 'Sacred',    number: 4,  entries: [{ tier: 'SACRED' }] },
+const ICONS = [
+  { Icon: Plus,          name: 'Plus',          use: 'Add, create, claim' },
+  { Icon: X,             name: 'X',             use: 'Close, remove, dismiss' },
+  { Icon: Check,         name: 'Check',         use: 'Confirm, saved, copied' },
+  { Icon: Pencil,        name: 'Pencil',        use: 'Edit inline' },
+  { Icon: Trash2,        name: 'Trash2',        use: 'Retire / remove permanently' },
+  { Icon: Search,        name: 'Search',        use: 'Find a legend / city' },
+  { Icon: Undo2,         name: 'Undo2',         use: 'Undo a destructive action' },
+  { Icon: ChevronLeft,   name: 'ChevronLeft',   use: 'Back in history' },
+  { Icon: ChevronRight,  name: 'ChevronRight',  use: 'Forward / drill in' },
+  { Icon: ArrowLeft,     name: 'ArrowLeft',     use: 'Return to the wall' },
+  { Icon: ExternalLink,  name: 'ExternalLink',  use: 'Share, open elsewhere' },
+  { Icon: Flame,         name: 'Flame',         use: 'Heat, hot streak' },
+  { Icon: Star,          name: 'Star',          use: 'Honored, saved' },
+  { Icon: Trophy,        name: 'Trophy',        use: 'Championship moments' },
+  { Icon: Shield,        name: 'Shield',        use: 'Defense, teams' },
+  { Icon: Award,         name: 'Award',         use: 'Individual accolade' },
+  { Icon: Zap,           name: 'Zap',           use: 'Fast, electric moment' },
+  { Icon: Diamond,       name: 'Diamond',       use: 'Rare, iconic' },
+  { Icon: Users,         name: 'Users',         use: 'Contributors, collab' },
+  { Icon: MapPin,        name: 'MapPin',        use: 'City / town / location' },
+  { Icon: Map,           name: 'Map',           use: 'Browse by place' },
 ]
 
 // ── Reusable blocks ────────────────────────────────────────────────────────
@@ -145,11 +140,11 @@ function SubSection({ title, note, children }) {
   )
 }
 
-function Swatch({ name, swatch, note, style }) {
+function TokenRow({ name, note, children }) {
   return (
-    <div className="ds-swatch">
-      <div className="ds-swatch__chip" style={{ background: swatch, ...style }} />
-      <div className="ds-swatch__meta">
+    <div className="ds-token-row">
+      <div className="ds-token-row__demo">{children}</div>
+      <div className="ds-token-row__meta">
         <code className="ds-code">{name}</code>
         {note && <span className="ds-swatch__note">{note}</span>}
       </div>
@@ -157,16 +152,23 @@ function Swatch({ name, swatch, note, style }) {
   )
 }
 
-function Rule({ variant, label, body }) {
+// A demo tile that matches wall-scale without running through <WallTile>
+// (so we can render any arbitrary heat style, including every team palette).
+function DemoTile({ style, number, textColor, size = 80 }) {
   return (
-    <div className={`ds-rule ds-rule--${variant}`}>
-      <span className={`ds-rule__pill ds-rule__pill--${variant}`}>
-        {variant === 'do' ? 'DO' : "DON'T"}
+    <div
+      className="ds-demo-tile"
+      style={{
+        width: size,
+        height: size,
+        background: style.bg,
+        border: `1px solid ${style.border}`,
+        boxShadow: style.glow !== 'none' ? style.glow : undefined,
+      }}
+    >
+      <span className="ds-demo-tile__num" style={{ color: textColor || style.text }}>
+        {number}
       </span>
-      <div className="ds-rule__text">
-        <strong className="ds-rule__label">{label}</strong>
-        <span className="ds-rule__body">{body}</span>
-      </div>
     </div>
   )
 }
@@ -174,10 +176,6 @@ function Rule({ variant, label, body }) {
 // ── The page ───────────────────────────────────────────────────────────────
 
 export default function DesignSystem() {
-  // Stub identity for the live composition demo — not wired to storage.
-  const demoIdentity = { number: '18', city: 'Brookline, MA' }
-  const noop = () => {}
-
   return (
     <div className="ds-page">
       {/* ── Banner ────────────────────────────────────────────────── */}
@@ -186,75 +184,80 @@ export default function DesignSystem() {
         <h1 className="ds-banner__title">THE NUMBER WALL</h1>
         <h2 className="ds-banner__sub">Design System</h2>
         <p className="ds-banner__lede">
-          Tokens, primitives, and compositions — documented live from the same
-          variables the product ships. The goal is legibility: anyone should
-          be able to read this page once and know how to build something that
-          feels like The Number Wall.
+          A system only works if everyone building on it can see it. This page
+          renders the product's tokens, tile language, primitives, and icons
+          live from the same source files the app ships — so the system can
+          never secretly drift. If a color shifts or a token disappears, a
+          swatch here breaks first. If a new pattern gets invented, it lives
+          here or it doesn't exist.
+        </p>
+        <p className="ds-banner__lede">
+          The goal isn't completeness. The goal is <em>intentionality</em>. Every
+          entry on this page earns its place by carrying meaning the product
+          depends on. Anything that doesn't carry meaning gets cut.
         </p>
         <nav className="ds-toc" aria-label="Jump to section">
           <a href="#foundations">Foundations</a>
+          <a href="#tiles">Tile Language</a>
           <a href="#primitives">Primitives</a>
+          <a href="#icons">Iconography</a>
           <a href="#compositions">Compositions</a>
-          <a href="#voice">Voice</a>
-          <a href="#donts">Don'ts</a>
           <Link to="/" className="ds-toc__home">← Back to the wall</Link>
         </nav>
       </header>
 
-      {/* ── 1. Foundations ──────────────────────────────────────────── */}
+      {/* ── 01. Foundations ─────────────────────────────────────── */}
       <Section
         id="foundations"
         eyebrow="01"
         title="Foundations"
-        intro="Every color, size, and duration in the product comes from one of these tokens. If a component needs a value that isn't here, the scale is wrong — add a token, don't hardcode."
+        intro="The raw material every screen is assembled from. These tokens are fixed — if a component needs something that isn't here, the system is wrong, not the token."
       >
-        <SubSection title="Color · core" note="The eight colors the product thinks in. Heat is energy. Sacred is honored. Muted is frosty, not dim.">
+        <SubSection
+          title="Palette"
+          note="Seven colors the product thinks in. Heat is energy. Sacred is honored. Muted is frosty, not dim. Paper is clean, not pure white — 100% white flattens on our dark canvas."
+        >
           <div className="ds-swatch-grid">
-            {COLOR_CORE.map(c => <Swatch key={c.name} {...c} />)}
-          </div>
-        </SubSection>
-
-        <SubSection title="Color · team" note="Team accents are drawn from official team primaries. Used only on team walls — never on the main wall.">
-          <div className="ds-swatch-grid">
-            {COLOR_TEAM.map(c => <Swatch key={c.name} {...c} />)}
-          </div>
-        </SubSection>
-
-        <SubSection title="Surface scale" note="Four white tints for layering on the dark canvas. Don't invent new alpha values.">
-          <div className="ds-swatch-grid ds-swatch-grid--alpha">
-            {SURFACES.map(c => <Swatch key={c.name} {...c} />)}
-          </div>
-        </SubSection>
-
-        <SubSection title="Border scale" note="Edges. Faint for dividers, strong for hover/focus.">
-          <div className="ds-swatch-grid ds-swatch-grid--alpha">
-            {BORDERS.map(c => (
-              <Swatch
-                key={c.name}
-                name={c.name}
-                swatch="transparent"
-                note={c.note}
-                style={{ border: `1px solid ${c.swatch}` }}
-              />
-            ))}
-          </div>
-        </SubSection>
-
-        <SubSection title="Ink scale" note="Text tints for secondary hierarchy. Prefer --color-muted for frosty labels; these are for body copy on dim surfaces.">
-          <div className="ds-ink-grid">
-            {INKS.map(i => (
-              <div key={i.name} className="ds-ink">
-                <span className="ds-ink__sample" style={{ color: i.swatch }}>
-                  Every fan has a number.
-                </span>
-                <code className="ds-code">{i.name}</code>
-                <span className="ds-swatch__note">{i.note}</span>
+            {PALETTE.map(c => (
+              <div key={c.name} className="ds-swatch">
+                <div className="ds-swatch__chip" style={{ background: `var(${c.name})` }} />
+                <div className="ds-swatch__meta">
+                  <code className="ds-code">{c.name}</code>
+                  <span className="ds-swatch__note">{c.note}</span>
+                </div>
               </div>
             ))}
           </div>
         </SubSection>
 
-        <SubSection title="Type · families" note="Four families. Banner for identity. Program for reading. Scoreboard for labels. Handwritten for warmth — use sparingly.">
+        <SubSection
+          title="Layers"
+          note="Four steps of white-on-dark used together — a surface tint paired with a border tint. Surfaces fill, borders edge. Use them as pairs, matched by strength, so elevation always reads cleanly."
+        >
+          <div className="ds-layers">
+            {LAYERS.map(l => (
+              <div
+                key={l.surface}
+                className="ds-layers__card"
+                style={{
+                  background: `var(${l.surface})`,
+                  border: `1px solid var(${l.border})`,
+                }}
+              >
+                <div className="ds-layers__codes">
+                  <code className="ds-code">{l.surface}</code>
+                  <code className="ds-code">{l.border}</code>
+                </div>
+                <span className="ds-swatch__note">{l.note}</span>
+              </div>
+            ))}
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Typography · families"
+          note="Four typefaces with non-overlapping jobs. Banner for identity. Program for reading. Scoreboard for labels. Handwritten for warmth — use it three times per screen max or it loses its meaning."
+        >
           <div className="ds-font-grid">
             {FONTS.map(f => (
               <div key={f.name} className="ds-font">
@@ -270,45 +273,59 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Type · ramp" note="Seven steps, collapsed from an earlier spread of eight. Use tokens — never raw rem.">
+        <SubSection
+          title="Typography · scale"
+          note="Seven steps. If a component needs a size that isn't here, add a step to the scale — don't improvise with raw rem."
+        >
           <div className="ds-ramp">
             {TYPE_RAMP.map(t => (
               <div key={t.name} className="ds-ramp__row">
                 <code className="ds-code ds-ramp__name">{t.name}</code>
-                <span className="ds-ramp__sample" style={{ fontSize: t.size }}>{t.sample}</span>
+                <span className="ds-ramp__sample" style={{ fontSize: `var(${t.name})` }}>
+                  {t.sample}
+                </span>
                 <span className="ds-ramp__note">{t.note}</span>
               </div>
             ))}
           </div>
         </SubSection>
 
-        <SubSection title="Letter-spacing" note="Scoreboard labels get wide tracking. Banner type stays tight. Never use raw em values.">
-          <div className="ds-track">
-            {TRACKING.map(t => (
-              <div key={t.name} className="ds-track__row">
-                <code className="ds-code">{t.name}</code>
-                <span className="ds-track__sample" style={{ letterSpacing: t.value }}>
-                  NUMBER WALL
-                </span>
-                <span className="ds-swatch__note">{t.value}</span>
+        <SubSection
+          title="Spacing"
+          note="Eight-step scale on a roughly-doubling rhythm. Used for gap, padding, margin — the same tokens horizontally and vertically so rhythm stays consistent in both directions."
+        >
+          <div className="ds-space-dual">
+            <div className="ds-space-dual__col">
+              <span className="ds-space-dual__caption">Horizontal</span>
+              {SPACE.map(s => (
+                <div key={`h-${s.name}`} className="ds-space__row">
+                  <code className="ds-code ds-space__name">{s.name}</code>
+                  <span className="ds-space__bar-h" style={{ width: `var(${s.name})` }} />
+                  <span className="ds-swatch__note">{s.value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="ds-space-dual__col">
+              <span className="ds-space-dual__caption">Vertical</span>
+              <div className="ds-space-vert">
+                {SPACE.map(s => (
+                  <div key={`v-${s.name}`} className="ds-space-vert__row">
+                    <span className="ds-space__bar-v" style={{ height: `var(${s.name})` }} />
+                    <div className="ds-space-vert__labels">
+                      <code className="ds-code">{s.name}</code>
+                      <span className="ds-swatch__note">{s.value}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </SubSection>
 
-        <SubSection title="Spacing" note="Eight-step scale on a 4→96px doubling-ish rhythm. Use tokens for gap, padding, margin — never raw px.">
-          <div className="ds-space">
-            {SPACE.map(s => (
-              <div key={s.name} className="ds-space__row">
-                <code className="ds-code ds-space__name">{s.name}</code>
-                <span className="ds-space__bar" style={{ width: `var(${s.name})` }} />
-                <span className="ds-swatch__note">{s.value}</span>
-              </div>
-            ))}
-          </div>
-        </SubSection>
-
-        <SubSection title="Radius" note="Four steps. Tiles and inputs share sm. Cards get md. Panels get xl.">
+        <SubSection
+          title="Radius"
+          note="Four steps. Tiles and inputs share sm. Cards get md. Panels get xl. Nothing in the product is perfectly round except pill chips."
+        >
           <div className="ds-radii">
             {RADII.map(r => (
               <div key={r.name} className="ds-radii__item">
@@ -319,42 +336,133 @@ export default function DesignSystem() {
             ))}
           </div>
         </SubSection>
+      </Section>
 
-        <SubSection title="Motion" note="Four durations. Hover is fast. Reveal is paced. Everything else lives on this ramp.">
-          <div className="ds-motion">
-            {MOTION.map(m => (
-              <div key={m.name} className="ds-motion__row">
-                <button
-                  className="ds-motion__demo"
-                  style={{ transition: `background var(${m.name}), border-color var(${m.name})` }}
-                >
-                  Hover me
-                </button>
-                <code className="ds-code">{m.name}</code>
-                <span className="ds-swatch__note">{m.value} · {m.note}</span>
+      {/* ── 02. Tile Language ───────────────────────────────────── */}
+      <Section
+        id="tiles"
+        eyebrow="02"
+        title="Tile Language"
+        intro="The tile is the product. Its heat, its ring, its glow — these are how The Number Wall communicates which numbers carry weight. Get this wrong and the rest of the system doesn't matter."
+      >
+        <SubSection
+          title="Heat progression · main wall"
+          note="Six levels driven by legend count. Unwritten is lights-out. Each step up adds warmth, glow, and text brightness until the number is literally on fire. Orange is the signature color of the product."
+        >
+          <div className="ds-heat">
+            {HEAT_LEVELS.map((h, i) => (
+              <div key={h.level} className="ds-heat__item">
+                <DemoTile
+                  style={HEAT_TILES[i]}
+                  number={[88, 7, 23, 19, 4, 12][i]}
+                  textColor={HEAT_TILES[i].text}
+                />
+                <span className="ds-heat__label">{h.label}</span>
+                <span className="ds-swatch__note ds-heat__copy">{h.copy}</span>
+              </div>
+            ))}
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Sacred & Selected"
+          note="Sacred is reserved for the pantheon — numbers synonymous with a single legend across all sports. It's ice-blue, and it transcends team identity on every wall. Selected is the tile you're currently reading — white ring with the underlying heat still bleeding through."
+        >
+          <div className="ds-special">
+            <div className="ds-special__item">
+              <DemoTile style={SACRED_TILE} number={9} />
+              <div className="ds-special__meta">
+                <span className="ds-heat__label">Sacred</span>
+                <code className="ds-code">SACRED_TILE</code>
+                <span className="ds-swatch__note">Ice blue. Always. Never mixed with team color.</span>
+              </div>
+            </div>
+            <div className="ds-special__item">
+              <div
+                className="ds-demo-tile"
+                style={{
+                  width: 80, height: 80,
+                  background: HEAT_TILES[3].bg,
+                  border: '1px solid rgba(255,255,255,0.82)',
+                  boxShadow: `0 0 0 2px rgba(255,255,255,0.45), ${HEAT_TILES[3].glow}`,
+                }}
+              >
+                <span className="ds-demo-tile__num" style={{ color: '#FFFFFF' }}>23</span>
+              </div>
+              <div className="ds-special__meta">
+                <span className="ds-heat__label">Selected</span>
+                <code className="ds-code">SELECTED_TILE</code>
+                <span className="ds-swatch__note">White ring + heat underneath. Pure white type.</span>
+              </div>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Team palettes"
+          note="Ten base colors, each generating a six-step heat progression from the same recipe used on the main wall. Team walls don't have tiers — heat is pure density. Pick a palette per team; the system does the rest."
+        >
+          <div className="ds-team-palettes">
+            {Object.entries(TEAM_PALETTES).map(([key, levels]) => (
+              <div key={key} className="ds-team-palette">
+                <div className="ds-team-palette__head">
+                  <code className="ds-code">{key}</code>
+                </div>
+                <div className="ds-team-palette__row">
+                  {levels.map((style, i) => (
+                    <DemoTile
+                      key={i}
+                      style={style}
+                      number={i === 0 ? '' : [1, 3, 6, 9, 12][i - 1]}
+                      size={44}
+                    />
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </SubSection>
       </Section>
 
-      {/* ── 2. Primitives ───────────────────────────────────────────── */}
+      {/* ── 03. Primitives ──────────────────────────────────────── */}
       <Section
         id="primitives"
-        eyebrow="02"
+        eyebrow="03"
         title="Primitives"
-        intro="The atoms the product is assembled from. Reach for these before writing new CSS — extend with props if you need a variant."
+        intro="The atoms the product is assembled from, rendered at real product scale. Reach for these before writing new CSS — extend them with props if you need a variant."
       >
         <SubSection title="WallTile" note="The core atom. One square per number. Heat, ring, and type treatment encode meaning.">
           <div className="ds-tiles">
-            {TILE_EXAMPLES.map(t => (
-              <div key={t.label} className="ds-tile-demo">
-                <div className="ds-tile-demo__tile">
-                  <WallTile number={t.number} entries={t.entries} isActive={false} onClick={() => {}} />
-                </div>
-                <span className="ds-swatch__note">{t.label}</span>
+            <div className="ds-tile-demo">
+              <div className="ds-tile-demo__wrap">
+                <WallTile number={88} entries={[{ tier: 'UNWRITTEN' }]} isActive={false} onClick={() => {}} />
               </div>
-            ))}
+              <span className="ds-swatch__note">Unwritten</span>
+            </div>
+            <div className="ds-tile-demo">
+              <div className="ds-tile-demo__wrap">
+                <WallTile number={7}  entries={[{ tier: 'LIT' }]} isActive={false} onClick={() => {}} />
+              </div>
+              <span className="ds-swatch__note">Lit</span>
+            </div>
+            <div className="ds-tile-demo">
+              <div className="ds-tile-demo__wrap">
+                <WallTile number={19} entries={[{ tier: 'HOT' }, { tier: 'LIT' }]} isActive={false} onClick={() => {}} />
+              </div>
+              <span className="ds-swatch__note">Hot</span>
+            </div>
+            <div className="ds-tile-demo">
+              <div className="ds-tile-demo__wrap">
+                <WallTile number={4}  entries={[{ tier: 'SACRED' }]} isActive={false} onClick={() => {}} />
+              </div>
+              <span className="ds-swatch__note">Sacred</span>
+            </div>
+            <div className="ds-tile-demo">
+              <div className="ds-tile-demo__wrap">
+                <WallTile number={23} entries={[{ tier: 'HOT' }]} isActive={true} onClick={() => {}} />
+              </div>
+              <span className="ds-swatch__note">Selected</span>
+            </div>
           </div>
         </SubSection>
 
@@ -367,7 +475,7 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Input" note="Flat, dark, no chrome. Focus darkens the border slightly.">
+        <SubSection title="Input" note="Flat, dark, no chrome. Focus darkens the border slightly — no glow, no outline shift.">
           <div className="ds-input-row">
             <input className="tnw-input" placeholder="Your city" />
             <input className="tnw-input" placeholder="00" style={{ maxWidth: 120, textAlign: 'center' }} />
@@ -384,31 +492,41 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Eyebrow" note="Scoreboard overline for section labels. Always uppercase, always tracked-widest.">
+        <SubSection title="Eyebrow" note="Scoreboard overline for section labels. Always uppercase, always tracked-widest, always muted.">
           <div className="ds-eyebrow-demo">
             <span className="tnw-eyebrow">MY WALLS</span>
           </div>
         </SubSection>
       </Section>
 
-      {/* ── 3. Compositions ─────────────────────────────────────────── */}
+      {/* ── 04. Iconography ─────────────────────────────────────── */}
       <Section
-        id="compositions"
-        eyebrow="03"
-        title="Compositions"
-        intro="How the atoms click together. These are the patterns; don't recreate them from scratch."
+        id="icons"
+        eyebrow="04"
+        title="Iconography"
+        intro="Lucide line-art, 1.5–2px stroke, rendered in currentColor so they inherit the surrounding type. Icons carry meaning — a new one earns its way in by doing a job none of these already do."
       >
-        <SubSection title="Identity row" note="Number (square) + City (wide field). Same shell, same height, each slot sized to its data.">
-          <div className="ds-comp">
-            <IdentityTiles
-              identity={demoIdentity}
-              citySuggestions={getCitySuggestions}
-              onSaveField={noop}
-            />
+        <SubSection title="Vocabulary" note="The icons used across the app. Reach for one of these before importing a new glyph.">
+          <div className="ds-icon-grid">
+            {ICONS.map(({ Icon, name, use }) => (
+              <div key={name} className="ds-icon">
+                <div className="ds-icon__glyph"><Icon size={20} strokeWidth={2} /></div>
+                <code className="ds-code">{name}</code>
+                <span className="ds-swatch__note">{use}</span>
+              </div>
+            ))}
           </div>
         </SubSection>
+      </Section>
 
-        <SubSection title="Tile row" note="Primitive + primitive. Every wall on the site is a grid of these.">
+      {/* ── 05. Compositions ────────────────────────────────────── */}
+      <Section
+        id="compositions"
+        eyebrow="05"
+        title="Compositions"
+        intro="Patterns proven in the product. When you need one of these, compose it from the primitives above — don't restyle."
+      >
+        <SubSection title="Tile row" note="Primitive × N. Every wall in the product is a grid of these. Selection lives on one at a time.">
           <div className="ds-comp">
             <div className="ds-tile-row">
               {[1, 4, 7, 12, 19, 23, 77, 99].map((n, i) => (
@@ -416,11 +534,11 @@ export default function DesignSystem() {
                   key={n}
                   number={n}
                   entries={
-                    [null, [{ tier: 'SACRED' }], [{ tier: 'LIT' }], [{ tier: 'HOT' }],
+                    [[{ tier: 'UNWRITTEN' }], [{ tier: 'SACRED' }], [{ tier: 'LIT' }], [{ tier: 'HOT' }],
                      [{ tier: 'LIT' }, { tier: 'LIT' }], [{ tier: 'UNWRITTEN' }],
-                     [{ tier: 'SACRED' }], [{ tier: 'UNWRITTEN' }]][i] || [{ tier: 'UNWRITTEN' }]
+                     [{ tier: 'SACRED' }], [{ tier: 'UNWRITTEN' }]][i]
                   }
-                  isActive={n === 4}
+                  isActive={n === 23}
                   onClick={() => {}}
                 />
               ))}
@@ -429,45 +547,9 @@ export default function DesignSystem() {
         </SubSection>
       </Section>
 
-      {/* ── 4. Voice ────────────────────────────────────────────────── */}
-      <Section
-        id="voice"
-        eyebrow="04"
-        title="Voice"
-        intro="Language is part of the system. Get these right and the product feels like itself; get them wrong and it reads like boilerplate."
-      >
-        <div className="ds-voice">
-          <Rule variant="do"   label="MY for inventory."   body='Use "MY NUMBER", "MY CITY", "MY WALLS" — anything that belongs to the person.' />
-          <Rule variant="do"   label="YOUR for address."   body='Use "your personal wall", "claim your identity" — when the app is talking to the person.' />
-          <Rule variant="dont" label="Don't mix in one block." body="If a panel uses MY for the labels, the surrounding copy stays in YOUR. They're different voices serving different jobs." />
-          <Rule variant="do"   label="Banner for names."   body="Archivo Black = identity. The wordmark, the big numbers, the city name. Nothing else." />
-          <Rule variant="do"   label="Scoreboard for labels." body="IBM Plex Mono, uppercase, tracked-widest. Every label, overline, and button." />
-          <Rule variant="do"   label="Handwritten sparingly." body="Rock Salt appears in tagline moments. Use it when you want the product to feel like a human is speaking." />
-          <Rule variant="dont" label="Don't use emojis."  body="We're a scoreboard, not a feed. The palette is enough expression." />
-        </div>
-      </Section>
-
-      {/* ── 5. Don'ts ─────────────────────────────────────────────── */}
-      <Section
-        id="donts"
-        eyebrow="05"
-        title="Don'ts"
-        intro="Every entry here is something that broke the system and had to be cleaned up. Leave them here as scar tissue."
-      >
-        <div className="ds-voice">
-          <Rule variant="dont" label="No raw rgba."  body="If you're typing rgba(255, 255, 255, 0.xx), reach for --surface-*, --border-*, or --ink-* instead." />
-          <Rule variant="dont" label="No raw rem."   body="Every type size has a token. If yours isn't here, the scale is wrong — add a step, don't improvise." />
-          <Rule variant="dont" label="No raw px for spacing." body="Gap, padding, margin: --space-1 through --space-8. Don't reach for 10px because it looks right." />
-          <Rule variant="dont" label="No banner type on pass-through tiles." body="Banner = content. If a tile is a doorway (COACHES, +ADD), use scoreboard small-caps. The numbers own banner." />
-          <Rule variant="dont" label="No custom tile styles." body="If you need a square with a number, use <WallTile>. Pass overrides via heatStyle / textColor props. Don't write parallel CSS." />
-          <Rule variant="dont" label="No duplicate color tokens." body="--ink-low and --color-muted are different things. Don't add a third gray — pick the one that fits." />
-          <Rule variant="dont" label="No new alpha values on surfaces." body="The four-step surface scale covers every layering case. If yours doesn't fit, you're layering too much." />
-        </div>
-      </Section>
-
       <footer className="ds-footer">
         <p className="ds-footer__line">
-          This page is the source of truth. If the product drifts from it, the page wins.
+          If it's not here, it doesn't exist. If it drifts, this page breaks first.
         </p>
       </footer>
     </div>

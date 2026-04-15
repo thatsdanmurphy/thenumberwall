@@ -630,6 +630,7 @@ function impactWeight(game) {
 export default function LegendTimeline({ timeline }) {
   const canvasRef = useRef(null)
   const vCanvasRef = useRef(null)       // vertical mobile canvas
+  const vMiniCanvasRef = useRef(null)   // tiny career overview strip for mobile
   const containerRef = useRef(null)
   const rafRef = useRef(null)
   const scrubIndicatorRef = useRef(null) // direct DOM ref for scrub position
@@ -735,6 +736,12 @@ export default function LegendTimeline({ timeline }) {
       if (vCanvas && vCanvas.getBoundingClientRect().height > 0) {
         const gy = drawVerticalTimeline(vCanvas, gamesRef.current, activeIndexRef.current, breathRef.current)
         if (gy) vGamePositionsRef.current = gy
+      }
+
+      // Draw mobile mini-timeline (horizontal career overview strip)
+      const vMini = vMiniCanvasRef.current
+      if (vMini && vMini.getBoundingClientRect().width > 0) {
+        drawTimeline(vMini, gamesRef.current, null, breathRef.current, shimmerRef.current)
       }
 
       // Sync positions to React state infrequently (for markers/scrub indicator)
@@ -918,9 +925,14 @@ export default function LegendTimeline({ timeline }) {
             <h1 className="legend-timeline__name">{timeline.player_name}</h1>
             <p className="legend-timeline__meta">
               {timeline.position} · {timeline.career_span} · {timeline.total_games} games
-              <span className="legend-timeline__draft-inline"> · Rd {draft.round}, Pick {draft.pick} · {draft.year}</span>
             </p>
           </div>
+          {draft && (
+            <div className="legend-timeline__draft-chip">
+              <span className="legend-timeline__draft-chip-top">Rd {draft.round} · Pick {draft.pick}</span>
+              <span className="legend-timeline__draft-chip-bot">{draft.year} Draft</span>
+            </div>
+          )}
         </div>
         <p className="legend-timeline__voice">{timeline.voice_line}</p>
       </div>
@@ -1033,6 +1045,19 @@ export default function LegendTimeline({ timeline }) {
       <div className="vtl">
         {/* Unified top card — Brady identity + live game details */}
         <div className="vtl__top-card">
+          {/* Career overview mini-strip — tiny glow map of whole career */}
+          <div className="vtl__minimap">
+            <canvas ref={vMiniCanvasRef} className="vtl__minimap-canvas" />
+            <div
+              className="vtl__minimap-dot"
+              style={{
+                left: activeIndex != null && gamesRef.current.length > 1
+                  ? `${(activeIndex / (gamesRef.current.length - 1)) * 100}%`
+                  : '0%'
+              }}
+            />
+          </div>
+
           <div className="vtl__top-card-header">
             <span className="vtl__top-number">12</span>
             <div className="vtl__top-name-block">

@@ -192,7 +192,7 @@ export function getHeatLevelByCount(entries) {
 // Text colour is a warm tone that lives inside the tile — not inverted black.
 // The glow is what makes the wall feel alive — don't remove it.
 
-const HEAT_TILES = [
+export const HEAT_TILES = [
   // 0 — unwritten — lights out. Zero orange. Number barely there.
   { bg: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.05)', glow: 'none',                                                                                          text: 'rgba(255,255,255,0.38)' },
   // 1 — ember

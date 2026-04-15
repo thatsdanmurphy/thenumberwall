@@ -18,9 +18,9 @@
 
 .legend-timeline__number-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .legend-timeline__number {
@@ -53,6 +53,7 @@
 
 .legend-timeline__name-block {
   min-width: 0;
+  flex: 1;
 }
 
 .legend-timeline__name {
@@ -76,6 +77,37 @@
   color: rgba(200, 195, 185, 0.4);
 }
 
+/* Draft chip — right-aligned tag next to the name lockup */
+.legend-timeline__draft-chip {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 230, 120, 0.15);
+  border-radius: 6px;
+  background: rgba(255, 230, 120, 0.03);
+  align-self: center;
+}
+
+.legend-timeline__draft-chip-top {
+  font-family: var(--font-banner);
+  font-size: 0.8125rem;
+  color: rgba(255, 230, 120, 0.75);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.legend-timeline__draft-chip-bot {
+  font-family: var(--font-scoreboard);
+  font-size: 0.625rem;
+  color: rgba(200, 195, 185, 0.45);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .legend-timeline__voice {
   font-family: var(--font-program);
   font-size: 0.9375rem;
@@ -84,6 +116,7 @@
   line-height: 1.5;
   font-style: italic;
   max-width: 520px;
+  padding-left: calc(4.5rem + var(--space-3));  /* align under name, past the number */
 }
 
 /* ─── Bar Wrap ───────────────────────────────────────────────────────────── */
@@ -557,8 +590,8 @@
    Fixed height so the card never reflows across moments/bye/DNP states. */
 .vtl__top-card {
   flex-shrink: 0;
-  height: 150px;
-  padding: 14px var(--space-3) 12px;
+  height: 172px;
+  padding: 10px var(--space-3) 12px;
   border-bottom: 1px solid rgba(255, 230, 120, 0.1);
   background: rgba(6, 8, 18, 0.95);
   backdrop-filter: blur(16px);
@@ -570,6 +603,42 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* Career overview mini-strip — thin horizontal glow band + dot tracker */
+.vtl__minimap {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.vtl__minimap-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.vtl__minimap-dot {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: rgba(255, 250, 220, 1);
+  box-shadow:
+    0 0 6px rgba(255, 230, 120, 0.95),
+    0 0 14px rgba(255, 195, 45, 0.6),
+    0 0 24px rgba(255, 195, 45, 0.3);
+  transition: left 80ms linear;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .vtl__top-card-header {

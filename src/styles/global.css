@@ -279,6 +279,24 @@ a:focus-visible {
   color: rgba(255, 255, 255, 0.22);
 }
 
+/* iOS Safari auto-zooms on focus when an input's computed font-size is
+   under 16px. That zoom breaks the full-bleed feel of the wall on mobile.
+   Bump inputs (and the few other editable surfaces) to 16px on touch
+   viewports so focus stays put. Desktop keeps the tighter --text-body. */
+@media (max-width: 768px) {
+  .tnw-input,
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* ─── Primitive: tab ───────────────────────────────────────────────
    Used by city pages (Boston, NY, …). Active state draws a heat
    underline. Place inside a flex container with a 1px bottom border. */
