@@ -1,18 +1,17 @@
 /**
- * DESIGN SYSTEM — /design
+ * DESIGN SYSTEM — /behindthecurtains/design
  *
  * Hidden reference documenting The Number Wall's atoms, primitives, and
- * heat language. Everything renders live from the actual tokens and data
- * files the product ships — if the system drifts, this page breaks
- * visibly first. That's the point: the page is both the spec and the lint.
+ * tile language. Everything renders live from the actual tokens and data
+ * files the product ships. If the system drifts, this page breaks
+ * visibly first.
  *
- * Structure (every section earns its place — if we can't explain why it
- * exists in one line, it doesn't belong):
- *   1. Foundations    — the raw material: palette, layers, type, space, radius
- *   2. Tile language  — the soul of the product: heat, sacred, team palettes
- *   3. Primitives     — the atoms at real scale: tiles, buttons, inputs
- *   4. Iconography    — the line-art vocabulary
- *   5. Compositions   — the recipes the product leans on
+ * Structure:
+ *   01 Foundations   — palette, layers, type, space, radius, grid
+ *   02 Tile language — heat, sacred, selected, team palettes
+ *   03 Primitives    — tiles, buttons, inputs, tabs
+ *   04 Iconography   — the line-art + sports vocabulary
+ *   05 Compositions  — patterns proven in the product
  */
 
 import { Link } from 'react-router-dom'
@@ -21,6 +20,7 @@ import {
   Check, Undo2, Flame, Star, Trophy, Shield, Zap, Map, MapPin, Users, Award,
   ExternalLink, Diamond,
 } from 'lucide-react'
+import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
 import WallTile from '../components/WallTile.jsx'
 import { TEAM_PALETTES } from '../data/teamColors.js'
 import { HEAT_TILES, SACRED_TILE } from '../data/index.js'
@@ -30,41 +30,41 @@ import './DesignSystem.css'
 
 const PALETTE = [
   { name: '--color-night',   note: 'The canvas. Every screen sits on this.' },
-  { name: '--color-surface', note: 'One step up from canvas — elevated panels.' },
+  { name: '--color-surface', note: 'One step up from canvas. Elevated panels.' },
   { name: '--color-paper',   note: 'Primary type. Clean, not pure white.' },
   { name: '--color-muted',   note: 'Frosty gray. Labels, secondary type.' },
   { name: '--color-heat',    note: 'Energy. CTAs, selection, your own number.' },
-  { name: '--color-blaze',   note: 'Heat on hover — a warmer step.' },
+  { name: '--color-blaze',   note: 'Heat on hover, a warmer step.' },
   { name: '--color-sacred',  note: 'Honored, focused, iconic. Ice blue.' },
 ]
 
 const LAYERS = [
-  { surface: '--surface-1', border: '--border-faint',  note: 'Barely-there card / section divider' },
-  { surface: '--surface-2', border: '--border-soft',   note: 'Resting input / default edge' },
-  { surface: '--surface-3', border: '--border-medium', note: 'Hover surface / button edge' },
-  { surface: '--surface-4', border: '--border-strong', note: 'Active / pressed / hover-focus edge' },
+  { surface: '--surface-1', border: '--border-faint',  note: 'Barely-there card or section divider' },
+  { surface: '--surface-2', border: '--border-soft',   note: 'Resting input or default edge' },
+  { surface: '--surface-3', border: '--border-medium', note: 'Hover surface or button edge' },
+  { surface: '--surface-4', border: '--border-strong', note: 'Active, pressed, hover-focus edge' },
 ]
 
 const FONTS = [
-  { name: '--font-banner',      sample: 'NUMBER WALL',                     note: 'Archivo Black — identity, big numbers, names in all caps. Monumental.' },
-  { name: '--font-program',     sample: 'The game is about to begin.',     note: 'Inter — body copy, inputs, reading. Neutral.' },
-  { name: '--font-scoreboard',  sample: 'HEAT  ·  SACRED  ·  WRITTEN',     note: 'IBM Plex Mono — every label, overline, and button. Always uppercase, always tracked.' },
-  { name: '--font-handwritten', sample: "You're already one.",             note: 'Rock Salt — taglines and warmth moments. Used sparingly or it loses its meaning.' },
+  { name: '--font-banner',      sample: 'NUMBER WALL',                     note: 'Archivo Black. Identity, big numbers, names in all caps. Monumental.' },
+  { name: '--font-program',     sample: 'The game is about to begin.',     note: 'Inter. Body copy, inputs, reading. Neutral.' },
+  { name: '--font-scoreboard',  sample: 'HEAT  ·  SACRED  ·  WRITTEN',     note: 'IBM Plex Mono. Every label, overline, button. Always uppercase, always tracked.' },
+  { name: '--font-handwritten', sample: "You're already one.",             note: 'Rock Salt. Taglines and warmth moments. Used sparingly or it loses its meaning.' },
 ]
 
 const TYPE_RAMP = [
-  { name: '--text-h1',      sample: 'Every fan has a number.', note: 'Modal titles · major headings' },
+  { name: '--text-h1',      sample: 'Every fan has a number.', note: 'Modal titles, major headings' },
   { name: '--text-h2',      sample: 'THIS IS YOUR WALL',        note: 'Section heads' },
-  { name: '--text-body',    sample: 'Claim your identity.',     note: 'Body copy · inputs' },
-  { name: '--text-small',   sample: 'Your personal wall',       note: 'Dense body · secondary' },
-  { name: '--text-caption', sample: '3 PICKS',                  note: 'Pills · chips · badges' },
-  { name: '--text-label',   sample: 'MY NUMBER',                note: 'Eyebrow · all-caps labels' },
-  { name: '--text-micro',   sample: 'COACHES',                  note: 'Smallest labels · stat tags' },
+  { name: '--text-body',    sample: 'Claim your identity.',     note: 'Body copy, inputs' },
+  { name: '--text-small',   sample: 'Your personal wall',       note: 'Dense body, secondary' },
+  { name: '--text-caption', sample: '3 PICKS',                  note: 'Pills, chips, badges' },
+  { name: '--text-label',   sample: 'MY NUMBER',                note: 'Eyebrow, all-caps labels' },
+  { name: '--text-micro',   sample: 'COACHES',                  note: 'Smallest labels, stat tags' },
 ]
 
 const SPACE = [1, 2, 3, 4, 5, 6, 7, 8].map((n, i) => ({
   name: `--space-${n}`,
-  value: [4, 8, 16, 24, 32, 48, 64, 96][i] + 'px',
+  value: [4, 8, 16, 24, 32, 48, 64, 96][i],
 }))
 
 const RADII = [
@@ -75,17 +75,16 @@ const RADII = [
 ]
 
 // Grid — page grid (12 col) + tile-wall grid (responsive column count).
-// The tile wall is the signature layout — density over generous tap targets.
+// The tile wall is the signature layout. Density wins over generous tap
+// targets; seeing the whole wall is the experience.
 const BREAKPOINTS = [
-  { label: 'Mobile',  range: '< 768px',    wallCols: 5,  pageCols: 4,  margin: '24px' },
-  { label: 'Tablet',  range: '768px+',     wallCols: 8,  pageCols: 8,  margin: '48px' },
-  { label: 'Desktop', range: '1024px+',    wallCols: 10, pageCols: 12, margin: '64px' },
-  { label: 'Wide',    range: '1280px+',    wallCols: 12, pageCols: 12, margin: '96px' },
+  { label: 'Mobile',  range: '< 768px',  wallCols: 5,  pageCols: 4,  margin: 24, gutter: 24 },
+  { label: 'Tablet',  range: '768px+',   wallCols: 8,  pageCols: 8,  margin: 48, gutter: 24 },
+  { label: 'Desktop', range: '1024px+',  wallCols: 10, pageCols: 12, margin: 64, gutter: 24 },
+  { label: 'Wide',    range: '1280px+',  wallCols: 12, pageCols: 12, margin: 96, gutter: 24 },
 ]
 
-// ── Tile language: the soul of the product ────────────────────────────────
-// Six heat levels + sacred + selected. These are the meaning-carrying
-// elements — everything else is scaffolding around them.
+// ── Tile language ──────────────────────────────────────────────────────────
 
 const HEAT_LEVELS = [
   { level: 0, label: 'Unwritten', copy: 'No legend has lived here yet.' },
@@ -93,21 +92,21 @@ const HEAT_LEVELS = [
   { level: 2, label: 'Warm',      copy: 'Two or three. A pattern.' },
   { level: 3, label: 'Hot',       copy: 'Four to six. A conversation.' },
   { level: 4, label: 'Blazing',   copy: 'Seven to nine. A hot topic.' },
-  { level: 5, label: 'Inferno',   copy: 'Ten or more. The number is on fire.' },
+  { level: 5, label: 'Inferno',   copy: 'Ten or more. On fire.' },
 ]
 
-// ── Icon vocabulary — curated from the set actually used in the app ────────
+// ── Icon vocabulary ────────────────────────────────────────────────────────
 
-const ICONS = [
+const LUCIDE_ICONS = [
   { Icon: Plus,          name: 'Plus',          use: 'Add, create, claim' },
   { Icon: X,             name: 'X',             use: 'Close, remove, dismiss' },
   { Icon: Check,         name: 'Check',         use: 'Confirm, saved, copied' },
   { Icon: Pencil,        name: 'Pencil',        use: 'Edit inline' },
-  { Icon: Trash2,        name: 'Trash2',        use: 'Retire / remove permanently' },
-  { Icon: Search,        name: 'Search',        use: 'Find a legend / city' },
+  { Icon: Trash2,        name: 'Trash2',        use: 'Retire or remove permanently' },
+  { Icon: Search,        name: 'Search',        use: 'Find a legend or city' },
   { Icon: Undo2,         name: 'Undo2',         use: 'Undo a destructive action' },
   { Icon: ChevronLeft,   name: 'ChevronLeft',   use: 'Back in history' },
-  { Icon: ChevronRight,  name: 'ChevronRight',  use: 'Forward / drill in' },
+  { Icon: ChevronRight,  name: 'ChevronRight',  use: 'Forward, drill in' },
   { Icon: ArrowLeft,     name: 'ArrowLeft',     use: 'Return to the wall' },
   { Icon: ExternalLink,  name: 'ExternalLink',  use: 'Share, open elsewhere' },
   { Icon: Flame,         name: 'Flame',         use: 'Heat, hot streak' },
@@ -118,8 +117,16 @@ const ICONS = [
   { Icon: Zap,           name: 'Zap',           use: 'Fast, electric moment' },
   { Icon: Diamond,       name: 'Diamond',       use: 'Rare, iconic' },
   { Icon: Users,         name: 'Users',         use: 'Contributors, collab' },
-  { Icon: MapPin,        name: 'MapPin',        use: 'City / town / location' },
+  { Icon: MapPin,        name: 'MapPin',        use: 'City or town' },
   { Icon: Map,           name: 'Map',           use: 'Browse by place' },
+]
+
+const SPORT_ICONS = [
+  { Icon: FaFootballBall,   name: 'Football',   use: 'NFL, college, high school football' },
+  { Icon: FaBasketballBall, name: 'Basketball', use: 'NBA, college, high school basketball' },
+  { Icon: FaBaseballBall,   name: 'Baseball',   use: 'MLB, college, softball variant' },
+  { Icon: FaHockeyPuck,     name: 'Hockey',     use: 'NHL, college, high school hockey' },
+  { Icon: FaFutbol,         name: 'Soccer',     use: 'Pro, college, youth soccer' },
 ]
 
 // ── Reusable blocks ────────────────────────────────────────────────────────
@@ -149,20 +156,7 @@ function SubSection({ title, note, children }) {
   )
 }
 
-function TokenRow({ name, note, children }) {
-  return (
-    <div className="ds-token-row">
-      <div className="ds-token-row__demo">{children}</div>
-      <div className="ds-token-row__meta">
-        <code className="ds-code">{name}</code>
-        {note && <span className="ds-swatch__note">{note}</span>}
-      </div>
-    </div>
-  )
-}
-
-// A demo tile that matches wall-scale without running through <WallTile>
-// (so we can render any arbitrary heat style, including every team palette).
+// Arbitrary heat-style tile (used for heat progression + team palettes)
 function DemoTile({ style, number, textColor, size = 80 }) {
   return (
     <div
@@ -189,21 +183,21 @@ export default function DesignSystem() {
     <div className="ds-page">
       {/* ── Banner ────────────────────────────────────────────────── */}
       <header className="ds-banner">
-        <div className="ds-banner__eyebrow">INTERNAL REFERENCE · NOT IN NAV</div>
+        <div className="ds-banner__eyebrow">01 · Design system</div>
         <h1 className="ds-banner__title">THE NUMBER WALL</h1>
         <h2 className="ds-banner__sub">Design System</h2>
         <p className="ds-banner__lede">
           A system only works if everyone building on it can see it. This page
           renders the product's tokens, tile language, primitives, and icons
-          live from the same source files the app ships — so the system can
+          live from the same source files the app ships, so the system can
           never secretly drift. If a color shifts or a token disappears, a
           swatch here breaks first. If a new pattern gets invented, it lives
           here or it doesn't exist.
         </p>
         <p className="ds-banner__lede">
-          The goal isn't completeness. The goal is <em>intentionality</em>. Every
-          entry on this page earns its place by carrying meaning the product
-          depends on. Anything that doesn't carry meaning gets cut.
+          The goal isn't completeness. The goal is <em>intentionality</em>.
+          Every entry on this page earns its place by carrying meaning the
+          product depends on. Anything that doesn't carry meaning gets cut.
         </p>
         <nav className="ds-toc" aria-label="Jump to section">
           <a href="#foundations">Foundations</a>
@@ -211,7 +205,7 @@ export default function DesignSystem() {
           <a href="#primitives">Primitives</a>
           <a href="#icons">Iconography</a>
           <a href="#compositions">Compositions</a>
-          <Link to="/" className="ds-toc__home">← Back to the wall</Link>
+          <Link to="/behindthecurtains" className="ds-toc__home">← Behind the curtains</Link>
         </nav>
       </header>
 
@@ -220,11 +214,11 @@ export default function DesignSystem() {
         id="foundations"
         eyebrow="01"
         title="Foundations"
-        intro="The raw material every screen is assembled from. These tokens are fixed — if a component needs something that isn't here, the system is wrong, not the token."
+        intro="The raw material every screen is assembled from. These tokens are fixed. If a component needs something that isn't here, the system is wrong, not the token."
       >
         <SubSection
           title="Palette"
-          note="Seven colors the product thinks in. Heat is energy. Sacred is honored. Muted is frosty, not dim. Paper is clean, not pure white — 100% white flattens on our dark canvas."
+          note="Seven colors the product thinks in. Heat is energy. Sacred is honored. Muted is frosty, not dim. Paper is clean, not pure white; 100% white flattens on our dark canvas."
         >
           <div className="ds-swatch-grid">
             {PALETTE.map(c => (
@@ -241,7 +235,7 @@ export default function DesignSystem() {
 
         <SubSection
           title="Layers"
-          note="Four steps of white-on-dark used together — a surface tint paired with a border tint. Surfaces fill, borders edge. Use them as pairs, matched by strength, so elevation always reads cleanly."
+          note="Four steps of white-on-dark used together, a surface tint paired with a border tint. Surfaces fill, borders edge. Use them as pairs, matched by strength, so elevation always reads cleanly."
         >
           <div className="ds-layers">
             {LAYERS.map(l => (
@@ -265,7 +259,7 @@ export default function DesignSystem() {
 
         <SubSection
           title="Typography · families"
-          note="Four typefaces with non-overlapping jobs. Banner for identity. Program for reading. Scoreboard for labels. Handwritten for warmth — use it three times per screen max or it loses its meaning."
+          note="Four typefaces with non-overlapping jobs. Banner for identity. Program for reading. Scoreboard for labels. Handwritten for warmth, used three times per screen max or it loses its meaning."
         >
           <div className="ds-font-grid">
             {FONTS.map(f => (
@@ -284,7 +278,7 @@ export default function DesignSystem() {
 
         <SubSection
           title="Typography · scale"
-          note="Seven steps. If a component needs a size that isn't here, add a step to the scale — don't improvise with raw rem."
+          note="Seven steps. If a component needs a size that isn't here, add a step to the scale, don't improvise with raw rem."
         >
           <div className="ds-ramp">
             {TYPE_RAMP.map(t => (
@@ -301,33 +295,23 @@ export default function DesignSystem() {
 
         <SubSection
           title="Spacing"
-          note="Eight-step scale on a roughly-doubling rhythm. Used for gap, padding, margin — the same tokens horizontally and vertically so rhythm stays consistent in both directions."
+          note="Eight-step scale on a roughly-doubling rhythm. Each square is the token applied in both directions, so you can see the footprint at a glance. Used for gap, padding, and margin."
         >
-          <div className="ds-space-dual">
-            <div className="ds-space-dual__col">
-              <span className="ds-space-dual__caption">Horizontal</span>
-              {SPACE.map(s => (
-                <div key={`h-${s.name}`} className="ds-space__row">
-                  <code className="ds-code ds-space__name">{s.name}</code>
-                  <span className="ds-space__bar-h" style={{ width: `var(${s.name})` }} />
-                  <span className="ds-swatch__note">{s.value}</span>
+          <div className="ds-space-squares">
+            {SPACE.map(s => (
+              <div key={s.name} className="ds-space-square">
+                <div className="ds-space-square__box">
+                  <span
+                    className="ds-space-square__fill"
+                    style={{ width: `${s.value}px`, height: `${s.value}px` }}
+                  />
                 </div>
-              ))}
-            </div>
-            <div className="ds-space-dual__col">
-              <span className="ds-space-dual__caption">Vertical</span>
-              <div className="ds-space-vert">
-                {SPACE.map(s => (
-                  <div key={`v-${s.name}`} className="ds-space-vert__row">
-                    <span className="ds-space__bar-v" style={{ height: `var(${s.name})` }} />
-                    <div className="ds-space-vert__labels">
-                      <code className="ds-code">{s.name}</code>
-                      <span className="ds-swatch__note">{s.value}</span>
-                    </div>
-                  </div>
-                ))}
+                <div className="ds-space-square__meta">
+                  <code className="ds-code">{s.name}</code>
+                  <span className="ds-swatch__note">{s.value}px</span>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </SubSection>
 
@@ -348,7 +332,7 @@ export default function DesignSystem() {
 
         <SubSection
           title="Grid"
-          note="Two grids, one system. The page grid (12 columns max) holds everything. The tile wall is its own grid — the column count ramps with screen width so the 102-tile field stays visible at any size. Density wins over generous tap targets; seeing the whole wall is the experience."
+          note="Two grids, one system. The page grid (12 columns max) holds everything. The tile wall is its own grid; the column count ramps with screen width so the 102-tile field stays visible at any size. Density over generous tap targets."
         >
           <div className="ds-grid-bps">
             {BREAKPOINTS.map(bp => (
@@ -356,47 +340,47 @@ export default function DesignSystem() {
                 <div className="ds-grid-bp__head">
                   <span className="ds-grid-bp__label">{bp.label}</span>
                   <span className="ds-swatch__note">{bp.range}</span>
+                  <span className="ds-grid-bp__tokens">
+                    <code className="ds-code">margin {bp.margin}</code>
+                    <code className="ds-code">gutter {bp.gutter}</code>
+                  </span>
                 </div>
 
                 <div className="ds-grid-bp__row">
                   <span className="ds-grid-bp__row-label">Tile wall</span>
-                  <div
-                    className="ds-grid-bp__tiles"
-                    style={{ gridTemplateColumns: `repeat(${bp.wallCols}, 1fr)` }}
-                  >
-                    {Array.from({ length: bp.wallCols }).map((_, i) => (
-                      <span key={i} className="ds-grid-bp__tile" />
-                    ))}
+                  <div className="ds-grid-bp__stage">
+                    <span className="ds-grid-bp__margin" />
+                    <div
+                      className="ds-grid-bp__tiles"
+                      style={{ gridTemplateColumns: `repeat(${bp.wallCols}, 1fr)` }}
+                    >
+                      {Array.from({ length: bp.wallCols }).map((_, i) => (
+                        <span key={i} className="ds-grid-bp__tile" />
+                      ))}
+                    </div>
+                    <span className="ds-grid-bp__margin" />
                   </div>
                   <code className="ds-code">{bp.wallCols} cols</code>
                 </div>
 
                 <div className="ds-grid-bp__row">
                   <span className="ds-grid-bp__row-label">Page grid</span>
-                  <div
-                    className="ds-grid-bp__cols"
-                    style={{ gridTemplateColumns: `repeat(${bp.pageCols}, 1fr)` }}
-                  >
-                    {Array.from({ length: bp.pageCols }).map((_, i) => (
-                      <span key={i} className="ds-grid-bp__col" />
-                    ))}
+                  <div className="ds-grid-bp__stage">
+                    <span className="ds-grid-bp__margin" />
+                    <div
+                      className="ds-grid-bp__cols"
+                      style={{ gridTemplateColumns: `repeat(${bp.pageCols}, 1fr)` }}
+                    >
+                      {Array.from({ length: bp.pageCols }).map((_, i) => (
+                        <span key={i} className="ds-grid-bp__col" />
+                      ))}
+                    </div>
+                    <span className="ds-grid-bp__margin" />
                   </div>
-                  <code className="ds-code">{bp.pageCols} cols · {bp.margin}</code>
+                  <code className="ds-code">{bp.pageCols} cols</code>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="ds-grid-tokens">
-            <TokenRow name="--grid-max-width" note="1280px — page caps here on wide screens">
-              <span className="ds-token-swatch" style={{ width: 80, height: 8, background: 'var(--color-heat)' }} />
-            </TokenRow>
-            <TokenRow name="--grid-gutter" note="24px between columns at every breakpoint">
-              <span className="ds-token-swatch" style={{ width: 'var(--grid-gutter)', height: 8, background: 'var(--color-heat)' }} />
-            </TokenRow>
-            <TokenRow name="--grid-margin" note="Responsive page margin · 24 / 48 / 64 / 96">
-              <span className="ds-token-swatch" style={{ width: 'var(--grid-margin)', height: 8, background: 'var(--color-heat)' }} />
-            </TokenRow>
           </div>
         </SubSection>
       </Section>
@@ -406,11 +390,11 @@ export default function DesignSystem() {
         id="tiles"
         eyebrow="02"
         title="Tile Language"
-        intro="The tile is the product. Its heat, its ring, its glow — these are how The Number Wall communicates which numbers carry weight. Get this wrong and the rest of the system doesn't matter."
+        intro="The tile is the product. Its heat, its ring, its glow; these are how The Number Wall communicates which numbers carry weight. Get this wrong and the rest of the system doesn't matter."
       >
         <SubSection
           title="Heat progression · main wall"
-          note="Six levels driven by legend count. Unwritten is lights-out. Each step up adds warmth, glow, and text brightness until the number is literally on fire. Orange is the signature color of the product."
+          note="Six levels driven by legend count. Unwritten is lights out. Each step adds warmth, glow, and text brightness until the number is on fire. Orange is the signature color of the product."
         >
           <div className="ds-heat">
             {HEAT_LEVELS.map((h, i) => (
@@ -429,7 +413,7 @@ export default function DesignSystem() {
 
         <SubSection
           title="Sacred & Selected"
-          note="Sacred is reserved for the pantheon — numbers synonymous with a single legend across all sports. It's ice-blue, and it transcends team identity on every wall. Selected is the tile you're currently reading — white ring with the underlying heat still bleeding through."
+          note="Sacred is reserved for the pantheon, numbers synonymous with a single legend across all sports. It's ice-blue, and it transcends team identity on every wall. Selected is the tile you're currently reading; white ring with the underlying heat still bleeding through."
         >
           <div className="ds-special">
             <div className="ds-special__item">
@@ -455,7 +439,7 @@ export default function DesignSystem() {
               <div className="ds-special__meta">
                 <span className="ds-heat__label">Selected</span>
                 <code className="ds-code">SELECTED_TILE</code>
-                <span className="ds-swatch__note">White ring + heat underneath. Pure white type.</span>
+                <span className="ds-swatch__note">White ring plus heat underneath. Pure white type.</span>
               </div>
             </div>
           </div>
@@ -463,7 +447,7 @@ export default function DesignSystem() {
 
         <SubSection
           title="Team palettes"
-          note="Ten base colors, each generating a six-step heat progression from the same recipe used on the main wall. Team walls don't have tiers — heat is pure density. Pick a palette per team; the system does the rest."
+          note="Ten base colors, each generating a six-step heat progression from the same recipe used on the main wall. Team walls don't have tiers; heat is pure density. Pick a palette per team, the system does the rest."
         >
           <div className="ds-team-palettes">
             {Object.entries(TEAM_PALETTES).map(([key, levels]) => (
@@ -477,7 +461,7 @@ export default function DesignSystem() {
                       key={i}
                       style={style}
                       number={i === 0 ? '' : [1, 3, 6, 9, 12][i - 1]}
-                      size={44}
+                      size={40}
                     />
                   ))}
                 </div>
@@ -492,7 +476,7 @@ export default function DesignSystem() {
         id="primitives"
         eyebrow="03"
         title="Primitives"
-        intro="The atoms the product is assembled from, rendered at real product scale. Reach for these before writing new CSS — extend them with props if you need a variant."
+        intro="The atoms the product is assembled from, rendered at real product scale. Reach for these before writing new CSS; extend them with props if you need a variant."
       >
         <SubSection title="WallTile" note="The core atom. One square per number. Heat, ring, and type treatment encode meaning.">
           <div className="ds-tiles">
@@ -538,7 +522,7 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Input" note="Flat, dark, no chrome. Focus darkens the border slightly — no glow, no outline shift.">
+        <SubSection title="Input" note="Flat, dark, no chrome. Focus darkens the border slightly, no glow, no outline shift.">
           <div className="ds-input-row">
             <input className="tnw-input" placeholder="Your city" />
             <input className="tnw-input" placeholder="00" style={{ maxWidth: 120, textAlign: 'center' }} />
@@ -554,12 +538,6 @@ export default function DesignSystem() {
             <button className="tnw-tab">MLB</button>
           </div>
         </SubSection>
-
-        <SubSection title="Eyebrow" note="Scoreboard overline for section labels. Always uppercase, always tracked-widest, always muted.">
-          <div className="ds-eyebrow-demo">
-            <span className="tnw-eyebrow">MY WALLS</span>
-          </div>
-        </SubSection>
       </Section>
 
       {/* ── 04. Iconography ─────────────────────────────────────── */}
@@ -567,13 +545,25 @@ export default function DesignSystem() {
         id="icons"
         eyebrow="04"
         title="Iconography"
-        intro="Lucide line-art, 1.5–2px stroke, rendered in currentColor so they inherit the surrounding type. Icons carry meaning — a new one earns its way in by doing a job none of these already do."
+        intro="Two icon sets with clear jobs. Lucide line-art for UI actions. Font Awesome sports icons for league context. Icons carry meaning; a new one earns its way in by doing a job none of these already do."
       >
-        <SubSection title="Vocabulary" note="The icons used across the app. Reach for one of these before importing a new glyph.">
+        <SubSection title="UI · lucide-react" note="1.5 to 2px stroke, rendered in currentColor so they inherit the surrounding type. The app's action vocabulary.">
           <div className="ds-icon-grid">
-            {ICONS.map(({ Icon, name, use }) => (
+            {LUCIDE_ICONS.map(({ Icon, name, use }) => (
               <div key={name} className="ds-icon">
                 <div className="ds-icon__glyph"><Icon size={20} strokeWidth={2} /></div>
+                <code className="ds-code">{name}</code>
+                <span className="ds-swatch__note">{use}</span>
+              </div>
+            ))}
+          </div>
+        </SubSection>
+
+        <SubSection title="Sports · react-icons/fa" note="Solid, punchy glyphs for league and sport context. Used in filters, pills, and sport badges on team walls.">
+          <div className="ds-icon-grid">
+            {SPORT_ICONS.map(({ Icon, name, use }) => (
+              <div key={name} className="ds-icon">
+                <div className="ds-icon__glyph"><Icon size={22} /></div>
                 <code className="ds-code">{name}</code>
                 <span className="ds-swatch__note">{use}</span>
               </div>
@@ -587,7 +577,7 @@ export default function DesignSystem() {
         id="compositions"
         eyebrow="05"
         title="Compositions"
-        intro="Patterns proven in the product. When you need one of these, compose it from the primitives above — don't restyle."
+        intro="Patterns proven in the product. When you need one of these, compose it from the primitives above. Don't restyle."
       >
         <SubSection title="Tile row" note="Primitive × N. Every wall in the product is a grid of these. Selection lives on one at a time.">
           <div className="ds-comp">
@@ -605,6 +595,137 @@ export default function DesignSystem() {
                   onClick={() => {}}
                 />
               ))}
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Player card"
+          note="How a legend reads at a glance inside a panel. Number leads, name follows, one line of metadata. The sport icon sits with the metadata, never the number."
+        >
+          <div className="ds-comp ds-comp--cards">
+            <div className="ds-player-card">
+              <div className="ds-player-card__num">12</div>
+              <div className="ds-player-card__body">
+                <div className="ds-player-card__name">TOM BRADY</div>
+                <div className="ds-player-card__meta">
+                  <FaFootballBall size={12} />
+                  <span>Patriots · QB · 2000–2019</span>
+                </div>
+              </div>
+            </div>
+            <div className="ds-player-card">
+              <div className="ds-player-card__num ds-player-card__num--sacred">9</div>
+              <div className="ds-player-card__body">
+                <div className="ds-player-card__name">TED WILLIAMS</div>
+                <div className="ds-player-card__meta">
+                  <FaBaseballBall size={12} />
+                  <span>Red Sox · LF · 1939–1960</span>
+                </div>
+                <div className="ds-player-card__flag">SACRED</div>
+              </div>
+            </div>
+            <div className="ds-player-card">
+              <div className="ds-player-card__num">4</div>
+              <div className="ds-player-card__body">
+                <div className="ds-player-card__name">BOBBY ORR</div>
+                <div className="ds-player-card__meta">
+                  <FaHockeyPuck size={12} />
+                  <span>Bruins · D · 1966–1976</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Player panel"
+          note="What opens when a tile is selected. The number echoes the tile that was tapped. Stacked cards when a number has more than one legend."
+        >
+          <div className="ds-comp ds-comp--panel">
+            <div className="ds-panel-demo">
+              <div className="ds-panel-demo__head">
+                <span className="ds-panel-demo__eyebrow">NUMBER 12 · BOSTON</span>
+                <button className="ds-panel-demo__close" aria-label="Close"><X size={16} /></button>
+              </div>
+              <div className="ds-panel-demo__num">12</div>
+              <div className="ds-panel-demo__stack">
+                <div className="ds-player-card">
+                  <div className="ds-player-card__num">12</div>
+                  <div className="ds-player-card__body">
+                    <div className="ds-player-card__name">TOM BRADY</div>
+                    <div className="ds-player-card__meta">
+                      <FaFootballBall size={12} />
+                      <span>Patriots · QB · 2000–2019</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="ds-player-card">
+                  <div className="ds-player-card__num">12</div>
+                  <div className="ds-player-card__body">
+                    <div className="ds-player-card__name">JERRY YORK</div>
+                    <div className="ds-player-card__meta">
+                      <FaHockeyPuck size={12} />
+                      <span>BC · coach · 1994–2022</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Locals row"
+          note="The row pattern used to surface a short, dense list of picks tied to a place, team, or theme. A tile anchors the row; the right side fills with names."
+        >
+          <div className="ds-comp ds-comp--locals">
+            <div className="ds-locals-row">
+              <div className="ds-locals-row__tile">
+                <DemoTile style={HEAT_TILES[3]} number={7} size={56} />
+              </div>
+              <div className="ds-locals-row__body">
+                <span className="ds-locals-row__title">LOCALS · NUMBER 7</span>
+                <span className="ds-locals-row__list">
+                  Phil Esposito · Ray Bourque · John Havlicek · Trot Nixon
+                </span>
+              </div>
+              <ChevronRight size={18} className="ds-locals-row__arrow" />
+            </div>
+            <div className="ds-locals-row">
+              <div className="ds-locals-row__tile">
+                <DemoTile style={SACRED_TILE} number={4} size={56} />
+              </div>
+              <div className="ds-locals-row__body">
+                <span className="ds-locals-row__title">SACRED · NUMBER 4</span>
+                <span className="ds-locals-row__list">
+                  Bobby Orr · Lou Gehrig · Dan Marino · Brett Favre
+                </span>
+              </div>
+              <ChevronRight size={18} className="ds-locals-row__arrow" />
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="City map"
+          note="The map view for a town or school. A single pin anchors the place, a short stack of the town's legends lives alongside. Used on /walls/town/:slug and the towns index."
+        >
+          <div className="ds-comp ds-comp--map">
+            <div className="ds-map-demo">
+              <div className="ds-map-demo__canvas">
+                <svg viewBox="0 0 240 140" className="ds-map-demo__svg" aria-hidden="true">
+                  <path d="M10 110 Q40 90 70 100 T130 95 T200 105 L230 120 L230 140 L10 140 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" />
+                  <path d="M20 80 Q60 60 100 70 T180 70 T230 80" fill="none" stroke="rgba(255,255,255,0.08)" strokeDasharray="3 4" />
+                </svg>
+                <span className="ds-map-demo__pin">
+                  <MapPin size={22} />
+                </span>
+              </div>
+              <div className="ds-map-demo__card">
+                <span className="ds-map-demo__label">MILTON, MA</span>
+                <span className="ds-map-demo__count">14 LEGENDS</span>
+              </div>
             </div>
           </div>
         </SubSection>
