@@ -80,8 +80,8 @@
 /* Draft line — sits left-aligned under the meta row, as a third line */
 .legend-timeline__draft-line {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
-  color: rgba(255, 230, 120, 0.55);
+  font-size: 0.8125rem;
+  color: rgba(232, 124, 42, 0.85);
   margin: 3px 0 0 0;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -569,8 +569,8 @@
    Fixed height so the card never reflows across moments/bye/DNP states. */
 .vtl__top-card {
   flex-shrink: 0;
-  height: 180px;
-  padding: 10px var(--space-3) 14px;
+  height: 200px;
+  padding: 12px var(--space-3) 16px;
   background: transparent;
   box-sizing: border-box;
   display: flex;
@@ -638,10 +638,10 @@
   font-family: var(--font-banner);
   font-size: 1.75rem;
   line-height: 0.85;
-  color: rgba(255, 230, 120, 0.85);
+  color: rgba(232, 124, 42, 0.95);
   text-shadow:
-    0 0 20px rgba(255, 220, 80, 0.3),
-    0 0 40px rgba(255, 195, 45, 0.12);
+    0 0 20px rgba(232, 124, 42, 0.3),
+    0 0 40px rgba(232, 124, 42, 0.12);
   flex-shrink: 0;
 }
 
@@ -662,9 +662,9 @@
 
 .vtl__top-meta {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.5);
-  letter-spacing: 0.03em;
+  font-size: var(--text-small);
+  color: rgba(200, 195, 185, 0.7);
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -681,8 +681,8 @@
 
 .vtl__top-draft {
   font-family: var(--font-scoreboard);
-  font-size: 10px;
-  color: rgba(255, 230, 120, 0.55);
+  font-size: 11px;
+  color: rgba(232, 124, 42, 0.8);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-top: 2px;
@@ -717,8 +717,8 @@
 
 .vtl__bar-col {
   position: relative;
-  width: 52%;
-  max-width: 170px;
+  width: 36%;
+  max-width: 120px;
   flex-shrink: 0;
   /* height is set inline based on game count */
 }
@@ -731,21 +731,24 @@
   pointer-events: none;
 }
 
-/* Mobile moment markers — icon + label along the right edge of the bar. Tappable. */
+/* Mobile moment markers — icon + label along the right edge of the bar. Tappable.
+   Clamped to available viewport width so nothing overflows or gets cut off. */
 .vtl__moment-marker {
   position: absolute;
-  right: -10px;
-  transform: translate(100%, -50%);
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 6px;
   pointer-events: auto;
   white-space: nowrap;
-  max-width: 48vw;
+  /* (100vw - bar-col midpoint at 50vw - half bar-col width - gap - safe margin) */
+  width: calc(50vw - 80px);
   padding: 6px 4px;
-  margin: -6px -4px;
+  margin: -6px 0 -6px -4px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
 }
 
 .vtl__moment-marker:active .vtl__moment-marker__icon {
@@ -755,7 +758,7 @@
 .vtl__moment-marker__line {
   width: 12px;
   height: 1px;
-  background: linear-gradient(to right, rgba(255, 230, 120, 0.5), rgba(255, 230, 120, 0.15));
+  background: linear-gradient(to right, rgba(232, 124, 42, 0.5), rgba(232, 124, 42, 0.15));
   flex-shrink: 0;
 }
 
@@ -765,9 +768,9 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  color: rgba(255, 230, 120, 0.9);
+  color: rgba(232, 124, 42, 0.95);
   flex-shrink: 0;
-  filter: drop-shadow(0 0 4px rgba(255, 195, 45, 0.4));
+  filter: drop-shadow(0 0 4px rgba(232, 124, 42, 0.35));
   transition: transform 120ms ease-out;
 }
 
@@ -778,9 +781,9 @@
 
 .vtl__moment-marker__label {
   font-family: var(--font-scoreboard);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.04em;
-  color: rgba(200, 195, 185, 0.7);
+  color: rgba(200, 195, 185, 0.75);
   text-transform: uppercase;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -943,15 +946,15 @@
 
 .vtl__card-stats {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  color: rgba(200, 195, 185, 0.6);
+  font-size: var(--text-small);
+  color: rgba(200, 195, 185, 0.78);
   letter-spacing: 0.02em;
 }
 
 .vtl__card-meta-line {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.35);
+  font-size: var(--text-caption);
+  color: rgba(200, 195, 185, 0.5);
   letter-spacing: 0.03em;
 }
 
@@ -1010,18 +1013,18 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 999px;
   background: rgba(20, 22, 30, 0.95);
-  border: 1px solid rgba(255, 230, 120, 0.35);
+  border: 1px solid rgba(232, 124, 42, 0.4);
   box-shadow:
-    0 0 14px rgba(255, 195, 45, 0.35),
-    0 0 28px rgba(255, 195, 45, 0.15);
+    0 0 14px rgba(232, 124, 42, 0.3),
+    0 0 28px rgba(232, 124, 42, 0.12);
   font-family: var(--font-banner);
-  font-size: 0.7rem;
-  color: rgba(255, 240, 180, 0.95);
+  font-size: 0.8125rem;
+  color: rgba(255, 210, 160, 0.98);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   max-width: 85vw;
   overflow: hidden;
@@ -1031,10 +1034,10 @@
 }
 
 .vtl__active-token svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  filter: drop-shadow(0 0 4px rgba(255, 195, 45, 0.5));
+  filter: drop-shadow(0 0 4px rgba(232, 124, 42, 0.4));
 }
 
 .vtl__active-token--sacred {
@@ -1069,28 +1072,33 @@
   font-style: italic;
 }
 
-/* ── Tribute at bottom of scroll — fills space past last game.
-   Tall top padding = scroll room letting last game reach the scrub line. ── */
+/* ── Tribute at bottom of scroll — tight to the last game.
+   Top padding is scroll room so the last game reaches the scrub line, but we
+   vertically center the text inside it so it reads close to the last game. ── */
 .vtl__tribute {
   width: 100%;
   max-width: 520px;
-  padding: calc(100dvh - 320px) var(--space-3) 20px;
+  min-height: calc(100dvh - 260px);
+  padding: 24px var(--space-3) 12px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
   font-family: var(--font-banner);
-  color: rgba(255, 230, 120, 0.75);
-  font-size: 1.1rem;
-  line-height: 1.45;
-  letter-spacing: 0.01em;
+  color: rgba(245, 247, 250, 0.88);
+  font-size: 1.5rem;
+  line-height: 1.4;
+  letter-spacing: 0.005em;
 }
 
 .vtl__tribute em {
   display: block;
-  margin-top: 14px;
+  margin-top: 18px;
   font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: rgba(200, 195, 185, 0.45);
-  letter-spacing: 0.1em;
+  font-size: var(--text-caption);
+  color: rgba(232, 124, 42, 0.7);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-style: normal;
 }
@@ -1098,41 +1106,41 @@
 /* ── "Did we miss a moment?" footer ── */
 .vtl__miss {
   width: 100%;
-  padding: 18px var(--space-3) 40px;
+  padding: 10px var(--space-3) 40px;
   box-sizing: border-box;
   text-align: center;
   font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.08em;
+  font-size: var(--text-caption);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(200, 195, 185, 0.4);
+  color: rgba(200, 195, 185, 0.5);
 }
 
 .vtl__miss a {
-  color: rgba(255, 230, 120, 0.75);
+  color: rgba(232, 124, 42, 0.95);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 230, 120, 0.3);
+  border-bottom: 1px solid rgba(232, 124, 42, 0.4);
 }
 
 /* Desktop tribute/miss */
 .legend-timeline__tribute {
-  max-width: 720px;
+  max-width: 780px;
   margin: 80px auto 0;
   padding: 0 var(--space-4);
   text-align: center;
   font-family: var(--font-banner);
-  color: rgba(255, 230, 120, 0.8);
-  font-size: 1.4rem;
-  line-height: 1.5;
+  color: rgba(245, 247, 250, 0.92);
+  font-size: 2rem;
+  line-height: 1.35;
 }
 
 .legend-timeline__tribute em {
   display: block;
-  margin-top: 18px;
+  margin-top: 20px;
   font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  color: rgba(200, 195, 185, 0.45);
-  letter-spacing: 0.1em;
+  font-size: var(--text-caption);
+  color: rgba(232, 124, 42, 0.7);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-style: normal;
 }
@@ -1143,16 +1151,16 @@
   padding: 0 var(--space-4);
   text-align: center;
   font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: 0.08em;
+  font-size: var(--text-small);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(200, 195, 185, 0.4);
+  color: rgba(200, 195, 185, 0.5);
 }
 
 .legend-timeline__miss a {
-  color: rgba(255, 230, 120, 0.75);
+  color: rgba(232, 124, 42, 0.95);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 230, 120, 0.3);
+  border-bottom: 1px solid rgba(232, 124, 42, 0.4);
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */

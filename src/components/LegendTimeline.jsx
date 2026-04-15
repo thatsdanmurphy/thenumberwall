@@ -1160,7 +1160,7 @@ export default function LegendTimeline({ timeline }) {
                 <div
                   key={`vm-${m.gameIdx}`}
                   className={`vtl__moment-marker ${m.isSacred ? 'vtl__moment-marker--sacred' : ''} ${m.isNegative ? 'vtl__moment-marker--negative' : ''} ${pinnedIndex === m.gameIdx ? 'vtl__moment-marker--pinned' : ''}`}
-                  style={{ top: `${m.top}px`, paddingLeft: `${m.indent}px` }}
+                  style={{ top: `${m.top}px` }}
                   onClick={(e) => handleVMomentClick(m.gameIdx, e)}
                 >
                   <span className="vtl__moment-marker__line" />
@@ -1237,23 +1237,23 @@ function narrateQuietGame(g) {
   return 'Another Sunday. Another game in the ledger.'
 }
 
-// ── Stagger mobile markers when their vertical positions collide ──
-// Different moments that fall within 26px of each other get indented to the right
-// in a round-robin so every icon is tappable. Mutates a lightweight copy.
+// ── Stack mobile markers vertically when they'd collide ──
+// Two buttons stacking on top of each other — we accept that the icon won't be
+// perfectly aligned with the game's pixel; tapping will scroll to the game.
+// This keeps markers on-screen (no horizontal indent) so nothing gets cut off.
 function staggerVerticalMarkers(markers, positions) {
-  const MIN_GAP = 26
-  const INDENTS = [0, 48, 96]
+  const MIN_GAP = 34 // enough for icon (24px) + breathing room; tap-target friendly
   const placed = []
   return markers.map(m => {
-    const top = (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2
-    let indent = 0
-    for (let i = 0; i < INDENTS.length; i++) {
-      const slot = INDENTS[i]
-      const conflict = placed.some(p => p.indent === slot && Math.abs(p.top - top) < MIN_GAP)
-      if (!conflict) { indent = slot; break }
-      indent = INDENTS[(i + 1) % INDENTS.length]
+    const natural = (positions[m.gameIdx] + positions[m.gameIdx + 1]) / 2
+    let top = natural
+    // If any placed marker is within MIN_GAP, push this one below it.
+    const collisions = placed.filter(p => Math.abs(p.top - top) < MIN_GAP)
+    if (collisions.length > 0) {
+      const lowestBelow = Math.max(...collisions.map(p => p.top))
+      top = lowestBelow + MIN_GAP
     }
-    const entry = { ...m, top, indent }
+    const entry = { ...m, top }
     placed.push(entry)
     return entry
   })
