@@ -666,7 +666,7 @@ export default function TeamWallPage() {
           </div>
 
           {/* ── Panel ─────────────────────────────────────────── */}
-          <aside className={`player-panel${!selected ? ' player-panel--idle' : ''}`}>
+          <aside className={`player-panel${!selected && !coachView ? ' player-panel--idle' : ''}`}>
             <div className="player-panel__handle" aria-hidden="true" />
             <div className="player-panel__inner">
 
@@ -683,7 +683,10 @@ export default function TeamWallPage() {
                   <div className="tw-panel-header">
                     <div
                       className="tw-coach-panel__title"
-                      style={{ color: getTeamTileTextColor(colorKey, coaches.length) }}
+                      style={{
+                        color: TEAM_PALETTES[colorKey]?.[4]?.text || getTeamTileTextColor(colorKey, coaches.length),
+                        textShadow: `0 0 28px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
+                      }}
                     >COACHES</div>
                     <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditingId(null) }} aria-label="Close panel">
                       <X size={14} />
