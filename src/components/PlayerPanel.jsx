@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
 import { Award, Check, ExternalLink, X, ArrowRight } from 'lucide-react'
 import { getSportIcon } from '../data/sports.js'
@@ -85,6 +86,7 @@ function shareNumber(number) {
 
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
 function PlayerCard({ entry, isTop = false }) {
+  const navigate       = useNavigate()
   const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
   const teamAccent     = TEAM_ACCENT[entry.team] ?? null
@@ -130,11 +132,14 @@ function PlayerCard({ entry, isTop = false }) {
           className="player-card__timeline-cta"
           href={`/timeline/${timelineId}`}
           onClick={(e) => {
-            try { track('timeline_open_from_card', { player: entry.name }) } catch {}
-            // Use pushState so BrowserRouter picks up the new route without a reload
+            // React Router's navigate() is the only reliable way to move
+            // without a full reload. The earlier pushState + PopStateEvent
+            // hack didn't update the router's internal state, which left
+            // the PlayerPanel overlay on top of an empty body — the "wall
+            // goes dark" bug.
             e.preventDefault()
-            window.history.pushState({}, '', `/timeline/${timelineId}`)
-            window.dispatchEvent(new PopStateEvent('popstate'))
+            try { track('timeline_open_from_card', { player: entry.name }) } catch {}
+            navigate(`/timeline/${timelineId}`)
           }}
         >
           <span>View his career timeline</span>
