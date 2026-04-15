@@ -87,7 +87,7 @@ const GROUPS = [
       { path: '/behindthecurtains',             name: 'Hub',          desc: 'Landing. One card per internal section.',  status: 'LIVE' },
       { path: '/behindthecurtains/design',      name: 'Design System', desc: 'Tokens, tiles, primitives, icons, compositions.', status: 'LIVE' },
       { path: '/behindthecurtains/sitemap',     name: 'Sitemap',      desc: 'This page.',                                 status: 'LIVE' },
-      { path: '/behindthecurtains/flows',       name: 'Flows',        desc: 'The journeys that matter.',                  status: 'DRAFT' },
+      { path: '/behindthecurtains/flows',       name: 'Flows',        desc: 'The journeys that matter.',                  status: 'LIVE' },
       { path: '/behindthecurtains/engineering', name: 'Engineering',  desc: 'Stack, structure, conventions.',             status: 'DRAFT' },
       { path: '/behindthecurtains/marketing',   name: 'Marketing',    desc: 'Kit, audiences, voice.',                     status: 'DRAFT' },
       { path: '/behindthecurtains/research',    name: 'Research',     desc: 'Testing, findings, insights.',               status: 'DRAFT' },

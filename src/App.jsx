@@ -18,6 +18,7 @@ import BehindTheCurtainsLayout from './pages/behindthecurtains/BehindTheCurtains
 import BehindTheCurtainsHome   from './pages/behindthecurtains/Home.jsx'
 import BehindTheCurtainsStub   from './pages/behindthecurtains/Stub.jsx'
 import Sitemap                 from './pages/behindthecurtains/Sitemap.jsx'
+import Flows                   from './pages/behindthecurtains/Flows.jsx'
 
 export default function App() {
   return (
@@ -45,23 +46,7 @@ export default function App() {
           <Route index element={<BehindTheCurtainsHome />} />
           <Route path="design" element={<DesignSystem />} />
           <Route path="sitemap" element={<Sitemap />} />
-          <Route
-            path="flows"
-            element={
-              <BehindTheCurtainsStub
-                eyebrow="03 · Flows"
-                title="THE JOURNEYS THAT MATTER"
-                lede="A flow is a user moving through layouts with intent. This page holds the handful of flows the product is built around — documented with screens, decisions, and the moments that carry weight."
-                plan={[
-                  'First visit → claim identity → build first wall',
-                  'Boston fan → explore city wall → tap a sacred tile',
-                  'Team alumni → find school → fill in years',
-                  'Returning user → hub → continue a wall',
-                  'Each flow: screens in order, annotations on the decisions, links into the sitemap',
-                ]}
-              />
-            }
-          />
+          <Route path="flows" element={<Flows />} />
           <Route
             path="engineering"
             element={

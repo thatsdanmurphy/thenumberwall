@@ -1,0 +1,345 @@
+/* Flows — /behindthecurtains/flows
+   Tokens only. Sibling to Sitemap; same banner rhythm, different content unit. */
+
+.fl-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Banner ────────────────────────────────────────────────────────────── */
+
+.fl-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.fl-banner__eyebrow {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.fl-banner__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h1);
+  letter-spacing: 0.01em;
+  color: var(--color-paper);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.fl-banner__lede {
+  font-family: var(--font-program);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+  max-width: 64ch;
+  margin: 0;
+}
+
+.fl-banner__lede em {
+  color: var(--color-paper);
+  font-style: italic;
+}
+
+/* Pulse strip — status counts */
+
+.fl-pulse {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  font-family: var(--font-scoreboard);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+}
+
+.fl-pulse__num {
+  font-family: var(--font-banner);
+  font-size: 1.75rem;
+  color: var(--color-paper);
+  letter-spacing: 0.02em;
+}
+
+.fl-pulse__num--shipped { color: var(--color-heat); }
+.fl-pulse__num--partial { color: var(--color-muted); }
+
+.fl-pulse__label {
+  font-size: var(--text-label);
+  color: var(--color-muted);
+}
+
+.fl-pulse__sep {
+  color: var(--border-soft);
+  padding: 0 var(--space-1);
+}
+
+/* TOC */
+
+.fl-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.fl-toc a {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+}
+
+.fl-toc a:hover {
+  color: var(--color-heat);
+  border-color: var(--color-heat);
+}
+
+.fl-toc__home { margin-left: auto; }
+
+/* ── Flow stack ────────────────────────────────────────────────────────── */
+
+.fl-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ── Flow card ─────────────────────────────────────────────────────────── */
+
+.fl-flow {
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fl-flow--partial { border-style: dashed; }
+
+.fl-flow__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.fl-flow__title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.fl-flow__name {
+  font-family: var(--font-banner);
+  font-size: var(--text-h2);
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.fl-flow__status {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.fl-flow__status--shipped {
+  color: var(--color-heat);
+  border-color: var(--color-heat);
+  background: rgba(232, 124, 42, 0.08);
+}
+
+.fl-flow__status--partial {
+  color: var(--color-muted);
+  border-color: var(--border-soft);
+}
+
+.fl-flow__status--unbuilt {
+  color: var(--color-muted);
+  border-color: var(--border-faint);
+  opacity: 0.8;
+}
+
+.fl-flow__intent {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin: 0;
+  max-width: 64ch;
+}
+
+/* ── Steps ─────────────────────────────────────────────────────────────── */
+
+.fl-flow__steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-left: 1px dashed var(--border-faint);
+  padding-left: var(--space-4);
+}
+
+.fl-flow__step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.fl-flow__step-n {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-heat);
+  line-height: 1.4;
+  padding-top: 2px;
+  min-width: 28px;
+}
+
+.fl-flow__step-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.fl-flow__step-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.fl-flow__action {
+  font-family: var(--font-banner);
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+}
+
+.fl-flow__arrow { color: var(--color-muted); flex-shrink: 0; }
+
+.fl-flow__state {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.fl-flow__step-note {
+  font-family: var(--font-handwritten);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-paper);
+  margin: 2px 0 0;
+  opacity: 0.85;
+}
+
+/* ── Foot: weight + start ──────────────────────────────────────────────── */
+
+.fl-flow__foot {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-4);
+  align-items: flex-end;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-faint);
+}
+
+@media (max-width: 640px) {
+  .fl-flow__foot { grid-template-columns: 1fr; }
+}
+
+.fl-flow__weight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 56ch;
+}
+
+.fl-flow__weight-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+}
+
+.fl-flow__weight-line {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.fl-flow__start {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  text-decoration: none;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.fl-flow__start:hover { border-color: var(--color-heat); }
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+
+.fl-footer {
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+}
+
+.fl-footer__line {
+  font-family: var(--font-handwritten);
+  font-size: 1rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ── Squeeze ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .fl-page {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+    gap: var(--space-5);
+  }
+  .fl-flow__title-row { flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+  .fl-toc__home { margin-left: 0; }
+}
