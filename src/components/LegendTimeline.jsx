@@ -831,27 +831,15 @@ export default function LegendTimeline({ timeline }) {
   const vScrollRef = useRef(null)  // scrollable viewport element
   const vInitializedRef = useRef(false)
 
-  // On first render after positions are computed, align game 0 with the scrub line
-  // (scrub is at top of bar-area). scrollTop=0 puts bar-col top at viewport top,
-  // which is exactly where the scrub line sits.
-  useEffect(() => {
-    if (vInitializedRef.current) return
-    const viewport = vScrollRef.current
-    const positions = vGamePositionsRef.current
-    if (!viewport || !positions) return
-    const barCol = viewport.querySelector('.vtl__bar-col')
-    if (!barCol) return
-    // Scrub at y=0 of viewport. game[0] midpoint should align to it.
-    const mid = (positions[0] + positions[1]) / 2
-    viewport.scrollTop = barCol.offsetTop + mid
-    vInitializedRef.current = true
-    // Place pills in their initial positions immediately
-    requestAnimationFrame(() => positionPills())
-  }, [vGamePositions, positionPills])
-
   // ── Position the persistent pills on every scroll frame ──
   // Each pill rides with its game midpoint. When it reaches the top of the
   // viewport (the scrub line), it docks. Next pill pushes the docked one up.
+  //
+  // NOTE: declared BEFORE the init-scroll effect below — that effect lists
+  // positionPills in its deps, and `const` hoisting leaves it in the
+  // temporal dead zone until this line executes. Out of order = TDZ
+  // ReferenceError on every render = ErrorBoundary fallback ("wall went
+  // dark"). Keep this above the useEffect that references it.
   const positionPills = useCallback(() => {
     const viewport = vScrollRef.current
     const positions = vGamePositionsRef.current
@@ -895,6 +883,23 @@ export default function LegendTimeline({ timeline }) {
       el.classList.toggle('vtl__pill--docked', docked)
     }
   }, [])
+
+  // On first render after positions are computed, align game 0 with the
+  // scrub line (scrub is at top of bar-area). scrollTop=0 puts bar-col top
+  // at viewport top, which is exactly where the scrub line sits.
+  useEffect(() => {
+    if (vInitializedRef.current) return
+    const viewport = vScrollRef.current
+    const positions = vGamePositionsRef.current
+    if (!viewport || !positions) return
+    const barCol = viewport.querySelector('.vtl__bar-col')
+    if (!barCol) return
+    const mid = (positions[0] + positions[1]) / 2
+    viewport.scrollTop = barCol.offsetTop + mid
+    vInitializedRef.current = true
+    // Place pills in their initial positions immediately
+    requestAnimationFrame(() => positionPills())
+  }, [vGamePositions, positionPills])
 
   const handleVScroll = useCallback(() => {
     const viewport = vScrollRef.current
