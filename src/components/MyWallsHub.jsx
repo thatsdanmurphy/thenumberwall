@@ -30,7 +30,7 @@ function WelcomePlacemat({ onDismiss }) {
             <span className="hub-welcome__slot-sub">Massachusetts</span>
           </div>
         </div>
-        <p className="hub-welcome__sub">Claim your identity. Then build walls around what you care about.</p>
+        <p className="hub-welcome__sub">Claim my identity. Then build walls around what I care about.</p>
         <button className="btn-primary hub-welcome__cta" onClick={onDismiss}>
           CLAIM MINE
         </button>
@@ -130,7 +130,7 @@ export default function MyWallsHub() {
           anchor so the row reads as a named part of the hub, not floating UI. */}
       <header className="hub-identity-header">
         <span className="hub-identity-header__eyebrow">MY IDENTITY</span>
-        <h2 className="hub-identity-header__title">What&rsquo;s yours?</h2>
+        <h2 className="hub-identity-header__title">This is me.</h2>
       </header>
       <IdentityTiles
         identity={identity}
@@ -190,7 +190,7 @@ export default function MyWallsHub() {
                       {isPersonal ? `${w.owner_name}'s Wall` : w.theme}
                     </span>
                     <span className="hub-wall-row__desc">
-                      {isPersonal ? 'Your personal wall' : (w.theme_description || '')}
+                      {isPersonal ? 'My personal wall' : (w.theme_description || '')}
                     </span>
                     <span className="hub-wall-row__bottom">
                       <span className="hub-wall-row__count">{w.entryCount} PICKS</span>
@@ -206,10 +206,10 @@ export default function MyWallsHub() {
         </>
       ) : (
         <div className="hub-empty">
-          <p className="hub-empty__text">You haven't built any walls yet.</p>
+          <p className="hub-empty__text">I haven&rsquo;t built any walls yet.</p>
           <button className="tnw-btn tnw-btn--secondary hub-empty__cta" onClick={() => setShowModal(true)}>
             <Plus size={16} />
-            <span>BUILD YOUR FIRST WALL</span>
+            <span>BUILD MY FIRST WALL</span>
           </button>
         </div>
       )}

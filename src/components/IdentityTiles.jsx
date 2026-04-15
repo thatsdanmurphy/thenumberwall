@@ -77,7 +77,7 @@ function NumberSlot({ value, onSave }) {
     setEditing(false)
   }
 
-  const sub = value ? 'THE ONE THAT\u2019S YOURS' : 'PICK A NUMBER'
+  const sub = value ? 'THE ONE THAT\u2019S MINE' : 'PICK A NUMBER'
 
   if (editing) {
     return (
@@ -136,13 +136,16 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
     setSuggestions(suggestionFn ? suggestionFn(v) : [])
   }
 
-  const sub = value ? 'WHERE YOUR TEAMS PLAY' : 'PICK A CITY'
+  const sub = value ? 'WHERE MY TEAMS PLAY' : 'PICK A CITY'
   // City cells stay at 1fr — no grid reflow. Long words (Nashville,
   // Indianapolis) shrink the value via `id-slot--shrink` instead of
   // widening the tile. Keeps the triptych balanced and the sublabel
   // hint text uncovered.
   const len = (editing ? draft : value || '').length
-  const modifier = len > 9 ? 'id-slot--shrink-sm' : len > 6 ? 'id-slot--shrink' : ''
+  const modifier =
+    len > 10 ? 'id-slot--shrink-xs' :
+    len > 7  ? 'id-slot--shrink-sm' :
+    len > 5  ? 'id-slot--shrink'    : ''
 
   if (editing) {
     return (
@@ -154,7 +157,7 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
           onChange={e => onDraftChange(e.target.value.slice(0, 24))}
           onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') setEditing(false) }}
           onBlur={() => setTimeout(() => commit(), 150)}
-          placeholder="Your city"
+          placeholder="My city"
           autoFocus
         />
         {suggestions.length > 0 && (
@@ -236,7 +239,7 @@ function HeroSlot({ value, onSave }) {
     setResults([])
   }
 
-  const sub = heroName ? heroName.toUpperCase() : 'THE ONE YOU\u2019D NEVER TRADE'
+  const sub = heroName ? heroName.toUpperCase() : 'THE ONE I\u2019D NEVER TRADE'
   const hasValue = !!(heroNumber || heroName)
 
   if (editing) {
