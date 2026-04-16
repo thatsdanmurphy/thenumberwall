@@ -19,6 +19,7 @@ import BehindTheCurtainsHome   from './pages/behindthecurtains/Home.jsx'
 import BehindTheCurtainsStub   from './pages/behindthecurtains/Stub.jsx'
 import Sitemap                 from './pages/behindthecurtains/Sitemap.jsx'
 import Flows                   from './pages/behindthecurtains/Flows.jsx'
+import Engineering             from './pages/behindthecurtains/Engineering.jsx'
 
 export default function App() {
   return (
@@ -47,23 +48,7 @@ export default function App() {
           <Route path="design" element={<DesignSystem />} />
           <Route path="sitemap" element={<Sitemap />} />
           <Route path="flows" element={<Flows />} />
-          <Route
-            path="engineering"
-            element={
-              <BehindTheCurtainsStub
-                eyebrow="04 · Engineering"
-                title="HOW IT'S BUILT"
-                lede="The stack, the conventions, and the trade-offs. Not documentation for strangers — a reference for future-you at 11pm trying to remember why something is shaped the way it is."
-                plan={[
-                  'Stack: React 19 + Vite + React Router 6, Supabase backend, Vercel deploys',
-                  'Repo shape: src/pages, src/components, src/data, src/lib, src/styles',
-                  'Data conventions: /02_Product/thenumberwall-build/src/data/*.js (see data-garden skill)',
-                  'Backend notes: Supabase tables, RLS, what each row means',
-                  'Build-order principle: compose → modify → tokenize. No raw rgba/rem/px.',
-                  'Deploy: git push to main → Vercel',
-                ]}
-              />
-            }
+          <Route path="engineering" element={<Engineering />}
           />
           <Route
             path="marketing"

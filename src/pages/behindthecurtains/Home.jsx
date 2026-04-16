@@ -14,6 +14,7 @@ const LIVE = new Set([
   '/behindthecurtains/design',
   '/behindthecurtains/sitemap',
   '/behindthecurtains/flows',
+  '/behindthecurtains/engineering',
 ])
 
 export default function BehindTheCurtainsHome() {

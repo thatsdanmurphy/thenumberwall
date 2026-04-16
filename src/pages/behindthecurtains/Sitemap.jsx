@@ -122,7 +122,7 @@ const GROUPS = [
           { path: '/behindthecurtains/design',      name: 'Design System', desc: 'Tokens, tiles, primitives, icons.',        status: 'LIVE' },
           { path: '/behindthecurtains/sitemap',     name: 'Sitemap',      desc: 'This page.',                                 status: 'LIVE' },
           { path: '/behindthecurtains/flows',       name: 'Flows',        desc: 'The journeys that matter.',                  status: 'LIVE' },
-          { path: '/behindthecurtains/engineering', name: 'Engineering',  desc: 'Stack, structure, conventions.',             status: 'DRAFT' },
+          { path: '/behindthecurtains/engineering', name: 'Engineering',  desc: 'Stack, structure, conventions.',             status: 'LIVE' },
           { path: '/behindthecurtains/marketing',   name: 'Marketing',    desc: 'Kit, audiences, voice.',                     status: 'DRAFT' },
           { path: '/behindthecurtains/research',    name: 'Research',     desc: 'Testing, findings, insights.',               status: 'DRAFT' },
           { path: '/behindthecurtains/analytics',   name: 'Analytics',    desc: 'Traffic, behaviour, Vercel.',                status: 'DRAFT' },
