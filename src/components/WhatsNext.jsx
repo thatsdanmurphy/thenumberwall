@@ -9,11 +9,6 @@ import './WhatsNext.css'
 
 const OPTIONS = [
   {
-    id: 'new_york_wall',
-    label: 'New York Wall',
-    desc: 'Yankees, Mets, Knicks, Nets, Giants, Jets, Rangers, Islanders, Devils, NYCFC, Red Bulls',
-  },
-  {
     id: 'college_teams',
     label: 'College Teams',
     desc: 'Alma maters and college legends on their own walls',

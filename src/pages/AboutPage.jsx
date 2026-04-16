@@ -53,6 +53,11 @@ export default function AboutPage() {
             <span className="about-page__city-cta-teams">Red Sox · Patriots · Celtics · Bruins</span>
             <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
           </Link>
+          <Link to="/newyork" className="about-page__city-cta">
+            <span className="about-page__city-cta-name">THE NEW YORK WALL</span>
+            <span className="about-page__city-cta-teams">Yankees · Mets · Giants · Jets · Knicks · Nets · Rangers · Islanders</span>
+            <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
+          </Link>
         </section>
 
         {/* Team Walls — Disabled until ready

@@ -90,11 +90,8 @@ export default function TeamWallsPage() {
           <WallsMap />
 
           <div className="twb-global-cta">
-            <Globe size={14} />
-            <span>Team outside the US? </span>
-            <a href="mailto:dan@thenumberwall.com?subject=International%20Team%20Wall&body=Team%3A%20%0ACity%2FCountry%3A%20">
-              Let us know — we'll open up the map.
-            </a>
+            <Globe size={16} />
+            <span>Team outside the US? Let us know — we'll open up the map.</span>
           </div>
         </div>
 
