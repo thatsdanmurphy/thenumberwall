@@ -306,3 +306,26 @@
   border-color: var(--border-soft);
   background: var(--surface-2);
 }
+
+/* ── Global interest CTA ────────────────────────────────────────────────── */
+
+.twb-global-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-scoreboard, 'JetBrains Mono', monospace);
+  font-size: var(--text-micro, 10px);
+  letter-spacing: 0.10em;
+  color: var(--color-text-muted, rgba(255, 255, 255, 0.4));
+}
+
+.twb-global-cta a {
+  color: var(--color-accent, rgba(232, 124, 42, 0.75));
+  text-decoration: none;
+}
+
+.twb-global-cta a:hover {
+  color: var(--color-accent, rgba(232, 124, 42, 1));
+  text-decoration: underline;
+}
