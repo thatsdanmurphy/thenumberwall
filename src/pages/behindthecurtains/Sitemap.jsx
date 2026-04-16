@@ -61,9 +61,9 @@ const GROUPS = [
           {
             path: '/walls/town/:townSlug', name: 'Town',
             desc: 'All walls in a town, stacked.',
-            status: 'LIVE', example: '/walls/town/milton-ma',
+            status: 'LIVE',
             children: [
-              { path: '/walls/:schoolSlug/:sport', name: 'Team Wall', desc: 'One team at one school. Year-by-year lineage.', status: 'LIVE', example: '/walls/bc-high/football' },
+              { path: '/walls/:schoolSlug/:sport', name: 'Team Wall', desc: 'One team at one school. Year-by-year lineage.', status: 'LIVE' },
             ],
           },
         ],
@@ -81,7 +81,7 @@ const GROUPS = [
         status: 'LIVE',
         children: [
           { path: '/my-wall/new', name: 'Create',     desc: '"Make a new wall" modal, routed.',         status: 'LIVE' },
-          { path: '/wall/:slug',  name: 'One of mine', desc: 'A wall a person owns, at its own URL.',  status: 'LIVE', example: '/wall/dan-murphy' },
+          { path: '/wall/:slug',  name: 'One of mine', desc: 'A wall a person owns, at its own URL.',  status: 'LIVE' },
         ],
       },
     ],
@@ -161,6 +161,7 @@ function counts(routes) {
     total: routes.length,
     live:  routes.filter(r => r.status === 'LIVE').length,
     draft: routes.filter(r => r.status === 'DRAFT').length,
+    off:   routes.filter(r => r.status === 'DISABLED' || r.status === 'REDIRECT').length,
   }
 }
 
@@ -246,6 +247,11 @@ export default function Sitemap() {
           <span className="sm-pulse__sep">·</span>
           <span className="sm-pulse__num sm-pulse__num--draft">{totals.draft}</span>
           <span className="sm-pulse__label">sketch</span>
+          {totals.off > 0 && <>
+            <span className="sm-pulse__sep">·</span>
+            <span className="sm-pulse__num sm-pulse__num--off">{totals.off}</span>
+            <span className="sm-pulse__label">off</span>
+          </>}
         </div>
 
         <nav className="sm-toc" aria-label="Jump to group">

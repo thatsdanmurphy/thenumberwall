@@ -68,6 +68,7 @@
 
 .sm-pulse__num--live  { color: var(--color-heat); }
 .sm-pulse__num--draft { color: var(--color-muted); }
+.sm-pulse__num--off   { color: var(--color-muted); opacity: 0.6; }
 
 .sm-pulse__label {
   font-size: var(--text-label);

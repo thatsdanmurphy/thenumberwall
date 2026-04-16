@@ -45,6 +45,34 @@ function ThumbWall({ highlights = [] }) {
   )
 }
 
+function ThumbWallHeat() {
+  // Wall with several tiles lit — the "scan" moment where heat reads.
+  return <ThumbWall highlights={[12, 23, 34, 45, 56, 67, 78, 7, 30, 51]} />
+}
+
+function ThumbWallFiltered() {
+  // Fewer tiles visible (sport filter active), 2–3 pulsing.
+  return (
+    <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
+      {Array.from({ length: 30 }).map((_, i) => {
+        const r = Math.floor(i / 6), c = i % 6
+        const pulse = [7, 14, 22].includes(i)
+        return (
+          <rect
+            key={i}
+            x={5 + c * 11}
+            y={5 + r * 13}
+            width={8}
+            height={10}
+            rx={1}
+            className={pulse ? 'fl-thumb__tile fl-thumb__tile--pulse' : 'fl-thumb__tile'}
+          />
+        )
+      })}
+    </svg>
+  )
+}
+
 function ThumbWallSelected() {
   // Same grid but with one tile circled — the "tapped" state.
   return <ThumbWall highlights={[23]} />
@@ -104,6 +132,72 @@ function ThumbTimeline() {
       <line x1={58} y1={8} x2={58} y2={70} className="fl-thumb__tick" />
       {/* sacred gold peak */}
       <circle cx={68} cy={14} r={3.5} className="fl-thumb__peak" />
+    </svg>
+  )
+}
+
+function ThumbTimelineMoment() {
+  // Same waveform but zoomed into the sacred-gold moment — peak is large,
+  // a label line sits beside it. Distinct from the overview waveform.
+  return (
+    <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
+      <path
+        d="M4 58 C 12 54, 18 48, 26 40 C 34 32, 40 38, 48 24 C 54 16, 60 20, 68 10"
+        className="fl-thumb__wave"
+        fill="none"
+      />
+      {/* sacred gold moment — bigger, with a ring */}
+      <circle cx={68} cy={10} r={6} className="fl-thumb__dot-pulse-ring" />
+      <circle cx={68} cy={10} r={3.5} className="fl-thumb__peak" />
+      {/* label line */}
+      <rect x={38} y={6} width={22} height={2.5} rx={1} className="fl-thumb__accent" />
+      {/* context ticks faded */}
+      <line x1={20} y1={8} x2={20} y2={70} className="fl-thumb__tick" />
+      <line x1={42} y1={8} x2={42} y2={70} className="fl-thumb__tick" />
+    </svg>
+  )
+}
+
+function ThumbModalFilled() {
+  // Modal with a filled input and a confirm button — "Name it" state.
+  return (
+    <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
+      <rect x={0} y={0} width={74} height={74} className="fl-thumb__scrim" />
+      <rect x={10} y={16} width={54} height={42} rx={3} className="fl-thumb__panel" />
+      <rect x={14} y={22} width={24} height={3} rx={1} className="fl-thumb__accent" />
+      {/* filled input */}
+      <rect x={14} y={30} width={46} height={8} rx={1.5} className="fl-thumb__panel" />
+      <rect x={16} y={32.5} width={28} height={3} rx={1} className="fl-thumb__accent" />
+      {/* confirm button highlighted */}
+      <rect x={14} y={44} width={20} height={8} rx={1.5} className="fl-thumb__accent" />
+    </svg>
+  )
+}
+
+function ThumbTeamWallEdit() {
+  // Same year grid but with one cell highlighted + a plus glyph.
+  return (
+    <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
+      {Array.from({ length: 40 }).map((_, i) => {
+        const r = Math.floor(i / 8), c = i % 8
+        const lit = [9, 18, 27, 28, 36].includes(i)
+        const isNew = i === 19
+        return (
+          <rect
+            key={i}
+            x={4 + c * 8.5}
+            y={10 + r * 11}
+            width={7}
+            height={9}
+            rx={1}
+            className={isNew ? 'fl-thumb__tile fl-thumb__tile--pulse' : lit ? 'fl-thumb__tile fl-thumb__tile--lit' : 'fl-thumb__tile'}
+          />
+        )
+      })}
+      <rect x={4} y={4} width={66} height={2} rx={1} className="fl-thumb__accent" />
+      {/* plus icon in the new cell */}
+      <line x1={24.25} y1={35} x2={24.25} y2={41} className="fl-thumb__plus" />
+      <line x1={21.25} y1={38} x2={27.25} y2={38} className="fl-thumb__plus" />
     </svg>
   )
 }
@@ -245,19 +339,24 @@ function ThumbDeepLink() {
 }
 
 const THUMBS = {
-  wall:        ThumbWall,
-  wallTap:     ThumbWallSelected,
-  panel:       ThumbPanel,
-  scoreboard:  ThumbScoreboard,
-  timeline:    ThumbTimeline,
-  map:         ThumbMap,
-  townStack:   ThumbTownStack,
-  teamWall:    ThumbTeamWall,
-  hub:         ThumbHub,
-  modal:       ThumbModal,
-  built:       ThumbBuilt,
-  share:       ThumbShare,
-  deepLink:    ThumbDeepLink,
+  wall:            ThumbWall,
+  wallHeat:        ThumbWallHeat,
+  wallFiltered:    ThumbWallFiltered,
+  wallTap:         ThumbWallSelected,
+  panel:           ThumbPanel,
+  scoreboard:      ThumbScoreboard,
+  timeline:        ThumbTimeline,
+  timelineMoment:  ThumbTimelineMoment,
+  map:             ThumbMap,
+  townStack:       ThumbTownStack,
+  teamWall:        ThumbTeamWall,
+  teamWallEdit:    ThumbTeamWallEdit,
+  hub:             ThumbHub,
+  modal:           ThumbModal,
+  modalFilled:     ThumbModalFilled,
+  built:           ThumbBuilt,
+  share:           ThumbShare,
+  deepLink:        ThumbDeepLink,
 }
 
 // ── Flow catalogue ──────────────────────────────────────────────────────────
@@ -273,8 +372,8 @@ const FLOWS = [
     status: 'SHIPPED',
     entry: { path: '/', label: 'Start on the wall' },
     steps: [
-      { thumb: 'wall',    action: 'Land on the wall', state: '00–99 grid. Heat tells you where to look.' },
-      { thumb: 'wall',    action: 'Scan',             state: 'Eye picks up bright tiles — sacred blue, inferno orange.' },
+      { thumb: 'wall',     action: 'Land on the wall', state: '00–99 grid. Heat tells you where to look.' },
+      { thumb: 'wallHeat', action: 'Feel the heat',   state: 'Eye picks up bright tiles — sacred blue, inferno orange.' },
       { thumb: 'wallTap', action: 'Tap a number',     state: 'Tile goes white-ringed. Panel slides in.' },
       { thumb: 'panel',   action: 'Read',             state: 'Number echoed. Player cards ranked by tier.',
         note: 'This is the moment of discovery — "oh, THAT\'s whose number it is."' },
@@ -288,7 +387,7 @@ const FLOWS = [
     status: 'SHIPPED',
     entry: { path: '/', label: 'Start on the wall' },
     steps: [
-      { thumb: 'wall',       action: 'Filter a sport',      state: 'Wall shrinks. Contested tiles start pulsing.' },
+      { thumb: 'wallFiltered', action: 'Filter a sport',    state: 'Wall shrinks. Contested tiles start pulsing.' },
       { thumb: 'wallTap',    action: 'Tap a contested tile', state: 'Panel opens with a "who really owns this?" prompt.' },
       { thumb: 'panel',      action: 'Pick a legend',        state: 'Chip taps. A split bar fades in.' },
       { thumb: 'scoreboard', action: 'See the verdict',      state: 'Wall agrees / differs. Top legend stays amber.',
@@ -306,7 +405,7 @@ const FLOWS = [
       { thumb: 'wallTap',  action: 'Tap #12',           state: 'Panel opens. Brady card shows a timeline CTA.' },
       { thumb: 'panel',    action: 'Open the timeline', state: 'Route changes to /timeline/brady_tom. Waveform fades in.' },
       { thumb: 'timeline', action: 'Move through eras', state: 'Chapter labels overlay the wave. Indigo void → sacred gold.' },
-      { thumb: 'timeline', action: 'Land on a moment',  state: 'Sacred-gold marker for a ring, record, or defining game.',
+      { thumb: 'timelineMoment', action: 'Land on a moment',  state: 'Sacred-gold marker for a ring, record, or defining game.',
         note: 'The void is what gives the gold meaning. Torn ACL → Tampa ring reads as a shape, not a stat.' },
     ],
     weight: 'Brady is the only subject today. The flow exists; the library does not. Expansion is the single biggest leverage point.',
@@ -321,7 +420,7 @@ const FLOWS = [
       { thumb: 'map',       action: 'Land on /walls',         state: 'USA map. Boston pulses as the seed.' },
       { thumb: 'townStack', action: 'Pick a town',            state: 'All walls in that town, stacked.' },
       { thumb: 'teamWall',  action: 'Pick a school + sport',  state: 'The team\'s year-by-year wall.' },
-      { thumb: 'teamWall',  action: 'Fill in a year',         state: 'Add a legend to an open number. Lineage forms.',
+      { thumb: 'teamWallEdit', action: 'Fill in a year',      state: 'Add a legend to an open number. Lineage forms.',
         note: 'Alumni recognition is the hook. "My jersey is on here" is the reason to come back.' },
     ],
     weight: 'The leap from "a Boston product" to "many walls" happens here. Until non-Boston schools have walls, this flow is mostly theoretical.',
@@ -335,7 +434,7 @@ const FLOWS = [
     steps: [
       { thumb: 'hub',   action: 'Open /my-wall', state: 'Three lanes: built, on, follow. Login gate only here.' },
       { thumb: 'modal', action: 'Tap "new"',     state: 'NewWallModal. Name + template + first number pick.' },
-      { thumb: 'modal', action: 'Name it',       state: 'Wall gets a slug. /wall/:slug is live.' },
+      { thumb: 'modalFilled', action: 'Name it',  state: 'Wall gets a slug. /wall/:slug is live.' },
       { thumb: 'built', action: 'Build',         state: 'Add legends, pick a palette, make it yours.',
         note: 'The only place identity matters. Rest of the product is anonymous by design.' },
     ],

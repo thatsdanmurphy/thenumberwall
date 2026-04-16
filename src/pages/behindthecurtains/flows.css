@@ -178,11 +178,7 @@
   border-color: var(--border-soft);
 }
 
-.fl-flow__status--unbuilt {
-  color: var(--color-muted);
-  border-color: var(--border-faint);
-  opacity: 0.8;
-}
+/* .fl-flow__status--unbuilt reserved for future flows */
 
 .fl-flow__intent {
   font-family: var(--font-program);
@@ -335,6 +331,9 @@
 .fl-thumb__scrim { fill: var(--surface-2); opacity: 0.55; }
 
 .fl-thumb__link rect { fill: var(--color-muted); opacity: 0.8; }
+
+.fl-thumb__tile--pulse { fill: var(--color-heat); stroke: none; opacity: 0.6; }
+.fl-thumb__plus { stroke: var(--color-paper); stroke-width: 1.2; stroke-linecap: round; }
 
 /* ── Foot: weight + start ──────────────────────────────────────────────── */
 
