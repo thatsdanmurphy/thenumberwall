@@ -169,6 +169,12 @@ button.id-slot.id-slot--empty:hover {
   padding: 0;
 }
 
+.id-slot__input--big:focus {
+  outline: 2px solid var(--color-sacred);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .id-slot__plus {
   color: var(--color-muted);
   transition: color var(--motion-hover);

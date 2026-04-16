@@ -92,6 +92,7 @@ function NumberSlot({ value, onSave }) {
           placeholder="00"
           autoFocus
           inputMode="numeric"
+          aria-label="Enter your jersey number"
         />
       </Slot>
     )
@@ -159,6 +160,7 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
           onBlur={() => setTimeout(() => commit(), 150)}
           placeholder="My city"
           autoFocus
+          aria-label="Enter your city"
         />
         {suggestions.length > 0 && (
           <div className="id-slot__suggestions">
@@ -249,6 +251,7 @@ function HeroSlot({ value, onSave }) {
           className="id-slot__input id-slot__input--big"
           type="text"
           value={draft}
+          aria-label="Search for your hero player"
           onChange={e => onDraftChange(e.target.value.slice(0, 40))}
           onKeyDown={e => {
             if (e.key === 'Enter') { if (results[0]) commitPick(results[0]); else commitFree() }

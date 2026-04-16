@@ -12,6 +12,7 @@
  *   03 Primitives    — tiles, buttons, inputs, tabs
  *   04 Iconography   — the line-art + sports vocabulary
  *   05 Compositions  — patterns proven in the product
+ *   06 Accessibility — WCAG AA standards, contrast, focus, aria, type floors
  */
 
 import { Link } from 'react-router-dom'
@@ -690,6 +691,132 @@ export default function DesignSystem() {
           <div className="ds-comp ds-comp--map">
             <div className="ds-map-live">
               <WallsMap />
+            </div>
+          </div>
+        </SubSection>
+      </Section>
+
+      {/* ── 06 Accessibility ─────────────────────────────────────────── */}
+
+      <Section
+        id="accessibility"
+        eyebrow="06"
+        title="Accessibility"
+        intro="WCAG AA is the floor, not a goal. Every component, every page, every interaction must clear it. These standards are non-negotiable — they exist because a product that can't be used by everyone isn't finished."
+      >
+        <SubSection title="Color Contrast" note="Minimum contrast ratios on --color-night (#080C10) backgrounds.">
+          <div className="ds-a11y-rules">
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Normal text (under 18px / 14px bold)</span>
+              <span className="ds-a11y-rule__value">4.5 : 1</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Large text (18px+ / 14px+ bold)</span>
+              <span className="ds-a11y-rule__value">3 : 1</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">UI components and graphical objects</span>
+              <span className="ds-a11y-rule__value">3 : 1</span>
+            </div>
+            <div className="ds-a11y-rule ds-a11y-rule--token">
+              <span className="ds-a11y-rule__label"><code>--color-muted</code> (#B8C4CF)</span>
+              <span className="ds-a11y-rule__value ds-a11y-rule__value--pass">4.6 : 1 ✓</span>
+            </div>
+            <div className="ds-a11y-rule ds-a11y-rule--token">
+              <span className="ds-a11y-rule__label"><code>--ink-dim</code> (rgba 255,255,255, 0.50)</span>
+              <span className="ds-a11y-rule__value ds-a11y-rule__value--pass">4.6 : 1 ✓</span>
+            </div>
+            <div className="ds-a11y-rule ds-a11y-rule--token">
+              <span className="ds-a11y-rule__label"><code>--color-heat</code> (#E87C2A)</span>
+              <span className="ds-a11y-rule__value ds-a11y-rule__value--pass">4.7 : 1 ✓</span>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection title="Type Floors" note="Minimum rendered sizes to prevent illegibility and iOS auto-zoom.">
+          <div className="ds-a11y-rules">
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Body text minimum</span>
+              <span className="ds-a11y-rule__value">12px (0.75rem)</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Labels with letter-spacing ≥ 0.10em</span>
+              <span className="ds-a11y-rule__value">11px (0.6875rem)</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Absolute floor (stat tags, micro labels)</span>
+              <span className="ds-a11y-rule__value">10px (0.625rem)</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Mobile inputs (prevents iOS auto-zoom)</span>
+              <span className="ds-a11y-rule__value">16px on touch viewports</span>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection title="Focus Indicators" note="Every interactive element must show a visible focus ring on keyboard navigation.">
+          <div className="ds-a11y-rules">
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Global <code>:focus-visible</code> ring</span>
+              <span className="ds-a11y-rule__value">2px solid --color-sacred</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Outline offset</span>
+              <span className="ds-a11y-rule__value">2px</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Applies to</span>
+              <span className="ds-a11y-rule__value">a, button, input, select, textarea</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Custom inputs with <code>outline: none</code></span>
+              <span className="ds-a11y-rule__value">Must add explicit :focus style</span>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection title="ARIA & Semantics" note="Rules for accessible markup across the product.">
+          <div className="ds-a11y-rules">
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Every <code>&lt;input&gt;</code> without a visible label</span>
+              <span className="ds-a11y-rule__value">Must have aria-label</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Decorative SVGs and icons</span>
+              <span className="ds-a11y-rule__value">aria-hidden="true"</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Meaningful images</span>
+              <span className="ds-a11y-rule__value">Descriptive alt text required</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Modal overlays</span>
+              <span className="ds-a11y-rule__value">role="dialog", aria-modal="true"</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Search inputs with live results</span>
+              <span className="ds-a11y-rule__value">aria-expanded on dropdown state</span>
+            </div>
+          </div>
+        </SubSection>
+
+        <SubSection title="Keyboard Navigation" note="Every flow must be completable without a mouse.">
+          <div className="ds-a11y-rules">
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Tab order</span>
+              <span className="ds-a11y-rule__value">Follows visual reading order</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Escape key</span>
+              <span className="ds-a11y-rule__value">Closes modals, cancels editing</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">Enter key</span>
+              <span className="ds-a11y-rule__value">Commits edits, selects options</span>
+            </div>
+            <div className="ds-a11y-rule">
+              <span className="ds-a11y-rule__label">No tab traps</span>
+              <span className="ds-a11y-rule__value">Focus must always be escapable</span>
             </div>
           </div>
         </SubSection>

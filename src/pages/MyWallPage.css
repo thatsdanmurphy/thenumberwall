@@ -792,6 +792,14 @@
   outline: none;
   padding: 2px 0;
   caret-color: rgba(100, 170, 255, 0.80);
+  transition: border-color var(--motion-hover);
+}
+
+.my-wall-page__contrib-input:focus {
+  border-bottom-color: rgba(100, 170, 255, 0.65);
+  outline: 2px solid var(--color-sacred);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .my-wall-page__contrib-input::placeholder {
@@ -1977,6 +1985,13 @@
   .id-chip__input { font-size: 0.95rem; width: 60px; }
   .id-chip__input--number { font-size: 1.2rem; width: 40px; }
   .id-chip__input--hero { width: 40px; }
+}
+
+/* Focus indicator for identity chip inputs (a11y) */
+.id-chip__input:focus {
+  border-bottom-color: var(--color-heat);
+  outline: 2px solid var(--color-sacred);
+  outline-offset: 2px;
 }
 
 /* ─── Confirmation modal ───────────────────────────────────────────────── */

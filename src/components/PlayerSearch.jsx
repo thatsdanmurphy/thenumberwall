@@ -123,6 +123,7 @@ export default function PlayerSearch({ number, onPlace, onCancel, hideHeader = f
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Someone else? Search or type a name..."
+          aria-label="Search for a player by name"
           onKeyDown={e => {
             if (e.key === 'Escape') onCancel()
             if (e.key === 'Enter' && results.length === 0 && query.length >= 2) {
