@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
 import AppShell     from '../components/AppShell.jsx'
@@ -8,6 +8,7 @@ import WallGrid     from '../components/WallGrid.jsx'
 import PlayerPanel  from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import { nyLegends, nyCurrent, buildFilteredIndex } from '../data/index.js'
+import { fetchWallScores, fetchMyVotes, castPlayerVote } from '../lib/playerVoteStore.js'
 import './NewYorkPage.css'
 
 // Dynamic season label: "25/26" — flips in July each year
@@ -33,6 +34,67 @@ export default function NewYorkPage() {
   useEffect(() => { document.title = 'The New York Wall | The Number Wall' }, [])
   const [selected,     setSelected]     = useState(null)
   const [sportFilter,  setSportFilter]  = useState(null)
+
+  // ── Vote state (legends tab only) ────────────────────────────────────────
+  const [voteScores, setVoteScores] = useState(null)   // Map: "number|name" → { netScore, totalVotes }
+  const [myVotes,    setMyVotes]    = useState(null)    // Map: "number|name" → 1 | -1
+
+  // Fetch scores + user votes on mount and tab change
+  useEffect(() => {
+    if (tab !== 'legends') { setVoteScores(null); setMyVotes(null); return }
+    let stale = false
+    async function load() {
+      const [scores, mine] = await Promise.all([
+        fetchWallScores('newyork'),
+        fetchMyVotes('newyork'),
+      ])
+      if (!stale) { setVoteScores(scores); setMyVotes(mine) }
+    }
+    load()
+    return () => { stale = true }
+  }, [tab])
+
+  // Vote callback — optimistic update + persist
+  const handlePlayerVote = useCallback(async (number, playerName, direction) => {
+    const key = `${number}|${playerName}`
+    const currentVote = myVotes?.get(key) ?? null
+    const newDir = await castPlayerVote('newyork', number, playerName, direction)
+
+    // Optimistic: update myVotes
+    setMyVotes(prev => {
+      const next = new Map(prev)
+      if (newDir === null) next.delete(key)
+      else next.set(key, newDir)
+      return next
+    })
+
+    // Optimistic: update voteScores
+    setVoteScores(prev => {
+      const next = new Map(prev)
+      const existing = next.get(key) ?? { netScore: 0, totalVotes: 0 }
+      let delta = 0
+      let countDelta = 0
+      if (newDir === null) {
+        // Toggled off
+        delta = -currentVote
+        countDelta = -1
+      } else if (currentVote === null) {
+        // New vote
+        delta = newDir
+        countDelta = 1
+      } else {
+        // Changed direction: remove old, add new
+        delta = newDir - currentVote
+      }
+      next.set(key, {
+        netScore: existing.netScore + delta,
+        totalVotes: existing.totalVotes + countDelta,
+      })
+      return next
+    })
+
+    return newDir
+  }, [myVotes])
 
   const baseData = tab === 'legends' ? nyLegends : nyCurrent
 
@@ -102,6 +164,9 @@ export default function NewYorkPage() {
             mode={tab === 'current' ? 'current' : 'default'}
             sportFilter={sportFilter}
             wallId={tab === 'current' ? 'none' : 'newyork'}
+            voteScores={tab === 'legends' ? voteScores : null}
+            myVotes={tab === 'legends' ? myVotes : null}
+            onPlayerVote={tab === 'legends' ? handlePlayerVote : null}
           />
 
         </div>

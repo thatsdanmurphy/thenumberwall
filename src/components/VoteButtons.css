@@ -1,0 +1,81 @@
+/* VoteButtons — Reddit-style up/down vote controls */
+
+.vote-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-width: 32px;
+  flex-shrink: 0;
+}
+
+.vote-buttons--compact {
+  min-width: 24px;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+.vote-buttons__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--color-text-muted, rgba(255, 255, 255, 0.4));
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.vote-buttons--compact .vote-buttons__btn {
+  width: 22px;
+  height: 18px;
+}
+
+.vote-buttons__btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.vote-buttons__btn--up:hover,
+.vote-buttons__btn--up.vote-buttons__btn--active {
+  color: var(--color-accent, rgba(232, 124, 42, 1));
+}
+
+.vote-buttons__btn--down:hover,
+.vote-buttons__btn--down.vote-buttons__btn--active {
+  color: rgba(120, 140, 255, 0.85);
+}
+
+.vote-buttons__btn--active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Score ───────────────────────────────────────────────────────────────── */
+
+.vote-buttons__score {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-text-muted, rgba(255, 255, 255, 0.5));
+  letter-spacing: 0.02em;
+  min-width: 20px;
+  text-align: center;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.vote-buttons--compact .vote-buttons__score {
+  font-size: 10px;
+}
+
+.vote-buttons__score--up {
+  color: var(--color-accent, rgba(232, 124, 42, 1));
+}
+
+.vote-buttons__score--down {
+  color: rgba(120, 140, 255, 0.85);
+}

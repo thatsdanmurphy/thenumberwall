@@ -7,6 +7,7 @@ import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { pickKey } from '../lib/storageKeys.js'
 import associationsData from '../data/associations.json'
+import VoteButtons from './VoteButtons.jsx'
 import './PlayerPanel.css'
 
 // Players with a full-career Legend Timeline. Name-matched (case-insensitive).
@@ -87,7 +88,7 @@ function shareNumber(number) {
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
 // Exported so the Design System page can render the real card (reuse discipline —
 // the DS must mirror the build, not a parallel sketch).
-export function PlayerCard({ entry, isTop = false }) {
+export function PlayerCard({ entry, isTop = false, voteData = null }) {
   const navigate       = useNavigate()
   const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
@@ -100,6 +101,18 @@ export function PlayerCard({ entry, isTop = false }) {
   return (
     <div className={`player-card${isTop ? ' player-card--top' : ''}`}>
       <div className="player-card__row">
+
+        {/* ── Vote buttons (NYC mode) ──────────────────── */}
+        {voteData && (
+          <VoteButtons
+            netScore={voteData.netScore}
+            myVote={voteData.myVote}
+            onVote={voteData.onVote}
+            playerName={entry.name}
+            number={entry.number}
+            compact
+          />
+        )}
 
         <div className="player-card__info">
           <div className="player-card__name-row">
@@ -433,7 +446,7 @@ function useSwipeDown(panelRef, onClose) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global' }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global', voteScores = null, myVotes = null, onPlayerVote = null }) {
   const [copied, setCopied] = useState(false)
   const panelRef = useRef(null)
   useSwipeDown(panelRef, onClear)
@@ -449,9 +462,20 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
     ? ((assoc.seedVotes[assoc.options[0]?.id] ?? 0) >= (assoc.seedVotes[assoc.options[1]?.id] ?? 0) ? 0 : 1)
     : 0
 
-  // Cards sort by tier + stat weight — independent of the debate.
-  // The debate asks a contextual question; the cards show the global legend ranking.
-  const legends = sortLegends(entries.filter(e => e.tier !== 'UNWRITTEN'))
+  // Cards sort by tier + stat weight — or by net votes when voting is active.
+  const votingMode = Boolean(voteScores)
+  const legendsBase = entries.filter(e => e.tier !== 'UNWRITTEN')
+  const legends = votingMode
+    ? [...legendsBase].sort((a, b) => {
+        const scoreA = voteScores.get(`${a.number}|${a.name}`)?.netScore ?? 0
+        const scoreB = voteScores.get(`${b.number}|${b.name}`)?.netScore ?? 0
+        if (scoreB !== scoreA) return scoreB - scoreA
+        // Tie-break: fall back to tier + stat weight
+        const tierDiff = (TIER_RANK[a.tier] ?? 9) - (TIER_RANK[b.tier] ?? 9)
+        if (tierDiff !== 0) return tierDiff
+        return (b.statWeight || 0) - (a.statWeight || 0)
+      })
+    : sortLegends(legendsBase)
 
   const isSacred    = legends.some(e => e.tier === 'SACRED')
   const heat        = getHeatStyle(legends, isSacred)
@@ -545,13 +569,14 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
             )}
 
             {/* ── Who owns this number? ──
+                 Voting mode (NYC): skip debates entirely — votes drive ordering.
                  Sport filter active + debate exists → full vote mechanic.
                  Sport filter active + no debate but 2+ legends → crowd pick.
                  ALL view + contested → light "contested" nudge, no vote. */}
-            {sportFilter && sportFilter.size > 0 && (assoc || (!isSacred && legendCount >= 2)) && (
+            {!votingMode && sportFilter && sportFilter.size > 0 && (assoc || (!isSacred && legendCount >= 2)) && (
               <YourNumberPick number={number} legends={legends} assoc={assoc} leadIdx={panelLeadIdx} />
             )}
-            {(!sportFilter || sportFilter.size === 0) && !isSacred && legendCount >= 2 && (
+            {!votingMode && (!sportFilter || sportFilter.size === 0) && !isSacred && legendCount >= 2 && (
               <div className="player-panel__contested">
                 <span className="player-panel__contested-label">CONTESTED</span>
                 <span className="player-panel__contested-hint">
@@ -563,9 +588,17 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
             {/* ── Legend cards ─────────────────────────────────── */}
             {legendCount > 0 && (
               <div className="player-panel__cards">
-                {legends.map((entry, i) => (
-                  <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} />
-                ))}
+                {legends.map((entry, i) => {
+                  const voteKey = `${entry.number}|${entry.name}`
+                  const cardVoteData = votingMode ? {
+                    netScore: voteScores.get(voteKey)?.netScore ?? 0,
+                    myVote:   myVotes?.get(voteKey) ?? null,
+                    onVote:   (dir) => onPlayerVote?.(number, entry.name, dir),
+                  } : null
+                  return (
+                    <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} voteData={cardVoteData} />
+                  )
+                })}
                 <a
                   className="player-panel__add-legend"
                   href={`mailto:dan@thenumberwall.com?subject=Add a Legend — %23${number}`}

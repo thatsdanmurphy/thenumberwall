@@ -1,0 +1,139 @@
+/* GlobalInterestMap — world map with interest pings.
+   Matches the WallsMap visual language: muted fill, glowing dots, dark stage. */
+
+.global-interest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-3) var(--space-3);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.global-interest__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.global-interest__label {
+  font-family: var(--font-scoreboard, 'JetBrains Mono', monospace);
+  font-size: var(--text-micro, 10px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, rgba(255, 255, 255, 0.45));
+}
+
+.global-interest__count {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: var(--text-micro, 10px);
+  color: var(--color-accent, rgba(232, 124, 42, 0.7));
+  letter-spacing: 0.08em;
+}
+
+/* ── Map stage ──────────────────────────────────────────────────────────── */
+
+.global-interest__stage {
+  position: relative;
+  width: 100%;
+}
+
+.global-interest__country {
+  fill: rgba(255, 255, 255, 0.07);
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+/* ── Dots ────────────────────────────────────────────────────────────────── */
+
+.global-interest__dot {
+  fill: var(--color-accent, rgba(232, 124, 42, 1));
+  fill-opacity: 0.85;
+  filter: drop-shadow(0 0 6px rgba(232, 124, 42, 0.6));
+}
+
+.global-interest__dot-pulse {
+  fill: var(--color-accent, rgba(232, 124, 42, 1));
+  fill-opacity: 0.25;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: global-interest-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes global-interest-pulse {
+  0%   { transform: scale(0.5); fill-opacity: 0.35; }
+  70%  { transform: scale(2.0); fill-opacity: 0.00; }
+  100% { transform: scale(2.0); fill-opacity: 0.00; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-interest__dot-pulse { animation: none; fill-opacity: 0.2; }
+}
+
+/* ── CTA area ───────────────────────────────────────────────────────────── */
+
+.global-interest__cta-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: var(--space-1) 0;
+}
+
+.global-interest__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm, 13px);
+}
+
+.global-interest__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-scoreboard, 'JetBrains Mono', monospace);
+  font-size: var(--text-micro, 10px);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, rgba(255, 255, 255, 0.45));
+}
+
+.global-interest__status--done {
+  color: var(--color-accent, rgba(232, 124, 42, 0.8));
+}
+
+.global-interest__status--error {
+  color: rgba(255, 80, 80, 0.8);
+}
+
+.global-interest__spinner {
+  animation: global-interest-spin 1s linear infinite;
+}
+
+@keyframes global-interest-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Label form ─────────────────────────────────────────────────────────── */
+
+.global-interest__label-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 400px;
+}
+
+.global-interest__label-input {
+  flex: 1;
+  font-size: var(--text-sm, 13px);
+}
+
+.global-interest__submit {
+  flex-shrink: 0;
+  font-size: var(--text-sm, 13px);
+}

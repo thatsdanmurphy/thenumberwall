@@ -13,6 +13,7 @@ import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
 import CreateTeamWall from '../components/CreateTeamWall.jsx'
 import WallsMap from '../components/WallsMap.jsx'
+import GlobalInterestMap from '../components/GlobalInterestMap.jsx'
 import { getActiveWallsWithSignals, browseTeamWalls, slugify } from '../lib/teamWallStore.js'
 import { TEAM_PALETTES } from '../data/teamColors.js'
 import './TeamWallsPage.css'
@@ -87,6 +88,7 @@ export default function TeamWallsPage() {
           </div>
 
           <WallsMap />
+          <GlobalInterestMap />
         </div>
 
         {/* ── Right: Search + Cards ────────────────────────── */}
