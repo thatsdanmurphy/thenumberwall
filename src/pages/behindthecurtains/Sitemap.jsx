@@ -123,6 +123,7 @@ const GROUPS = [
           { path: '/behindthecurtains/sitemap',     name: 'Sitemap',      desc: 'This page.',                                 status: 'LIVE' },
           { path: '/behindthecurtains/flows',       name: 'Flows',        desc: 'The journeys that matter.',                  status: 'LIVE' },
           { path: '/behindthecurtains/engineering', name: 'Engineering',  desc: 'Stack, structure, conventions.',             status: 'LIVE' },
+          { path: '/behindthecurtains/workflow',    name: 'Workflow',     desc: 'Process, rhythm, trade-offs, how work ships.', status: 'LIVE' },
           { path: '/behindthecurtains/marketing',   name: 'Marketing',    desc: 'Kit, audiences, voice.',                     status: 'DRAFT' },
           { path: '/behindthecurtains/research',    name: 'Research',     desc: 'Testing, findings, insights.',               status: 'DRAFT' },
           { path: '/behindthecurtains/analytics',   name: 'Analytics',    desc: 'Traffic, behaviour, Vercel.',                status: 'DRAFT' },
@@ -233,9 +234,11 @@ export default function Sitemap() {
         <div className="sm-banner__eyebrow">02 · Sitemap</div>
         <h1 className="sm-banner__title">EVERY ROUTE, EVERY PAGE</h1>
         <p className="sm-banner__lede">
-          The shape of the product as a map. Each box is a real page; each
-          arrow is the parent→child relationship. Click a box to open the
-          real page in a new tab.
+          The reference map. Every route the product serves, drawn as boxes
+          with parent→child arrows. Status is honest — if it's live, it's
+          live. If it's a sketch, it says so. Click any box to open the
+          real page. For how people actually move through these routes,
+          see <Link to="/behindthecurtains/flows" className="sm-banner__link">Flows</Link>.
         </p>
 
         <div className="sm-pulse">

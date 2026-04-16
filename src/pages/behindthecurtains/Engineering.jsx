@@ -12,8 +12,7 @@
 
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Layers, Database, Palette, GitBranch, Rocket, BookOpen } from 'lucide-react'
-import { wallData, bostonLegends, bostonCurrent, HEAT_TILES, SACRED_TILE, TILE_NUMBERS } from '../../data/index.js'
-import { TIER_WEIGHT, TIER_DESC } from '../../data/tiers.js'
+import { wallData, bostonLegends, bostonCurrent } from '../../data/index.js'
 import './engineering.css'
 
 // ── Live stats ────────────────────────────────────────────────────────────────
@@ -22,8 +21,6 @@ const LIVE_STATS = [
   { label: 'Global legends',  value: wallData.filter(e => e.tier !== 'UNWRITTEN').length },
   { label: 'Boston legends',  value: bostonLegends.length },
   { label: 'Boston current',  value: bostonCurrent.length },
-  { label: 'Tile numbers',    value: TILE_NUMBERS.length },
-  { label: 'Heat levels',     value: HEAT_TILES.length },
 ]
 
 // ── Stack ─────────────────────────────────────────────────────────────────────
@@ -86,40 +83,6 @@ const PIPELINE = [
   { step: 'Deploy', desc: 'git push main → Vercel picks it up → live in ~45s.', icon: Rocket },
 ]
 
-// ── Heat swatch ───────────────────────────────────────────────────────────────
-
-const HEAT_LABELS = ['Unwritten', 'Ember', 'Warm', 'Hot', 'Blazing', 'Inferno']
-
-function HeatSwatch({ level, style, label }) {
-  return (
-    <div className="eng-heat__swatch">
-      <div
-        className="eng-heat__tile"
-        style={{
-          background: style.bg,
-          borderColor: style.border,
-          boxShadow: style.glow,
-          color: style.text,
-        }}
-      >
-        {String(level).padStart(2, '0')}
-      </div>
-      <span className="eng-heat__label">{label}</span>
-    </div>
-  )
-}
-
-// ── Tier row ──────────────────────────────────────────────────────────────────
-
-function TierRow({ name, weight, desc }) {
-  return (
-    <div className="eng-tier__row">
-      <span className="eng-tier__name">{name}</span>
-      <span className="eng-tier__weight">{weight}</span>
-      <span className="eng-tier__desc">{desc}</span>
-    </div>
-  )
-}
 
 // ── The page ──────────────────────────────────────────────────────────────────
 
@@ -231,43 +194,23 @@ export default function Engineering() {
         </p>
       </section>
 
-      {/* ── Heat system ─────────────────────────────────────────── */}
+      {/* ── Heat & Tier system ──────────────────────────────────── */}
       <section className="eng-section">
-        <h2 className="eng-section__title"><Palette size={18} /> The Heat System</h2>
+        <h2 className="eng-section__title"><Palette size={18} /> The Heat & Tier System</h2>
         <p className="eng-section__lede">
-          Every tile on the wall glows based on how many legends have worn that
-          number — and how significant those legends are. Six heat levels, from
-          unwritten (dark, invisible) to inferno (blazing orange-gold). The
-          swatches below are rendered from the same style objects the real
-          tiles use.
+          Every tile glows based on who wore the number and how significant they are.
+          Six heat levels from unwritten to inferno, plus sacred gold for the
+          untouchable numbers. Heat is computed from tier weights — each legend is
+          classified as Sacred, Legend, Icon, Conditional, Active, or Unwritten, and
+          the tier weights feed the glow.
         </p>
-        <div className="eng-heat">
-          {HEAT_TILES.map((style, i) => (
-            <HeatSwatch key={i} level={i} style={style} label={HEAT_LABELS[i]} />
-          ))}
-          <HeatSwatch level="S" style={SACRED_TILE} label="Sacred" />
-        </div>
-      </section>
-
-      {/* ── Tier system ─────────────────────────────────────────── */}
-      <section className="eng-section">
-        <h2 className="eng-section__title">The Tier System</h2>
         <p className="eng-section__lede">
-          Every legend is assigned a tier. Tier isn't subjective — it's a
-          defined classification with a numeric weight that feeds into the heat
-          system. Higher weight means the tile burns hotter. These values are
-          imported from <code>data/tiers.js</code> — the same file the product reads.
+          Both systems are rendered live — with actual swatches and weight tables —
+          on the{' '}
+          <Link to="/behindthecurtains/design" className="eng-link">
+            Design System page
+          </Link>.
         </p>
-        <div className="eng-tiers">
-          <div className="eng-tier__header">
-            <span>Tier</span>
-            <span>Weight</span>
-            <span>Meaning</span>
-          </div>
-          {Object.entries(TIER_WEIGHT).map(([name, weight]) => (
-            <TierRow key={name} name={name} weight={weight} desc={TIER_DESC[name]} />
-          ))}
-        </div>
       </section>
 
       {/* ── Conventions ─────────────────────────────────────────── */}

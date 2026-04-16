@@ -93,6 +93,16 @@
   color: var(--color-heat);
 }
 
+.eng-link {
+  color: var(--color-heat);
+  text-decoration: none;
+  transition: color var(--motion-hover);
+}
+
+.eng-link:hover {
+  color: var(--color-blaze);
+}
+
 .eng-section__note {
   font-family: var(--font-scoreboard);
   font-size: var(--text-label);

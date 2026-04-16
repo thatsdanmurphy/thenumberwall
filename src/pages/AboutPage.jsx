@@ -100,11 +100,25 @@ export default function AboutPage() {
         <section className="about-page__section">
           <h2 className="about-page__subheading">WHO BUILT THIS</h2>
           <p className="about-page__body">
-            Built by Dan Murphy. The idea started with a simple observation: when a kid gets assigned a jersey number, that moment means nothing. It should mean everything.
+            Built by Dan Murphy — product thinker, BC kid, lifelong sports fan who believes jersey numbers carry weight that nobody's bothered to organize. The Number Wall started with a simple observation: when a kid gets assigned a jersey number, that moment means nothing. It should mean everything. So he built the place where it does.
           </p>
           <a href="mailto:dan@thenumberwall.com" className="tnw-btn tnw-btn--secondary about-page__cta">
             DAN@THENUMBERWALL.COM
           </a>
+        </section>
+
+        <hr className="about-page__rule" />
+
+        <section className="about-page__section">
+          <h2 className="about-page__subheading">HOW IT'S MADE</h2>
+          <p className="about-page__body">
+            The Number Wall is documented from the inside out — the design system, the engineering decisions, the user flows, the trade-offs. If you're curious how a solo founder ships a product like this, the whole story is open.
+          </p>
+          <Link to="/behindthecurtains" className="about-page__city-cta">
+            <span className="about-page__city-cta-name">BEHIND THE CURTAINS</span>
+            <span className="about-page__city-cta-teams">Design · Engineering · Flows · Process</span>
+            <ChevronRight size={16} className="about-page__city-cta-arrow" aria-hidden="true" />
+          </Link>
         </section>
 
         <hr className="about-page__rule" />

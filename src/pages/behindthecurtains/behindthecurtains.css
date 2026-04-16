@@ -300,3 +300,47 @@
   padding-left: var(--space-3);
   border-left: 1px solid var(--border-soft);
 }
+
+/* ── North star conviction block ──────────────────────────────────────── */
+
+.btc-home__north-star {
+  border-left: 3px solid var(--color-heat);
+  padding: var(--space-3) var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--color-paper);
+  max-width: 56ch;
+}
+
+/* ── Roadmap thesis ──────────────────────────────────────────────────── */
+
+.btc-home__roadmap {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.btc-home__roadmap-title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h2);
+  letter-spacing: 0.04em;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.btc-home__roadmap-line {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.btc-home__roadmap-line strong {
+  color: var(--color-paper);
+}

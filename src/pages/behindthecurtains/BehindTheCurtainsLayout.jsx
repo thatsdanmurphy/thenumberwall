@@ -18,6 +18,7 @@ const SECTIONS = [
   { to: '/behindthecurtains/sitemap',     label: 'Sitemap',    note: 'Every route, every page' },
   { to: '/behindthecurtains/flows',       label: 'Flows',      note: 'Key user journeys' },
   { to: '/behindthecurtains/engineering', label: 'Engineering', note: 'Stack, structure, conventions' },
+  { to: '/behindthecurtains/workflow',    label: 'Workflow',    note: 'Process, rhythm, trade-offs' },
   { to: '/behindthecurtains/marketing',   label: 'Marketing',  note: 'Kit, audiences, voice' },
   { to: '/behindthecurtains/research',    label: 'Research',   note: 'Testing, findings, insights' },
   { to: '/behindthecurtains/analytics',   label: 'Analytics',  note: 'Traffic, behaviour, Vercel' },

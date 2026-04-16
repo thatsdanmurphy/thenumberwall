@@ -20,6 +20,7 @@ import BehindTheCurtainsStub   from './pages/behindthecurtains/Stub.jsx'
 import Sitemap                 from './pages/behindthecurtains/Sitemap.jsx'
 import Flows                   from './pages/behindthecurtains/Flows.jsx'
 import Engineering             from './pages/behindthecurtains/Engineering.jsx'
+import HowWorkHappens          from './pages/behindthecurtains/HowWorkHappens.jsx'
 
 export default function App() {
   return (
@@ -48,13 +49,13 @@ export default function App() {
           <Route path="design" element={<DesignSystem />} />
           <Route path="sitemap" element={<Sitemap />} />
           <Route path="flows" element={<Flows />} />
-          <Route path="engineering" element={<Engineering />}
-          />
+          <Route path="engineering" element={<Engineering />} />
+          <Route path="workflow" element={<HowWorkHappens />} />
           <Route
             path="marketing"
             element={
               <BehindTheCurtainsStub
-                eyebrow="05 · Marketing"
+                eyebrow="06 · Marketing"
                 title="HOW IT REACHES PEOPLE"
                 lede="The audience, the voice, the channels. Subscribers, captured interest, and what we've said out loud."
                 plan={[
@@ -71,7 +72,7 @@ export default function App() {
             path="research"
             element={
               <BehindTheCurtainsStub
-                eyebrow="06 · Research"
+                eyebrow="07 · Research"
                 title="WHAT WE'VE LEARNED"
                 lede="Every conversation, test, and reaction that shaped the product. The goal isn't a research library — it's a short, honest record of what users actually did and said, and what we changed as a result."
                 plan={[
@@ -87,7 +88,7 @@ export default function App() {
             path="analytics"
             element={
               <BehindTheCurtainsStub
-                eyebrow="07 · Analytics"
+                eyebrow="08 · Analytics"
                 title="WHAT IT'S DOING"
                 lede="Vercel data rendered the way we think — not the way their default dashboard thinks. Tied into the sitemap so each page shows its own pulse."
                 plan={[

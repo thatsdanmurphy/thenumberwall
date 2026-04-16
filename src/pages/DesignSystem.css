@@ -223,7 +223,29 @@
 .ds-ink {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-3);
+}
+
+.ds-ink__row {
+  display: grid;
+  grid-template-columns: 32px auto 1fr 2fr;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.ds-ink__swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-faint);
+}
+
+.ds-ink__value {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-paper);
 }
 
 .ds-ink__sample {
@@ -368,14 +390,22 @@
 .ds-motion {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .ds-motion__row {
   display: grid;
-  grid-template-columns: 140px 180px 1fr;
-  gap: var(--space-3);
-  align-items: center;
+  grid-template-columns: auto 1fr 2fr;
+  gap: var(--space-2) var(--space-3);
+  align-items: baseline;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.ds-motion__value {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-caption);
+  color: var(--color-paper);
 }
 
 .ds-motion__demo {
@@ -993,12 +1023,14 @@
   .ds-ramp__row,
   .ds-track__row,
   .ds-space__row,
-  .ds-motion__row {
+  .ds-motion__row,
+  .ds-ink__row {
     grid-template-columns: 1fr;
     gap: var(--space-1);
   }
   .ds-ramp__note,
-  .ds-motion__row .ds-swatch__note {
+  .ds-motion__row .ds-swatch__note,
+  .ds-ink__row .ds-swatch__note {
     justify-self: start;
     text-align: left;
   }

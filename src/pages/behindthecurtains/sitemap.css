@@ -47,6 +47,13 @@
   margin: 0;
 }
 
+.sm-banner__link {
+  color: var(--color-heat);
+  text-decoration: none;
+  transition: color var(--motion-hover);
+}
+.sm-banner__link:hover { color: var(--color-blaze); }
+
 /* Pulse strip — live counts */
 
 .sm-pulse {

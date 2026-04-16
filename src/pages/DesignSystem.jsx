@@ -108,6 +108,20 @@ const BREAKPOINTS = [
   { label: 'Wide',    range: '1280px+',  wallCols: 12, pageCols: 12, margin: 96, gutter: 24 },
 ]
 
+const MOTION = [
+  { name: '--motion-hover',  value: '180ms ease-out',     note: 'Micro-interactions. Buttons, links, tile borders.' },
+  { name: '--motion-reveal', value: '250ms ease-in-out',  note: 'Panels, modals, content entering the viewport.' },
+  { name: '--motion-heat',   value: '300ms ease-in-out',  note: 'Tile glow transitions, heat state changes.' },
+  { name: '--motion-color',  value: '200ms ease-out',     note: 'Color fades, border color transitions.' },
+]
+
+const INK = [
+  { name: '--ink-dim',  value: 'rgba(255,255,255, 0.50)', note: 'Placeholder text, dormant tabs, lowest readable.' },
+  { name: '--ink-low',  value: 'rgba(255,255,255, 0.60)', note: 'Secondary labels, supporting text.' },
+  { name: '--ink-mid',  value: 'rgba(255,255,255, 0.70)', note: 'Body text on dim surfaces.' },
+  { name: '--ink-high', value: 'rgba(255,255,255, 0.85)', note: 'Default body text. The workhorse.' },
+]
+
 // ── Tile language ──────────────────────────────────────────────────────────
 
 const HEAT_LEVELS = [
@@ -407,6 +421,37 @@ export default function DesignSystem() {
             ))}
           </div>
         </SubSection>
+
+        <SubSection
+          title="Motion"
+          note="Four timing curves for different interactions. Hover is snappy. Reveal and heat transitions are smooth. Color fades are quick."
+        >
+          <div className="ds-motion">
+            {MOTION.map(m => (
+              <div key={m.name} className="ds-motion__row">
+                <code className="ds-code">{m.name}</code>
+                <span className="ds-motion__value">{m.value}</span>
+                <span className="ds-swatch__note">{m.note}</span>
+              </div>
+            ))}
+          </div>
+        </SubSection>
+
+        <SubSection
+          title="Ink Hierarchy"
+          note="Four opacity steps for readable text on dark surfaces. Each step has a purpose — from placeholder dimness to body text boldness."
+        >
+          <div className="ds-ink">
+            {INK.map(i => (
+              <div key={i.name} className="ds-ink__row">
+                <div className="ds-ink__swatch" style={{ backgroundColor: i.value }} />
+                <code className="ds-code">{i.name}</code>
+                <span className="ds-ink__value">{i.value}</span>
+                <span className="ds-swatch__note">{i.note}</span>
+              </div>
+            ))}
+          </div>
+        </SubSection>
       </Section>
 
       {/* ── 02. Tile Language ───────────────────────────────────── */}
@@ -702,9 +747,9 @@ export default function DesignSystem() {
         id="accessibility"
         eyebrow="06"
         title="Accessibility"
-        intro="WCAG AA is the floor, not a goal. Every component, every page, every interaction must clear it. These standards are non-negotiable — they exist because a product that can't be used by everyone isn't finished."
+        intro="The product is only as good as who can use it. WCAG AA is the baseline — not because a checklist says so, but because a fan navigating by keyboard or reading on a low-contrast screen deserves the same wall everyone else sees. These standards exist because we got them wrong before we got them right."
       >
-        <SubSection title="Color Contrast" note="Minimum contrast ratios on --color-night (#080C10) backgrounds.">
+        <SubSection title="Color Contrast" note="These ratios were tested against --color-night. Every muted label, every dim placeholder, every dormant tab — if it carries meaning, it clears 4.5:1.">
           <div className="ds-a11y-rules">
             <div className="ds-a11y-rule">
               <span className="ds-a11y-rule__label">Normal text (under 18px / 14px bold)</span>
@@ -733,7 +778,7 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Type Floors" note="Minimum rendered sizes to prevent illegibility and iOS auto-zoom.">
+        <SubSection title="Type Floors" note="Small text is tempting on a dark UI. These are the lines we don't cross.">
           <div className="ds-a11y-rules">
             <div className="ds-a11y-rule">
               <span className="ds-a11y-rule__label">Body text minimum</span>
@@ -754,7 +799,7 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Focus Indicators" note="Every interactive element must show a visible focus ring on keyboard navigation.">
+        <SubSection title="Focus Indicators" note="If you can't see where you are, you can't use the product. Every interactive element gets a visible ring on Tab.">
           <div className="ds-a11y-rules">
             <div className="ds-a11y-rule">
               <span className="ds-a11y-rule__label">Global <code>:focus-visible</code> ring</span>
@@ -775,7 +820,7 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="ARIA & Semantics" note="Rules for accessible markup across the product.">
+        <SubSection title="ARIA & Semantics" note="Screen readers don't see the glow. They need the markup to be honest.">
           <div className="ds-a11y-rules">
             <div className="ds-a11y-rule">
               <span className="ds-a11y-rule__label">Every <code>&lt;input&gt;</code> without a visible label</span>
@@ -800,7 +845,7 @@ export default function DesignSystem() {
           </div>
         </SubSection>
 
-        <SubSection title="Keyboard Navigation" note="Every flow must be completable without a mouse.">
+        <SubSection title="Keyboard Navigation" note="Every flow on this product — tap a tile, claim a number, build a wall — should work with a keyboard alone.">
           <div className="ds-a11y-rules">
             <div className="ds-a11y-rule">
               <span className="ds-a11y-rule__label">Tab order</span>
