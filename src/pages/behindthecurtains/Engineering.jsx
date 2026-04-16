@@ -12,7 +12,7 @@
 
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Layers, Database, Palette, GitBranch, Rocket, BookOpen } from 'lucide-react'
-import { wallData, bostonLegends, bostonCurrent, bcLegends, HEAT_TILES, SACRED_TILE, TILE_NUMBERS } from '../../data/index.js'
+import { wallData, bostonLegends, bostonCurrent, HEAT_TILES, SACRED_TILE, TILE_NUMBERS } from '../../data/index.js'
 import { TIER_WEIGHT, TIER_DESC } from '../../data/tiers.js'
 import './engineering.css'
 
@@ -22,7 +22,6 @@ const LIVE_STATS = [
   { label: 'Global legends',  value: wallData.filter(e => e.tier !== 'UNWRITTEN').length },
   { label: 'Boston legends',  value: bostonLegends.length },
   { label: 'Boston current',  value: bostonCurrent.length },
-  { label: 'BC legends',      value: bcLegends.length },
   { label: 'Tile numbers',    value: TILE_NUMBERS.length },
   { label: 'Heat levels',     value: HEAT_TILES.length },
 ]
@@ -161,6 +160,32 @@ export default function Engineering() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── Data strategy ─────────────────────────────────────────── */}
+      <section className="eng-section">
+        <h2 className="eng-section__title"><Database size={18} /> The Data Strategy</h2>
+        <p className="eng-section__lede">
+          The content layer splits into two tiers by design. Curated content —
+          the legends on the global wall, the Boston wall, the tier assignments,
+          the fun facts — is static JSON compiled from relational CSVs and
+          shipped at build time. No API call, no loading spinner, no cold start.
+          The product feels instant because the data <em>is</em> the bundle.
+        </p>
+        <p className="eng-section__lede">
+          User-generated content — team walls, personal walls, votes, identity
+          claims — hits a Supabase Postgres backend with row-level security.
+          This tier accepts writes, handles auth, and scales independently.
+          The two tiers never cross: curated data doesn't depend on a database
+          being up, and user-generated data doesn't pollute the editorial layer.
+        </p>
+        <p className="eng-section__lede">
+          The result is a product that can show you every legend on every number
+          before the first network request completes — and still let thousands
+          of alumni build their own walls without any of that data touching the
+          core content. The architecture is the strategy: <em>curated is instant,
+          crowdsourced is live, and neither waits for the other</em>.
+        </p>
       </section>
 
       {/* ── Stack ───────────────────────────────────────────────── */}

@@ -4,9 +4,9 @@
    tokens — not screenshots. Sibling to Sitemap in banner rhythm. */
 
 .fl-page {
-  max-width: 1200px;
+  max-width: var(--grid-max-width);
   margin: 0 auto;
-  padding: var(--space-5) var(--space-4) var(--space-6);
+  padding: var(--space-5) var(--grid-margin) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -330,6 +330,7 @@
 
 .fl-thumb__scrim { fill: var(--surface-2); opacity: 0.55; }
 
+.fl-thumb__bar  { fill: var(--surface-1); stroke: var(--border-soft); stroke-width: 0.5; }
 .fl-thumb__link rect { fill: var(--color-muted); opacity: 0.8; }
 
 .fl-thumb__tile--pulse { fill: var(--color-heat); stroke: none; opacity: 0.6; }
@@ -412,7 +413,6 @@
 
 @media (max-width: 640px) {
   .fl-page {
-    padding: var(--space-4) var(--space-3) var(--space-5);
     gap: var(--space-5);
   }
   .fl-flow__title-row { flex-direction: column; align-items: flex-start; gap: var(--space-1); }

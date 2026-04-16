@@ -118,42 +118,63 @@ function ThumbScoreboard() {
 }
 
 function ThumbTimeline() {
-  // A waveform sweeping left to right with a bright peak at the end.
+  // Horizontal era bars rising left to right — a career gaining heat.
+  // Each bar is an era/chapter. Taller = more significance.
+  const bars = [
+    { x: 4,  w: 10, h: 18 },
+    { x: 16, w: 10, h: 28 },
+    { x: 28, w: 10, h: 22 },
+    { x: 40, w: 10, h: 36 },
+    { x: 52, w: 10, h: 48 },
+    { x: 64, w: 8,  h: 54 },
+  ]
   return (
     <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
-      <path
-        d="M4 50 C 10 46, 14 52, 20 44 C 26 38, 30 48, 36 36 C 42 28, 46 42, 52 26 C 58 18, 62 30, 68 14"
-        className="fl-thumb__wave"
-        fill="none"
-      />
-      {/* chapter ticks */}
-      <line x1={20} y1={8} x2={20} y2={70} className="fl-thumb__tick" />
-      <line x1={40} y1={8} x2={40} y2={70} className="fl-thumb__tick" />
-      <line x1={58} y1={8} x2={58} y2={70} className="fl-thumb__tick" />
-      {/* sacred gold peak */}
-      <circle cx={68} cy={14} r={3.5} className="fl-thumb__peak" />
+      {/* baseline */}
+      <line x1={2} y1={68} x2={72} y2={68} className="fl-thumb__tick" />
+      {bars.map((b, i) => (
+        <rect
+          key={i}
+          x={b.x} y={68 - b.h} width={b.w} height={b.h}
+          rx={1.5}
+          className={i === bars.length - 1 ? 'fl-thumb__accent' : 'fl-thumb__bar'}
+        />
+      ))}
+      {/* chapter labels */}
+      <rect x={4} y={4} width={18} height={2} rx={1} className="fl-thumb__line" />
+      <rect x={28} y={4} width={14} height={2} rx={1} className="fl-thumb__line" />
+      <rect x={52} y={4} width={12} height={2} rx={1} className="fl-thumb__line" />
     </svg>
   )
 }
 
 function ThumbTimelineMoment() {
-  // Same waveform but zoomed into the sacred-gold moment — peak is large,
-  // a label line sits beside it. Distinct from the overview waveform.
+  // Same era bars but the final bar is highlighted with a gold marker —
+  // the defining moment zoomed in on.
+  const bars = [
+    { x: 4,  w: 10, h: 18 },
+    { x: 16, w: 10, h: 28 },
+    { x: 28, w: 10, h: 22 },
+    { x: 40, w: 10, h: 36 },
+    { x: 52, w: 10, h: 48 },
+    { x: 64, w: 8,  h: 54 },
+  ]
   return (
     <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
-      <path
-        d="M4 58 C 12 54, 18 48, 26 40 C 34 32, 40 38, 48 24 C 54 16, 60 20, 68 10"
-        className="fl-thumb__wave"
-        fill="none"
-      />
-      {/* sacred gold moment — bigger, with a ring */}
-      <circle cx={68} cy={10} r={6} className="fl-thumb__dot-pulse-ring" />
-      <circle cx={68} cy={10} r={3.5} className="fl-thumb__peak" />
-      {/* label line */}
-      <rect x={38} y={6} width={22} height={2.5} rx={1} className="fl-thumb__accent" />
-      {/* context ticks faded */}
-      <line x1={20} y1={8} x2={20} y2={70} className="fl-thumb__tick" />
-      <line x1={42} y1={8} x2={42} y2={70} className="fl-thumb__tick" />
+      <line x1={2} y1={68} x2={72} y2={68} className="fl-thumb__tick" />
+      {bars.map((b, i) => (
+        <rect
+          key={i}
+          x={b.x} y={68 - b.h} width={b.w} height={b.h}
+          rx={1.5}
+          className={i === bars.length - 1 ? 'fl-thumb__accent' : 'fl-thumb__bar'}
+        />
+      ))}
+      {/* sacred gold marker on the peak bar */}
+      <circle cx={68} cy={10} r={5} className="fl-thumb__dot-pulse-ring" />
+      <circle cx={68} cy={10} r={2.5} className="fl-thumb__peak" />
+      {/* label beside the moment */}
+      <rect x={40} y={8} width={20} height={2.5} rx={1} className="fl-thumb__accent" />
     </svg>
   )
 }
