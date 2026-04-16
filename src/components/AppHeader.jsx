@@ -18,12 +18,6 @@ export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagl
           </button>
         ) : <span />}
         <nav className="app-header__nav">
-          <button className="app-header__nav-link" onClick={() => navigate('/boston')}>
-            Boston
-          </button>
-          <button className="app-header__nav-link" onClick={() => navigate('/newyork')}>
-            New York
-          </button>
           <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
             My Walls
           </button>
