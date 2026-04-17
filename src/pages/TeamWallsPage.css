@@ -24,7 +24,6 @@
 @media (min-width: 768px) {
   .twb-page {
     flex-direction: row;
-    flex-wrap: wrap;
     align-items: flex-start;
     gap: var(--space-4);
   }
@@ -339,23 +338,14 @@
 }
 
 /* ── Global interest CTA ────────────────────────────────────────────────── */
-/* Now a direct child of .twb-page (the flex row), so it spans the full
-   width beneath both the map and card columns. */
 
 .twb-global-cta {
-  flex-basis: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-4) var(--space-3);
-  border-top: 1px solid var(--border-soft);
+  padding: var(--space-3) var(--space-3) 0;
   font-family: var(--font-scoreboard);
   font-size: var(--text-small);
   letter-spacing: 0.08em;
   color: var(--color-muted);
-}
-
-@media (min-width: 768px) {
-  .twb-global-cta { margin-top: var(--space-2); }
 }

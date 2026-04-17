@@ -127,6 +127,10 @@ export default function TeamWallsPage() {
 
           <WallsMap />
 
+          <div className="twb-global-cta">
+            <Globe size={16} />
+            <span>Team outside the US? Let us know — we'll open up the map.</span>
+          </div>
         </div>
 
         {/* ── Right: Search + Cards ────────────────────────── */}
@@ -232,10 +236,6 @@ export default function TeamWallsPage() {
           )}
         </div>
 
-        <div className="twb-global-cta">
-          <Globe size={16} />
-          <span>Team outside the US? Let us know — we'll open up the map.</span>
-        </div>
       </main>
 
       <AppFooter />
