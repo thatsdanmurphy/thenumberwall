@@ -187,13 +187,13 @@
 
 .tw-year-chip {
   font-family: var(--font-scoreboard);
-  font-size: 0.5rem;
-  letter-spacing: 0.10em;
+  font-size: var(--text-body);
+  letter-spacing: 0.06em;
   color: var(--ink-dim);
   background: var(--surface-2);
   border: 1px solid var(--border-soft);
-  border-radius: 3px;
-  padding: 3px var(--space-2);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
   cursor: pointer;
   transition: background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
 }
@@ -205,7 +205,7 @@
 
 .tw-year-chip--active {
   background: var(--surface-3);
-  color: var(--ink-mid);
+  color: var(--color-paper);
   border-color: var(--border-strong);
 }
 
@@ -246,6 +246,23 @@
 .tw-add__input--half {
   flex:      1;
   min-width: 0;
+}
+
+.tw-add__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--ink-low);
+  cursor: pointer;
+}
+
+.tw-add__toggle input[type="checkbox"] {
+  accent-color: var(--color-heat);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 /* PositionPicker — sport-aware <select> + Other… free-text escape.
@@ -546,6 +563,22 @@
   align-items: center;
   gap: var(--space-1);
 }
+
+/* ── "Went Pro" ambient glow — slow breathing border for players who made it ── */
+
+@keyframes tw-pro-breathe {
+  0%, 100% { border-color: var(--tw-pro-glow-dim); box-shadow: 0 0 0 transparent; }
+  50%      { border-color: var(--tw-pro-glow-bright); box-shadow: 0 0 12px var(--tw-pro-glow-dim); }
+}
+
+.player-card--pro {
+  --tw-pro-glow-dim:    rgba(255, 255, 255, 0.12);
+  --tw-pro-glow-bright: rgba(255, 255, 255, 0.35);
+  animation: tw-pro-breathe 4s ease-in-out infinite;
+}
+
+/* When team palette injects custom glow color via inline style,
+   the vars override these defaults and the breathe stays on-brand. */
 
 /* ── Empty-tile invitation — lead line pops, supporting line tempers ──────── */
 

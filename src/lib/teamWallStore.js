@@ -360,7 +360,7 @@ export async function getEntryCounts(wallId) {
 
 // ─── Add an entry to a team wall ───────────────────────────────────────────
 
-export async function addTeamEntry(wallId, { number, name, gradYear, position, funFact }) {
+export async function addTeamEntry(wallId, { number, name, gradYear, position, funFact, wentPro }) {
   const fp = getFingerprint()
 
   const row = {
@@ -374,6 +374,7 @@ export async function addTeamEntry(wallId, { number, name, gradYear, position, f
 
   if (position) row.position = position
   if (funFact)  row.fun_fact = funFact.slice(0, 140)
+  if (wentPro)  row.went_pro = true
 
   const { data, error } = await supabase
     .from('team_wall_entries')
@@ -387,12 +388,13 @@ export async function addTeamEntry(wallId, { number, name, gradYear, position, f
 
 // ─── Update an entry (anyone can edit name, position, fun_fact, grad_year) ─
 
-export async function updateTeamEntry(entryId, { name, position, funFact, gradYear }) {
+export async function updateTeamEntry(entryId, { name, position, funFact, gradYear, wentPro }) {
   const updates = {}
   if (name !== undefined)     updates.name      = name
   if (position !== undefined) updates.position   = position || null
   if (funFact !== undefined)  updates.fun_fact   = funFact ? funFact.slice(0, 140) : null
   if (gradYear !== undefined) updates.grad_year  = gradYear ? Number(gradYear) : null
+  if (wentPro !== undefined)  updates.went_pro   = !!wentPro
 
   const { data, error } = await supabase
     .from('team_wall_entries')

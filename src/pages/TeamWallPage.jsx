@@ -47,6 +47,7 @@ export default function TeamWallPage() {
   const [addPosition, setAddPosition] = useState('')
   const [addGradYear, setAddGradYear] = useState('')
   const [addFunFact, setAddFunFact]   = useState('')
+  const [addWentPro, setAddWentPro]   = useState(false)
   const [addSubmitting, setAddSubmitting] = useState(false)
   const [addError, setAddError]       = useState(null)
   const [addSuccess, setAddSuccess]   = useState(false)
@@ -83,6 +84,7 @@ export default function TeamWallPage() {
   const [editPosition, setEditPosition] = useState('')
   const [editGradYear, setEditGradYear] = useState('')
   const [editFunFact, setEditFunFact] = useState('')
+  const [editWentPro, setEditWentPro] = useState(false)
   const [editSubmitting, setEditSubmitting] = useState(false)
   const [editError, setEditError]           = useState(null)
   const [coachError, setCoachError]         = useState(null)
@@ -124,9 +126,15 @@ export default function TeamWallPage() {
       .catch(err => { console.error('Could not load coaches:', err); setCoachesLoaded(true) })
   }, [wall, coachesLoaded])
 
+  // Reset coach state when navigating between sports/walls
+  useEffect(() => {
+    setCoaches([]); setCoachesLoaded(false); setCoachView(false)
+    setCoachEditingId(null); setCoachError(null)
+  }, [schoolSlug, sport])
+
   // Reset forms when selecting a different number
   useEffect(() => {
-    setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
+    setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact(''); setAddWentPro(false)
     setAddError(null); setAddSuccess(false); setShowAddForm(false)
     setEditingId(null); setYearFilter(null)
     if (selected) setCoachView(false)
@@ -207,8 +215,9 @@ export default function TeamWallPage() {
         gradYear: addGradYear ? Number(addGradYear) : null,
         position: addPosition.trim() || null,
         funFact: addFunFact.trim() || null,
+        wentPro: addWentPro,
       })
-      setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact('')
+      setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact(''); setAddWentPro(false)
       setAddSuccess(true)
       setShowAddForm(false)  // close form, back to card view
       await fetchWall()
@@ -245,6 +254,7 @@ export default function TeamWallPage() {
     setEditPosition(entry.position || '')
     setEditGradYear(entry.grad_year ? String(entry.grad_year) : '')
     setEditFunFact(entry.fun_fact || '')
+    setEditWentPro(!!entry.went_pro)
     setEditError(null)
   }
 
@@ -265,6 +275,7 @@ export default function TeamWallPage() {
         position: editPosition.trim() || null,
         gradYear: editGradYear ? Number(editGradYear) : null,
         funFact: editFunFact.trim() || null,
+        wentPro: editWentPro,
       })
       await fetchWall()
       // Close only after a successful save + refresh, so the form sticks
@@ -694,9 +705,9 @@ export default function TeamWallPage() {
                   </div>
 
                   <div className="tw-coach-panel">
-                    {/* Coach list */}
+                    {/* Coach list — reuses player-card layout */}
                     {coaches.length > 0 ? (
-                      <div className="tw-coach-list">
+                      <div className="player-panel__cards">
                         {coaches.map((coach, i) => (
                           coachEditingId === coach.id ? (
                             <form key={coach.id} className="tw-add" onSubmit={handleCoachSave}>
@@ -716,27 +727,32 @@ export default function TeamWallPage() {
                               </div>
                             </form>
                           ) : (
-                            <div key={coach.id} className="tw-coach-card" style={i === 0 ? {
+                            <div key={coach.id} className="player-card" style={i === 0 ? {
                               background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
                               borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
                             } : undefined}>
-                              <div className="tw-coach-card__head">
-                                <div className="tw-coach-card__name">{coach.name}</div>
-                                {!isArchived && (
-                                  <div className="tw-coach-card__actions">
-                                    <button className="tw-entry__edit" onClick={() => startEditCoach(coach)} aria-label="Edit coach">
-                                      <Pencil size={13} />
-                                    </button>
-                                    {(coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) || isCreator) && (
+                              <div className="player-card__row">
+                                <div className="player-card__info">
+                                  <div className="player-card__name-row">
+                                    <span className="player-card__name">{coach.name}</span>
+                                    {!isArchived && (
+                                      <button className="tw-entry__edit" onClick={() => startEditCoach(coach)} aria-label="Edit coach">
+                                        <Pencil size={14} />
+                                      </button>
+                                    )}
+                                    {!isArchived && (coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) || isCreator) && (
                                       <button className="tw-entry__delete" onClick={() => handleCoachDelete(coach)} aria-label="Remove coach">
-                                        {coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) ? <Trash2 size={13} /> : <EyeOff size={13} />}
+                                        {coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) ? <Trash2 size={11} /> : <EyeOff size={11} />}
                                       </button>
                                     )}
                                   </div>
-                                )}
+                                  <div className="player-card__badges">
+                                    <span className="player-card__badge player-card__badge--dim">Coach</span>
+                                    {coach.years && <span className="player-card__badge player-card__badge--dim">{coach.years}</span>}
+                                  </div>
+                                </div>
                               </div>
-                              {coach.years && <div className="tw-coach-card__years">{coach.years}</div>}
-                              {coach.fun_fact && <div className="tw-coach-card__fact">{coach.fun_fact}</div>}
+                              {coach.fun_fact && <div className="player-card__fact">{coach.fun_fact}</div>}
                             </div>
                           )
                         ))}
@@ -846,6 +862,10 @@ export default function TeamWallPage() {
                             </div>
                             <input type="text" className="tnw-input tw-add__input" placeholder="Fun fact (optional)"
                               value={editFunFact} onChange={e => setEditFunFact(e.target.value.slice(0, 140))} maxLength={140} />
+                            <label className="tw-add__toggle">
+                              <input type="checkbox" checked={editWentPro} onChange={e => setEditWentPro(e.target.checked)} />
+                              <span>Went pro</span>
+                            </label>
                             <div className="tw-add__row">
                               <button type="submit" className="tnw-btn tnw-btn--secondary tw-add__submit" disabled={!editName.trim() || editSubmitting}>
                                 {editSubmitting ? <Loader size={12} className="tw-add__spinner" /> : 'Save'}
@@ -854,10 +874,16 @@ export default function TeamWallPage() {
                             </div>
                           </form>
                         ) : (
-                          <div key={entry.id} className="player-card" style={i === 0 ? {
-                            background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
-                            borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
-                          } : undefined}>
+                          <div key={entry.id} className={`player-card${entry.went_pro ? ' player-card--pro' : ''}`} style={{
+                            ...(i === 0 ? {
+                              background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
+                              borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
+                            } : {}),
+                            ...(entry.went_pro ? {
+                              '--tw-pro-glow-dim': TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(255,255,255,0.12)',
+                              '--tw-pro-glow-bright': TEAM_PALETTES[colorKey]?.[4]?.border || 'rgba(255,255,255,0.35)',
+                            } : {}),
+                          }}>
                             <div className="player-card__row">
                               <div className="player-card__info">
                                 <div className="player-card__name-row">
@@ -925,6 +951,10 @@ export default function TeamWallPage() {
                       </div>
                       <input type="text" className="tnw-input tw-add__input" placeholder="Fun fact (optional)"
                         value={addFunFact} onChange={e => setAddFunFact(e.target.value.slice(0, 140))} maxLength={140} />
+                      <label className="tw-add__toggle">
+                        <input type="checkbox" checked={addWentPro} onChange={e => setAddWentPro(e.target.checked)} />
+                        <span>Went pro</span>
+                      </label>
                       <div className="tw-add__row">
                         <button type="submit" className="tnw-btn tnw-btn--secondary tw-add__submit" disabled={!addName.trim() || addSubmitting}>
                           {addSubmitting ? <Loader size={12} className="tw-add__spinner" /> : addSuccess ? 'Added' : 'Add'}
