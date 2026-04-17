@@ -26,12 +26,48 @@
   text-transform: uppercase;
 }
 
+.town-page__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .town-page__title {
   font-family: var(--font-banner);
   font-size: var(--text-h1);
   color: var(--color-paper);
   letter-spacing: 0.02em;
   margin: 0;
+}
+
+.town-page__share {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: all var(--motion-hover);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.town-page__share:hover {
+  color: var(--color-paper);
+  border-color: var(--border-medium);
+  background: var(--surface-2);
+}
+
+.town-page__share--copied {
+  color: var(--color-sacred);
+  border-color: var(--color-sacred);
 }
 
 .town-page__sub {

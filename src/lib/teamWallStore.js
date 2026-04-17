@@ -227,47 +227,56 @@ export async function getWallsForMap() {
 // ─── Get recent / active walls (for homepage "BUILDING NOW" section) ──────
 
 export async function getActiveWalls(limit = 5) {
-  // Get walls that were most recently contributed to
-  const { data: recentEntries } = await supabase
-    .from('team_wall_entries')
-    .select('wall_id, added_at')
-    .eq('status', 'active')
-    .order('added_at', { ascending: false })
-    .limit(50)
+  // Two sources: walls with recent entries + recently created walls.
+  // Merge by activity, dedup, so "Building Now" shows both fresh walls
+  // and walls that are actively collecting names.
 
-  if (!recentEntries || recentEntries.length === 0) {
-    // Fallback: most recently created walls
-    const { data } = await supabase
+  const [{ data: recentEntries }, { data: recentWalls }] = await Promise.all([
+    supabase
+      .from('team_wall_entries')
+      .select('wall_id, added_at')
+      .eq('status', 'active')
+      .order('added_at', { ascending: false })
+      .limit(50),
+    supabase
       .from('team_walls')
-      .select('*')
+      .select('id, created_at')
       .eq('status', 'active')
       .order('created_at', { ascending: false })
-      .limit(limit)
-    return data || []
-  }
+      .limit(limit),
+  ])
 
-  // Deduplicate by wall_id, keep most recent
+  // Merge: entry-active walls first (most recent activity), then recently
+  // created walls that haven't received entries yet. Dedup keeps activity
+  // order — a wall with entries always ranks above a fresh empty wall.
   const seen = new Set()
-  const uniqueWallIds = []
-  for (const e of recentEntries) {
+  const orderedIds = []
+  for (const e of recentEntries || []) {
     if (!seen.has(e.wall_id)) {
       seen.add(e.wall_id)
-      uniqueWallIds.push(e.wall_id)
+      orderedIds.push(e.wall_id)
     }
-    if (uniqueWallIds.length >= limit) break
   }
+  for (const w of recentWalls || []) {
+    if (!seen.has(w.id)) {
+      seen.add(w.id)
+      orderedIds.push(w.id)
+    }
+  }
+  const topIds = orderedIds.slice(0, limit)
+  if (topIds.length === 0) return []
 
   const { data: walls } = await supabase
     .from('team_walls')
     .select('*')
-    .in('id', uniqueWallIds)
+    .in('id', topIds)
     .eq('status', 'active')
 
   if (!walls) return []
 
-  // Maintain activity order
+  // Maintain merged activity order
   const wallMap = new Map(walls.map(w => [w.id, w]))
-  return uniqueWallIds.map(id => wallMap.get(id)).filter(Boolean)
+  return topIds.map(id => wallMap.get(id)).filter(Boolean)
 }
 
 // ─── Enriched BUILDING NOW ─────────────────────────────────────────────────

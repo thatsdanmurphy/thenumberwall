@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Plus } from 'lucide-react'
+import { MapPin, Plus, Share2, Check } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -27,6 +27,7 @@ export default function TownWallsPage() {
   const [walls, setWalls]     = useState([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
+  const [copied, setCopied]   = useState(false)
 
   useEffect(() => {
     if (!townSlug) return
@@ -67,6 +68,20 @@ export default function TownWallsPage() {
       : 'Town | The Number Wall'
   }, [walls])
 
+  function handleShare() {
+    const url = window.location.href
+    const title = walls[0]
+      ? `${walls[0].town}, ${walls[0].state} — The Number Wall`
+      : 'The Number Wall'
+    if (navigator.share) {
+      navigator.share({ title, url }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(url).catch(() => {})
+    }
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1800)
+  }
+
   return (
     <AppShell>
       <AppHeader title="TOWN" back={{ label: 'Team Walls', onClick: () => navigate('/walls') }} />
@@ -76,7 +91,17 @@ export default function TownWallsPage() {
           <div className="town-page__eyebrow">
             <MapPin size={12} /> TOWN
           </div>
-          <h2 className="town-page__title">{townDisplay}</h2>
+          <div className="town-page__title-row">
+            <h2 className="town-page__title">{townDisplay}</h2>
+            <button
+              className={`town-page__share${copied ? ' town-page__share--copied' : ''}`}
+              onClick={handleShare}
+              aria-label="Share this town"
+            >
+              {copied ? <Check size={14} /> : <Share2 size={14} />}
+              <span>{copied ? 'Copied' : 'Share'}</span>
+            </button>
+          </div>
           <p className="town-page__sub">
             {orgs.length
               ? `${orgs.length} ${orgs.length === 1 ? 'organization' : 'organizations'}, ${walls.length} ${walls.length === 1 ? 'wall' : 'walls'}`
