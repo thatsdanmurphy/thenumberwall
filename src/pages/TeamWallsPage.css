@@ -66,6 +66,12 @@
   margin-right: auto;
 }
 
+.twb-hero__sub--dim {
+  color: var(--ink-low);
+  font-size: var(--text-caption);
+  margin-top: var(--space-1);
+}
+
 /* Inherits .tnw-btn .tnw-btn--primary. */
 .twb-hero__cta {
   margin-top: var(--space-4);
@@ -167,9 +173,33 @@
   transition: background var(--motion-hover), border-color var(--motion-hover);
 }
 
-.twb-card:hover {
-  background: rgba(232, 124, 42, 0.07);
-  border-color: rgba(232, 124, 42, 0.22);
+/* Sport pills inside the card — one per wall for this school. Each pill
+   is clickable and navigates to that specific sport wall. */
+.twb-card__sports {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: 2px;
+}
+
+.twb-card__sport-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px var(--space-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  color: var(--color-paper);
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  cursor: pointer;
+  transition: all var(--motion-hover);
+}
+
+.twb-card__sport-pill:hover {
+  background: rgba(232, 124, 42, 0.12);
+  border-color: rgba(232, 124, 42, 0.35);
 }
 
 .twb-card__content {

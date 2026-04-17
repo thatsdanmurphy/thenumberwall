@@ -5,17 +5,17 @@
  * Shows active walls ("BUILDING NOW"), search, and create button.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Users, Flame } from 'lucide-react'
+import { Plus, Search, Users, Flame, Globe } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
 import CreateTeamWall from '../components/CreateTeamWall.jsx'
 import WallsMap from '../components/WallsMap.jsx'
-import { Globe } from 'lucide-react'
 import { getActiveWallsWithSignals, browseTeamWalls, slugify } from '../lib/teamWallStore.js'
 import { TEAM_PALETTES } from '../data/teamColors.js'
+import { getSportIcon } from '../data/sports.js'
 import './TeamWallsPage.css'
 
 export default function TeamWallsPage() {
@@ -70,6 +70,41 @@ export default function TeamWallsPage() {
 
   const wallsToShow = searchResults !== null ? searchResults : activeWalls
 
+  // Group walls by school so one card holds all sports being built.
+  // Maintains insertion order — first wall seen per school sets the rank.
+  const groupedWalls = useMemo(() => {
+    const map = new Map()
+    for (const w of wallsToShow) {
+      const key = w.school_slug
+      if (!map.has(key)) {
+        map.set(key, {
+          school_slug:  w.school_slug,
+          school:       w.school,
+          town:         w.town,
+          state:        w.state,
+          color_primary: w.color_primary,
+          walls:        [],
+          // Aggregate signals across all sports for this school
+          entryCount:       0,
+          contributorCount: 0,
+          lastActivityAt:   null,
+          isHot:            false,
+        })
+      }
+      const g = map.get(key)
+      g.walls.push(w)
+      g.entryCount += (w.entryCount || 0)
+      g.contributorCount += (w.contributorCount || 0)
+      if (w.lastActivityAt && (!g.lastActivityAt || w.lastActivityAt > g.lastActivityAt)) {
+        g.lastActivityAt = w.lastActivityAt
+      }
+      if (w.lastActivityAt && (Date.now() - new Date(w.lastActivityAt).getTime()) < 24 * 60 * 60 * 1000) {
+        g.isHot = true
+      }
+    }
+    return Array.from(map.values())
+  }, [wallsToShow])
+
   return (
     <AppShell>
       <AppHeader title="TEAM WALLS" back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
@@ -81,6 +116,9 @@ export default function TeamWallsPage() {
             <h2 className="twb-hero__heading">EVERY TEAM HAS A WALL.</h2>
             <p className="twb-hero__sub">
               Start a wall for your team. Share the link. Let your teammates claim their numbers.
+            </p>
+            <p className="twb-hero__sub twb-hero__sub--dim">
+              Every legend on the main wall started on a team like yours.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
               <Plus size={16} /> Start a Team Wall
@@ -118,7 +156,7 @@ export default function TeamWallsPage() {
 
           {loading ? (
             <p className="twb-empty">Loading…</p>
-          ) : wallsToShow.length === 0 ? (
+          ) : groupedWalls.length === 0 ? (
             <div className="twb-empty">
               {searchResults !== null
                 ? <p>No walls found for "{query}". Be the first!</p>
@@ -127,50 +165,55 @@ export default function TeamWallsPage() {
             </div>
           ) : (
             <div className="twb-cards">
-              {wallsToShow.map(wall => {
-                const palette = TEAM_PALETTES[wall.color_primary] || TEAM_PALETTES.orange
-                const accent  = palette[3] // "hot" level
-                const sportLabel = wall.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-                const since = formatSince(wall.lastActivityAt)
-                // "Hot" if there's been activity in the last 24h
-                const isHot = wall.lastActivityAt
-                  && (Date.now() - new Date(wall.lastActivityAt).getTime()) < 24 * 60 * 60 * 1000
+              {groupedWalls.map(group => {
+                const palette = TEAM_PALETTES[group.color_primary] || TEAM_PALETTES.orange
+                const accent  = palette[3]
+                const since   = formatSince(group.lastActivityAt)
 
                 return (
-                  <div key={wall.id} className="twb-card-wrap">
-                    <button
-                      className="twb-card"
-                      onClick={() => navigateToWall(wall)}
-                    >
+                  <div key={group.school_slug} className="twb-card-wrap">
+                    <div className="twb-card">
                       <div className="twb-card__content">
                         <span className="twb-card__dot" style={{ background: accent.bg }} />
                         <div className="twb-card__text">
                           <div className="twb-card__top">
-                            <span className="twb-card__school">{wall.school}</span>
-                            {isHot && (
+                            <span className="twb-card__school">{group.school}</span>
+                            {group.isHot && (
                               <span className="twb-card__hot" title="Active in the last 24 hours">
                                 <Flame size={10} /> HOT
                               </span>
                             )}
                           </div>
+                          <div className="twb-card__sports">
+                            {group.walls.map(w => {
+                              const Icon = getSportIcon(w.sport)
+                              const label = w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                              return (
+                                <button
+                                  key={w.id}
+                                  className="twb-card__sport-pill"
+                                  onClick={() => navigateToWall(w)}
+                                >
+                                  {Icon && <Icon size={11} />}
+                                  <span>{label}</span>
+                                </button>
+                              )
+                            })}
+                          </div>
                           <div className="twb-card__meta">
-                            <span>{sportLabel}</span>
-                            {wall.town && (
-                              <>
-                                <span className="twb-card__meta-sep" aria-hidden="true">·</span>
-                                <span className="twb-card__meta-town">{wall.town}, {wall.state}</span>
-                              </>
+                            {group.town && (
+                              <span className="twb-card__meta-town">{group.town}, {group.state}</span>
                             )}
                           </div>
                           <div className="twb-card__signals">
-                            {wall.entryCount > 0 && (
+                            {group.entryCount > 0 && (
                               <span className="twb-card__signal">
-                                {wall.entryCount} {wall.entryCount === 1 ? 'name' : 'names'}
+                                {group.entryCount} {group.entryCount === 1 ? 'name' : 'names'}
                               </span>
                             )}
-                            {wall.contributorCount > 0 && (
+                            {group.contributorCount > 0 && (
                               <span className="twb-card__signal">
-                                <Users size={10} /> {wall.contributorCount}
+                                <Users size={10} /> {group.contributorCount}
                               </span>
                             )}
                             {since && (
@@ -181,7 +224,7 @@ export default function TeamWallsPage() {
                           </div>
                         </div>
                       </div>
-                    </button>
+                    </div>
                   </div>
                 )
               })}
