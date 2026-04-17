@@ -568,17 +568,22 @@
 
 @keyframes tw-pro-breathe {
   0%, 100% { border-color: var(--tw-pro-glow-dim); box-shadow: 0 0 0 transparent; }
-  50%      { border-color: var(--tw-pro-glow-bright); box-shadow: 0 0 12px var(--tw-pro-glow-dim); }
+  50%      { border-color: var(--tw-pro-glow-bright); box-shadow: 0 0 14px var(--tw-pro-glow-dim); }
 }
 
-.player-card--pro {
+.wall-tile--pro {
   --tw-pro-glow-dim:    rgba(255, 255, 255, 0.12);
   --tw-pro-glow-bright: rgba(255, 255, 255, 0.35);
   animation: tw-pro-breathe 4s ease-in-out infinite;
 }
 
-/* When team palette injects custom glow color via inline style,
-   the vars override these defaults and the breathe stays on-brand. */
+/* Suppress breathing when tile is selected — clean white ring only */
+.wall-tile--pro.wall-tile--active {
+  animation: none;
+}
+
+/* Team palette injects custom glow color via inline style vars,
+   overriding defaults so the breathe stays on-brand. */
 
 /* ── Empty-tile invitation — lead line pops, supporting line tempers ──────── */
 

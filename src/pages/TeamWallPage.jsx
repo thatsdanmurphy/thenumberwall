@@ -117,20 +117,17 @@ export default function TeamWallPage() {
     if (wall) document.title = `${wall.school} ${sportLabel} | The Number Wall`
   }, [wall, sportLabel])
 
-  // Load coaches on mount so the tile's empty-vs-populated treatment is
-  // correct at first paint — don't wait for the user to open the panel.
+  // Load coaches whenever the wall changes (mount or sport switch).
+  // Keyed to wall?.id so it automatically re-fetches for the correct wall
+  // and clears stale coaches from the previous sport.
   useEffect(() => {
-    if (!wall || coachesLoaded) return
+    if (!wall?.id) { setCoaches([]); setCoachesLoaded(false); return }
+    setCoaches([]); setCoachesLoaded(false); setCoachView(false)
+    setCoachEditingId(null); setCoachError(null)
     listWallCoaches(wall.id)
       .then(list => { setCoaches(list); setCoachesLoaded(true) })
       .catch(err => { console.error('Could not load coaches:', err); setCoachesLoaded(true) })
-  }, [wall, coachesLoaded])
-
-  // Reset coach state when navigating between sports/walls
-  useEffect(() => {
-    setCoaches([]); setCoachesLoaded(false); setCoachView(false)
-    setCoachEditingId(null); setCoachError(null)
-  }, [schoolSlug, sport])
+  }, [wall?.id])
 
   // Reset forms when selecting a different number
   useEffect(() => {
@@ -188,10 +185,20 @@ export default function TeamWallPage() {
 
   // Team-color heat function — passed to WallGrid → WallTile
   const tileHeatFn = useCallback((num, _entries) => {
-    const count     = (entryIndex.get(num) || []).length
+    const numEntries = entryIndex.get(num) || []
+    const count     = numEntries.length
     const heatStyle = getTeamHeatStyle(colorKey, count)
     const textColor = getTeamTileTextColor(colorKey, count)
-    return { heatStyle, textColor }
+    const hasPro    = numEntries.some(e => e.went_pro)
+    const result    = { heatStyle, textColor }
+    if (hasPro) {
+      result.extraClass = 'wall-tile--pro'
+      result.extraStyle = {
+        '--tw-pro-glow-dim': TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(255,255,255,0.12)',
+        '--tw-pro-glow-bright': TEAM_PALETTES[colorKey]?.[4]?.border || 'rgba(255,255,255,0.35)',
+      }
+    }
+    return result
   }, [entryIndex, colorKey])
 
   async function handleAdd(e) {
@@ -874,16 +881,10 @@ export default function TeamWallPage() {
                             </div>
                           </form>
                         ) : (
-                          <div key={entry.id} className={`player-card${entry.went_pro ? ' player-card--pro' : ''}`} style={{
-                            ...(i === 0 ? {
-                              background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
-                              borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
-                            } : {}),
-                            ...(entry.went_pro ? {
-                              '--tw-pro-glow-dim': TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(255,255,255,0.12)',
-                              '--tw-pro-glow-bright': TEAM_PALETTES[colorKey]?.[4]?.border || 'rgba(255,255,255,0.35)',
-                            } : {}),
-                          }}>
+                          <div key={entry.id} className="player-card" style={i === 0 ? {
+                            background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
+                            borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
+                          } : undefined}>
                             <div className="player-card__row">
                               <div className="player-card__info">
                                 <div className="player-card__name-row">

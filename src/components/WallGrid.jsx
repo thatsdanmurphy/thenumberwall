@@ -100,7 +100,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           : legends.length >= 8 && !hasSacred
 
         // Custom heat: team walls pass tileHeatFn for team-color palettes
-        const heatProps = tileHeatFn ? tileHeatFn(num, entries) : {}
+        const { extraClass, extraStyle, ...heatProps } = tileHeatFn ? tileHeatFn(num, entries) : {}
 
         return (
           <WallTile
@@ -111,6 +111,8 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
             isDebating={debating}
             debateVariant={debating ? 'c' : null}
             onClick={() => handleTileClick(num)}
+            extraClass={extraClass}
+            extraStyle={extraStyle}
             {...heatProps}
           />
         )

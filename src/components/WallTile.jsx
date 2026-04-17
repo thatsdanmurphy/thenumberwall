@@ -8,7 +8,7 @@ import './WallTile.css'
  * Override: pass `heatStyle` and/or `textColor` for custom palettes
  *           (e.g. team walls use count-based team-color heat).
  */
-export default function WallTile({ number, entries, isActive, forceActive, isDebating, debateVariant, onClick, heatStyle: heatOverride, textColor: textOverride }) {
+export default function WallTile({ number, entries, isActive, forceActive, isDebating, debateVariant, onClick, heatStyle: heatOverride, textColor: textOverride, extraClass, extraStyle }) {
   const isSacred    = entries.some(e => e.tier === 'SACRED')
   // UNWRITTEN placeholder rows don't count — a tile is unwritten if it has no real legends
   const isUnwritten = !entries.some(e => e.tier !== 'UNWRITTEN')
@@ -54,12 +54,13 @@ export default function WallTile({ number, entries, isActive, forceActive, isDeb
     isUnwritten  && 'wall-tile--unwritten',
     isActive     && 'wall-tile--active',
     debateClass,
+    extraClass,
   ].filter(Boolean).join(' ')
 
   return (
     <button
       className={classes}
-      style={tileStyle}
+      style={{ ...tileStyle, ...extraStyle }}
       onClick={onClick}
       aria-label={`Number ${number}${entries.length ? ` — ${entries.length} legend${entries.length > 1 ? 's' : ''}` : ' — unwritten'}`}
       aria-pressed={isActive}
