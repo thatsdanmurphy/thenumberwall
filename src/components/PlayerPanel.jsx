@@ -6,6 +6,7 @@ import { getSportIcon } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { pickKey } from '../lib/storageKeys.js'
+import { submitNumberPick, getPickCounts, blendVotes } from '../lib/votesStore.js'
 import associationsData from '../data/associations.json'
 import VoteButtons from './VoteButtons.jsx'
 import './PlayerPanel.css'
@@ -217,11 +218,16 @@ function rankOrange(i) {
 // Without assoc: all-legend chips, auto-seeded by rank, crowd message post-pick.
 // Same UI, same storage key — one component, two data sources.
 
-function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
+function YourNumberPick({ number, legends, assoc, leadIdx = 0, wall = 'global', sport = null }) {
   const saved                   = getSavedPick(number)
   const [pick, setPick]         = useState(saved)
   const [tapping, setTapping]   = useState(null)
   const [revealed, setRevealed] = useState(!!saved)
+  const [liveCounts, setLiveCounts] = useState(new Map())
+
+  // Derive the sport key for this debate context — assoc.sport or the active
+  // sport filter. Used for both the Supabase read and write.
+  const debateSport = assoc ? assoc.sport : sport
 
   useEffect(() => {
     const s = getSavedPick(number)
@@ -229,6 +235,15 @@ function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
     setTapping(null)
     setRevealed(!!s)
   }, [number])
+
+  // Fetch live vote counts from Supabase when number/wall/sport changes
+  useEffect(() => {
+    let stale = false
+    getPickCounts({ number, wall, sport: debateSport })
+      .then(counts => { if (!stale) setLiveCounts(counts) })
+      .catch(() => {})
+    return () => { stale = true }
+  }, [number, wall, debateSport])
 
   // Build unified options list — either the 2 curated players or all visible legends
   const options = assoc ? assoc.options.map(opt => ({ name: opt.name })) : legends
@@ -245,6 +260,14 @@ function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
     setTimeout(() => {
       savePick(number, idx)
       setPick({ idx, ts: Date.now() })
+      // Write to Supabase (fire-and-forget — localStorage is the optimistic cache)
+      submitNumberPick({ number, optionIdx: idx, wall, sport: debateSport })
+      // Update local live counts optimistically
+      setLiveCounts(prev => {
+        const next = new Map(prev)
+        next.set(idx, (next.get(idx) || 0) + 1)
+        return next
+      })
       if (assoc) {
         const pickedName     = assoc.options[idx]?.name ?? ''
         const agreedWithWall = assoc.options[idx]?.id === assoc.wallCall
@@ -257,9 +280,11 @@ function YourNumberPick({ number, legends, assoc, leadIdx = 0 }) {
   }
 
   const pickedIdx = pick?.idx ?? null
-  const votes     = seeds.map((s, i) => s + (pickedIdx === i ? 1 : 0))
-  const total     = votes.reduce((a, b) => a + b, 0)
-  const pcts      = votes.map(v => Math.round((v / total) * 100))
+  // Blend seed + live votes. Seeds fade out as live traffic grows.
+  const blended = blendVotes(seeds, liveCounts)
+  const votes   = blended.map((v, i) => v + (pickedIdx === i ? 1 : 0))
+  const total   = votes.reduce((a, b) => a + b, 0)
+  const pcts    = votes.map(v => Math.round((v / total) * 100))
 
   // Post-pick note — wall editorial (debate) or crowd scoreboard (open pick)
   function postPickNote() {
@@ -574,7 +599,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                  Sport filter active + no debate but 2+ legends → crowd pick.
                  ALL view + contested → light "contested" nudge, no vote. */}
             {!votingMode && sportFilter && sportFilter.size > 0 && (assoc || (!isSacred && legendCount >= 2)) && (
-              <YourNumberPick number={number} legends={legends} assoc={assoc} leadIdx={panelLeadIdx} />
+              <YourNumberPick number={number} legends={legends} assoc={assoc} leadIdx={panelLeadIdx} wall={wallId} sport={sportFilter ? [...sportFilter][0] : null} />
             )}
             {!votingMode && (!sportFilter || sportFilter.size === 0) && !isSacred && legendCount >= 2 && (
               <div className="player-panel__contested">

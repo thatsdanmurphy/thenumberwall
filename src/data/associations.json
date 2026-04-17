@@ -362,5 +362,31 @@
     "wallCall": "A",
     "wallNote": "The wall sees Bird. But no one in Boston has worn a number with more physical authority than Chara.",
     "seasonLabel": "Season 1 · Q1 2026"
+  },
+  {
+    "number": 87,
+    "wall": "global",
+    "sport": "Football",
+    "wallContext": "#87 · Football",
+    "question": "Who do you see first?",
+    "options": [
+      {
+        "id": "A",
+        "name": "Rob Gronkowski",
+        "team": "New England Patriots"
+      },
+      {
+        "id": "B",
+        "name": "Travis Kelce",
+        "team": "Kansas City Chiefs"
+      }
+    ],
+    "seedVotes": {
+      "A": 1080,
+      "B": 920
+    },
+    "wallCall": "A",
+    "wallNote": "The wall sees Gronk. Kelce has the rings and the longevity. Gronk redefined what a tight end could be.",
+    "seasonLabel": "Season 1 · Q1 2026"
   }
 ]
