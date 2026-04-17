@@ -92,9 +92,10 @@ export default function TeamWallPage() {
   const fetchWall = useCallback(async () => {
     try {
       const data = await loadTeamWallByRoute(schoolSlug, sport)
-      if (!data) setError('Wall not found.')
+      if (!data) { setWall(null); setError('Wall not found.') }
       else setWall(data)
     } catch (err) {
+      setWall(null)
       setError('Could not load this wall.')
       console.error(err)
     } finally {
@@ -103,6 +104,14 @@ export default function TeamWallPage() {
   }, [schoolSlug, sport])
 
   const sportLabel = sport?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+
+  // Clear stale state immediately when the route changes — don't wait for
+  // the async fetch. This forces the coach effect (keyed to wall?.id) to
+  // see a null → newId transition, preventing cross-sport bleed.
+  useEffect(() => {
+    setWall(null); setSelected(null); setLoading(true); setError(null)
+    setCoaches([]); setCoachesLoaded(false); setCoachView(false)
+  }, [schoolSlug, sport])
 
   useEffect(() => { fetchWall() }, [fetchWall])
 

@@ -564,22 +564,35 @@
   gap: var(--space-1);
 }
 
-/* ── "Went Pro" ambient glow — slow breathing border for players who made it ── */
+/* ── "Went Pro" ambient glow — slow breathing border for players who made it ──
+   Uses a ::after pseudo-element so the glow animation doesn't fight the
+   inline border/box-shadow that WallTile sets via React style props.        */
 
 @keyframes tw-pro-breathe {
-  0%, 100% { border-color: var(--tw-pro-glow-dim); box-shadow: 0 0 0 transparent; }
-  50%      { border-color: var(--tw-pro-glow-bright); box-shadow: 0 0 14px var(--tw-pro-glow-dim); }
+  0%, 100% { opacity: 0; box-shadow: 0 0 0 transparent; }
+  50%      { opacity: 1; box-shadow: 0 0 14px var(--tw-pro-glow-dim); }
 }
 
 .wall-tile--pro {
   --tw-pro-glow-dim:    rgba(255, 255, 255, 0.12);
   --tw-pro-glow-bright: rgba(255, 255, 255, 0.35);
+  position: relative;
+}
+
+.wall-tile--pro::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1.5px solid var(--tw-pro-glow-bright);
+  box-shadow: 0 0 14px var(--tw-pro-glow-dim);
+  pointer-events: none;
   animation: tw-pro-breathe 4s ease-in-out infinite;
 }
 
 /* Suppress breathing when tile is selected — clean white ring only */
-.wall-tile--pro.wall-tile--active {
-  animation: none;
+.wall-tile--pro.wall-tile--active::after {
+  display: none;
 }
 
 /* Team palette injects custom glow color via inline style vars,
