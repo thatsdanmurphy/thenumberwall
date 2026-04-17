@@ -26,14 +26,17 @@ export function getSportIcon(sportId) {
   return SPORT_ICONS[sportId?.toLowerCase()] || null
 }
 
-// Legends wall — 6 sports for the filter bar
+// Legends wall — 5 sports for the filter bar
+// NOTE: Cricket is staged in source CSVs but hidden from the live wall
+// until more than a handful of entries exist. Restore by adding
+// { id: 'Cricket', label: 'Cricket' } and the matching SPORT_NAMES +
+// SPORT_EMOJI entries below.
 export const LEGEND_SPORTS = [
   { id: 'Basketball', label: 'Basketball' },
   { id: 'Football',   label: 'Football' },
   { id: 'Baseball',   label: 'Baseball' },
   { id: 'Hockey',     label: 'Hockey' },
   { id: 'Soccer',     label: 'Soccer' },
-  { id: 'Cricket',    label: 'Cricket' },
 ]
 
 // Team walls — all numbered team sports
@@ -52,7 +55,7 @@ export const TEAM_SPORTS = [
 ]
 
 // Simple string list for PlayerSearch sport selector
-export const SPORT_NAMES = ['Basketball', 'Baseball', 'Hockey', 'Football', 'Soccer', 'Cricket']
+export const SPORT_NAMES = ['Basketball', 'Baseball', 'Hockey', 'Football', 'Soccer']
 
 // Unicode emoji map — used for lightweight contexts (HeroSearch) where
 // react-icons components would be overkill. Keys match capitalised IDs.
@@ -62,7 +65,6 @@ export const SPORT_EMOJI = {
   Baseball:   '\u26BE',
   Hockey:     '\u{1F3D2}',
   Soccer:     '\u26BD',
-  Cricket:    '\u{1F3CF}',
 }
 
 // ── Positions by sport ───────────────────────────────────────────────────
