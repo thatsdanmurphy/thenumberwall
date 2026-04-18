@@ -4138,5 +4138,25 @@
     "League Wide Retired": false,
     "Retired League": "",
     "Retired Badge": ""
+  },
+  {
+    "Number": "45",
+    "Tier": "LEGEND",
+    "Name": "Bob Gibson",
+    "Sport": "Baseball",
+    "League": "MLB",
+    "Status": "Retired",
+    "Era": "MLB Golden Age",
+    "Team": "St. Louis Cardinals",
+    "Hometown": "Omaha, NE",
+    "Signature Stat": "1.12",
+    "Stat Label": "ERA in 1968 (modern record for 300+ innings)",
+    "Stat Weight": 3,
+    "Role": "Pitcher",
+    "Fun Fact": "In 1968 he posted a 1.12 ERA \u2014 the lowest in modern baseball history. The league was so dominated by pitching that year that MLB literally lowered the mound the following season. They lowered the mound because of Bob Gibson.",
+    "Notes": "#45 retired by St. Louis Cardinals in 1975.",
+    "League Wide Retired": false,
+    "Retired League": "",
+    "Retired Badge": ""
   }
 ]
