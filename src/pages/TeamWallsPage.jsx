@@ -109,9 +109,9 @@ export default function TeamWallsPage() {
         {/* ── Left: Hero ───────────────────────────────────── */}
         <div className="twb-left">
           <div className="twb-hero">
-            <h2 className="twb-hero__heading">SEE WHERE THE LEGENDS COME FROM.</h2>
+            <h2 className="twb-hero__heading">LOG YOUR TEAM. FIND THE PIPELINES.</h2>
             <p className="twb-hero__sub">
-              Every legend wore a number somewhere first. Find the pipelines, remember the hometown heroes, and put names on the wall before they're forgotten. Share the link — your teammates will fill in the rest.
+              Every legend wore a number somewhere first. Start your team's wall, add the names you remember, and share the link — your teammates will fill in the rest.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
               <Plus size={16} /> Start a Team Wall
