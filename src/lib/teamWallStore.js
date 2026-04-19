@@ -632,6 +632,38 @@ export function canDeleteEntry(entry) {
 
 // ─── Get all sports for a school (for sport nav) ──────────────────────────
 
+// Load ALL entries across every sport wall for a school — used for the ALL
+// view on TeamWallPage where sports are layered on the same grid.
+export async function loadAllSchoolEntries(schoolSlug) {
+  // Step 1: get all active wall IDs for this school
+  const { data: walls, error: wErr } = await supabase
+    .from('team_walls')
+    .select('id, sport')
+    .eq('school_slug', schoolSlug)
+    .in('status', ['active', 'archived'])
+
+  if (wErr || !walls?.length) return []
+
+  const wallIds = walls.map(w => w.id)
+  const wallSportMap = Object.fromEntries(walls.map(w => [w.id, w.sport]))
+
+  // Step 2: fetch all entries across those walls
+  const { data: entries, error: eErr } = await supabase
+    .from('team_wall_entries')
+    .select('*')
+    .in('wall_id', wallIds)
+    .in('status', ['active', 'flagged'])
+    .order('added_at', { ascending: true })
+
+  if (eErr) return []
+
+  // Tag each entry with its sport for display
+  return (entries || []).map(e => ({
+    ...e,
+    sport: wallSportMap[e.wall_id] || null,
+  }))
+}
+
 export async function getSchoolSports(schoolSlug) {
   const { data, error } = await supabase
     .from('team_walls')

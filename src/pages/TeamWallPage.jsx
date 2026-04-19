@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check, ChevronRight } from 'lucide-react'
+import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import PositionPicker from '../components/PositionPicker.jsx'
 import AppShell   from '../components/AppShell.jsx'
@@ -17,7 +17,7 @@ import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
 import WallGrid   from '../components/WallGrid.jsx'
 import {
-  loadTeamWallByRoute, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall,
+  loadTeamWallByRoute, loadAllSchoolEntries, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall,
   isWallCreator, archiveWall, unarchiveWall, retireDaysLeft,
   deleteOwnEntry, hideEntryAsCreator, canDeleteEntry,
   listWallCoaches, addWallCoach, updateWallCoach, deleteOwnCoach, hideCoachAsCreator,
@@ -57,6 +57,10 @@ export default function TeamWallPage() {
   // Sports nav — other sports for this school
   const [schoolSports, setSchoolSports] = useState([])
   const [showSportPicker, setShowSportPicker] = useState(false)
+
+  // ALL view — entries from every sport at this school, layered on one grid
+  const [allEntries, setAllEntries] = useState([])
+  const [allLoaded, setAllLoaded]   = useState(false)
   const [addingSport, setAddingSport]         = useState(false)
 
   // Coach state — multi-row
@@ -120,6 +124,16 @@ export default function TeamWallPage() {
     }
   }, [schoolSlug])
 
+  // ALL view — load entries from every sport wall at this school.
+  // Lazy: only fetches the first time ALL is activated, then caches.
+  useEffect(() => {
+    if (viewMode === 'all' && !allLoaded && schoolSlug) {
+      loadAllSchoolEntries(schoolSlug)
+        .then(entries => { setAllEntries(entries); setAllLoaded(true) })
+        .catch(err => { console.error('Could not load all entries:', err); setAllLoaded(true) })
+    }
+  }, [viewMode, allLoaded, schoolSlug])
+
   useEffect(() => {
     if (wall) document.title = `${wall.school} ${sportLabel} | The Number Wall`
   }, [wall, sportLabel])
@@ -144,8 +158,8 @@ export default function TeamWallPage() {
     if (selected) setCoachView(false)
   }, [selected])
 
-  // Build entry index: number → [entries]
-  const entryIndex = useMemo(() => {
+  // Build entry index: number → [entries] — single sport
+  const sportEntryIndex = useMemo(() => {
     if (!wall?.entries) return new Map()
     const idx = new Map()
     for (const entry of wall.entries) {
@@ -155,6 +169,21 @@ export default function TeamWallPage() {
     }
     return idx
   }, [wall?.entries])
+
+  // ALL view: merged entries across every sport at this school
+  const allEntryIndex = useMemo(() => {
+    if (!allEntries.length) return new Map()
+    const idx = new Map()
+    for (const entry of allEntries) {
+      const key = String(entry.number)
+      if (!idx.has(key)) idx.set(key, [])
+      idx.get(key).push(entry)
+    }
+    return idx
+  }, [allEntries])
+
+  // Active index switches based on view mode
+  const entryIndex = viewMode === 'all' ? allEntryIndex : sportEntryIndex
 
   const colorKey       = wall?.color_primary || 'orange'
   const selectedEntries = selected ? (entryIndex.get(selected) || []) : []
@@ -554,7 +583,7 @@ export default function TeamWallPage() {
               <MapPin size={11} />
               <span>{wall.town}, {wall.state}</span>
             </button>
-          ) : <span />}
+          ) : null}
           <button
             className={`tw-share-btn${copied && !selected ? ' tw-share-btn--copied' : ''}`}
             onClick={() => {
@@ -639,7 +668,6 @@ export default function TeamWallPage() {
 
         {/* ── Grid + panel ─────────────────────────────────── */}
         {/* Reuses wall-page__body layout — golden ratio grid + panel */}
-        {viewMode === 'grid' ? (
         <div className="wall-page__body">
 
           <div className="wall-page__grid-col">
@@ -991,48 +1019,6 @@ export default function TeamWallPage() {
             </div>
           </aside>
         </div>
-        ) : (
-        /* ── All View — every populated number as a tappable row ── */
-        <div className="tw-all-view">
-          {coaches.length > 0 && (
-            <div className="tw-all-row tw-all-row--coaches">
-              <span className="tw-all-row__number">HC</span>
-              <div className="tw-all-row__entries">
-                {coaches.map(c => (
-                  <div key={c.id} className="tw-all-row__entry">
-                    <span className="tw-all-row__name">{c.name}</span>
-                    {c.years && <span className="tw-all-row__detail">{c.years}</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {TEAM_TILE_NUMBERS.filter(n => (entryIndex.get(n) || []).length > 0).map(num => {
-            const entries = entryIndex.get(num) || []
-            const hasPro = entries.some(e => e.went_pro)
-            return (
-              <button
-                key={num}
-                className={`tw-all-row${hasPro ? ' tw-all-row--pro' : ''}`}
-                onClick={() => { setViewMode('grid'); setSelected(num) }}
-              >
-                <span className="tw-all-row__number">#{num}</span>
-                <div className="tw-all-row__entries">
-                  {entries.map(e => (
-                    <div key={e.id} className="tw-all-row__entry">
-                      <span className="tw-all-row__name">{e.name}</span>
-                      {e.position && <span className="tw-all-row__detail">{e.position}</span>}
-                      {e.grad_year && <span className="tw-all-row__detail">'{String(e.grad_year).slice(-2)}</span>}
-                      {e.went_pro && <span className="tw-all-row__pro-badge">PRO</span>}
-                    </div>
-                  ))}
-                </div>
-                <ChevronRight size={14} className="tw-all-row__arrow" />
-              </button>
-            )
-          })}
-        </div>
-        )}
       </main>
 
       <AppFooter />
