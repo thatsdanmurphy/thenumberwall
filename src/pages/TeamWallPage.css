@@ -680,14 +680,7 @@
   text-transform: uppercase;
 }
 
-/* ── Tab bar — reuses global .tnw-tab ─────────────────────────────────── */
-
-.tw-tabs {
-  display: flex;
-  gap: var(--space-4);
-  border-bottom: 1px solid var(--border-faint);
-  margin-bottom: var(--space-3);
-}
+/* ALL pill lives in the sports-filter row — no separate tab bar needed */
 
 /* ── All View — expanded list of every number ──────────────────────────── */
 

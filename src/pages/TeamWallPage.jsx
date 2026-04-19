@@ -576,17 +576,29 @@ export default function TeamWallPage() {
           </button>
         </div>
 
-        {/* ── Sports nav — reuses SportsFilter pill styles ── */}
+        {/* ── Sports nav — ALL pill first, then sport pills ── */}
         <div className="sports-filter" role="group" aria-label="Sports at this school">
+          <button
+            className={`sports-filter__pill${viewMode === 'all' ? ' sports-filter__pill--active' : ''}`}
+            onClick={() => { setViewMode('all'); setSelected(null) }}
+            aria-pressed={viewMode === 'all'}
+          >
+            ALL
+          </button>
           {schoolSports.map(s => {
-            const isActive = s.sport === sport
+            const isActive = s.sport === sport && viewMode === 'grid'
             const label = s.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
             const Icon = getSportIcon(s.sport)
             return (
               <button
                 key={s.id}
                 className={`sports-filter__pill${isActive ? ' sports-filter__pill--active' : ''}`}
-                onClick={() => !isActive && navigate(`/walls/${schoolSlug}/${s.sport}`)}
+                onClick={() => {
+                  if (s.sport !== sport) {
+                    navigate(`/walls/${schoolSlug}/${s.sport}`)
+                  }
+                  setViewMode('grid')
+                }}
                 aria-pressed={isActive}
               >
                 {Icon && <Icon size={13} className="sports-filter__icon" />}
@@ -623,22 +635,6 @@ export default function TeamWallPage() {
                 })}
             </div>
           )}
-        </div>
-
-        {/* ── Tab bar — mirrors main wall tab treatment ── */}
-        <div className="tw-tabs" role="tablist">
-          <button
-            className={`tnw-tab${viewMode === 'all' ? ' tnw-tab--active' : ''}`}
-            role="tab"
-            aria-selected={viewMode === 'all'}
-            onClick={() => { setViewMode('all'); setSelected(null) }}
-          >ALL</button>
-          <button
-            className={`tnw-tab${viewMode === 'grid' ? ' tnw-tab--active' : ''}`}
-            role="tab"
-            aria-selected={viewMode === 'grid'}
-            onClick={() => setViewMode('grid')}
-          >GRID</button>
         </div>
 
         {/* ── Grid + panel ─────────────────────────────────── */}
