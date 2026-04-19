@@ -17,7 +17,7 @@ import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
 import WallGrid   from '../components/WallGrid.jsx'
 import {
-  loadTeamWallByRoute, loadAllSchoolEntries, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall,
+  loadTeamWallByRoute, loadAllSchoolEntries, loadAllSchoolCoaches, addTeamEntry, updateTeamEntry, getSchoolSports, createTeamWall,
   isWallCreator, archiveWall, unarchiveWall, retireDaysLeft,
   deleteOwnEntry, hideEntryAsCreator, canDeleteEntry,
   listWallCoaches, addWallCoach, updateWallCoach, deleteOwnCoach, hideCoachAsCreator,
@@ -69,8 +69,9 @@ export default function TeamWallPage() {
   const [schoolSports, setSchoolSports] = useState([])
   const [showSportPicker, setShowSportPicker] = useState(false)
 
-  // ALL view — entries from every sport at this school, layered on one grid
+  // ALL view — entries + coaches from every sport at this school, layered on one grid
   const [allEntries, setAllEntries] = useState([])
+  const [allCoaches, setAllCoaches] = useState([])
   const [allLoaded, setAllLoaded]   = useState(false)
   const [addingSport, setAddingSport]         = useState(false)
 
@@ -135,12 +136,19 @@ export default function TeamWallPage() {
     }
   }, [schoolSlug])
 
-  // ALL view — load entries from every sport wall at this school.
+  // ALL view — load entries + coaches from every sport wall at this school.
   // Lazy: only fetches the first time ALL is activated, then caches.
   useEffect(() => {
     if (viewMode === 'all' && !allLoaded && schoolSlug) {
-      loadAllSchoolEntries(schoolSlug)
-        .then(entries => { setAllEntries(entries); setAllLoaded(true) })
+      Promise.all([
+        loadAllSchoolEntries(schoolSlug),
+        loadAllSchoolCoaches(schoolSlug),
+      ])
+        .then(([entries, coachList]) => {
+          setAllEntries(entries)
+          setAllCoaches(coachList)
+          setAllLoaded(true)
+        })
         .catch(err => { console.error('Could not load all entries:', err); setAllLoaded(true) })
     }
   }, [viewMode, allLoaded, schoolSlug])
@@ -377,7 +385,13 @@ export default function TeamWallPage() {
     setSelected(null)
     setCoachView(true)
     setCoachEditingId(null)
-    if (!coachesLoaded) await refreshCoaches()
+    if (viewMode === 'all' && allCoaches.length > 0) {
+      // ALL view — show merged coaches from every sport
+      setCoaches(allCoaches)
+      setCoachesLoaded(true)
+    } else if (!coachesLoaded) {
+      await refreshCoaches()
+    }
   }
 
   function startAddCoach() {
@@ -691,10 +705,9 @@ export default function TeamWallPage() {
               numbers={TEAM_TILE_NUMBERS}
               tileHeatFn={tileHeatFn}
               prefixContent={(() => {
-                // Empty → unwritten treatment (dashed, dim). Populated → team
-                // color bg + glowing team-color text like a heat-scaled number
-                // tile. Label is always "COACHES" (plural) per Dan's feedback.
-                const hasCoaches = coaches.length > 0
+                // In ALL view, show coaches from all sports. In sport view, show sport-specific.
+                const displayCoaches = viewMode === 'all' ? allCoaches : coaches
+                const hasCoaches = displayCoaches.length > 0
                 const tileStyle = hasCoaches
                   ? {
                       background: TEAM_PALETTES[colorKey]?.[1]?.bg || 'rgba(255,255,255,0.03)',
@@ -702,7 +715,7 @@ export default function TeamWallPage() {
                     }
                   : undefined
                 const labelColor = hasCoaches
-                  ? getTeamTileTextColor(colorKey, coaches.length)
+                  ? getTeamTileTextColor(colorKey, displayCoaches.length)
                   : undefined
                 return (
                   <button

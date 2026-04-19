@@ -664,6 +664,37 @@ export async function loadAllSchoolEntries(schoolSlug) {
   }))
 }
 
+/**
+ * Load coaches from ALL sport walls for this school (for ALL view).
+ * Tags each coach with its sport so the UI can display sport context.
+ */
+export async function loadAllSchoolCoaches(schoolSlug) {
+  const { data: walls, error: wErr } = await supabase
+    .from('team_walls')
+    .select('id, sport')
+    .eq('school_slug', schoolSlug)
+    .in('status', ['active', 'archived'])
+
+  if (wErr || !walls?.length) return []
+
+  const wallIds = walls.map(w => w.id)
+  const wallSportMap = Object.fromEntries(walls.map(w => [w.id, w.sport]))
+
+  const { data: coaches, error: cErr } = await supabase
+    .from('team_wall_coaches')
+    .select('id, wall_id, name, years, fun_fact, added_by, added_at, status')
+    .in('wall_id', wallIds)
+    .in('status', ['active', 'flagged'])
+    .order('added_at', { ascending: true })
+
+  if (cErr) return []
+
+  return (coaches || []).map(c => ({
+    ...c,
+    sport: wallSportMap[c.wall_id] || null,
+  }))
+}
+
 export async function getSchoolSports(schoolSlug) {
   const { data, error } = await supabase
     .from('team_walls')

@@ -111,7 +111,7 @@ export default function TeamWallsPage() {
           <div className="twb-hero">
             <h2 className="twb-hero__heading">LOG YOUR TEAM. FIND THE PIPELINES.</h2>
             <p className="twb-hero__sub">
-              Every legend wore a number somewhere first. Start your team's wall, add the names you remember, and share the link — your teammates will fill in the rest.
+              Put your name on the wall. Add the teammates you played with, the legends you heard about, and share the link — the rest of the roster will show up.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
               <Plus size={16} /> Start a Team Wall
