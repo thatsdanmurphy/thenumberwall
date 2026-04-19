@@ -24,9 +24,6 @@ export default function AppHeader({ back = null, title = 'THE NUMBER WALL', tagl
           <button className="app-header__nav-link" onClick={() => navigate('/walls')}>
             Team Walls
           </button>
-          <button className="app-header__nav-link" onClick={() => navigate('/about')}>
-            About
-          </button>
         </nav>
       </div>
       <div className="app-header__brand">

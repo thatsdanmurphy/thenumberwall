@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Users, Globe, ChevronRight } from 'lucide-react'
+import { Plus, Search, Users, Globe, ChevronRight, ExternalLink } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -111,10 +111,7 @@ export default function TeamWallsPage() {
           <div className="twb-hero">
             <h2 className="twb-hero__heading">SEE WHERE THE LEGENDS COME FROM.</h2>
             <p className="twb-hero__sub">
-              Every legend on the main wall wore a number somewhere first. Find your team. See who came before you.
-            </p>
-            <p className="twb-hero__sub twb-hero__sub--dim">
-              Start a wall, share the link, and let your teammates claim their numbers.
+              Every legend wore a number somewhere first. Find the pipelines, remember the hometown heroes, and put names on the wall before they're forgotten. Share the link — your teammates will fill in the rest.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
               <Plus size={16} /> Start a Team Wall
@@ -136,7 +133,7 @@ export default function TeamWallsPage() {
             <input
               type="text"
               className="tnw-input twb-search__input"
-              placeholder="Search by school name…"
+              placeholder="Search by program or school…"
               value={query}
               onChange={e => setQuery(e.target.value)}
             />
@@ -188,6 +185,23 @@ export default function TeamWallsPage() {
                         </span>
                       )}
                     </div>
+                    <span
+                      className="twb-card__share"
+                      role="button"
+                      aria-label={`Share ${group.school}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        const url = `${window.location.origin}/walls/${group.school_slug}/${group.walls[0].sport}`
+                        const title = `${group.school} — The Number Wall`
+                        if (navigator.share) {
+                          navigator.share({ title, url }).catch(() => {})
+                        } else {
+                          navigator.clipboard.writeText(url).catch(() => {})
+                        }
+                      }}
+                    >
+                      <ExternalLink size={12} />
+                    </span>
                     <ChevronRight size={16} className="twb-card__arrow" />
                   </button>
                 )

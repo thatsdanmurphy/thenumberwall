@@ -65,11 +65,7 @@
   margin-right: auto;
 }
 
-.twb-hero__sub--dim {
-  color: var(--ink-low);
-  font-size: var(--text-caption);
-  margin-top: var(--space-1);
-}
+/* twb-hero__sub--dim removed — unified to single sub line */
 
 /* Inherits .tnw-btn .tnw-btn--primary. */
 .twb-hero__cta {
@@ -189,9 +185,9 @@
 }
 
 .twb-card__school {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: 0.14em;
+  font-family: var(--font-banner);
+  font-size: var(--text-h3);
+  letter-spacing: 0.04em;
   color: var(--color-paper);
 }
 
@@ -205,6 +201,24 @@
   font-family: var(--font-program);
   font-size: var(--text-caption);
   color: var(--color-muted);
+}
+
+.twb-card__share {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: color var(--motion-hover), background var(--motion-hover);
+}
+
+.twb-card__share:hover {
+  color: var(--color-paper);
+  background: var(--surface-3);
 }
 
 .twb-card__arrow {

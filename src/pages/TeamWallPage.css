@@ -306,29 +306,31 @@
   margin-bottom: var(--space-1);
 }
 
-.tw-share-wall {
+.tw-share-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 3px var(--space-2);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-program);
-  font-size: var(--text-caption);
-  color: var(--color-muted);
-  cursor: pointer;
-  transition: all var(--motion-hover);
-}
-
-.tw-share-wall:hover {
-  color: var(--color-paper);
-  border-color: var(--border-soft);
+  padding: var(--space-1) var(--space-2);
   background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  color: var(--ink-low);
+  cursor: pointer;
+  transition: background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
 }
 
-.tw-share-wall--copied {
+.tw-share-btn:hover {
+  color: var(--color-paper);
+  border-color: var(--border-medium);
+  background: var(--surface-3);
+}
+
+.tw-share-btn--copied {
   color: var(--color-sacred);
+  border-color: rgba(200, 220, 255, 0.25);
 }
 
 /* ── Town crumb — hierarchy breadcrumb ───────────────────────────────────── */
@@ -678,36 +680,13 @@
   text-transform: uppercase;
 }
 
-/* ── View toggle — Grid / All ──────────────────────────────────────────── */
+/* ── Tab bar — reuses global .tnw-tab ─────────────────────────────────── */
 
-.tw-view-toggle {
+.tw-tabs {
   display: flex;
-  gap: var(--space-1);
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--border-faint);
   margin-bottom: var(--space-3);
-}
-
-.tw-view-toggle__btn {
-  padding: var(--space-1) var(--space-3);
-  background: transparent;
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: 0.12em;
-  color: var(--ink-dim);
-  cursor: pointer;
-  transition: all var(--motion-hover);
-}
-
-.tw-view-toggle__btn:hover {
-  background: var(--surface-2);
-  color: var(--ink-low);
-}
-
-.tw-view-toggle__btn--active {
-  background: var(--surface-3);
-  border-color: var(--border-strong);
-  color: var(--color-paper);
 }
 
 /* ── All View — expanded list of every number ──────────────────────────── */

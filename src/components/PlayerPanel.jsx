@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
-import { Award, Check, Share2, X, ArrowRight } from 'lucide-react'
+import { Award, Check, ExternalLink, X, ArrowRight } from 'lucide-react'
 import { getSportIcon } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
@@ -343,7 +343,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   onClick={handleShare}
                   aria-label={`Share #${number}`}
                 >
-                  {copied ? <Check size={14} /> : <Share2 size={14} />}
+                  {copied ? <Check size={14} /> : <ExternalLink size={14} />}
                 </button>
                 <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
                   <X size={14} />

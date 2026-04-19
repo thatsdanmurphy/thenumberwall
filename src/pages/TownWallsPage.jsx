@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Plus, Share2, Check } from 'lucide-react'
+import { MapPin, Plus, ExternalLink, Check } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -98,7 +98,7 @@ export default function TownWallsPage() {
               onClick={handleShare}
               aria-label="Share this town"
             >
-              {copied ? <Check size={14} /> : <Share2 size={14} />}
+              {copied ? <Check size={14} /> : <ExternalLink size={14} />}
               <span>{copied ? 'Copied' : 'Share'}</span>
             </button>
           </div>

@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, Share2, Check, ChevronRight } from 'lucide-react'
+import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check, ChevronRight } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import PositionPicker from '../components/PositionPicker.jsx'
 import AppShell   from '../components/AppShell.jsx'
@@ -41,7 +41,7 @@ export default function TeamWallPage() {
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState(null)
   const [selected, setSelected] = useState(null)
-  const [viewMode, setViewMode] = useState('grid') // 'grid' | 'all'
+  const [viewMode, setViewMode] = useState('all') // 'all' | 'grid'
 
   // Inline add form state
   const [addName, setAddName]         = useState('')
@@ -544,19 +544,19 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
-        {/* Top row — town breadcrumb + wall-level share */}
+        {/* Top row — location + share as one anchored row */}
         <div className="tw-top-row">
           {wall.town_slug && wall.town ? (
             <button
               className="tw-town-crumb"
               onClick={() => navigate(`/walls/town/${wall.town_slug}`)}
             >
-              <span>{wall.town}, {wall.state}</span>
               <MapPin size={11} />
+              <span>{wall.town}, {wall.state}</span>
             </button>
           ) : <span />}
           <button
-            className={`tw-share-wall${copied && !selected ? ' tw-share-wall--copied' : ''}`}
+            className={`tw-share-btn${copied && !selected ? ' tw-share-btn--copied' : ''}`}
             onClick={() => {
               const url = window.location.href.split('#')[0]
               const title = `${wall.school} ${sportLabel} — The Number Wall`
@@ -571,7 +571,7 @@ export default function TeamWallPage() {
             }}
             aria-label="Share this wall"
           >
-            {copied && !selected ? <Check size={13} /> : <Share2 size={13} />}
+            {copied && !selected ? <Check size={12} /> : <ExternalLink size={12} />}
             <span>{copied && !selected ? 'Copied' : 'Share'}</span>
           </button>
         </div>
@@ -625,16 +625,20 @@ export default function TeamWallPage() {
           )}
         </div>
 
-        {/* ── View toggle ── */}
-        <div className="tw-view-toggle" role="group" aria-label="View mode">
+        {/* ── Tab bar — mirrors main wall tab treatment ── */}
+        <div className="tw-tabs" role="tablist">
           <button
-            className={`tw-view-toggle__btn${viewMode === 'grid' ? ' tw-view-toggle__btn--active' : ''}`}
-            onClick={() => setViewMode('grid')}
-          >Grid</button>
-          <button
-            className={`tw-view-toggle__btn${viewMode === 'all' ? ' tw-view-toggle__btn--active' : ''}`}
+            className={`tnw-tab${viewMode === 'all' ? ' tnw-tab--active' : ''}`}
+            role="tab"
+            aria-selected={viewMode === 'all'}
             onClick={() => { setViewMode('all'); setSelected(null) }}
-          >All</button>
+          >ALL</button>
+          <button
+            className={`tnw-tab${viewMode === 'grid' ? ' tnw-tab--active' : ''}`}
+            role="tab"
+            aria-selected={viewMode === 'grid'}
+            onClick={() => setViewMode('grid')}
+          >GRID</button>
         </div>
 
         {/* ── Grid + panel ─────────────────────────────────── */}
@@ -846,7 +850,7 @@ export default function TeamWallPage() {
                         onClick={handleShare}
                         aria-label={`Share #${selected}`}
                       >
-                        {copied ? <Check size={14} /> : <Share2 size={14} />}
+                        {copied ? <Check size={14} /> : <ExternalLink size={14} />}
                       </button>
                       <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
                         <X size={14} />
