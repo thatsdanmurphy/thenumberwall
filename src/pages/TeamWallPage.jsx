@@ -140,7 +140,7 @@ export default function TeamWallPage() {
   useEffect(() => {
     setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact(''); setAddWentPro(false)
     setAddError(null); setAddSuccess(false); setShowAddForm(false)
-    setEditingId(null); setYearFilter(null)
+    setEditingId(null)
     if (selected) setCoachView(false)
   }, [selected])
 

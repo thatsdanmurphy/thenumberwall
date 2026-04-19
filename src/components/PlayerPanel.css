@@ -296,13 +296,13 @@
   display:         flex;
   flex-direction:  column;
   align-items:     center;
-  gap:             var(--space-1);
+  gap:             2px;
   width:           100%;
-  padding:         var(--space-3);
+  padding:         var(--space-2) var(--space-3);
   margin-bottom:   var(--space-3);
   background:      var(--surface-1);
   border:          1px solid var(--border-soft);
-  border-radius:   var(--radius-md);
+  border-radius:   var(--radius-sm);
   cursor:          pointer;
   transition:      background var(--motion-hover), border-color var(--motion-hover);
   -webkit-tap-highlight-color: transparent;
@@ -320,15 +320,15 @@
 
 .player-panel__vote-trigger-label {
   font-family:    var(--font-banner);
-  font-size:      var(--text-body);
+  font-size:      var(--text-small);
   letter-spacing: 0.04em;
   color:          var(--color-paper);
 }
 
 .player-panel__vote-trigger-hint {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.14em;
+  font-size:      0.55rem;
+  letter-spacing: 0.12em;
   color:          var(--ink-dim);
 }
 
