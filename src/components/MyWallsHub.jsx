@@ -128,10 +128,7 @@ export default function MyWallsHub() {
           (yellow). Each slot has a top eyebrow, a hero-sized value, and a
           bottom eyebrow descriptor. The section header sits above as an
           anchor so the row reads as a named part of the hub, not floating UI. */}
-      <header className="hub-identity-header">
-        <span className="hub-identity-header__eyebrow">MY IDENTITY</span>
-        <h2 className="hub-identity-header__title">This is me.</h2>
-      </header>
+      <span className="hub-section-label">THIS IS ME</span>
       <IdentityTiles
         identity={identity}
         citySuggestions={getCitySuggestions}

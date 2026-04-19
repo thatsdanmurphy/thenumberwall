@@ -290,29 +290,51 @@
   color:        var(--ink-high);
 }
 
-/* ── Contested nudge (ALL view, no debate mechanic) ────────────────────── */
+/* ── "WHO OWNS THIS NUMBER?" trigger ───────────────────────────────────── */
 
-.player-panel__contested {
-  display:        flex;
-  flex-direction: column;
-  gap:            var(--space-1);
-  padding:        var(--space-2) 0 var(--space-3);
-  border-bottom:  1px solid var(--border-faint);
-  margin-bottom:  var(--space-3);
+.player-panel__vote-trigger {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  gap:             var(--space-1);
+  width:           100%;
+  padding:         var(--space-3);
+  margin-bottom:   var(--space-3);
+  background:      var(--surface-1);
+  border:          1px solid var(--border-soft);
+  border-radius:   var(--radius-md);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), border-color var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.player-panel__contested-label {
+.player-panel__vote-trigger:hover {
+  background:   rgba(232, 124, 42, 0.07);
+  border-color: rgba(232, 124, 42, 0.30);
+}
+
+.player-panel__vote-trigger:active {
+  background:   rgba(232, 124, 42, 0.12);
+  border-color: rgba(232, 124, 42, 0.45);
+}
+
+.player-panel__vote-trigger-label {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-body);
+  letter-spacing: 0.04em;
+  color:          var(--color-paper);
+}
+
+.player-panel__vote-trigger-hint {
   font-family:    var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.16em;
-  color:          rgba(232, 124, 42, 0.65);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.14em;
+  color:          var(--ink-dim);
 }
 
-.player-panel__contested-hint {
-  font-family:    var(--font-program);
-  font-size: var(--text-small);
-  line-height:    1.5;
-  color:          var(--ink-dim);
+.player-panel__vote-loading {
+  text-align:      center;
+  padding:         var(--space-2) 0 var(--space-3);
 }
 
 /* ── Player cards stack ─────────────────────────────────────────────────── */
@@ -475,6 +497,13 @@
   margin-top:  var(--space-2);
 }
 
+/* When vote buttons are present, indent the fact to align with the name
+   column instead of bleeding under the vote arrows. Vote column is ~40px
+   (32px min-width + 8px gap from player-card__row). */
+.player-card--voting .player-card__fact {
+  margin-left: 40px;
+}
+
 /* Per-card footer removed — share lives in panel header */
 
 /* ── Stat — fixed right column ──────────────────────────────────────────── */
@@ -512,230 +541,31 @@
   hyphens:        none;
 }
 
-/* ── YourNumberPick — inline "who owns this number for you?" ─────────────── */
-
-.your-pick {
-  padding-bottom: var(--space-3);
-  border-bottom:  1px solid var(--border-faint);
-  margin-bottom:  var(--space-3);
-}
-
-.your-pick__label {
-  display:        block;
-  font-family:    var(--font-scoreboard);
-  font-size: var(--text-label);
-  letter-spacing: 0.16em;
-  color:          var(--ink-mid);
-  margin-bottom:  var(--space-2);
-}
-
-/* Name chips — compact, wrapping row */
-.your-pick__chips {
-  display:   flex;
-  flex-wrap: wrap;
-  gap:       var(--space-1);
-}
-
-.your-pick__chip {
-  font-family:    var(--font-banner);
-  font-size: var(--text-small);
-  letter-spacing: 0.01em;
-  color:          var(--ink-mid);
-  background:     var(--surface-2);
-  border:         1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  padding:        var(--space-1) 10px;
-  cursor:         pointer;
-  transition:
-    background   150ms ease,
-    border-color 150ms ease,
-    opacity      180ms ease,
-    transform    150ms ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.your-pick__chip:hover:not(:disabled) {
-  background:   rgba(232, 124, 42, 0.08);
-  border-color: rgba(232, 124, 42, 0.4);
-  color:        var(--color-paper);
-}
-
-@keyframes chip-tap {
-  0%   { transform: scale(1);    }
-  50%  { transform: scale(1.05); }
-  100% { transform: scale(1);    }
-}
-
-.your-pick__chip--tapping {
-  animation:    chip-tap 340ms ease forwards;
-  background:   rgba(232, 124, 42, 0.12) !important;
-  border-color: rgba(232, 124, 42, 0.6) !important;
-  color:        var(--color-paper) !important;
-}
-
-.your-pick__chip--fading {
-  opacity:   0.18;
-  transform: scale(0.96);
-}
-
-/* Rank-1 chip: amber wash — the wall's editorial nod to the leader */
-.your-pick__chip--top {
-  background:   rgba(232, 124, 42, 0.18);
-  border-color: rgba(232, 124, 42, 0.55);
-  color:        var(--color-paper);
-}
-
-.your-pick__chip--top:hover:not(:disabled) {
-  background:   rgba(232, 124, 42, 0.28);
-  border-color: rgba(232, 124, 42, 0.75);
-  color:        var(--color-paper);
-}
-
-/* Result */
-@keyframes pick-result-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0);   }
-}
-
-.your-pick__result {
-  display:        flex;
-  flex-direction: column;
-  gap:            var(--space-2);
-  animation:      pick-result-in 260ms ease forwards;
-}
-
-.your-pick__your-call {
-  display:     flex;
-  align-items: baseline;
-  gap:         var(--space-2);
-}
-
-.your-pick__your-call-label {
-  font-family:    var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.14em;
-  color:          var(--ink-dim);
-}
-
-.your-pick__your-call-name {
-  font-family:    var(--font-banner);
-  font-size:      0.9375rem;
-  letter-spacing: 0.01em;
-  color:          var(--color-paper);
-}
-
-/* Split bar */
-.your-pick__split {
-  display:        flex;
-  flex-direction: column;
-  gap:            var(--space-1);
-}
-
-.your-pick__split-bar {
-  height:        10px;
-  border-radius: 5px;
-  overflow:      hidden;
-  display:       flex;
-  gap:           2px;
-  background:    var(--surface-2);
-}
-
-.your-pick__split-fill {
-  height:     100%;
-  flex-shrink: 0;
-  border-radius: 3px;
-  transition: width 450ms cubic-bezier(0.34, 1.4, 0.64, 1);
-}
-
-.your-pick__split-labels {
-  display:   flex;
-  flex-wrap: wrap;
-  gap:       var(--space-1) var(--space-2);
-}
-
-.your-pick__split-pct {
-  font-family:    var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.08em;
-  /* color is set inline via rankOrange() — graded amber by rank */
-}
-
-/* Picked rank: full brightness + a "you" dot marker */
-.your-pick__split-pct--yours {
-  font-weight: 600;
-}
-
-.your-pick__split-pct--yours::before {
-  content:      '▸ ';
-  font-size:    0.45rem;
-  opacity:      0.7;
-}
-
-.your-pick__wall-note {
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  line-height: 1.55;
-  color:       var(--ink-low);
-  margin:      0;
-  font-style:  italic;
-}
-
-/* Inline verdict prefix — shown only on curated debates */
-.your-pick__wall-verdict {
-  font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
-  letter-spacing: 0.16em;
-  color:          rgba(232, 124, 42, 0.6);
-  font-style:     normal;
-}
-
-/* Vote count footer — shown only on curated debates */
-.your-pick__vote-count {
-  font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
-  letter-spacing: 0.12em;
-  color:          var(--ink-dim);
-  margin:         0;
-}
-
-/* Pick is permanent once made — no reset affordance.
-   Result state is the terminal view for this number on this device. */
-
-/* "Missing someone?" nomination link — sits inline with chips */
-.your-pick__nominate {
-  font-family:    var(--font-scoreboard);
-  font-size: var(--text-caption);
-  letter-spacing: 0.10em;
-  color:          var(--ink-mid);
-  text-decoration: none;
-  align-self:     center;
-  padding:        var(--space-1) 6px;
-  border-radius:  3px;
-  transition:     color 150ms ease;
-  white-space:    nowrap;
-}
-
-.your-pick__nominate:hover {
-  color: rgba(232, 124, 42, 0.85);
-}
+/* Old YourNumberPick styles removed — replaced by vote-trigger above */
 
 /* ── Add a Legend — sits below card stack, quiet invitation ─────────────── */
 
 .player-panel__add-legend {
-  display:        block;
-  margin-top:     var(--space-3);
-  font-family:    var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.14em;
-  color:          var(--ink-dim);
+  display:         block;
+  margin-top:      var(--space-3);
+  padding:         var(--space-2) var(--space-3);
+  background:      var(--surface-2);
+  border:          1px solid var(--border-medium);
+  border-radius:   var(--radius-sm);
+  font-family:     var(--font-scoreboard);
+  font-size:       var(--text-label);
+  letter-spacing:  0.14em;
+  color:           var(--ink-low);
   text-decoration: none;
-  text-align:     center;
-  padding:        var(--space-2) 0;
-  transition:     color 150ms ease;
+  text-align:      center;
+  transition:      background var(--motion-hover), color var(--motion-hover),
+                   border-color var(--motion-hover);
 }
 
 .player-panel__add-legend:hover {
-  color: rgba(232, 124, 42, 0.70);
+  background:   var(--surface-3);
+  border-color: var(--border-strong);
+  color:        var(--ink-high);
 }
 
 /* ── Legend Timeline CTA — surfaces on player cards with full-career timelines ── */

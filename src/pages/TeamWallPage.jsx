@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check } from 'lucide-react'
+import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, Share2, Check, ChevronRight } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import PositionPicker from '../components/PositionPicker.jsx'
 import AppShell   from '../components/AppShell.jsx'
@@ -41,6 +41,7 @@ export default function TeamWallPage() {
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState(null)
   const [selected, setSelected] = useState(null)
+  const [viewMode, setViewMode] = useState('grid') // 'grid' | 'all'
 
   // Inline add form state
   const [addName, setAddName]         = useState('')
@@ -52,9 +53,6 @@ export default function TeamWallPage() {
   const [addError, setAddError]       = useState(null)
   const [addSuccess, setAddSuccess]   = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
-
-  // Year filter for panel entries
-  const [yearFilter, setYearFilter]   = useState(null) // null = all years
 
   // Sports nav — other sports for this school
   const [schoolSports, setSchoolSports] = useState([])
@@ -168,20 +166,6 @@ export default function TeamWallPage() {
     if (!selected || !sport) return []
     return getSportMatchedLegends(selected, sport)
   }, [selected, sport])
-
-  // Unique years across entries for this number (for filter chips)
-  const uniqueYears = useMemo(() => {
-    const years = selectedEntries
-      .map(e => e.grad_year)
-      .filter(Boolean)
-    return [...new Set(years)].sort((a, b) => a - b)
-  }, [selectedEntries])
-
-  // Apply year filter
-  const filteredEntries = useMemo(() => {
-    if (!yearFilter) return selectedEntries
-    return selectedEntries.filter(e => e.grad_year === yearFilter)
-  }, [selectedEntries, yearFilter])
 
   function handleTileClick(num) {
     setSelected(prev => prev === num ? null : num)
@@ -560,18 +544,37 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
-        {/* Town breadcrumb — name first, pin after. Reads like a caption
-            ("Brookline, MA 📍") rather than a navigational chevron. Clicking
-            opens the town browse. Only when we have a town_slug. */}
-        {wall.town_slug && wall.town && (
+        {/* Top row — town breadcrumb + wall-level share */}
+        <div className="tw-top-row">
+          {wall.town_slug && wall.town ? (
+            <button
+              className="tw-town-crumb"
+              onClick={() => navigate(`/walls/town/${wall.town_slug}`)}
+            >
+              <span>{wall.town}, {wall.state}</span>
+              <MapPin size={11} />
+            </button>
+          ) : <span />}
           <button
-            className="tw-town-crumb"
-            onClick={() => navigate(`/walls/town/${wall.town_slug}`)}
+            className={`tw-share-wall${copied && !selected ? ' tw-share-wall--copied' : ''}`}
+            onClick={() => {
+              const url = window.location.href.split('#')[0]
+              const title = `${wall.school} ${sportLabel} — The Number Wall`
+              if (navigator.share) {
+                navigator.share({ title, url }).catch(() => {})
+              } else {
+                navigator.clipboard.writeText(url).catch(() => {})
+              }
+              setCopied(true)
+              setSelected(null)
+              setTimeout(() => setCopied(false), 1800)
+            }}
+            aria-label="Share this wall"
           >
-            <span>{wall.town}, {wall.state}</span>
-            <MapPin size={11} />
+            {copied && !selected ? <Check size={13} /> : <Share2 size={13} />}
+            <span>{copied && !selected ? 'Copied' : 'Share'}</span>
           </button>
-        )}
+        </div>
 
         {/* ── Sports nav — reuses SportsFilter pill styles ── */}
         <div className="sports-filter" role="group" aria-label="Sports at this school">
@@ -622,8 +625,21 @@ export default function TeamWallPage() {
           )}
         </div>
 
+        {/* ── View toggle ── */}
+        <div className="tw-view-toggle" role="group" aria-label="View mode">
+          <button
+            className={`tw-view-toggle__btn${viewMode === 'grid' ? ' tw-view-toggle__btn--active' : ''}`}
+            onClick={() => setViewMode('grid')}
+          >Grid</button>
+          <button
+            className={`tw-view-toggle__btn${viewMode === 'all' ? ' tw-view-toggle__btn--active' : ''}`}
+            onClick={() => { setViewMode('all'); setSelected(null) }}
+          >All</button>
+        </div>
+
         {/* ── Grid + panel ─────────────────────────────────── */}
         {/* Reuses wall-page__body layout — golden ratio grid + panel */}
+        {viewMode === 'grid' ? (
         <div className="wall-page__body">
 
           <div className="wall-page__grid-col">
@@ -830,7 +846,7 @@ export default function TeamWallPage() {
                         onClick={handleShare}
                         aria-label={`Share #${selected}`}
                       >
-                        {copied ? <Check size={14} /> : <ExternalLink size={14} />}
+                        {copied ? <Check size={14} /> : <Share2 size={14} />}
                       </button>
                       <button className="player-panel__close" onClick={() => setSelected(null)} aria-label="Close panel">
                         <X size={14} />
@@ -838,31 +854,10 @@ export default function TeamWallPage() {
                     </div>
                   </div>
 
-                  {/* Year filter chips — show when entries span 2+ years */}
-                  {uniqueYears.length >= 2 && (
-                    <div className="tw-year-filter">
-                      <button
-                        className={`tw-year-chip${!yearFilter ? ' tw-year-chip--active' : ''}`}
-                        onClick={() => setYearFilter(null)}
-                      >
-                        ALL
-                      </button>
-                      {uniqueYears.map(yr => (
-                        <button
-                          key={yr}
-                          className={`tw-year-chip${yearFilter === yr ? ' tw-year-chip--active' : ''}`}
-                          onClick={() => setYearFilter(yr === yearFilter ? null : yr)}
-                        >
-                          '{String(yr).slice(-2)}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
                   {/* Player cards — reuses player-card styles from main wall */}
-                  {filteredEntries.length > 0 ? (
+                  {selectedEntries.length > 0 ? (
                     <div className="player-panel__cards">
-                      {filteredEntries.map((entry, i) => (
+                      {selectedEntries.map((entry, i) => (
                         editingId === entry.id ? (
                           /* Inline edit form */
                           <form key={entry.id} className="tw-add" onSubmit={handleEditSave}>
@@ -927,18 +922,10 @@ export default function TeamWallPage() {
                     </div>
                   ) : (
                     <div className="tw-empty-number">
-                      {yearFilter ? (
-                        <span className="tw-empty-number__text">
-                          No one from '{String(yearFilter).slice(-2)} wore #{selected} yet.
-                        </span>
-                      ) : (
-                        <>
-                          <span className="tw-empty-number__lead">No one's here yet.</span>
-                          <span className="tw-empty-number__text">
-                            Remember who wore #{selected} at {wall.school}? Put a name on it.
-                          </span>
-                        </>
-                      )}
+                      <span className="tw-empty-number__lead">No one's here yet.</span>
+                      <span className="tw-empty-number__text">
+                        Remember who wore #{selected} at {wall.school}? Put a name on it.
+                      </span>
                     </div>
                   )}
 
@@ -1004,6 +991,48 @@ export default function TeamWallPage() {
             </div>
           </aside>
         </div>
+        ) : (
+        /* ── All View — every populated number as a tappable row ── */
+        <div className="tw-all-view">
+          {coaches.length > 0 && (
+            <div className="tw-all-row tw-all-row--coaches">
+              <span className="tw-all-row__number">HC</span>
+              <div className="tw-all-row__entries">
+                {coaches.map(c => (
+                  <div key={c.id} className="tw-all-row__entry">
+                    <span className="tw-all-row__name">{c.name}</span>
+                    {c.years && <span className="tw-all-row__detail">{c.years}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {TEAM_TILE_NUMBERS.filter(n => (entryIndex.get(n) || []).length > 0).map(num => {
+            const entries = entryIndex.get(num) || []
+            const hasPro = entries.some(e => e.went_pro)
+            return (
+              <button
+                key={num}
+                className={`tw-all-row${hasPro ? ' tw-all-row--pro' : ''}`}
+                onClick={() => { setViewMode('grid'); setSelected(num) }}
+              >
+                <span className="tw-all-row__number">#{num}</span>
+                <div className="tw-all-row__entries">
+                  {entries.map(e => (
+                    <div key={e.id} className="tw-all-row__entry">
+                      <span className="tw-all-row__name">{e.name}</span>
+                      {e.position && <span className="tw-all-row__detail">{e.position}</span>}
+                      {e.grad_year && <span className="tw-all-row__detail">'{String(e.grad_year).slice(-2)}</span>}
+                      {e.went_pro && <span className="tw-all-row__pro-badge">PRO</span>}
+                    </div>
+                  ))}
+                </div>
+                <ChevronRight size={14} className="tw-all-row__arrow" />
+              </button>
+            )
+          })}
+        </div>
+        )}
       </main>
 
       <AppFooter />

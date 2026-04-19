@@ -66,7 +66,7 @@ export default function AboutPage() {
         <section className="about-page__section">
           <h2 className="about-page__subheading">TEAM WALLS</h2>
           <p className="about-page__body">
-            Start a wall for your team. Share the link with your teammates. Everyone claims their number. See who wore what — and who else in history wore it too.
+            Every legend on the main wall wore a number somewhere first. Find your team, see who came before you, and claim your own number.
           </p>
           <Link to="/walls" className="about-page__city-cta">
             <span className="about-page__city-cta-name">BROWSE TEAM WALLS</span>

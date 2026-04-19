@@ -25,23 +25,9 @@ const US_TOPO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json'
 // Boston — the seed. Shown pulsing when there are zero walls yet.
 const SEED_COORDS = [-71.0589, 42.3601]
 
-// Sport → glow hue. Tuned against the paper/parchment background.
-const SPORT_HUE = {
-  hockey:        '#4aa3ff',
-  football:      '#d76a3b',
-  basketball:    '#e89a3b',
-  baseball:      '#8ec96b',
-  soccer:        '#6ad0bf',
-  lacrosse:      '#b480e0',
-  volleyball:    '#e06bb8',
-  track:         '#e0c064',
-  swimming:      '#6ac9e0',
-  default:       '#e87c2a',
-}
-
-function hueFor(sport) {
-  return SPORT_HUE[sport] || SPORT_HUE.default
-}
+// Single map color — the signature TNW orange.
+// Dot opacity/glow scales with activity (wall count) instead of sport color.
+const MAP_HUE = '#e87c2a'
 
 // Aggregate walls by town_slug → { key, coords, town, state, sports[], count }
 function groupByTown(walls) {
@@ -129,7 +115,7 @@ export default function WallsMap() {
           {showSeed && (
             <MapDot
               coords={SEED_COORDS}
-              hue={SPORT_HUE.default}
+              hue={MAP_HUE}
               pulsing
               label="Boston, MA — the first wall lights here."
               onHoverIn={(x, y, label) => setHover({ x, y, label })}
@@ -137,9 +123,8 @@ export default function WallsMap() {
             />
           )}
 
-          {/* Live state: one dot per town, sport-colored */}
+          {/* Live state: one dot per town, orange with activity-based glow */}
           {!showSeed && nodes.map(node => {
-            const dominantSport = node.sports[0]
             const count = node.walls.length
             const label = count === 1
               ? `${node.town}, ${node.state}`
@@ -148,9 +133,10 @@ export default function WallsMap() {
               <MapDot
                 key={node.key}
                 coords={node.coords}
-                hue={hueFor(dominantSport)}
+                hue={MAP_HUE}
                 radius={4 + Math.min(count - 1, 4) * 1.25}
                 pulsing={count >= 3}
+                glowIntensity={Math.min(count / 5, 1)}
                 label={label}
                 onClick={() => navigate(`/walls/town/${node.key}`)}
                 onHoverIn={(x, y, l) => setHover({ x, y, label: l })}
@@ -182,7 +168,9 @@ export default function WallsMap() {
  * of ComposableMap. Since we're inside <Geographies>'s sibling slot, we use
  * <Marker> from the lib.
  */
-function MapDot({ coords, hue, radius = 5, pulsing = false, label, onClick, onHoverIn, onHoverOut }) {
+function MapDot({ coords, hue, radius = 5, pulsing = false, glowIntensity = 0.5, label, onClick, onHoverIn, onHoverOut }) {
+  // glowIntensity 0→1 drives fill opacity and glow spread
+  const opacity = 0.55 + glowIntensity * 0.45  // 0.55–1.0
   return (
     <Marker coordinates={coords}>
       {pulsing && (
@@ -195,7 +183,7 @@ function MapDot({ coords, hue, radius = 5, pulsing = false, label, onClick, onHo
       <circle
         r={radius}
         className="walls-map__dot"
-        style={{ fill: hue, stroke: hue }}
+        style={{ fill: hue, stroke: hue, fillOpacity: opacity }}
         onClick={onClick}
         onMouseEnter={e => onHoverIn?.(e.clientX, e.clientY, label)}
         onMouseLeave={onHoverOut}

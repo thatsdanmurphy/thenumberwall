@@ -178,37 +178,6 @@
 
 /* ── Year filter chips ────────────────────────────────────────────────────── */
 
-.tw-year-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  margin-bottom: var(--space-3);
-}
-
-.tw-year-chip {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-body);
-  letter-spacing: 0.06em;
-  color: var(--ink-dim);
-  background: var(--surface-2);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  padding: var(--space-1) var(--space-2);
-  cursor: pointer;
-  transition: background var(--motion-hover), color var(--motion-hover), border-color var(--motion-hover);
-}
-
-.tw-year-chip:hover:not(.tw-year-chip--active) {
-  background: var(--surface-3);
-  color: var(--ink-low);
-}
-
-.tw-year-chip--active {
-  background: var(--surface-3);
-  color: var(--color-paper);
-  border-color: var(--border-strong);
-}
-
 /* ── Inline add form ──────────────────────────────────────────────────────── */
 
 .tw-add {
@@ -328,12 +297,16 @@
   }
 }
 
-/* ── Town crumb — hierarchy breadcrumb under the school title ─────────────── */
+/* ── Top row — town crumb left, share button right ───────────────────────── */
 
-.tw-town-crumb {
-  /* Right-aligned caption — reads "…at Brookline, MA 📍" tucked to the edge of
-     the content column, not floating indented in the left margin. */
-  align-self: flex-end;
+.tw-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-1);
+}
+
+.tw-share-wall {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -346,7 +319,33 @@
   color: var(--color-muted);
   cursor: pointer;
   transition: all var(--motion-hover);
-  margin-bottom: var(--space-1);
+}
+
+.tw-share-wall:hover {
+  color: var(--color-paper);
+  border-color: var(--border-soft);
+  background: var(--surface-2);
+}
+
+.tw-share-wall--copied {
+  color: var(--color-sacred);
+}
+
+/* ── Town crumb — hierarchy breadcrumb ───────────────────────────────────── */
+
+.tw-town-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px var(--space-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: all var(--motion-hover);
 }
 
 .tw-town-crumb:hover {
@@ -677,4 +676,150 @@
   letter-spacing: 0.14em;
   color: var(--ink-low);
   text-transform: uppercase;
+}
+
+/* ── View toggle — Grid / All ──────────────────────────────────────────── */
+
+.tw-view-toggle {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+.tw-view-toggle__btn {
+  padding: var(--space-1) var(--space-3);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: all var(--motion-hover);
+}
+
+.tw-view-toggle__btn:hover {
+  background: var(--surface-2);
+  color: var(--ink-low);
+}
+
+.tw-view-toggle__btn--active {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+  color: var(--color-paper);
+}
+
+/* ── All View — expanded list of every number ──────────────────────────── */
+
+.tw-all-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 640px;
+}
+
+.tw-all-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--motion-hover), border-color var(--motion-hover);
+  position: relative;
+}
+
+.tw-all-row:hover {
+  background:   rgba(232, 124, 42, 0.07);
+  border-color: rgba(232, 124, 42, 0.22);
+}
+
+/* Pro glow on the row — subtle ambient border */
+.tw-all-row--pro {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.06);
+}
+
+.tw-all-row--pro:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.10);
+}
+
+.tw-all-row--coaches {
+  cursor: default;
+  border-style: dashed;
+  border-color: var(--border-faint);
+}
+
+.tw-all-row__number {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-h3);
+  letter-spacing: 0.06em;
+  color: var(--color-paper);
+  min-width: 48px;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.tw-all-row--pro .tw-all-row__number {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.20);
+}
+
+.tw-all-row__entries {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tw-all-row__entry {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tw-all-row__name {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-paper);
+}
+
+.tw-all-row__detail {
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  color: var(--ink-dim);
+}
+
+.tw-all-row__pro-badge {
+  font-family: var(--font-scoreboard);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  padding: 1px 5px;
+  line-height: 1;
+}
+
+.tw-all-row__arrow {
+  flex: 0 0 14px;
+  color: rgba(232, 124, 42, 0.55);
+  margin-top: 4px;
+  transition: transform var(--motion-hover), color var(--motion-hover);
+}
+
+.tw-all-row:hover .tw-all-row__arrow {
+  transform: translateX(3px);
+  color: var(--color-heat);
 }

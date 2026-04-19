@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Users, Flame, Globe } from 'lucide-react'
+import { Plus, Search, Users, Globe, ChevronRight } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -88,7 +88,6 @@ export default function TeamWallsPage() {
           entryCount:       0,
           contributorCount: 0,
           lastActivityAt:   null,
-          isHot:            false,
         })
       }
       const g = map.get(key)
@@ -97,9 +96,6 @@ export default function TeamWallsPage() {
       g.contributorCount += (w.contributorCount || 0)
       if (w.lastActivityAt && (!g.lastActivityAt || w.lastActivityAt > g.lastActivityAt)) {
         g.lastActivityAt = w.lastActivityAt
-      }
-      if (w.lastActivityAt && (Date.now() - new Date(w.lastActivityAt).getTime()) < 24 * 60 * 60 * 1000) {
-        g.isHot = true
       }
     }
     return Array.from(map.values())
@@ -113,12 +109,12 @@ export default function TeamWallsPage() {
         {/* ── Left: Hero ───────────────────────────────────── */}
         <div className="twb-left">
           <div className="twb-hero">
-            <h2 className="twb-hero__heading">EVERY TEAM HAS A WALL.</h2>
+            <h2 className="twb-hero__heading">SEE WHERE THE LEGENDS COME FROM.</h2>
             <p className="twb-hero__sub">
-              Start a wall for your team. Share the link. Let your teammates claim their numbers.
+              Every legend on the main wall wore a number somewhere first. Find your team. See who came before you.
             </p>
             <p className="twb-hero__sub twb-hero__sub--dim">
-              Every legend on the main wall started on a team like yours.
+              Start a wall, share the link, and let your teammates claim their numbers.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
               <Plus size={16} /> Start a Team Wall
@@ -170,66 +166,30 @@ export default function TeamWallsPage() {
           ) : (
             <div className="twb-cards">
               {groupedWalls.map(group => {
-                const palette = TEAM_PALETTES[group.color_primary] || TEAM_PALETTES.orange
-                const accent  = palette[3]
-                const since   = formatSince(group.lastActivityAt)
+                const since = formatSince(group.lastActivityAt)
+                const sportsLabel = group.walls
+                  .map(w => w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
+                  .join(' · ')
 
                 return (
-                  <div key={group.school_slug} className="twb-card-wrap">
-                    <div className="twb-card">
-                      <div className="twb-card__content">
-                        <span className="twb-card__dot" style={{ background: accent.bg }} />
-                        <div className="twb-card__text">
-                          <div className="twb-card__top">
-                            <span className="twb-card__school">{group.school}</span>
-                            {group.isHot && (
-                              <span className="twb-card__hot" title="Active in the last 24 hours">
-                                <Flame size={10} /> HOT
-                              </span>
-                            )}
-                          </div>
-                          <div className="twb-card__sports">
-                            {group.walls.map(w => {
-                              const Icon = getSportIcon(w.sport)
-                              const label = w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-                              return (
-                                <button
-                                  key={w.id}
-                                  className="twb-card__sport-pill"
-                                  onClick={() => navigateToWall(w)}
-                                >
-                                  {Icon && <Icon size={11} />}
-                                  <span>{label}</span>
-                                </button>
-                              )
-                            })}
-                          </div>
-                          <div className="twb-card__meta">
-                            {group.town && (
-                              <span className="twb-card__meta-town">{group.town}, {group.state}</span>
-                            )}
-                          </div>
-                          <div className="twb-card__signals">
-                            {group.entryCount > 0 && (
-                              <span className="twb-card__signal">
-                                {group.entryCount} {group.entryCount === 1 ? 'name' : 'names'}
-                              </span>
-                            )}
-                            {group.contributorCount > 0 && (
-                              <span className="twb-card__signal">
-                                <Users size={10} /> {group.contributorCount}
-                              </span>
-                            )}
-                            {since && (
-                              <span className="twb-card__signal twb-card__signal--dim">
-                                {since}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
+                  <button
+                    key={group.school_slug}
+                    className="twb-card"
+                    onClick={() => navigateToWall(group.walls[0])}
+                  >
+                    <div className="twb-card__text">
+                      <span className="twb-card__school">{group.school}</span>
+                      <span className="twb-card__sports-line">{sportsLabel}</span>
+                      {group.town && (
+                        <span className="twb-card__meta-line">
+                          {group.town}, {group.state}
+                          {group.entryCount > 0 && ` · ${group.entryCount} ${group.entryCount === 1 ? 'name' : 'names'}`}
+                          {since && ` · ${since}`}
+                        </span>
+                      )}
                     </div>
-                  </div>
+                    <ChevronRight size={16} className="twb-card__arrow" />
+                  </button>
                 )
               })}
             </div>

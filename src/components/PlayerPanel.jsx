@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
-import { Award, Check, ExternalLink, X, ArrowRight } from 'lucide-react'
+import { Award, Check, Share2, X, ArrowRight } from 'lucide-react'
 import { getSportIcon } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
-import { pickKey } from '../lib/storageKeys.js'
-import { submitNumberPick, getPickCounts, blendVotes } from '../lib/votesStore.js'
-import associationsData from '../data/associations.json'
+import { fetchWallScores, fetchMyVotes, castPlayerVote } from '../lib/playerVoteStore.js'
 import VoteButtons from './VoteButtons.jsx'
 import './PlayerPanel.css'
 
@@ -15,31 +13,6 @@ import './PlayerPanel.css'
 // When a card renders for one of these, show a "View career timeline" CTA.
 const TIMELINE_PLAYERS = {
   'tom brady': 'brady_tom',
-}
-
-// Group debates by number — multiple debates can share a number (e.g. #7 global + #7 Soccer)
-const ASSOC_MAP = {}
-associationsData.forEach(a => {
-  const key = String(a.number)
-  if (!ASSOC_MAP[key]) ASSOC_MAP[key] = []
-  ASSOC_MAP[key].push(a)
-})
-
-// Pick the right debate given wall + sport filter context.
-// Rules:
-//   1. Filter to debates scoped to this wall first.
-//   2. Sport tab active → exact sport match only (no cross-sport on a sport tab).
-//   3. All tab → cross-sport (sport: null) debates only.
-//   4. No match at any step → null (crowd pick with all legends).
-function pickAssoc(assocList, sportFilter, wallId = 'global') {
-  if (!assocList || assocList.length === 0) return null
-  const wallDebates = assocList.filter(a => a.wall === wallId)
-  if (wallDebates.length === 0) return null
-  const activeSport = sportFilter ? [...sportFilter][0] : null
-  if (activeSport) {
-    return wallDebates.find(a => a.sport === activeSport) ?? null
-  }
-  return wallDebates.find(a => a.sport === null) ?? null
 }
 
 // Tier sort order + descriptions imported from data/tiers.js (single source of truth)
@@ -52,27 +25,10 @@ function sortLegends(entries) {
   })
 }
 
-// ─── Vote seed generator ──────────────────────────────────────────────────────
-// Rank-based distribution so the top legend always leads the crowd.
-// 1st: 60% · 2nd: 25% · 3rd: 10% · remainder ~2% each
-const RANK_SHARES = [0.60, 0.25, 0.10, 0.03, 0.015, 0.01]
-const SEED_BASE   = 480
-
-function autoSeedVotes(sortedLegends) {
-  return sortedLegends.map((_, i) => {
-    const share = i < RANK_SHARES.length ? RANK_SHARES[i] : 0.005
-    return Math.max(1, Math.round(SEED_BASE * share))
-  })
-}
-
 // ─── Team accent colors ───────────────────────────────────────────────────────
-const TEAM_ACCENT = {
-  'Boston Red Sox':       { bg: 'rgba(255,58,74,0.15)',  border: 'rgba(255,58,74,0.40)',  text: '#FF3A4A' },
-  'Boston Celtics':       { bg: 'rgba(0,224,90,0.12)',   border: 'rgba(0,224,90,0.38)',   text: '#00E05A' },
-  'Boston Bruins':        { bg: 'rgba(255,211,64,0.12)', border: 'rgba(255,211,64,0.38)', text: '#FFD340' },
-  'New England Patriots': { bg: 'rgba(74,140,255,0.12)', border: 'rgba(74,140,255,0.38)', text: '#4A8CFF' },
-  'Boston Patriots':      { bg: 'rgba(74,140,255,0.12)', border: 'rgba(74,140,255,0.38)', text: '#4A8CFF' },
-}
+// Team accent colors removed — all teams render with the same neutral badge
+// style on every wall. City walls can re-introduce team colors later as a
+// per-wall feature, but the main wall should feel sport-neutral.
 
 // Sport icons imported from data/sports.js (single source of truth)
 
@@ -93,14 +49,11 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
   const navigate       = useNavigate()
   const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
-  const teamAccent     = TEAM_ACCENT[entry.team] ?? null
-  const teamBadgeStyle = teamAccent
-    ? { background: teamAccent.bg, borderColor: teamAccent.border, color: teamAccent.text }
-    : {}
+  const teamBadgeStyle = {}
   const timelineId     = TIMELINE_PLAYERS[(entry.name || '').toLowerCase()]
 
   return (
-    <div className={`player-card${isTop ? ' player-card--top' : ''}`}>
+    <div className={`player-card${isTop ? ' player-card--top' : ''}${voteData ? ' player-card--voting' : ''}`}>
       <div className="player-card__row">
 
         {/* ── Vote buttons (NYC mode) ──────────────────── */}
@@ -161,244 +114,6 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
           <span>View his career timeline</span>
           <ArrowRight size={14} />
         </a>
-      )}
-    </div>
-  )
-}
-
-// ─── YourNumberPick ───────────────────────────────────────────────────────────
-// Inline "who owns this number for you?" — lives at the bottom of the legends
-// list. Works for any count ≥ 2. Auto-seeds votes from sort rank so the top
-// legend always leads. No separate tab — the moment is part of the same view.
-
-function getSavedPick(number) {
-  try {
-    const raw = localStorage.getItem(pickKey(number))
-    return raw ? JSON.parse(raw) : null
-  } catch { return null }
-}
-
-function savePick(number, idx) {
-  try {
-    localStorage.setItem(pickKey(number), JSON.stringify({ idx, ts: Date.now() }))
-  } catch {}
-}
-
-// clearPick retained for future use (e.g. admin/debug tools) but not exposed in UI.
-// Pick is permanent by design — prevents vote inflation from reset/re-vote loops.
-function clearPick(number) { // eslint-disable-line no-unused-vars
-  try { localStorage.removeItem(pickKey(number)) } catch {}
-}
-
-// Last name only for compact chips
-function shortName(name) {
-  const parts = (name || '').trim().split(' ')
-  return parts.length > 1 ? parts[parts.length - 1] : name
-}
-
-// Graded amber by rank position — rank 0 (leader) = full amber, steps down.
-// Applied as inline color so each label feels like a heat reading, not just white text.
-const RANK_ORANGE = [
-  'rgba(232, 124, 42, 1.00)',  // rank 1 — full amber
-  'rgba(232, 124, 42, 0.70)',  // rank 2
-  'rgba(232, 124, 42, 0.50)',  // rank 3
-  'rgba(232, 124, 42, 0.36)',  // rank 4
-  'rgba(232, 124, 42, 0.26)',  // rank 5
-  'rgba(232, 124, 42, 0.20)',  // rank 6+
-]
-function rankOrange(i) {
-  return RANK_ORANGE[Math.min(i, RANK_ORANGE.length - 1)]
-}
-
-// ─── YourNumberPick ───────────────────────────────────────────────────────────
-// Unified "who owns this number?" mechanic — handles both curated head-to-heads
-// (when assoc is provided) and open crowd picks (all visible legends).
-//
-// With assoc:    2-chip debate, seeds from assoc.seedVotes, wall note post-pick.
-// Without assoc: all-legend chips, auto-seeded by rank, crowd message post-pick.
-// Same UI, same storage key — one component, two data sources.
-
-function YourNumberPick({ number, legends, assoc, leadIdx = 0, wall = 'global', sport = null }) {
-  const saved                   = getSavedPick(number)
-  const [pick, setPick]         = useState(saved)
-  const [tapping, setTapping]   = useState(null)
-  const [revealed, setRevealed] = useState(!!saved)
-  const [liveCounts, setLiveCounts] = useState(new Map())
-
-  // Derive the sport key for this debate context — assoc.sport or the active
-  // sport filter. Used for both the Supabase read and write.
-  const debateSport = assoc ? assoc.sport : sport
-
-  useEffect(() => {
-    const s = getSavedPick(number)
-    setPick(s)
-    setTapping(null)
-    setRevealed(!!s)
-  }, [number])
-
-  // Fetch live vote counts from Supabase when number/wall/sport changes
-  useEffect(() => {
-    let stale = false
-    getPickCounts({ number, wall, sport: debateSport })
-      .then(counts => { if (!stale) setLiveCounts(counts) })
-      .catch(() => {})
-    return () => { stale = true }
-  }, [number, wall, debateSport])
-
-  // Build unified options list — either the 2 curated players or all visible legends
-  const options = assoc ? assoc.options.map(opt => ({ name: opt.name })) : legends
-  if (options.length < 2) return null
-
-  // Seed votes — from assoc data or auto-generated by rank
-  const seeds = assoc
-    ? assoc.options.map(opt => assoc.seedVotes[opt.id] ?? 0)
-    : autoSeedVotes(legends)
-
-  function handlePick(idx) {
-    if (pick || tapping !== null) return
-    setTapping(idx)
-    setTimeout(() => {
-      savePick(number, idx)
-      setPick({ idx, ts: Date.now() })
-      // Write to Supabase (fire-and-forget — localStorage is the optimistic cache)
-      submitNumberPick({ number, optionIdx: idx, wall, sport: debateSport })
-      // Update local live counts optimistically
-      setLiveCounts(prev => {
-        const next = new Map(prev)
-        next.set(idx, (next.get(idx) || 0) + 1)
-        return next
-      })
-      if (assoc) {
-        const pickedName     = assoc.options[idx]?.name ?? ''
-        const agreedWithWall = assoc.options[idx]?.id === assoc.wallCall
-        track('debate_vote', { number, picked: pickedName, agreedWithWall })
-      } else {
-        track('your_number_pick', { number, picked: legends[idx]?.name })
-      }
-      setTimeout(() => { setRevealed(true); setTapping(null) }, 160)
-    }, 340)
-  }
-
-  const pickedIdx = pick?.idx ?? null
-  // Blend seed + live votes. Seeds fade out as live traffic grows.
-  const blended = blendVotes(seeds, liveCounts)
-  const votes   = blended.map((v, i) => v + (pickedIdx === i ? 1 : 0))
-  const total   = votes.reduce((a, b) => a + b, 0)
-  const pcts    = votes.map(v => Math.round((v / total) * 100))
-
-  // Post-pick note — wall editorial (debate) or crowd scoreboard (open pick)
-  function postPickNote() {
-    if (pickedIdx === null) return null
-    if (assoc) {
-      const wallAgrees = assoc.options[pickedIdx]?.id === assoc.wallCall
-      return (
-        <>
-          <span className="your-pick__wall-verdict">
-            {wallAgrees ? 'THE WALL AGREES · ' : 'THE WALL DIFFERS · '}
-          </span>
-          {assoc.wallNote}
-        </>
-      )
-    }
-    // Crowd message — scoreboard voice
-    const leaderPct  = pcts[0]
-    const yourPct    = pcts[pickedIdx]
-    const gap        = leaderPct - yourPct
-    const leaderName = shortName(legends[0].name)
-    if (pickedIdx === 0) {
-      if (leaderPct >= 70) return `${leaderName} — ${leaderPct}% of the wall.`
-      if (leaderPct >= 57) return `${leaderName} leads. ${100 - leaderPct}% push back.`
-      return `No clear owner. Split.`
-    }
-    const yourName = shortName(legends[pickedIdx].name)
-    if (gap >= 35) return `${leaderName} leads this one. You're with ${yourPct}%.`
-    if (gap >= 18) return `${leaderName} leads. ${yourName} has ${yourPct}%.`
-    if (gap >= 6)  return `${gap}% gap. Closer than it looks.`
-    return gap > 0 ? `${gap}% gap.` : `Split.`
-  }
-
-  // Split bar — all amber, no blue. Leading option gets full amber, trailing is dim.
-  function barStyle(i) {
-    const isLeader = i === leadIdx
-    return {
-      background: isLeader ? 'rgba(232,124,42,0.80)' : 'rgba(255,255,255,0.10)',
-      opacity:    i === pickedIdx ? 1 : 0.55,
-    }
-  }
-
-  return (
-    <div className="your-pick">
-      {!revealed && (
-        <>
-          <span className="your-pick__label">WHO REALLY OWNS THIS NUMBER?</span>
-          <div className="your-pick__chips">
-            {options.map((opt, i) => (
-              <button
-                key={i}
-                className={[
-                  'your-pick__chip',
-                  i === leadIdx                     && 'your-pick__chip--top',
-                  tapping === i                     && 'your-pick__chip--tapping',
-                  tapping !== null && tapping !== i && 'your-pick__chip--fading',
-                ].filter(Boolean).join(' ')}
-                onClick={() => handlePick(i)}
-                disabled={tapping !== null}
-              >
-                {shortName(opt.name)}
-              </button>
-            ))}
-            <a
-              className="your-pick__nominate"
-              href="https://forms.gle/FdUYZoLakEYm9GiK8"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              + missing someone?
-            </a>
-          </div>
-        </>
-      )}
-
-      {revealed && pickedIdx !== null && (
-        <div className="your-pick__result">
-          <div className="your-pick__your-call">
-            <span className="your-pick__your-call-label">YOUR PICK</span>
-            <span className="your-pick__your-call-name">{options[pickedIdx]?.name}</span>
-          </div>
-
-          <div className="your-pick__split">
-            <div className="your-pick__split-bar">
-              {options.map((_, i) => (
-                <div
-                  key={i}
-                  className="your-pick__split-fill"
-                  style={{ width: `${pcts[i]}%`, ...barStyle(i) }}
-                />
-              ))}
-            </div>
-            <div className="your-pick__split-labels">
-              {options.map((opt, i) => (
-                pcts[i] >= 5 ? (
-                  <span
-                    key={i}
-                    className={[
-                      'your-pick__split-pct',
-                      i === pickedIdx && 'your-pick__split-pct--yours',
-                    ].filter(Boolean).join(' ')}
-                    style={{ color: assoc ? undefined : rankOrange(i) }}
-                  >
-                    {pcts[i]}% {shortName(opt.name)}
-                  </span>
-                ) : null
-              ))}
-            </div>
-          </div>
-
-          <p className="your-pick__wall-note">{postPickNote()}</p>
-          {assoc && (
-            <p className="your-pick__vote-count">{total.toLocaleString()} picks</p>
-          )}
-        </div>
       )}
     </div>
   )
@@ -471,31 +186,87 @@ function useSwipeDown(panelRef, onClose) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global', voteScores = null, myVotes = null, onPlayerVote = null }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global' }) {
   const [copied, setCopied] = useState(false)
   const panelRef = useRef(null)
   useSwipeDown(panelRef, onClear)
 
+  // ── Internal voting state ──────────────────────────────────────────────────
+  // Voting is opt-in: user taps "WHO OWNS THIS NUMBER?" to activate.
+  // Panel fetches scores from Supabase when activated — no page-level wiring.
+  const [votingActive, setVotingActive] = useState(false)
+  const [voteScores,   setVoteScores]   = useState(null)  // Map: "number|name" → { netScore }
+  const [myVotes,      setMyVotes]      = useState(null)   // Map: "number|name" → 1 | -1
+
   const hasSelection = Boolean(selected)
   const entries      = selected?.entries ?? []
   const number       = selected?.number  ?? null
-  const assocList    = number ? (ASSOC_MAP[String(number)] ?? []) : []
-  const assoc        = pickAssoc(assocList, sportFilter, wallId)
 
-  // Which debate option leads by seed votes — shared by YourNumberPick and card stack
-  const panelLeadIdx = assoc
-    ? ((assoc.seedVotes[assoc.options[0]?.id] ?? 0) >= (assoc.seedVotes[assoc.options[1]?.id] ?? 0) ? 0 : 1)
-    : 0
+  // Reset voting when number changes
+  useEffect(() => {
+    setVotingActive(false)
+    setVoteScores(null)
+    setMyVotes(null)
+  }, [number])
+
+  // Fetch vote data when voting is activated
+  useEffect(() => {
+    if (!votingActive || !number || wallId === 'none') return
+    let stale = false
+    Promise.all([
+      fetchWallScores(wallId),
+      fetchMyVotes(wallId),
+    ]).then(([scores, mine]) => {
+      if (!stale) { setVoteScores(scores); setMyVotes(mine) }
+    }).catch(console.error)
+    return () => { stale = true }
+  }, [votingActive, wallId, number])
+
+  // Vote callback — optimistic update + persist
+  const handlePlayerVote = useCallback(async (voteNumber, playerName, direction) => {
+    const key = `${voteNumber}|${playerName}`
+    const currentVote = myVotes?.get(key) ?? null
+    const newDir = await castPlayerVote(wallId, voteNumber, playerName, direction)
+
+    setMyVotes(prev => {
+      const next = new Map(prev)
+      if (newDir === null) next.delete(key)
+      else next.set(key, newDir)
+      return next
+    })
+
+    setVoteScores(prev => {
+      const next = new Map(prev)
+      const existing = next.get(key) ?? { netScore: 0, totalVotes: 0 }
+      let delta = 0
+      let countDelta = 0
+      if (newDir === null) {
+        delta = -currentVote; countDelta = -1
+      } else if (currentVote === null) {
+        delta = newDir; countDelta = 1
+      } else {
+        delta = newDir - currentVote
+      }
+      next.set(key, { netScore: existing.netScore + delta, totalVotes: existing.totalVotes + countDelta })
+      return next
+    })
+
+    return newDir
+  }, [wallId, myVotes])
+
+  function activateVoting() {
+    setVotingActive(true)
+    track('voting_activated', { number, wallId })
+  }
 
   // Cards sort by tier + stat weight — or by net votes when voting is active.
-  const votingMode = Boolean(voteScores)
+  const votingMode = votingActive && Boolean(voteScores)
   const legendsBase = entries.filter(e => e.tier !== 'UNWRITTEN')
   const legends = votingMode
     ? [...legendsBase].sort((a, b) => {
         const scoreA = voteScores.get(`${a.number}|${a.name}`)?.netScore ?? 0
         const scoreB = voteScores.get(`${b.number}|${b.name}`)?.netScore ?? 0
         if (scoreB !== scoreA) return scoreB - scoreA
-        // Tie-break: fall back to tier + stat weight
         const tierDiff = (TIER_RANK[a.tier] ?? 9) - (TIER_RANK[b.tier] ?? 9)
         if (tierDiff !== 0) return tierDiff
         return (b.statWeight || 0) - (a.statWeight || 0)
@@ -508,6 +279,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const numberGlow  = `0 0 28px ${heat.border}`
 
   const legendCount = legends.length
+
+  // Show the trigger when: 2+ legends, not sacred, not already voting, not current-roster mode
+  const showVoteTrigger = legendCount >= 2 && !isSacred && !votingActive && mode !== 'current' && wallId !== 'none'
 
   const subtitle = legendCount === 0
     ? 'UNWRITTEN'
@@ -569,18 +343,13 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   onClick={handleShare}
                   aria-label={`Share #${number}`}
                 >
-                  {copied ? <Check size={14} /> : <ExternalLink size={14} />}
+                  {copied ? <Check size={14} /> : <Share2 size={14} />}
                 </button>
                 <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
                   <X size={14} />
                 </button>
               </div>
             </div>
-
-            {/* SACRED reads through the tile's blue glow — no badge here.
-                "Retired league-wide" is only true for #42 (Robinson/MLB) and
-                #99 (Gretzky/NHL). Brady, Hašek, Russell, Jordan, Parish are not.
-                If we reinstate this, it needs a per-entry leagueWideRetired field. */}
 
             {/* ── Unwritten ────────────────────────────────── */}
             {legendCount === 0 && (
@@ -593,20 +362,18 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
               </div>
             )}
 
-            {/* ── Who owns this number? ──
-                 Voting mode (NYC): skip debates entirely — votes drive ordering.
-                 Sport filter active + debate exists → full vote mechanic.
-                 Sport filter active + no debate but 2+ legends → crowd pick.
-                 ALL view + contested → light "contested" nudge, no vote. */}
-            {!votingMode && sportFilter && sportFilter.size > 0 && (assoc || (!isSacred && legendCount >= 2)) && (
-              <YourNumberPick number={number} legends={legends} assoc={assoc} leadIdx={panelLeadIdx} wall={wallId} sport={sportFilter ? [...sportFilter][0] : null} />
+            {/* ── "WHO OWNS THIS NUMBER?" trigger ─────────── */}
+            {showVoteTrigger && (
+              <button className="player-panel__vote-trigger" onClick={activateVoting}>
+                <span className="player-panel__vote-trigger-label">WHO OWNS #{number}?</span>
+                <span className="player-panel__vote-trigger-hint">Vote on the legends below</span>
+              </button>
             )}
-            {!votingMode && (!sportFilter || sportFilter.size === 0) && !isSacred && legendCount >= 2 && (
-              <div className="player-panel__contested">
-                <span className="player-panel__contested-label">CONTESTED</span>
-                <span className="player-panel__contested-hint">
-                  {legendCount} legends wore #{number}. Filter by sport to debate who owns it.
-                </span>
+
+            {/* Voting active indicator */}
+            {votingActive && !votingMode && (
+              <div className="player-panel__vote-loading">
+                <span className="player-panel__vote-trigger-label">LOADING VOTES…</span>
               </div>
             )}
 
@@ -618,7 +385,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   const cardVoteData = votingMode ? {
                     netScore: voteScores.get(voteKey)?.netScore ?? 0,
                     myVote:   myVotes?.get(voteKey) ?? null,
-                    onVote:   (dir) => onPlayerVote?.(number, entry.name, dir),
+                    onVote:   (dir) => handlePlayerVote(number, entry.name, dir),
                   } : null
                   return (
                     <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} voteData={cardVoteData} />

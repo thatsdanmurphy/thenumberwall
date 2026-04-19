@@ -37,7 +37,7 @@ export default function VoteButtons({ netScore = 0, myVote = null, onVote, playe
         aria-label="Upvote"
         title="Upvote"
       >
-        <ChevronUp size={compact ? 14 : 16} />
+        <ChevronUp size={compact ? 16 : 18} />
       </button>
 
       <span className={`vote-buttons__score${isUp ? ' vote-buttons__score--up' : ''}${isDown ? ' vote-buttons__score--down' : ''}`}>
@@ -50,7 +50,7 @@ export default function VoteButtons({ netScore = 0, myVote = null, onVote, playe
         aria-label="Downvote"
         title="Downvote"
       >
-        <ChevronDown size={compact ? 14 : 16} />
+        <ChevronDown size={compact ? 16 : 18} />
       </button>
     </div>
   )

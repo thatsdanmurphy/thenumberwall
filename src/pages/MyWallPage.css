@@ -1621,21 +1621,21 @@
 .hub-wall-row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   background: var(--surface-1);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: background var(--motion-hover), border-color var(--motion-hover);
   text-align: left;
   width: 100%;
   font-family: inherit;
 }
 
 .hub-wall-row:hover {
-  background: rgba(232, 124, 42, 0.04);
-  border-color: rgba(232, 124, 42, 0.20);
+  background:   rgba(232, 124, 42, 0.07);
+  border-color: rgba(232, 124, 42, 0.22);
 }
 
 /* Your number preview */
@@ -1749,7 +1749,8 @@
 }
 
 .hub-wall-row:hover .hub-wall-row__arrow {
-  color: rgba(232, 124, 42, 0.45);
+  transform: translateX(3px);
+  color: var(--color-heat);
 }
 
 /* ─── Build CTA ────────────────────────────────────────────────────────── */
@@ -1764,39 +1765,39 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: var(--space-3) 20px;
-  background: none;
-  border: 1px dashed rgba(232, 124, 42, 0.18);
-  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: background var(--motion-hover), color var(--motion-hover),
+              border-color var(--motion-hover);
   font-family: var(--font-scoreboard);
 }
 
 .hub-build-btn:hover {
-  background: rgba(232, 124, 42, 0.04);
-  border-color: rgba(232, 124, 42, 0.35);
-  border-style: solid;
+  background:   var(--surface-3);
+  border-color: var(--border-strong);
 }
 
 .hub-build-btn svg {
-  color: rgba(232, 124, 42, 0.35);
-  transition: color 0.2s;
+  color: var(--ink-low);
+  transition: color var(--motion-hover);
 }
 
 .hub-build-btn:hover svg {
-  color: rgba(232, 124, 42, 0.60);
+  color: var(--ink-high);
 }
 
 .hub-build-btn__text {
-  font-size: var(--text-caption);
-  letter-spacing: 0.10em;
-  color: rgba(232, 124, 42, 0.40);
-  transition: color 0.2s;
+  font-size: var(--text-label);
+  letter-spacing: 0.14em;
+  color: var(--ink-low);
+  transition: color var(--motion-hover);
 }
 
 .hub-build-btn:hover .hub-build-btn__text {
-  color: rgba(232, 124, 42, 0.70);
+  color: var(--ink-high);
 }
 
 /* ─── New Wall Modal ───────────────────────────────────────────────────── */

@@ -162,72 +162,60 @@
 
 .twb-card {
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
   background: var(--surface-1);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
-  overflow: hidden;
   text-align: left;
   text-decoration: none;
-  transition: background var(--motion-hover), border-color var(--motion-hover);
-}
-
-/* Sport pills inside the card — one per wall for this school. Each pill
-   is clickable and navigates to that specific sport wall. */
-.twb-card__sports {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  margin-top: 2px;
-}
-
-.twb-card__sport-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 3px var(--space-2);
-  background: var(--surface-2);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  color: var(--color-paper);
-  font-family: var(--font-program);
-  font-size: var(--text-caption);
   cursor: pointer;
-  transition: all var(--motion-hover);
+  transition: background var(--motion-hover), border-color var(--motion-hover);
+  font-family: inherit;
 }
 
-.twb-card__sport-pill:hover {
-  background: rgba(232, 124, 42, 0.12);
-  border-color: rgba(232, 124, 42, 0.35);
-}
-
-.twb-card__content {
-  padding: var(--space-3) var(--space-4);
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex: 1;
-}
-
-.twb-card__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  align-self: center;
+.twb-card:hover {
+  background:   rgba(232, 124, 42, 0.07);
+  border-color: rgba(232, 124, 42, 0.22);
 }
 
 .twb-card__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
 }
 
 .twb-card__school {
-  font-family: var(--font-program);
-  font-size: var(--text-body);
-  font-weight: 600;
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: 0.14em;
   color: var(--color-paper);
+}
+
+.twb-card__sports-line {
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  color: var(--ink-dim);
+}
+
+.twb-card__meta-line {
+  font-family: var(--font-program);
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+.twb-card__arrow {
+  flex: 0 0 16px;
+  color: rgba(232, 124, 42, 0.55);
+  transition: transform var(--motion-hover), color var(--motion-hover);
+}
+
+.twb-card:hover .twb-card__arrow {
+  transform: translateX(3px);
+  color: var(--color-heat);
 }
 
 .twb-card__meta {
@@ -273,22 +261,6 @@
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
-}
-
-.twb-card__hot {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 2px var(--space-1);
-  background: rgba(245, 140, 20, 0.14);
-  border: 1px solid rgba(245, 140, 20, 0.42);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  letter-spacing: 0.12em;
-  color: rgba(255, 170, 85, 1);
-  text-transform: uppercase;
-  line-height: 1;
 }
 
 .twb-card__signals {

@@ -71,6 +71,10 @@
 }
 
 /* City-card style CTA — matches Discover the Locals on the home screen */
+.about-page__city-cta + .about-page__city-cta {
+  margin-top: var(--space-2);
+}
+
 .about-page__city-cta {
   display:         flex;
   align-items:     center;

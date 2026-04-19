@@ -77,11 +77,9 @@ function NumberSlot({ value, onSave }) {
     setEditing(false)
   }
 
-  const sub = value ? 'THE ONE THAT\u2019S MINE' : 'PICK A NUMBER'
-
   if (editing) {
     return (
-      <Slot variant="number" label="MY NUMBER" subLabel={sub} filled>
+      <Slot variant="number" label="MY NUMBER" filled>
         <input
           className="id-slot__input id-slot__input--big"
           type="text"
@@ -100,7 +98,7 @@ function NumberSlot({ value, onSave }) {
 
   if (!value) {
     return (
-      <Slot variant="number" label="MY NUMBER" subLabel={sub} filled={false} interactive
+      <Slot variant="number" label="MY NUMBER" filled={false} interactive
             onClick={() => setEditing(true)} ariaLabel="Set my number">
         <Plus size={22} strokeWidth={2.5} className="id-slot__plus" />
       </Slot>
@@ -108,7 +106,7 @@ function NumberSlot({ value, onSave }) {
   }
 
   return (
-    <Slot variant="number" label="MY NUMBER" subLabel={sub} filled interactive
+    <Slot variant="number" label="MY NUMBER" filled interactive
           onClick={() => setEditing(true)} ariaLabel={`Edit my number (${value})`}>
       <span className="id-slot__value">{value}</span>
     </Slot>
@@ -137,7 +135,7 @@ function CitySlot({ value, suggestions: suggestionFn, onSave }) {
     setSuggestions(suggestionFn ? suggestionFn(v) : [])
   }
 
-  const sub = value ? 'WHERE MY TEAMS PLAY' : 'PICK A CITY'
+  const sub = !value ? 'PICK A CITY' : null
   // City cells stay at 1fr — no grid reflow. Long words (Nashville,
   // Indianapolis) shrink the value via `id-slot--shrink` instead of
   // widening the tile. Keeps the triptych balanced and the sublabel
