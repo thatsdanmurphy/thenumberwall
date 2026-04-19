@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { Loader, X, Pencil, Plus, Trash2, EyeOff, Archive, Undo2, MapPin, ExternalLink, Check } from 'lucide-react'
 import { getSportIcon, TEAM_SPORTS } from '../data/sports.js'
 import PositionPicker from '../components/PositionPicker.jsx'
@@ -36,12 +36,23 @@ const TEAM_TILE_NUMBERS = ['0', ...Array.from({ length: 99 }, (_, i) => String(i
 export default function TeamWallPage() {
   const { schoolSlug, sport } = useParams()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [wall, setWall]         = useState(null)
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState(null)
   const [selected, setSelected] = useState(null)
-  const [viewMode, setViewMode] = useState('all') // 'all' | 'grid'
+
+  // View mode persists across sport switches via URL search param
+  const viewMode = searchParams.get('view') || 'all'
+  const setViewMode = useCallback((mode) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (mode === 'all') next.delete('view')
+      else next.set('view', mode)
+      return next
+    }, { replace: true })
+  }, [setSearchParams])
 
   // Inline add form state
   const [addName, setAddName]         = useState('')
@@ -624,9 +635,10 @@ export default function TeamWallPage() {
                 className={`sports-filter__pill${isActive ? ' sports-filter__pill--active' : ''}`}
                 onClick={() => {
                   if (s.sport !== sport) {
-                    navigate(`/walls/${schoolSlug}/${s.sport}`)
+                    navigate(`/walls/${schoolSlug}/${s.sport}?view=grid`)
+                  } else {
+                    setViewMode('grid')
                   }
-                  setViewMode('grid')
                 }}
                 aria-pressed={isActive}
               >
