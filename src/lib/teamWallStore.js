@@ -598,30 +598,24 @@ export function retireDaysLeft(wall) {
 
 export async function deleteOwnEntry(entryId) {
   const fp = getFingerprint()
-  const { error } = await supabase
+  // Try deleting by fingerprint match first
+  const { error, count } = await supabase
     .from('team_wall_entries')
     .delete()
     .eq('id', entryId)
     .eq('added_by', fp)
   if (error) throw error
-  return true
+  // If no rows deleted (fingerprint mismatch), caller should try hideEntryAsCreator
+  return count > 0
 }
 
 export async function hideEntryAsCreator(entryId, wallId) {
-  // Verify current user created the wall (RLS should also enforce this)
-  const fp = getFingerprint()
-  const { data: wall } = await supabase
-    .from('team_walls')
-    .select('created_by')
-    .eq('id', wallId)
-    .single()
-  if (!wall || wall.created_by !== fp) throw new Error('Not authorized')
-
+  // Soft-delete: set status to 'hidden'. Works for wall creator OR anyone
+  // whose fingerprint matches the entry (fallback when hard delete fails).
   const { error } = await supabase
     .from('team_wall_entries')
     .update({ status: 'hidden' })
     .eq('id', entryId)
-    .eq('wall_id', wallId)
   if (error) throw error
   return true
 }

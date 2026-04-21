@@ -257,7 +257,7 @@ export default function TeamWallPage() {
     setAddError(null)
 
     try {
-      await addTeamEntry(wall.id, {
+      const newEntry = await addTeamEntry(wall.id, {
         number: selected,
         name: addName.trim(),
         gradYear: addGradYear ? Number(addGradYear) : null,
@@ -265,10 +265,13 @@ export default function TeamWallPage() {
         funFact: addFunFact.trim() || null,
         wentPro: addWentPro,
       })
+      // Optimistic: inject the new entry into local state immediately
+      if (newEntry) {
+        setWall(prev => prev ? { ...prev, entries: [...(prev.entries || []), newEntry] } : prev)
+      }
       setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact(''); setAddWentPro(false)
       setAddSuccess(true)
       setShowAddForm(false)  // close form, back to card view
-      await fetchWall()
       setTimeout(() => setAddSuccess(false), 2000)
     } catch (err) {
       setAddError('Something went wrong. Try again.')
@@ -493,18 +496,20 @@ export default function TeamWallPage() {
   // ── Entry deletion ──
   // Contributors can delete their own. Creator can hide any entry on their wall.
   async function handleDeleteEntry(entry) {
-    const mine = canDeleteEntry(entry)
-    const msg = mine
-      ? 'Delete your entry? This can\'t be undone.'
-      : 'Hide this entry from the wall? Only the original contributor can restore it.'
-    if (!window.confirm(msg)) return
+    if (!window.confirm('Remove this entry?')) return
     try {
-      if (mine) await deleteOwnEntry(entry.id)
-      else      await hideEntryAsCreator(entry.id, wall.id)
-      await fetchWall()
+      // Try hard delete first (works if fingerprint matches entry's added_by).
+      // Falls back to soft-hide so wall creators can always remove entries.
+      const deleted = await deleteOwnEntry(entry.id)
+      if (!deleted) await hideEntryAsCreator(entry.id, wall.id)
+      // Optimistic: remove from local state immediately
+      setWall(prev => prev ? {
+        ...prev,
+        entries: (prev.entries || []).filter(e => e.id !== entry.id),
+      } : prev)
     } catch (err) {
       console.error('Delete entry error:', err)
-      window.alert('Could not delete. Try again.')
+      window.alert('Could not remove. Try again.')
     }
   }
 
@@ -989,7 +994,7 @@ export default function TeamWallPage() {
                     </button>
                   ) : (
                     <form className="tw-add" onSubmit={handleAdd}>
-                      <span className="tw-add__label">ADD A PLAYER</span>
+                      <span className="tw-add__label">ADD TO {sportLabel?.toUpperCase() || 'ROSTER'}</span>
                       {addError && <span className="tw-add__error">{addError}</span>}
                       <input type="text" className="tnw-input tw-add__input" placeholder="Name"
                         value={addName} onChange={e => setAddName(e.target.value)} autoFocus />
