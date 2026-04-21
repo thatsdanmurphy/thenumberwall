@@ -33,6 +33,48 @@ import './TeamWallPage.css'    // team-wall-specific: coach tile, sport picker, 
 // Team walls: 0-99 (no 00 — that's legend wall only)
 const TEAM_TILE_NUMBERS = ['0', ...Array.from({ length: 99 }, (_, i) => String(i + 1))]
 
+// Expand abbreviated positions to full names for readability.
+const POS_MAP = {
+  // Basketball
+  G: 'Guard', F: 'Forward', C: 'Center', PG: 'Point Guard', SG: 'Shooting Guard',
+  SF: 'Small Forward', PF: 'Power Forward', 'G/F': 'Guard / Forward', 'F/C': 'Forward / Center',
+  // Football
+  QB: 'Quarterback', RB: 'Running Back', WR: 'Wide Receiver', TE: 'Tight End',
+  OL: 'Offensive Line', OT: 'Offensive Tackle', OG: 'Offensive Guard',
+  DL: 'Defensive Line', DE: 'Defensive End', DT: 'Defensive Tackle',
+  LB: 'Linebacker', ILB: 'Inside Linebacker', OLB: 'Outside Linebacker',
+  CB: 'Cornerback', S: 'Safety', FS: 'Free Safety', SS: 'Shortstop',
+  DB: 'Defensive Back', K: 'Kicker', P: 'Punter', LS: 'Long Snapper',
+  KR: 'Kick Returner', PR: 'Punt Returner', ATH: 'Athlete',
+  // Baseball
+  RHP: 'Right-Handed Pitcher', LHP: 'Left-Handed Pitcher',
+  INF: 'Infielder', OF: 'Outfielder', UTL: 'Utility',
+  '1B': 'First Base', '2B': 'Second Base', '3B': 'Third Base',
+  RF: 'Right Field', LF: 'Left Field', CF: 'Center Field', DH: 'Designated Hitter',
+  IF: 'Infielder', UT: 'Utility',
+  // Soccer
+  GK: 'Goalkeeper', DM: 'Defensive Mid', CM: 'Central Mid', AM: 'Attacking Mid',
+  LW: 'Left Wing', RW: 'Right Wing', ST: 'Striker', FW: 'Forward',
+  // Volleyball
+  SET: 'Setter', OH: 'Outside Hitter', MB: 'Middle Blocker',
+  RS: 'Right Side', L: 'Libero', DS: 'Defensive Specialist', OPP: 'Opposite',
+}
+// Sport-specific overrides for ambiguous single-letter codes.
+const SPORT_POS_OVERRIDES = {
+  volleyball: { S: 'Setter' },
+  soccer:     { D: 'Defender', M: 'Midfielder', F: 'Forward' },
+  hockey:     { D: 'Defense', G: 'Goalie', C: 'Center' },
+  lacrosse:   { A: 'Attack', M: 'Midfield', D: 'Defense', G: 'Goalie' },
+  field_hockey: { D: 'Defender', M: 'Midfielder', F: 'Forward' },
+}
+function expandPosition(pos, sport) {
+  if (!pos) return null
+  // Check sport-specific override first (handles ambiguous codes like S, D, M)
+  const override = sport && SPORT_POS_OVERRIDES[sport]?.[pos]
+  if (override) return override
+  return POS_MAP[pos] || POS_MAP[pos.toUpperCase()] || pos
+}
+
 export default function TeamWallPage() {
   const { schoolSlug, sport } = useParams()
   const navigate = useNavigate()
@@ -713,10 +755,13 @@ export default function TeamWallPage() {
                 // In ALL view, show coaches from all sports. In sport view, show sport-specific.
                 const displayCoaches = viewMode === 'all' ? allCoaches : coaches
                 const hasCoaches = displayCoaches.length > 0
-                const tileStyle = hasCoaches
+                const coachHeat = hasCoaches
+                  ? getTeamHeatStyle(colorKey, Math.max(displayCoaches.length, 3))
+                  : null
+                const tileStyle = coachHeat
                   ? {
-                      background: TEAM_PALETTES[colorKey]?.[1]?.bg || 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${TEAM_PALETTES[colorKey]?.[1]?.border || 'rgba(255,255,255,0.08)'}`,
+                      background: coachHeat.bg,
+                      border: `1px solid ${coachHeat.border}`,
                     }
                   : undefined
                 const labelColor = hasCoaches
@@ -929,7 +974,7 @@ export default function TeamWallPage() {
                                 value={editGradYear} onChange={e => setEditGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
                                 inputMode="numeric" maxLength={4} />
                             </div>
-                            <input type="text" className="tnw-input tw-add__input" placeholder="Fun fact (optional)"
+                            <input type="text" className="tnw-input tw-add__input" placeholder="Hometown, high school, or fun fact (optional)"
                               value={editFunFact} onChange={e => setEditFunFact(e.target.value.slice(0, 140))} maxLength={140} />
                             <label className="tw-add__toggle">
                               <input type="checkbox" checked={editWentPro} onChange={e => setEditWentPro(e.target.checked)} />
@@ -950,7 +995,13 @@ export default function TeamWallPage() {
                             <div className="player-card__row">
                               <div className="player-card__info">
                                 <div className="player-card__name-row">
-                                  <span className="player-card__name">{entry.name}</span>
+                                  <span className="player-card__name">
+                                    {entry.name}
+                                    {(() => {
+                                      const Icon = getSportIcon(entry.sport || sport)
+                                      return Icon ? <Icon size={12} className="player-card__sport-icon" aria-label={entry.sport || sport} /> : null
+                                    })()}
+                                  </span>
                                   {!isArchived && (
                                     <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
                                       <Pencil size={14} />
@@ -968,7 +1019,7 @@ export default function TeamWallPage() {
                                   )}
                                 </div>
                                 <div className="player-card__badges">
-                                  {entry.position && <span className="player-card__badge player-card__badge--dim">{entry.position}</span>}
+                                  {entry.position && <span className="player-card__badge player-card__badge--dim">{expandPosition(entry.position, entry.sport || sport)}</span>}
                                   {entry.grad_year && <span className="player-card__badge player-card__badge--dim">'{String(entry.grad_year).slice(-2)}</span>}
                                 </div>
                               </div>
@@ -1004,7 +1055,7 @@ export default function TeamWallPage() {
                           value={addGradYear} onChange={e => setAddGradYear(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
                           inputMode="numeric" maxLength={4} />
                       </div>
-                      <input type="text" className="tnw-input tw-add__input" placeholder="Fun fact (optional)"
+                      <input type="text" className="tnw-input tw-add__input" placeholder="Hometown, high school, or fun fact (optional)"
                         value={addFunFact} onChange={e => setAddFunFact(e.target.value.slice(0, 140))} maxLength={140} />
                       <label className="tw-add__toggle">
                         <input type="checkbox" checked={addWentPro} onChange={e => setAddWentPro(e.target.checked)} />
