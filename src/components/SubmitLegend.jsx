@@ -12,6 +12,7 @@
  */
 
 import { useState } from 'react'
+import { X } from 'lucide-react'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import './SubmitLegend.css'
 
@@ -75,7 +76,9 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
       <div className="submit-legend submit-legend--done">
         <span className="submit-legend__check">✓</span>
         <span className="submit-legend__done-text">Submitted for review</span>
-        <button className="tnw-btn tnw-btn--ghost submit-legend__close" onClick={onClose}>Close</button>
+        <button className="submit-legend__close-circle" onClick={onClose} aria-label="Close">
+          <X size={12} />
+        </button>
       </div>
     )
   }
@@ -85,7 +88,9 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
     <form className="submit-legend" onSubmit={handleSubmit}>
       <div className="submit-legend__header">
         <span className="submit-legend__title">Suggest a Legend for #{number}</span>
-        <button type="button" className="submit-legend__close" onClick={onClose}>✕</button>
+        <button type="button" className="submit-legend__close-circle" onClick={onClose} aria-label="Close">
+          <X size={12} />
+        </button>
       </div>
 
       <input
