@@ -1,14 +1,15 @@
 /* ── SubmitLegend — inline form inside PlayerPanel ─────────────────────────── */
+/* Mirrors tw-add styling from TeamWallPage so both forms share the same
+   design language: tnw-input, --font-scoreboard labels, --font-program body,
+   --text-small density, #ff6b6b errors.                                      */
 
 .submit-legend {
   display:        flex;
   flex-direction: column;
   gap:            var(--space-2);
   margin-top:     var(--space-3);
-  padding:        var(--space-3);
-  background:     var(--surface-2);
-  border:         1px solid var(--border-medium);
-  border-radius:  var(--radius-sm);
+  padding-top:    var(--space-3);
+  border-top:     1px solid var(--border-faint);
 }
 
 .submit-legend__header {
@@ -18,11 +19,11 @@
 }
 
 .submit-legend__title {
-  font-family:    var(--font-heading);
-  font-size:      var(--text-xs);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color:          var(--ink-medium);
+  letter-spacing: 0.16em;
+  color:          var(--ink-dim);
 }
 
 .submit-legend__close {
@@ -36,27 +37,19 @@
 }
 .submit-legend__close:hover { color: var(--ink-high); }
 
+/* Inputs get tnw-input class in JSX; this layer adds density overrides. */
 .submit-legend__input {
-  width:           100%;
-  padding:         var(--space-2);
-  background:      var(--surface-1);
-  border:          1px solid var(--border-medium);
-  border-radius:   var(--radius-xs);
-  color:           var(--ink-high);
-  font-family:     var(--font-body);
-  font-size:       var(--text-sm);
-}
-.submit-legend__input::placeholder { color: var(--ink-low); }
-.submit-legend__input:focus {
-  outline:      none;
-  border-color: var(--color-heat);
+  font-size: var(--text-small);
 }
 
 .submit-legend__row {
   display: flex;
   gap:     var(--space-2);
 }
-.submit-legend__input--half { flex: 1; }
+.submit-legend__input--half {
+  flex:      1;
+  min-width: 0;
+}
 
 .submit-legend__textarea {
   resize:     vertical;
@@ -64,30 +57,16 @@
 }
 
 .submit-legend__error {
-  font-size: var(--text-xs);
-  color:     var(--color-danger, #f44);
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       #ff6b6b;
 }
 
 .submit-legend__submit {
   align-self:      flex-start;
-  padding:         var(--space-1) var(--space-4);
-  background:      var(--color-heat);
-  border:          none;
-  border-radius:   var(--radius-xs);
-  color:           #000;
-  font-family:     var(--font-heading);
-  font-size:       var(--text-xs);
-  text-transform:  uppercase;
-  letter-spacing:  0.06em;
-  cursor:          pointer;
-  transition:      opacity 0.15s;
-}
-.submit-legend__submit:disabled {
-  opacity: 0.45;
-  cursor:  default;
-}
-.submit-legend__submit:hover:not(:disabled) {
-  opacity: 0.85;
+  padding:         var(--space-1) var(--space-3);
+  font-size:       var(--text-micro);
+  letter-spacing:  var(--tracking-wider);
 }
 
 /* ── Done state ───────────────────────────────────────────────────────────── */
@@ -103,10 +82,10 @@
   font-weight: 700;
 }
 .submit-legend__done-text {
-  font-family:    var(--font-heading);
-  font-size:      var(--text-xs);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color:          var(--ink-medium);
+  letter-spacing: 0.12em;
+  color:          var(--ink-dim);
   flex:           1;
 }

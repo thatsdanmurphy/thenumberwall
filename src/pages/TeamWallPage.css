@@ -159,6 +159,14 @@
 /* Add Player uses the shared .player-panel__add-legend style from the main
    wall — no team-wall override. Keep the experience identical across walls. */
 
+.tw-entry__actions {
+  display:     inline-flex;
+  align-items: center;
+  gap:         4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .tw-entry__edit {
   background: none;
   border: none;

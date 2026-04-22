@@ -2,6 +2,9 @@
  * SubmitLegend — inline form for suggesting a legend on the main / city walls.
  * POSTs to a Google Apps Script web app that appends to a Google Sheet.
  *
+ * Mirrors the tw-add form styling from TeamWallPage: tnw-input fields,
+ * --font-scoreboard labels, tnw-btn submit, #ff6b6b errors.
+ *
  * Props:
  *   number   – jersey number (pre-filled, read-only)
  *   wall     – 'global' | 'boston' | 'newyork' etc.
@@ -72,7 +75,7 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
       <div className="submit-legend submit-legend--done">
         <span className="submit-legend__check">✓</span>
         <span className="submit-legend__done-text">Submitted for review</span>
-        <button className="submit-legend__close" onClick={onClose}>Close</button>
+        <button className="tnw-btn tnw-btn--ghost submit-legend__close" onClick={onClose}>Close</button>
       </div>
     )
   }
@@ -86,7 +89,7 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
       </div>
 
       <input
-        className="submit-legend__input"
+        className="tnw-input submit-legend__input"
         placeholder="Player name *"
         value={name}
         onChange={e => setName(e.target.value)}
@@ -95,14 +98,14 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
       />
       <div className="submit-legend__row">
         <input
-          className="submit-legend__input submit-legend__input--half"
+          className="tnw-input submit-legend__input submit-legend__input--half"
           placeholder="Sport"
           value={sport}
           onChange={e => setSport(e.target.value)}
           maxLength={40}
         />
         <input
-          className="submit-legend__input submit-legend__input--half"
+          className="tnw-input submit-legend__input submit-legend__input--half"
           placeholder="Team"
           value={team}
           onChange={e => setTeam(e.target.value)}
@@ -110,7 +113,7 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
         />
       </div>
       <textarea
-        className="submit-legend__input submit-legend__textarea"
+        className="tnw-input submit-legend__input submit-legend__textarea"
         placeholder="Why do they belong on the wall?"
         value={reason}
         onChange={e => setReason(e.target.value)}
@@ -122,7 +125,7 @@ export default function SubmitLegend({ number, wall = 'global', onClose }) {
 
       <button
         type="submit"
-        className="submit-legend__submit"
+        className="tnw-btn tnw-btn--secondary submit-legend__submit"
         disabled={sending || !name.trim()}
       >
         {sending ? 'Sending…' : 'Submit'}

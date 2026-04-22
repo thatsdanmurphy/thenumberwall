@@ -871,14 +871,16 @@ export default function TeamWallPage() {
                                   <div className="player-card__name-row">
                                     <span className="player-card__name">{coach.name}</span>
                                     {!isArchived && (
-                                      <button className="tw-entry__edit" onClick={() => startEditCoach(coach)} aria-label="Edit coach">
-                                        <Pencil size={14} />
-                                      </button>
-                                    )}
-                                    {!isArchived && (coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) || isCreator) && (
-                                      <button className="tw-entry__delete" onClick={() => handleCoachDelete(coach)} aria-label="Remove coach">
-                                        {coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) ? <Trash2 size={11} /> : <EyeOff size={11} />}
-                                      </button>
+                                      <span className="tw-entry__actions">
+                                        <button className="tw-entry__edit" onClick={() => startEditCoach(coach)} aria-label="Edit coach">
+                                          <Pencil size={14} />
+                                        </button>
+                                        {(coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) || isCreator) && (
+                                          <button className="tw-entry__delete" onClick={() => handleCoachDelete(coach)} aria-label="Remove coach">
+                                            {coach.added_by === (typeof localStorage !== 'undefined' ? localStorage.getItem('tnw_fingerprint') : null) ? <Trash2 size={11} /> : <EyeOff size={11} />}
+                                          </button>
+                                        )}
+                                      </span>
                                     )}
                                   </div>
                                   <div className="player-card__badges">
@@ -1003,19 +1005,21 @@ export default function TeamWallPage() {
                                     })()}
                                   </span>
                                   {!isArchived && (
-                                    <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
-                                      <Pencil size={14} />
-                                    </button>
-                                  )}
-                                  {!isArchived && (canDeleteEntry(entry) || isCreator) && (
-                                    <button
-                                      className="tw-entry__delete"
-                                      onClick={() => handleDeleteEntry(entry)}
-                                      aria-label={canDeleteEntry(entry) ? 'Delete your entry' : 'Hide this entry'}
-                                      title={canDeleteEntry(entry) ? 'Delete your entry' : 'Hide from wall (creator)'}
-                                    >
-                                      {canDeleteEntry(entry) ? <Trash2 size={11} /> : <EyeOff size={11} />}
-                                    </button>
+                                    <span className="tw-entry__actions">
+                                      <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
+                                        <Pencil size={14} />
+                                      </button>
+                                      {(canDeleteEntry(entry) || isCreator) && (
+                                        <button
+                                          className="tw-entry__delete"
+                                          onClick={() => handleDeleteEntry(entry)}
+                                          aria-label={canDeleteEntry(entry) ? 'Delete your entry' : 'Hide this entry'}
+                                          title={canDeleteEntry(entry) ? 'Delete your entry' : 'Hide from wall (creator)'}
+                                        >
+                                          {canDeleteEntry(entry) ? <Trash2 size={11} /> : <EyeOff size={11} />}
+                                        </button>
+                                      )}
+                                    </span>
                                   )}
                                 </div>
                                 <div className="player-card__badges">
