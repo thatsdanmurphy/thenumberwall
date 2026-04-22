@@ -1,0 +1,112 @@
+/* ── SubmitLegend — inline form inside PlayerPanel ─────────────────────────── */
+
+.submit-legend {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+  margin-top:     var(--space-3);
+  padding:        var(--space-3);
+  background:     var(--surface-2);
+  border:         1px solid var(--border-medium);
+  border-radius:  var(--radius-sm);
+}
+
+.submit-legend__header {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+}
+
+.submit-legend__title {
+  font-family:    var(--font-heading);
+  font-size:      var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color:          var(--ink-medium);
+}
+
+.submit-legend__close {
+  background: none;
+  border:     none;
+  color:      var(--ink-low);
+  cursor:     pointer;
+  font-size:  var(--text-sm);
+  padding:    var(--space-1);
+  line-height: 1;
+}
+.submit-legend__close:hover { color: var(--ink-high); }
+
+.submit-legend__input {
+  width:           100%;
+  padding:         var(--space-2);
+  background:      var(--surface-1);
+  border:          1px solid var(--border-medium);
+  border-radius:   var(--radius-xs);
+  color:           var(--ink-high);
+  font-family:     var(--font-body);
+  font-size:       var(--text-sm);
+}
+.submit-legend__input::placeholder { color: var(--ink-low); }
+.submit-legend__input:focus {
+  outline:      none;
+  border-color: var(--color-heat);
+}
+
+.submit-legend__row {
+  display: flex;
+  gap:     var(--space-2);
+}
+.submit-legend__input--half { flex: 1; }
+
+.submit-legend__textarea {
+  resize:     vertical;
+  min-height: 3rem;
+}
+
+.submit-legend__error {
+  font-size: var(--text-xs);
+  color:     var(--color-danger, #f44);
+}
+
+.submit-legend__submit {
+  align-self:      flex-start;
+  padding:         var(--space-1) var(--space-4);
+  background:      var(--color-heat);
+  border:          none;
+  border-radius:   var(--radius-xs);
+  color:           #000;
+  font-family:     var(--font-heading);
+  font-size:       var(--text-xs);
+  text-transform:  uppercase;
+  letter-spacing:  0.06em;
+  cursor:          pointer;
+  transition:      opacity 0.15s;
+}
+.submit-legend__submit:disabled {
+  opacity: 0.45;
+  cursor:  default;
+}
+.submit-legend__submit:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+/* ── Done state ───────────────────────────────────────────────────────────── */
+
+.submit-legend--done {
+  flex-direction: row;
+  align-items:    center;
+  gap:            var(--space-2);
+}
+.submit-legend__check {
+  color:       var(--color-heat);
+  font-size:   var(--text-base);
+  font-weight: 700;
+}
+.submit-legend__done-text {
+  font-family:    var(--font-heading);
+  font-size:      var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color:          var(--ink-medium);
+  flex:           1;
+}

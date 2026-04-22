@@ -269,17 +269,20 @@
 }
 
 .player-panel__unwritten-cta {
-  display:         inline-block;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             var(--space-1);
   margin-top:      var(--space-2);
   padding:         var(--space-1) var(--space-3);
   background:      var(--surface-2);
   border:          1px solid var(--border-medium);
-  border-radius: var(--radius-sm);
+  border-radius:   var(--radius-sm);
   font-family:     var(--font-scoreboard);
-  font-size: var(--text-label);
+  font-size:       var(--text-label);
   letter-spacing:  0.18em;
   color:           var(--ink-low);
   text-decoration: none;
+  cursor:          pointer;
   transition:      background var(--motion-hover), color var(--motion-hover),
                    border-color var(--motion-hover);
 }
@@ -546,7 +549,11 @@
 /* ── Add a Legend — sits below card stack, quiet invitation ─────────────── */
 
 .player-panel__add-legend {
-  display:         block;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-1);
+  width:           100%;
   margin-top:      var(--space-3);
   padding:         var(--space-2) var(--space-3);
   background:      var(--surface-2);
@@ -558,6 +565,7 @@
   color:           var(--ink-low);
   text-decoration: none;
   text-align:      center;
+  cursor:          pointer;
   transition:      background var(--motion-hover), color var(--motion-hover),
                    border-color var(--motion-hover);
 }

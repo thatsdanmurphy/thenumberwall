@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
-import { Award, Check, ExternalLink, X, ArrowRight } from 'lucide-react'
+import { Award, Check, ExternalLink, X, ArrowRight, Plus } from 'lucide-react'
 import { getSportIcon } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { fetchWallScores, fetchMyVotes, castPlayerVote } from '../lib/playerVoteStore.js'
 import VoteButtons from './VoteButtons.jsx'
+import SubmitLegend from './SubmitLegend.jsx'
 import './PlayerPanel.css'
 
 // Players with a full-career Legend Timeline. Name-matched (case-insensitive).
@@ -194,6 +195,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   // ── Internal voting state ──────────────────────────────────────────────────
   // Voting is opt-in: user taps "WHO OWNS THIS NUMBER?" to activate.
   // Panel fetches scores from Supabase when activated — no page-level wiring.
+  const [showSubmit,   setShowSubmit]   = useState(false)
   const [votingActive, setVotingActive] = useState(false)
   const [voteScores,   setVoteScores]   = useState(null)  // Map: "number|name" → { netScore }
   const [myVotes,      setMyVotes]      = useState(null)   // Map: "number|name" → 1 | -1
@@ -202,8 +204,9 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const entries      = selected?.entries ?? []
   const number       = selected?.number  ?? null
 
-  // Reset voting when number changes
+  // Reset voting + submit form when number changes
   useEffect(() => {
+    setShowSubmit(false)
     setVotingActive(false)
     setVoteScores(null)
     setMyVotes(null)
@@ -356,9 +359,13 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
               <div className="player-panel__unwritten">
                 <div className="player-panel__unwritten-line">No legend has claimed this number yet.</div>
                 <div className="player-panel__unwritten-sub">This could be your story.</div>
-                <a className="player-panel__unwritten-cta" href="mailto:dan@thenumberwall.com?subject=Missing%20Legend">
-                  Submit a legend →
-                </a>
+                {showSubmit ? (
+                  <SubmitLegend number={number} wall={wallId} onClose={() => setShowSubmit(false)} />
+                ) : (
+                  <button className="player-panel__unwritten-cta" onClick={() => setShowSubmit(true)}>
+                    Submit a legend →
+                  </button>
+                )}
               </div>
             )}
 
@@ -391,12 +398,13 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                     <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} voteData={cardVoteData} />
                   )
                 })}
-                <a
-                  className="player-panel__add-legend"
-                  href={`mailto:dan@thenumberwall.com?subject=Add a Legend — %23${number}`}
-                >
-                  + Add a Legend
-                </a>
+                {showSubmit ? (
+                  <SubmitLegend number={number} wall={wallId} onClose={() => setShowSubmit(false)} />
+                ) : (
+                  <button className="player-panel__add-legend" onClick={() => setShowSubmit(true)}>
+                    <Plus size={12} /> Add a Legend
+                  </button>
+                )}
               </div>
             )}
           </>
