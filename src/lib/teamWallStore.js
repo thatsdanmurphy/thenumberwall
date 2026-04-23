@@ -269,19 +269,22 @@ export async function getActiveWallsWithSignals(limit = 5) {
   const wallIds = walls.map(w => w.id)
   const { data: entries } = await supabase
     .from('team_wall_entries')
-    .select('wall_id, added_by, added_at, entry_type')
+    .select('wall_id, name, added_by, added_at, entry_type')
     .in('wall_id', wallIds)
     .eq('status', 'active')
 
   const signals = new Map()
   for (const id of wallIds) {
-    signals.set(id, { entryCount: 0, legendCount: 0, contributors: new Set(), lastActivityAt: null })
+    signals.set(id, { entryCount: 0, legendCount: 0, legendNames: [], contributors: new Set(), lastActivityAt: null })
   }
   for (const e of entries || []) {
     const s = signals.get(e.wall_id)
     if (!s) continue
     s.entryCount += 1
-    if (e.entry_type === 'legend_seed') s.legendCount += 1
+    if (e.entry_type === 'legend_seed') {
+      s.legendCount += 1
+      if (e.name) s.legendNames.push(e.name)
+    }
     if (e.added_by) s.contributors.add(e.added_by)
     if (!s.lastActivityAt || e.added_at > s.lastActivityAt) {
       s.lastActivityAt = e.added_at
@@ -294,6 +297,7 @@ export async function getActiveWallsWithSignals(limit = 5) {
       ...w,
       entryCount:       s.entryCount,
       legendCount:      s.legendCount,
+      legendNames:      s.legendNames,
       contributorCount: s.contributors.size,
       lastActivityAt:   s.lastActivityAt,
     }
