@@ -305,6 +305,17 @@
   }
 }
 
+/* ── Inspiration line — below sport tabs, above grid ─────────────────────── */
+
+.tw-inspiration {
+  font-family:  var(--font-program);
+  font-size:    var(--text-small);
+  color:        var(--ink-dim);
+  margin:       0 0 var(--space-3);
+  line-height:  1.5;
+  font-style:   italic;
+}
+
 /* ── Top row — town crumb left, share button right ───────────────────────── */
 
 .tw-top-row {

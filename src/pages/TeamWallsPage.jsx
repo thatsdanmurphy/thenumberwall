@@ -112,7 +112,7 @@ export default function TeamWallsPage() {
           <div className="twb-hero">
             <h2 className="twb-hero__heading">DID YOU PLAY WITH A LEGEND?</h2>
             <p className="twb-hero__sub">
-              Every legend came from somewhere. Find their school, see who else played there, and put your name on the wall too.
+              Every legend came from somewhere. Find their school — and if you played there too, or remember who did, put those names on the wall.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
               <Plus size={16} /> Start a wall

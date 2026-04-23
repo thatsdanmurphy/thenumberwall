@@ -747,6 +747,11 @@ export default function TeamWallPage() {
           )}
         </div>
 
+        {/* ── Inspiration line ─────────────────────────────── */}
+        <p className="tw-inspiration">
+          Legends came through here. If you played here too, or remember someone who did — pick a number and add them.
+        </p>
+
         {/* ── Grid + panel ─────────────────────────────────── */}
         {/* Reuses wall-page__body layout — golden ratio grid + panel */}
         <div className="wall-page__body">

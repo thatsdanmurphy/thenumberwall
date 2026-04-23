@@ -73,9 +73,8 @@ const SEEDED_WALL_SLUGS = new Set([
   'university-of-kansas',
   'university-of-tennessee',
   // boston-university dropped — only Poulin after Hughes correction (below 2-legend threshold)
-  'ac-milan',
-  'barcelona',
-  'manchester-united',
+  // Pro clubs removed from pilot — they're destinations, not pipelines.
+  // Academies (ac-milan-academy, west-ham-united-academy) stay.
   'oshawa-generals',
   'st-michaels-majors',
   'london-knights',

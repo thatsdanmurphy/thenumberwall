@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Plus, ExternalLink, Check } from 'lucide-react'
+import { MapPin, Plus, ExternalLink, Check, ChevronRight } from 'lucide-react'
 import AppShell  from '../components/AppShell.jsx'
 import AppHeader from '../components/AppHeader.jsx'
 import AppFooter from '../components/AppFooter.jsx'
@@ -104,9 +104,14 @@ export default function TownWallsPage() {
           </div>
           <p className="town-page__sub">
             {orgs.length
-              ? `${orgs.length} ${orgs.length === 1 ? 'organization' : 'organizations'}, ${walls.length} ${walls.length === 1 ? 'wall' : 'walls'}`
+              ? `${orgs.length} ${orgs.length === 1 ? 'program' : 'programs'}, ${walls.length} ${walls.length === 1 ? 'wall' : 'walls'}`
               : 'No walls here yet.'}
           </p>
+          {orgs.length > 0 && (
+            <p className="town-page__cta-line">
+              Did you play here? Find your program and add your name.
+            </p>
+          )}
         </header>
 
         {loading ? (
@@ -124,31 +129,24 @@ export default function TownWallsPage() {
               const palette = TEAM_PALETTES[org.color_primary] || TEAM_PALETTES.orange
               const accent  = palette[3]
               return (
-                <section key={org.school_slug} className="town-org">
+                <button
+                  key={org.school_slug}
+                  className="town-org"
+                  onClick={() => navigate(`/walls/${org.school_slug}/all`)}
+                >
                   <div className="town-org__head">
                     <span className="town-org__dot" style={{ background: accent.bg }} />
                     <div className="town-org__titling">
                       <h3 className="town-org__name">{org.school}</h3>
-                      <span className="town-org__type">{getOrgTypeLabel(org.org_type)}</span>
+                      <span className="town-org__type">
+                        {getOrgTypeLabel(org.org_type)}
+                        {' · '}
+                        {org.walls.map(w => w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())).join(', ')}
+                      </span>
                     </div>
+                    <ChevronRight size={16} className="town-org__arrow" />
                   </div>
-                  <div className="town-org__walls">
-                    {org.walls.map(w => {
-                      const Icon = getSportIcon(w.sport)
-                      const sportLabel = w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-                      return (
-                        <button
-                          key={w.id}
-                          className="town-wall"
-                          onClick={() => navigate(`/walls/${w.school_slug}/${w.sport}`)}
-                        >
-                          {Icon && <Icon size={13} className="town-wall__icon" />}
-                          <span className="town-wall__sport">{sportLabel}</span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                </section>
+                </button>
               )
             })}
 

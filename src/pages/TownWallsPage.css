@@ -98,20 +98,50 @@
   gap: var(--space-4);
 }
 
+.town-page__cta-line {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--color-heat);
+  margin: var(--space-1) 0 0;
+  font-style: italic;
+}
+
 .town-org {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: 0;
+  padding: var(--space-3) var(--space-4);
   background: var(--surface-1);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background var(--motion-hover), border-color var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.town-org:hover {
+  background: var(--surface-2);
+  border-color: var(--border-medium);
+}
+
+.town-org:active {
+  background: var(--surface-3);
 }
 
 .town-org__head {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  width: 100%;
+}
+
+.town-org__arrow {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--ink-dim);
+  opacity: 0.5;
 }
 
 .town-org__dot {
