@@ -29,7 +29,7 @@ export default function TeamWallsPage() {
 
   useEffect(() => {
     document.title = 'Team Walls | The Number Wall'
-    getActiveWallsWithSignals(5)
+    getActiveWallsWithSignals(100)
       .then(setActiveWalls)
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -84,8 +84,8 @@ export default function TeamWallsPage() {
           state:        w.state,
           color_primary: w.color_primary,
           walls:        [],
-          // Aggregate signals across all sports for this school
           entryCount:       0,
+          legendCount:      0,
           contributorCount: 0,
           lastActivityAt:   null,
         })
@@ -93,6 +93,7 @@ export default function TeamWallsPage() {
       const g = map.get(key)
       g.walls.push(w)
       g.entryCount += (w.entryCount || 0)
+      g.legendCount += (w.legendCount || 0)
       g.contributorCount += (w.contributorCount || 0)
       if (w.lastActivityAt && (!g.lastActivityAt || w.lastActivityAt > g.lastActivityAt)) {
         g.lastActivityAt = w.lastActivityAt
@@ -109,12 +110,12 @@ export default function TeamWallsPage() {
         {/* ── Left: Hero ───────────────────────────────────── */}
         <div className="twb-left">
           <div className="twb-hero">
-            <h2 className="twb-hero__heading">LOG YOUR TEAM. FIND THE PIPELINES.</h2>
+            <h2 className="twb-hero__heading">DID YOU PLAY WITH A LEGEND?</h2>
             <p className="twb-hero__sub">
-              Put your name on the wall. Add the teammates you played with, the legends you heard about, and share the link — the rest of the roster will show up.
+              Every legend came from somewhere. Find their school, see who else played there, and put your name on the wall too.
             </p>
             <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
-              <Plus size={16} /> Start a Team Wall
+              <Plus size={16} /> Start a wall
             </button>
           </div>
 
@@ -122,7 +123,7 @@ export default function TeamWallsPage() {
 
           <div className="twb-global-cta">
             <Globe size={16} />
-            <span>Walls are live across 5 countries. Zoom coming soon.</span>
+            <span>Legends came from everywhere. Walls across 5 countries and counting.</span>
           </div>
         </div>
 
@@ -147,7 +148,7 @@ export default function TeamWallsPage() {
           <span className="twb-section-label">
             {searchResults !== null
               ? `${searchResults.length} RESULT${searchResults.length !== 1 ? 'S' : ''}`
-              : 'BUILDING NOW'
+              : 'WHERE LEGENDS PLAYED'
             }
           </span>
 
@@ -179,9 +180,8 @@ export default function TeamWallsPage() {
                       <span className="twb-card__sports-line">{sportsLabel}</span>
                       {group.town && (
                         <span className="twb-card__meta-line">
-                          {group.town}, {group.state}
-                          {group.entryCount > 0 && ` · ${group.entryCount} ${group.entryCount === 1 ? 'name' : 'names'}`}
-                          {since && ` · ${since}`}
+                          {group.town}{group.state ? `, ${group.state}` : group.walls[0]?.country ? `, ${group.walls[0].country}` : ''}
+                          {group.legendCount > 0 && ` · ${group.legendCount} ${group.legendCount === 1 ? 'legend' : 'legends'} came through here`}
                         </span>
                       )}
                     </div>

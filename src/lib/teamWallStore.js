@@ -239,57 +239,19 @@ export async function getWallsForMap() {
 
 // ─── Get recent / active walls (for homepage "BUILDING NOW" section) ──────
 
-export async function getActiveWalls(limit = 5) {
-  // Two sources: walls with recent entries + recently created walls.
-  // Merge by activity, dedup, so "Building Now" shows both fresh walls
-  // and walls that are actively collecting names.
-
-  const [{ data: recentEntries }, { data: recentWalls }] = await Promise.all([
-    supabase
-      .from('team_wall_entries')
-      .select('wall_id, added_at')
-      .eq('status', 'active')
-      .order('added_at', { ascending: false })
-      .limit(50),
-    supabase
-      .from('team_walls')
-      .select('id, created_at')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
-      .limit(limit),
-  ])
-
-  // Merge: entry-active walls first (most recent activity), then recently
-  // created walls that haven't received entries yet. Dedup keeps activity
-  // order — a wall with entries always ranks above a fresh empty wall.
-  const seen = new Set()
-  const orderedIds = []
-  for (const e of recentEntries || []) {
-    if (!seen.has(e.wall_id)) {
-      seen.add(e.wall_id)
-      orderedIds.push(e.wall_id)
-    }
-  }
-  for (const w of recentWalls || []) {
-    if (!seen.has(w.id)) {
-      seen.add(w.id)
-      orderedIds.push(w.id)
-    }
-  }
-  const topIds = orderedIds.slice(0, limit)
-  if (topIds.length === 0) return []
-
-  const { data: walls } = await supabase
+export async function getActiveWalls(limit = 100) {
+  // Fetch all active walls, ordered by school name for clean directory display.
+  // When limit is small (e.g. 5), used for homepage "Building Now" — ordered by
+  // recent activity. When limit is large, returns the full directory.
+  const { data: walls, error } = await supabase
     .from('team_walls')
     .select('*')
-    .in('id', topIds)
     .eq('status', 'active')
+    .order('school', { ascending: true })
+    .limit(limit)
 
-  if (!walls) return []
-
-  // Maintain merged activity order
-  const wallMap = new Map(walls.map(w => [w.id, w]))
-  return topIds.map(id => wallMap.get(id)).filter(Boolean)
+  if (error) { console.error('getActiveWalls error:', error); return [] }
+  return walls || []
 }
 
 // ─── Enriched BUILDING NOW ─────────────────────────────────────────────────
@@ -307,18 +269,19 @@ export async function getActiveWallsWithSignals(limit = 5) {
   const wallIds = walls.map(w => w.id)
   const { data: entries } = await supabase
     .from('team_wall_entries')
-    .select('wall_id, added_by, added_at')
+    .select('wall_id, added_by, added_at, entry_type')
     .in('wall_id', wallIds)
     .eq('status', 'active')
 
   const signals = new Map()
   for (const id of wallIds) {
-    signals.set(id, { entryCount: 0, contributors: new Set(), lastActivityAt: null })
+    signals.set(id, { entryCount: 0, legendCount: 0, contributors: new Set(), lastActivityAt: null })
   }
   for (const e of entries || []) {
     const s = signals.get(e.wall_id)
     if (!s) continue
     s.entryCount += 1
+    if (e.entry_type === 'legend_seed') s.legendCount += 1
     if (e.added_by) s.contributors.add(e.added_by)
     if (!s.lastActivityAt || e.added_at > s.lastActivityAt) {
       s.lastActivityAt = e.added_at
@@ -330,6 +293,7 @@ export async function getActiveWallsWithSignals(limit = 5) {
     return {
       ...w,
       entryCount:       s.entryCount,
+      legendCount:      s.legendCount,
       contributorCount: s.contributors.size,
       lastActivityAt:   s.lastActivityAt,
     }
