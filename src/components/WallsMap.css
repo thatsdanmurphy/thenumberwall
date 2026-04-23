@@ -74,30 +74,25 @@
   .walls-map__dot-pulse { animation: none; fill-opacity: 0.35; }
 }
 
-/* ── Cluster dots — bigger, slightly different ring ─────────────────────── */
+/* ── Region tabs ────────────────────────────────────────────────────────── */
 
-.walls-map__dot--cluster {
-  stroke-width: 3;
-  stroke-opacity: 0.2;
+.walls-map__tabs {
+  display:         flex;
+  gap:             var(--space-1);
+  padding:         var(--space-2) var(--space-3);
 }
 
-/* ── Zoom out button ────────────────────────────────────────────────────── */
-
-.walls-map__zoom-out {
-  position:        absolute;
-  top:             var(--space-2);
-  left:            var(--space-2);
-  z-index:         10;
+.walls-map__tab {
   display:         inline-flex;
   align-items:     center;
   gap:             var(--space-1);
   padding:         var(--space-1) var(--space-3);
-  background:      var(--surface-2);
+  background:      transparent;
   border:          1px solid var(--border-soft);
   border-radius:   var(--radius-sm);
   font-family:     var(--font-scoreboard);
   font-size:       var(--text-micro);
-  letter-spacing:  0.12em;
+  letter-spacing:  0.10em;
   color:           var(--ink-low);
   cursor:          pointer;
   transition:      background var(--motion-hover), border-color var(--motion-hover),
@@ -105,10 +100,45 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.walls-map__zoom-out:hover {
-  background:   var(--surface-3);
+.walls-map__tab:hover {
+  background:   var(--surface-2);
   border-color: var(--border-medium);
-  color:        var(--ink-high);
+  color:        var(--ink-mid);
+}
+
+.walls-map__tab--active {
+  background:   var(--surface-2);
+  border-color: rgba(232, 124, 42, 0.35);
+  color:        var(--color-heat);
+}
+
+.walls-map__tab-count {
+  font-size:       0.625rem;
+  font-weight:     700;
+  min-width:       16px;
+  height:          16px;
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   var(--radius-pill, 999px);
+  background:      rgba(232, 124, 42, 0.15);
+  color:           var(--color-heat);
+  line-height:     1;
+}
+
+.walls-map__tab--active .walls-map__tab-count {
+  background: rgba(232, 124, 42, 0.25);
+}
+
+/* ── Town name labels ──────────────────────────────────────────────────── */
+
+.walls-map__dot-label {
+  fill:            var(--ink-low, rgba(255, 255, 255, 0.45));
+  font-family:     var(--font-program);
+  font-size:       6px;
+  letter-spacing:  0.04em;
+  pointer-events:  none;
+  user-select:     none;
 }
 
 /* ── Tooltip ─────────────────────────────────────────────────────────────── */

@@ -84,7 +84,7 @@ export default function TeamWallsPage() {
           walls:          [],
           entryCount:       0,
           legendCount:      0,
-          legendNames:      [],
+          topNames:         [],
           contributorCount: 0,
           lastActivityAt:   null,
         })
@@ -93,7 +93,7 @@ export default function TeamWallsPage() {
       g.walls.push(w)
       g.entryCount += (w.entryCount || 0)
       g.legendCount += (w.legendCount || 0)
-      if (w.legendNames) g.legendNames.push(...w.legendNames)
+      if (w.topNames) g.topNames.push(...w.topNames)
       g.contributorCount += (w.contributorCount || 0)
       if (w.lastActivityAt && (!g.lastActivityAt || w.lastActivityAt > g.lastActivityAt)) {
         g.lastActivityAt = w.lastActivityAt
@@ -189,8 +189,10 @@ export default function TeamWallsPage() {
                   const sportsLabel = group.walls
                     .map(w => w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
                     .join(' · ')
-                  const legendNamesStr = [...new Set(group.legendNames)].slice(0, 4).join(', ')
-                  const extraLegends = group.legendCount - 4
+                  const topNames = [...new Set(group.topNames || [])].slice(0, 4)
+                  const topNamesStr = topNames.join(', ')
+                  const extraNames = group.entryCount - topNames.length
+                  const teamColor = group.walls[0]?.color_primary || null
 
                   return (
                     <button
@@ -201,30 +203,30 @@ export default function TeamWallsPage() {
                       onMouseEnter={() => handleCardHover(group.town_slug)}
                       onMouseLeave={() => handleCardHover(null)}
                     >
+                      {teamColor && (
+                        <span className="twb-card__dot" style={{ background: teamColor }} />
+                      )}
                       <div className="twb-card__body">
-                        <div className="twb-card__top-row">
-                          <span className="twb-card__school">{group.school}</span>
-                          <ChevronRight size={14} className="twb-card__arrow" />
-                        </div>
+                        <span className="twb-card__school">{group.school}</span>
                         <span className="twb-card__loc">
                           {group.town}{group.state ? `, ${group.state}` : group.walls[0]?.country ? `, ${group.walls[0].country}` : ''}
                           {' · '}{sportsLabel}
                         </span>
 
-                        {legendNamesStr && (
+                        {topNamesStr && (
                           <div className="twb-card__legends">
-                            <span className="twb-card__legends-label">Legends who came through</span>
+                            <span className="twb-card__legends-label">Names on the wall</span>
                             <span className="twb-card__legends-names">
-                              {legendNamesStr}{extraLegends > 0 ? ` +${extraLegends} more` : ''}
+                              {topNamesStr}{extraNames > 0 ? ` +${extraNames} more` : ''}
                             </span>
                           </div>
                         )}
 
                         <div className="twb-card__stats">
-                          {group.legendCount > 0 && (
-                            <span className="twb-card__stat">{group.legendCount} {group.legendCount === 1 ? 'legend' : 'legends'}</span>
+                          <span className="twb-card__stat">{group.entryCount} {group.entryCount === 1 ? 'name' : 'names'}</span>
+                          {group.contributorCount > 0 && (
+                            <span className="twb-card__stat">{group.contributorCount} {group.contributorCount === 1 ? 'contributor' : 'contributors'}</span>
                           )}
-                          <span className="twb-card__stat">{group.entryCount} {group.entryCount === 1 ? 'name' : 'names'} on the wall</span>
                         </div>
                       </div>
 
@@ -244,8 +246,9 @@ export default function TeamWallsPage() {
                           trackEvent('share_tap', { wall: group.school_slug, context: 'browse' })
                         }}
                       >
-                        <ExternalLink size={11} />
+                        <ExternalLink size={14} />
                       </span>
+                      <ChevronRight size={14} className="twb-card__arrow" />
                     </button>
                   )
                 })}
@@ -309,8 +312,10 @@ export default function TeamWallsPage() {
                     const sportsLabel = group.walls
                       .map(w => w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
                       .join(' · ')
-                    const legendNamesStr = [...new Set(group.legendNames)].slice(0, 3).join(', ')
-                    const extraLegends = group.legendCount - 3
+                    const topNames = [...new Set(group.topNames || [])].slice(0, 3)
+                    const topNamesStr = topNames.join(', ')
+                    const extraNames = group.entryCount - topNames.length
+                    const teamColor = group.walls[0]?.color_primary || null
 
                     return (
                       <button
@@ -318,23 +323,24 @@ export default function TeamWallsPage() {
                         className="twb-card"
                         onClick={() => navigateToWall(group.walls[0])}
                       >
+                        {teamColor && (
+                          <span className="twb-card__dot" style={{ background: teamColor }} />
+                        )}
                         <div className="twb-card__body">
-                          <div className="twb-card__top-row">
-                            <span className="twb-card__school">{group.school}</span>
-                            <ChevronRight size={14} className="twb-card__arrow" />
-                          </div>
+                          <span className="twb-card__school">{group.school}</span>
                           <span className="twb-card__loc">
                             {group.town}{group.state ? `, ${group.state}` : ''} · {sportsLabel}
                           </span>
-                          {legendNamesStr && (
+                          {topNamesStr && (
                             <div className="twb-card__legends">
-                              <span className="twb-card__legends-label">Legends who came through</span>
+                              <span className="twb-card__legends-label">Names on the wall</span>
                               <span className="twb-card__legends-names">
-                                {legendNamesStr}{extraLegends > 0 ? ` +${extraLegends}` : ''}
+                                {topNamesStr}{extraNames > 0 ? ` +${extraNames}` : ''}
                               </span>
                             </div>
                           )}
                         </div>
+                        <ChevronRight size={14} className="twb-card__arrow" />
                       </button>
                     )
                   })}

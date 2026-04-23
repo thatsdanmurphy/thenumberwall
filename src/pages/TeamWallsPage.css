@@ -56,7 +56,7 @@
   gap: var(--space-3);
   overflow-y: auto;
   max-height: 100vh;
-  padding: var(--space-3) var(--space-3) var(--space-5);
+  padding: var(--space-3) 0 var(--space-5) var(--space-4);
 }
 
 .twb-list-header {
@@ -183,10 +183,10 @@
 
 .twb-card {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-3);
   width: 100%;
-  padding: var(--space-3);
+  padding: var(--space-3) var(--space-3);
   background: var(--surface-1);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
@@ -206,19 +206,21 @@
   border-color: rgba(232, 124, 42, 0.30);
 }
 
+/* ── Color dot — team identity ─────────────────────────────────────────────── */
+
+.twb-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 .twb-card__body {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 3px;
-}
-
-.twb-card__top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
 }
 
 .twb-card__school {
@@ -289,25 +291,26 @@
   color: var(--ink-low);
 }
 
-/* ── Card share icon ───────────────────────────────────────────────────────── */
+/* ── Card share icon — circle, matches player panel ────────────────────────── */
 
 .twb-card__share {
-  flex: 0 0 auto;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  margin-top: 2px;
-  border-radius: var(--radius-sm);
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: none;
   color: var(--ink-dim);
   cursor: pointer;
-  transition: color var(--motion-hover), background var(--motion-hover);
+  transition: background var(--motion-hover), color var(--motion-hover);
 }
 
 .twb-card__share:hover {
+  background: var(--surface-4, var(--surface-3));
   color: var(--color-paper);
-  background: var(--surface-3);
 }
 
 /* ── Mobile layout (visible < 768px) ───────────────────────────────────────── */
