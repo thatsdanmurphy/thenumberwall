@@ -260,8 +260,12 @@ export default function TeamWallPage() {
   // surfacing Jordan #23). Only shown on tiles that actually have team entries.
   const bridgeLegends = useMemo(() => {
     if (!selected || !sport) return []
-    return getSportMatchedLegends(selected, sport)
-  }, [selected, sport])
+    const legends = getSportMatchedLegends(selected, sport)
+    // Filter out legends who already appear as entries on this wall (ghost seeds)
+    // so the same name doesn't show twice — once as a card and once in the bridge.
+    const entryNames = new Set(selectedEntries.map(e => e.name?.toLowerCase()))
+    return legends.filter(l => !entryNames.has(l.name?.toLowerCase()))
+  }, [selected, sport, selectedEntries])
 
   function handleTileClick(num) {
     setSelected(prev => prev === num ? null : num)
