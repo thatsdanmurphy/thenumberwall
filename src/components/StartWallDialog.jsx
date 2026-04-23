@@ -18,6 +18,7 @@
  */
 
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Loader } from 'lucide-react'
 import PositionPicker from './PositionPicker.jsx'
 import { createTeamWall, addTeamEntry } from '../lib/teamWallStore.js'
@@ -134,11 +135,11 @@ export default function StartWallDialog({
     }
   }
 
-  return (
+  return createPortal(
     <div className="tnw-overlay" style={{ zIndex: 520 }} onClick={onClose}>
       <div
         className="tw-confirm"
-        style={{ maxWidth: 360, padding: 'var(--space-4)' }}
+        style={{ maxWidth: 360, padding: 24 }}
         onClick={e => e.stopPropagation()}
       >
         {/* School context */}
@@ -216,6 +217,7 @@ export default function StartWallDialog({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
