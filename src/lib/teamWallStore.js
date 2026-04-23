@@ -163,13 +163,26 @@ export async function loadTeamWall(wallId) {
 export async function loadTeamWallByRoute(schoolSlug, sport) {
   // Accept active + archived (so creator can see and undo the retire).
   // Hidden walls (past cooldown) are not loadable from the UI.
-  const { data: wall, error } = await supabase
+  //
+  // Special case: sport='all' means load the first available wall for this
+  // school (used when navigating to /walls/:slug/all — the ALL tab URL).
+  let query = supabase
     .from('team_walls')
     .select('*')
     .eq('school_slug', schoolSlug)
-    .eq('sport', sport)
     .in('status', ['active', 'archived'])
-    .single()
+
+  if (sport === 'all') {
+    query = query.order('created_at', { ascending: true }).limit(1)
+  } else {
+    query = query.eq('sport', sport)
+  }
+
+  const { data, error } = sport === 'all'
+    ? await query
+    : await query.single()
+
+  const wall = sport === 'all' ? data?.[0] : data
 
   if (error || !wall) return null
 

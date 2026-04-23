@@ -1,12 +1,13 @@
 /**
- * US geography lookup for WallsMap.
+ * Geography lookup for WallsMap.
  *
  * TOWN_COORDS is hand-maintained. Key = town_slug used by teamWallStore
- * (slugify(town) + '-' + lowerState), value = [longitude, latitude].
+ * (slugify(town) + '-' + lowerState for US, '-' + country for international),
+ * value = [longitude, latitude].
  *
  * When WallsMap encounters a town_slug not in this list, it falls back to
- * the state centroid (STATE_CENTROIDS) and logs the miss so we can fill in
- * coords as new towns appear.
+ * the state centroid (STATE_CENTROIDS) for US towns and logs the miss so
+ * we can fill in coords as new towns appear.
  *
  * To add a town: look up its lat/long (Google "<town> latitude longitude"),
  * then add an entry here. [lng, lat] order — longitude first, that's how
@@ -108,6 +109,27 @@ export const TOWN_COORDS = {
   'austin-tx':           [-97.7431, 30.2672],
   'dallas-tx':           [-96.7970, 32.7767],
   'houston-tx':          [-95.3698, 29.7604],
+
+  // ── Pilot wall towns (US) ──
+  'manhattan-ks':        [-96.5717, 39.1836],
+  'tempe-az':            [-111.9400, 33.4255],
+  'kent-oh':             [-81.3579, 41.1537],
+  'knoxville-tn':        [-83.9207, 35.9606],
+  'lawrence-ks':         [-95.2353, 38.9717],
+  'storrs-ct':           [-72.2540, 41.8084],
+  'ann-arbor-mi':        [-83.7430, 42.2808],
+  'cincinnati-oh':       [-84.5120, 39.1031],
+
+  // ── Canada ──
+  'oshawa-on':           [-78.8658, 43.8971],
+  'toronto-on':          [-79.3832, 43.6532],
+  'london-on':           [-81.2453, 42.9849],
+
+  // ── Europe ──
+  'milan-it':            [9.1900, 45.4642],
+  'barcelona-es':        [2.1734, 41.3851],
+  'manchester-eng':      [-2.2426, 53.4808],
+  'london-eng':          [-0.1278, 51.5074],
 }
 
 /**

@@ -32,7 +32,7 @@
     left:          0;
     right:         0;
     margin-top:    0;
-    max-height:    82vh;
+    max-height:    88vh;
     border-radius: var(--radius-xl) 14px 0 0;
     border-bottom: none;
     overflow-y:    auto;

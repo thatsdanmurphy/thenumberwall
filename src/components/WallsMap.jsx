@@ -1,5 +1,5 @@
 /**
- * WallsMap — stylized US map for the TeamWalls hub.
+ * WallsMap — world map for the TeamWalls hub.
  *
  * Each active wall lights up a glowing dot at its town.
  * Zero-state: one pulsing seed dot on Boston — "the first wall lights here."
@@ -8,9 +8,12 @@
  * single node whose glow intensity scales with wall count. Click a dot →
  * drill into that town's wall list. Hover → tooltip with town + walls.
  *
- * Coords come from a hand-maintained TOWN_COORDS lookup. Unknown towns fall
- * back to their state centroid (so every wall still lights something up, and
- * we get a log of missing coords to fill in).
+ * Coords come from a hand-maintained TOWN_COORDS lookup. Unknown US towns
+ * fall back to their state centroid. International towns without coords are
+ * logged and skipped.
+ *
+ * Uses geoNaturalEarth1 projection for a clean, equal-area world view.
+ * Continent zooming is a future enhancement.
  */
 
 import { useEffect, useMemo, useState } from 'react'
@@ -20,16 +23,15 @@ import { getWallsForMap } from '../lib/teamWallStore.js'
 import { TOWN_COORDS, STATE_CENTROIDS } from '../data/usGeography.js'
 import './WallsMap.css'
 
-const US_TOPO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json'
+const WORLD_TOPO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
 
 // Boston — the seed. Shown pulsing when there are zero walls yet.
 const SEED_COORDS = [-71.0589, 42.3601]
 
 // Single map color — the signature TNW orange.
-// Dot opacity/glow scales with activity (wall count) instead of sport color.
 const MAP_HUE = '#e87c2a'
 
-// Aggregate walls by town_slug → { key, coords, town, state, sports[], count }
+// Aggregate walls by town_slug → { key, coords, town, state, country, sports[], count }
 function groupByTown(walls) {
   const map = new Map()
   const unknown = []
@@ -40,15 +42,19 @@ function groupByTown(walls) {
       coords = STATE_CENTROIDS[w.state.toUpperCase()]
       if (coords) unknown.push(key) // fell back to state centroid
     }
-    if (!coords) continue
+    if (!coords) {
+      unknown.push(key)
+      continue
+    }
     if (!map.has(key)) {
       map.set(key, {
         key,
         coords,
-        town:   w.town,
-        state:  w.state,
-        sports: [],
-        walls:  [],
+        town:    w.town,
+        state:   w.state,
+        country: w.country,
+        sports:  [],
+        walls:   [],
       })
     }
     const node = map.get(key)
@@ -56,15 +62,24 @@ function groupByTown(walls) {
     node.walls.push(w)
   }
   if (unknown.length) {
-    console.info('[WallsMap] towns using state-centroid fallback:', [...new Set(unknown)])
+    console.info('[WallsMap] towns missing coords or using fallback:', [...new Set(unknown)])
   }
   return Array.from(map.values())
 }
 
+// Format location label — handles both US (town, state) and international (town, country)
+function locationLabel(node) {
+  const count = node.walls.length
+  const loc = node.state
+    ? `${node.town}, ${node.state}`
+    : `${node.town}, ${node.country}`
+  return count === 1 ? loc : `${loc} · ${count} walls`
+}
+
 export default function WallsMap() {
   const navigate = useNavigate()
-  const [walls, setWalls] = useState(null)   // null = loading, [] = zero-state
-  const [hover, setHover] = useState(null)   // { node, x, y }
+  const [walls, setWalls] = useState(null)
+  const [hover, setHover] = useState(null)
 
   useEffect(() => {
     getWallsForMap()
@@ -76,25 +91,19 @@ export default function WallsMap() {
   }, [])
 
   const nodes = useMemo(() => groupByTown(walls || []), [walls])
-  // Show seed pulse when the map has nothing to light (loading OR zero walls)
-  // so the stage is never blank. Live dots only appear when we have real data.
   const showSeed = walls === null || nodes.length === 0
-
-  // Projection scale tuned for the left column (≈500–650px wide).
-  // AlbersUsa handles AK/HI insets automatically.
-  const projectionConfig = { scale: 900 }
 
   return (
     <div className="walls-map">
       <div className="walls-map__stage">
         <ComposableMap
-          projection="geoAlbersUsa"
-          projectionConfig={projectionConfig}
+          projection="geoNaturalEarth1"
+          projectionConfig={{ scale: 140, center: [0, 20] }}
           width={780}
-          height={480}
+          height={400}
           style={{ width: '100%', height: 'auto' }}
         >
-          <Geographies geography={US_TOPO_URL}>
+          <Geographies geography={WORLD_TOPO_URL}>
             {({ geographies }) =>
               geographies.map(geo => (
                 <Geography
@@ -123,12 +132,10 @@ export default function WallsMap() {
             />
           )}
 
-          {/* Live state: one dot per town, orange with activity-based glow */}
+          {/* Live dots — one per town, orange with activity-based glow */}
           {!showSeed && nodes.map(node => {
             const count = node.walls.length
-            const label = count === 1
-              ? `${node.town}, ${node.state}`
-              : `${node.town}, ${node.state} · ${count} walls`
+            const label = locationLabel(node)
             return (
               <MapDot
                 key={node.key}
@@ -160,17 +167,8 @@ export default function WallsMap() {
   )
 }
 
-/**
- * MapDot — projected point with optional pulse. Uses react-simple-maps'
- * Marker would be nicer, but we want SVG filter control, so we use raw
- * <circle> inside a <Marker>-style transform done via the Annotation-less
- * Marker equivalent: wrap in <g transform> using the projection via a child
- * of ComposableMap. Since we're inside <Geographies>'s sibling slot, we use
- * <Marker> from the lib.
- */
 function MapDot({ coords, hue, radius = 5, pulsing = false, glowIntensity = 0.5, label, onClick, onHoverIn, onHoverOut }) {
-  // glowIntensity 0→1 drives fill opacity and glow spread
-  const opacity = 0.55 + glowIntensity * 0.45  // 0.55–1.0
+  const opacity = 0.55 + glowIntensity * 0.45
   return (
     <Marker coordinates={coords}>
       {pulsing && (

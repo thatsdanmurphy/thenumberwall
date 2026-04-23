@@ -463,6 +463,19 @@
   background: rgba(255, 107, 107, 0.12);
 }
 
+/* ── Legend seed badge ─────────────────────────────────────────────────────── */
+
+.player-card__badge--legend {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.12em;
+  color:          rgba(232, 124, 42, 0.85);
+  background:     rgba(232, 124, 42, 0.10);
+  border:         1px solid rgba(232, 124, 42, 0.25);
+  border-radius:  3px;
+  padding:        2px 6px;
+}
+
 /* ── Entry delete button ──────────────────────────────────────────────────── */
 
 .tw-entry__delete {

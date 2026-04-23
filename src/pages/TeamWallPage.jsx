@@ -85,16 +85,22 @@ export default function TeamWallPage() {
   const [error, setError]       = useState(null)
   const [selected, setSelected] = useState(null)
 
-  // View mode persists across sport switches via URL search param
-  const viewMode = searchParams.get('view') || 'all'
+  // View mode: 'all' when sport param is 'all', otherwise from ?view param.
+  // Navigating to /walls/:slug/all always opens the ALL tab.
+  const isAllRoute = sport === 'all'
+  const viewMode = isAllRoute ? 'all' : (searchParams.get('view') || 'all')
   const setViewMode = useCallback((mode) => {
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev)
-      if (mode === 'all') next.delete('view')
-      else next.set('view', mode)
-      return next
-    }, { replace: true })
-  }, [setSearchParams])
+    if (mode === 'all') {
+      // Navigate to the /all slug so the URL reflects the ALL tab
+      navigate(`/walls/${schoolSlug}/all`, { replace: true })
+    } else {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev)
+        next.set('view', mode)
+        return next
+      }, { replace: true })
+    }
+  }, [navigate, schoolSlug, setSearchParams])
 
   // Inline add form state
   const [addName, setAddName]         = useState('')
@@ -684,24 +690,22 @@ export default function TeamWallPage() {
             onClick={() => { setViewMode('all'); setSelected(null) }}
             aria-pressed={viewMode === 'all'}
           >
-            ALL
+            All
           </button>
           {schoolSports.map(s => {
             const isActive = s.sport === sport && viewMode === 'grid'
+            // On the /all route, no sport pill is active — only the ALL pill is
+            const isActiveOnAllRoute = false
             const label = s.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
             const Icon = getSportIcon(s.sport)
             return (
               <button
                 key={s.id}
-                className={`sports-filter__pill${isActive ? ' sports-filter__pill--active' : ''}`}
+                className={`sports-filter__pill${(isAllRoute ? isActiveOnAllRoute : isActive) ? ' sports-filter__pill--active' : ''}`}
                 onClick={() => {
-                  if (s.sport !== sport) {
-                    navigate(`/walls/${schoolSlug}/${s.sport}?view=grid`)
-                  } else {
-                    setViewMode('grid')
-                  }
+                  navigate(`/walls/${schoolSlug}/${s.sport}?view=grid`)
                 }}
-                aria-pressed={isActive}
+                aria-pressed={isAllRoute ? false : isActive}
               >
                 {Icon && <Icon size={13} className="sports-filter__icon" />}
                 {label}
@@ -990,9 +994,12 @@ export default function TeamWallPage() {
                             </div>
                           </form>
                         ) : (
-                          <div key={entry.id} className="player-card" style={i === 0 ? {
+                          <div key={entry.id} className={`player-card${entry.entry_type === 'legend_seed' ? ' player-card--legend-seed' : ''}`} style={i === 0 ? {
                             background: TEAM_PALETTES[colorKey]?.[2]?.bg || 'rgba(232,124,42,0.07)',
                             borderColor: TEAM_PALETTES[colorKey]?.[2]?.border || 'rgba(232,124,42,0.30)',
+                          } : entry.entry_type === 'legend_seed' ? {
+                            background: 'rgba(232,124,42,0.05)',
+                            borderColor: 'rgba(232,124,42,0.20)',
                           } : undefined}>
                             <div className="player-card__row">
                               <div className="player-card__info">
@@ -1004,7 +1011,8 @@ export default function TeamWallPage() {
                                       return Icon ? <Icon size={12} className="player-card__sport-icon" aria-label={entry.sport || sport} /> : null
                                     })()}
                                   </span>
-                                  {!isArchived && (
+                                  {/* Legend seeds are read-only — no edit/delete */}
+                                  {!isArchived && entry.entry_type !== 'legend_seed' && (
                                     <span className="tw-entry__actions">
                                       <button className="tw-entry__edit" onClick={() => startEditing(entry)} aria-label="Edit">
                                         <Pencil size={14} />
@@ -1023,6 +1031,9 @@ export default function TeamWallPage() {
                                   )}
                                 </div>
                                 <div className="player-card__badges">
+                                  {entry.entry_type === 'legend_seed' && (
+                                    <span className="player-card__badge player-card__badge--legend">Legend</span>
+                                  )}
                                   {entry.position && <span className="player-card__badge player-card__badge--dim">{expandPosition(entry.position, entry.sport || sport)}</span>}
                                   {entry.grad_year && <span className="player-card__badge player-card__badge--dim">'{String(entry.grad_year).slice(-2)}</span>}
                                 </div>

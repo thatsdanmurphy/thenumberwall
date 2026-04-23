@@ -122,7 +122,7 @@ export default function TeamWallsPage() {
 
           <div className="twb-global-cta">
             <Globe size={16} />
-            <span>Team outside the US? Let us know — we'll open up the map.</span>
+            <span>Walls are live across 5 countries. Zoom coming soon.</span>
           </div>
         </div>
 

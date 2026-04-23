@@ -46,6 +46,11 @@ function normalise(row) {
     leagueWideRetired: row['League Wide Retired'] === true || row['League Wide Retired'] === 'true',
     retiredLeague:     row['Retired League']  ?? '',
     retiredBadge:      row['Retired Badge']   ?? '',
+    // Pipeline links — HS → College → Pro path
+    highSchool:         row.highSchool         ?? '',
+    highSchoolLocation: row.highSchoolLocation ?? '',
+    college:            row.college            ?? '',
+    collegeLocation:    row.collegeLocation    ?? '',
   }
 }
 

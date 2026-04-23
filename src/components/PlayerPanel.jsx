@@ -8,6 +8,9 @@ import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { fetchWallScores, fetchMyVotes, castPlayerVote } from '../lib/playerVoteStore.js'
 import VoteButtons from './VoteButtons.jsx'
 import SubmitLegend from './SubmitLegend.jsx'
+import PipelinePath from './PipelinePath.jsx'
+import StartWallDialog from './StartWallDialog.jsx'
+import './StartWallDialog.css'
 import './PlayerPanel.css'
 
 // Players with a full-career Legend Timeline. Name-matched (case-insensitive).
@@ -48,10 +51,34 @@ function shareNumber(number) {
 // the DS must mirror the build, not a parallel sketch).
 export function PlayerCard({ entry, isTop = false, voteData = null }) {
   const navigate       = useNavigate()
+  const [startWallData, setStartWallData] = useState(null)
   const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
   const teamBadgeStyle = {}
   const timelineId     = TIMELINE_PLAYERS[(entry.name || '').toLowerCase()]
+
+  // Pipeline data — shows path if any pipeline field is populated
+  const hasPipeline = Boolean(entry.highSchool || entry.college)
+
+  function handleStartWall({ school, location, type }) {
+    setStartWallData({ school, location, type })
+  }
+
+  function handleVisitWall({ school, location }) {
+    // Slug the college name and navigate to the team wall
+    const slug = (school || '')
+      .toLowerCase()
+      .replace(/['']/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+    const sport = (entry.sport || 'football').toLowerCase()
+    navigate(`/walls/${slug}/${sport}`)
+  }
+
+  function handleWallCreated({ schoolSlug, sport }) {
+    setStartWallData(null)
+    navigate(`/walls/${schoolSlug}/${sport}`)
+  }
 
   return (
     <div className={`player-card${isTop ? ' player-card--top' : ''}${voteData ? ' player-card--voting' : ''}`}>
@@ -97,16 +124,27 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
         <div className="player-card__fact">{entry.funFact}</div>
       )}
 
-      {timelineId && (
+      {/* Pipeline path — expand/collapse HS → College → Pro.
+          Timeline CTA is now a row inside PipelinePath when expanded. */}
+      {hasPipeline && (
+        <PipelinePath
+          highSchool={entry.highSchool}
+          highSchoolLocation={entry.highSchoolLocation}
+          college={entry.college}
+          collegeLocation={entry.collegeLocation}
+          team={entry.team}
+          timelineId={timelineId}
+          onStartWall={handleStartWall}
+          onVisitWall={handleVisitWall}
+        />
+      )}
+
+      {/* Fallback: timeline CTA for legends with timelines but no pipeline data */}
+      {!hasPipeline && timelineId && (
         <a
           className="player-card__timeline-cta"
           href={`/timeline/${timelineId}`}
           onClick={(e) => {
-            // React Router's navigate() is the only reliable way to move
-            // without a full reload. The earlier pushState + PopStateEvent
-            // hack didn't update the router's internal state, which left
-            // the PlayerPanel overlay on top of an empty body — the "wall
-            // goes dark" bug.
             e.preventDefault()
             try { track('timeline_open_from_card', { player: entry.name }) } catch {}
             navigate(`/timeline/${timelineId}`)
@@ -115,6 +153,20 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
           <span>View his career timeline</span>
           <ArrowRight size={14} />
         </a>
+      )}
+
+      {/* Start wall dialog — triggered from pipeline path plus icon */}
+      {startWallData && (
+        <StartWallDialog
+          school={startWallData.school}
+          location={startWallData.location}
+          type={startWallData.type}
+          sport={entry.sport}
+          legendName={entry.name}
+          legendNumber={entry.number}
+          onClose={() => setStartWallData(null)}
+          onCreated={handleWallCreated}
+        />
       )}
     </div>
   )
