@@ -231,7 +231,7 @@ export async function browseTeamWalls({ state, sport, query, limit = 20 } = {}) 
 export async function getWallsForMap() {
   const { data, error } = await supabase
     .from('team_walls')
-    .select('id, school, school_slug, sport, town, town_slug, state, color_primary')
+    .select('id, school, school_slug, sport, town, town_slug, state, country, color_primary')
     .eq('status', 'active')
   if (error) throw error
   return data || []

@@ -72,7 +72,7 @@ const SEEDED_WALL_SLUGS = new Set([
   'university-of-connecticut',
   'university-of-kansas',
   'university-of-tennessee',
-  'boston-university',
+  // boston-university dropped — only Poulin after Hughes correction (below 2-legend threshold)
   'ac-milan',
   'barcelona',
   'manchester-united',

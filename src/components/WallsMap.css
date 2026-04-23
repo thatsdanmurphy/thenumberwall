@@ -63,6 +63,66 @@
   .walls-map__dot-pulse { animation: none; fill-opacity: 0.35; }
 }
 
+/* ── Region zoom buttons ────────────────────────────────────────────────── */
+
+.walls-map__regions {
+  display:         flex;
+  justify-content: center;
+  gap:             var(--space-2);
+  margin-top:      var(--space-2);
+}
+
+.walls-map__region-btn {
+  padding:         var(--space-1) var(--space-3);
+  background:      var(--surface-2);
+  border:          1px solid var(--border-soft);
+  border-radius:   var(--radius-sm);
+  font-family:     var(--font-scoreboard);
+  font-size:       var(--text-micro);
+  letter-spacing:  0.12em;
+  color:           var(--ink-low);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), border-color var(--motion-hover),
+                   color var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.walls-map__region-btn:hover {
+  background:   var(--surface-3);
+  border-color: var(--border-medium);
+  color:        var(--ink-high);
+}
+
+/* ── Zoom out button ────────────────────────────────────────────────────── */
+
+.walls-map__zoom-out {
+  position:        absolute;
+  top:             var(--space-2);
+  left:            var(--space-2);
+  z-index:         10;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             var(--space-1);
+  padding:         var(--space-1) var(--space-3);
+  background:      var(--surface-2);
+  border:          1px solid var(--border-soft);
+  border-radius:   var(--radius-sm);
+  font-family:     var(--font-scoreboard);
+  font-size:       var(--text-micro);
+  letter-spacing:  0.12em;
+  color:           var(--ink-low);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), border-color var(--motion-hover),
+                   color var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.walls-map__zoom-out:hover {
+  background:   var(--surface-3);
+  border-color: var(--border-medium);
+  color:        var(--ink-high);
+}
+
 /* ── Tooltip ─────────────────────────────────────────────────────────────── */
 
 .walls-map__tooltip {
