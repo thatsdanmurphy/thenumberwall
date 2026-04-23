@@ -15,17 +15,23 @@
 .walls-map__stage {
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
-/* Country silhouette — state polygons share one fill with a matching stroke,
-   so internal borders disappear and the USA reads as a single shape. This is
-   what makes the map feel like a backdrop rather than an atlas. */
+/* Let the SVG breathe — slight negative margin so coastlines
+   don't feel clipped at the container edge. */
+.walls-map__stage svg {
+  margin: -2% 0;
+}
+
+/* Country outlines — stroke only, no fill. Reads as a subtle wireframe
+   that recedes behind the glowing dots. */
 .walls-map__state {
-  fill:          rgba(255, 255, 255, 0.09);
-  stroke:        rgba(255, 255, 255, 0.09);
+  fill:          transparent;
+  stroke:        rgba(255, 255, 255, 0.12);
   stroke-width:  0.5;
   stroke-linejoin: round;
-  transition:    fill 200ms ease;
+  transition:    stroke 200ms ease;
 }
 
 /* ── Dots ────────────────────────────────────────────────────────────────── */
@@ -78,21 +84,21 @@
 
 .walls-map__tabs {
   display:         flex;
-  gap:             var(--space-1);
-  padding:         var(--space-2) var(--space-3);
+  gap:             var(--space-2);
+  padding:         var(--space-3) var(--space-4);
 }
 
 .walls-map__tab {
   display:         inline-flex;
   align-items:     center;
-  gap:             var(--space-1);
-  padding:         var(--space-1) var(--space-3);
+  gap:             var(--space-2);
+  padding:         var(--space-2) var(--space-4);
   background:      transparent;
   border:          1px solid var(--border-soft);
-  border-radius:   var(--radius-sm);
+  border-radius:   var(--radius-md);
   font-family:     var(--font-scoreboard);
-  font-size:       var(--text-micro);
-  letter-spacing:  0.10em;
+  font-size:       var(--text-small);
+  letter-spacing:  0.08em;
   color:           var(--ink-low);
   cursor:          pointer;
   transition:      background var(--motion-hover), border-color var(--motion-hover),
@@ -113,10 +119,11 @@
 }
 
 .walls-map__tab-count {
-  font-size:       0.625rem;
+  font-size:       0.6875rem;
   font-weight:     700;
-  min-width:       16px;
-  height:          16px;
+  min-width:       22px;
+  height:          22px;
+  padding:         0 var(--space-1);
   display:         inline-flex;
   align-items:     center;
   justify-content: center;
@@ -128,17 +135,6 @@
 
 .walls-map__tab--active .walls-map__tab-count {
   background: rgba(232, 124, 42, 0.25);
-}
-
-/* ── Town name labels ──────────────────────────────────────────────────── */
-
-.walls-map__dot-label {
-  fill:            var(--ink-low, rgba(255, 255, 255, 0.45));
-  font-family:     var(--font-program);
-  font-size:       6px;
-  letter-spacing:  0.04em;
-  pointer-events:  none;
-  user-select:     none;
 }
 
 /* ── Tooltip ─────────────────────────────────────────────────────────────── */

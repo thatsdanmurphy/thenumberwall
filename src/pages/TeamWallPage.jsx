@@ -661,6 +661,11 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
+        {/* Lede — the invitation, right under the school name */}
+        <p className="tw-lede">
+          Legends came through here. If you played here too, or remember someone who did — pick a number and add them.
+        </p>
+
         {/* Top row — location + share as one anchored row */}
         <div className="tw-top-row">
           {wall.town_slug && wall.town ? (
@@ -753,10 +758,6 @@ export default function TeamWallPage() {
           )}
         </div>
 
-        {/* ── Inspiration line ─────────────────────────────── */}
-        <p className="tw-inspiration">
-          Legends came through here. If you played here too, or remember someone who did — pick a number and add them.
-        </p>
 
         {/* ── Grid + panel ─────────────────────────────────── */}
         {/* Reuses wall-page__body layout — golden ratio grid + panel */}

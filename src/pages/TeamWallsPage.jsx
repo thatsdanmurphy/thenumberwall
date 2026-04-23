@@ -166,7 +166,7 @@ export default function TeamWallsPage() {
               <span className="twb-section-label">
                 {searchResults !== null
                   ? `${searchResults.length} RESULT${searchResults.length !== 1 ? 'S' : ''}`
-                  : 'WHERE LEGENDS PLAYED'
+                  : 'LEGEND ORIGINS'
                 }
               </span>
               <button className="tnw-btn tnw-btn--primary twb-start-btn" onClick={() => setShowCreate(true)}>
@@ -189,10 +189,10 @@ export default function TeamWallsPage() {
                   const sportsLabel = group.walls
                     .map(w => w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
                     .join(' · ')
-                  const topNames = [...new Set(group.topNames || [])].slice(0, 4)
+                  const topNames = [...new Set(group.topNames || [])].slice(0, 3)
                   const topNamesStr = topNames.join(', ')
-                  const extraNames = group.entryCount - topNames.length
-                  const teamColor = group.walls[0]?.color_primary || null
+                  const locParts = [group.town, group.state || group.walls[0]?.country].filter(Boolean)
+                  const locStr = locParts.join(', ')
 
                   return (
                     <button
@@ -203,21 +203,17 @@ export default function TeamWallsPage() {
                       onMouseEnter={() => handleCardHover(group.town_slug)}
                       onMouseLeave={() => handleCardHover(null)}
                     >
-                      {teamColor && (
-                        <span className="twb-card__dot" style={{ background: teamColor }} />
-                      )}
                       <div className="twb-card__body">
                         <span className="twb-card__school">{group.school}</span>
                         <span className="twb-card__loc">
-                          {group.town}{group.state ? `, ${group.state}` : group.walls[0]?.country ? `, ${group.walls[0].country}` : ''}
-                          {' · '}{sportsLabel}
+                          {locStr}{locStr ? ' · ' : ''}{sportsLabel}
                         </span>
 
                         {topNamesStr && (
                           <div className="twb-card__legends">
                             <span className="twb-card__legends-label">Names on the wall</span>
                             <span className="twb-card__legends-names">
-                              {topNamesStr}{extraNames > 0 ? ` +${extraNames} more` : ''}
+                              {topNamesStr}
                             </span>
                           </div>
                         )}
@@ -293,7 +289,7 @@ export default function TeamWallsPage() {
               <span className="twb-section-label twb-section-label--mobile">
                 {searchResults !== null
                   ? `${searchResults.length} RESULT${searchResults.length !== 1 ? 'S' : ''}`
-                  : 'WHERE LEGENDS PLAYED'
+                  : 'LEGEND ORIGINS'
                 }
               </span>
 
@@ -314,8 +310,8 @@ export default function TeamWallsPage() {
                       .join(' · ')
                     const topNames = [...new Set(group.topNames || [])].slice(0, 3)
                     const topNamesStr = topNames.join(', ')
-                    const extraNames = group.entryCount - topNames.length
-                    const teamColor = group.walls[0]?.color_primary || null
+                    const locParts = [group.town, group.state || group.walls[0]?.country].filter(Boolean)
+                    const locStr = locParts.join(', ')
 
                     return (
                       <button
@@ -323,19 +319,16 @@ export default function TeamWallsPage() {
                         className="twb-card"
                         onClick={() => navigateToWall(group.walls[0])}
                       >
-                        {teamColor && (
-                          <span className="twb-card__dot" style={{ background: teamColor }} />
-                        )}
                         <div className="twb-card__body">
                           <span className="twb-card__school">{group.school}</span>
                           <span className="twb-card__loc">
-                            {group.town}{group.state ? `, ${group.state}` : ''} · {sportsLabel}
+                            {locStr}{locStr ? ' · ' : ''}{sportsLabel}
                           </span>
                           {topNamesStr && (
                             <div className="twb-card__legends">
                               <span className="twb-card__legends-label">Names on the wall</span>
                               <span className="twb-card__legends-names">
-                                {topNamesStr}{extraNames > 0 ? ` +${extraNames}` : ''}
+                                {topNamesStr}
                               </span>
                             </div>
                           )}

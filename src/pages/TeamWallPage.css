@@ -305,15 +305,15 @@
   }
 }
 
-/* ── Inspiration line — below sport tabs, above grid ─────────────────────── */
+/* ── Lede — orange invitation, right under school name ───────────────────── */
 
-.tw-inspiration {
+.tw-lede {
   font-family:  var(--font-program);
-  font-size:    var(--text-small);
-  color:        var(--ink-dim);
-  margin:       0 0 var(--space-3);
+  font-size:    var(--text-body);
+  color:        var(--color-heat);
+  margin:       0 0 var(--space-2);
   line-height:  1.5;
-  font-style:   italic;
+  max-width:    540px;
 }
 
 /* ── Top row — town crumb left, share button right ───────────────────────── */

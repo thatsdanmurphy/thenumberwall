@@ -21,27 +21,17 @@ const WORLD_TOPO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110
 const MAP_HUE = '#e87c2a'
 
 // Region configs: projection center, scale, and bounding box for filtering dots.
+// North America covers CONUS + Hawaii + Alaska + Canada + Mexico.
 const REGIONS = {
-  usa: {
-    label: 'USA',
-    center: [-96, 38],
-    scale: 600,
+  'north-america': {
+    label: 'North America',
+    center: [-96, 45],
+    scale: 340,
     width: 780,
-    height: 420,
+    height: 460,
     filter: (node) => {
       const [lng, lat] = node.coords
-      return lng > -130 && lng < -60 && lat > 24 && lat < 50
-    },
-  },
-  canada: {
-    label: 'Canada',
-    center: [-85, 50],
-    scale: 450,
-    width: 780,
-    height: 380,
-    filter: (node) => {
-      const [lng, lat] = node.coords
-      return lng > -140 && lng < -50 && lat > 42 && lat < 70
+      return lng > -170 && lng < -50 && lat > 15 && lat < 72
     },
   },
   europe: {
@@ -96,7 +86,7 @@ export default function WallsMap({ hoveredTown, onDotClick }) {
   const navigate = useNavigate()
   const [walls, setWalls] = useState(null)
   const [hover, setHover] = useState(null)
-  const [activeRegion, setActiveRegion] = useState('usa')
+  const [activeRegion, setActiveRegion] = useState('north-america')
 
   useEffect(() => {
     getWallsForMap()
@@ -204,15 +194,6 @@ export default function WallsMap({ hoveredTown, onDotClick }) {
                     {count}
                   </text>
                 )}
-                {/* Town label — visible at regional zoom */}
-                <text
-                  className="walls-map__dot-label"
-                  x={0}
-                  y={-(r + 6)}
-                  textAnchor="middle"
-                >
-                  {node.town}
-                </text>
               </Marker>
             )
           })}
