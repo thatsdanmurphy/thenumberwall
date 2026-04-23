@@ -1,56 +1,33 @@
 /* TeamWallsPage — browse and discover team walls.
+   Map-first hero layout: full-width map on top, card grid below.
    Follows baseline token system from global.css. */
 
-/* ── Page: stacked mobile, left/right desktop ────────────────────────────── */
+/* ── Page: single column, full width ───────────────────────────────────────── */
 
 .twb-page {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
-.twb-left {
+/* ── Map hero — full width with text overlay ──────────────────────────────── */
+
+.twb-map-hero {
   display: flex;
   flex-direction: column;
 }
 
-.twb-right {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-@media (min-width: 768px) {
-  .twb-page {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: var(--space-4);
-  }
-
-  .twb-left {
-    flex: 0 0 61.8%;
-    position: sticky;
-    top: var(--space-4);
-  }
-
-  .twb-right {
-    flex: 1;
-    max-width: var(--panel-max-width);
-    padding-top: var(--space-5);
-  }
-}
-
-/* ── Hero ──────────────────────────────────────────────────────────────────── */
-
-.twb-hero {
+.twb-map-hero__text {
   text-align: center;
-  padding: var(--space-5) var(--space-3) var(--space-3);
+  padding: var(--space-5) var(--space-3) 0;
 }
+
+/* ── Hero text ────────────────────────────────────────────────────────────── */
 
 .twb-hero__heading {
   font-family: var(--font-banner);
-  font-size: clamp(1.1rem, 3vw, 1.375rem);
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
   color: var(--color-paper);
   letter-spacing: 0.04em;
 }
@@ -60,28 +37,28 @@
   font-size: var(--text-small);
   color: var(--color-muted);
   margin-top: var(--space-2);
-  max-width: 360px;
+  max-width: 440px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* twb-hero__sub--dim removed — unified to single sub line */
+/* ── Browse section — search bar + card grid ──────────────────────────────── */
 
-/* Inherits .tnw-btn .tnw-btn--primary. */
-.twb-hero__cta {
-  margin-top: var(--space-4);
+.twb-browse {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-@media (min-width: 768px) {
-  .twb-hero {
-    text-align: left;
-    padding: var(--space-5) 0 var(--space-3);
-  }
+.twb-browse__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
 
-  .twb-hero__sub {
-    margin-left: 0;
-    margin-right: 0;
-  }
+.twb-browse__cta {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* ── Search ────────────────────────────────────────────────────────────────── */
@@ -90,6 +67,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  flex: 1;
   background: var(--surface-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -101,9 +79,6 @@
   flex-shrink: 0;
 }
 
-/* Input sits inside the search row; use .tnw-input base but strip the chrome
-   since the parent .twb-search provides the border/bg. Specificity bumped
-   so .tnw-input's border/bg can't leak back in. */
 .twb-search .twb-search__input,
 .twb-search input.twb-search__input {
   flex:       1;
@@ -118,7 +93,6 @@
   box-shadow: none;
 }
 
-/* Ghost-style search button with a heat accent. */
 .twb-search__btn {
   color:          var(--color-heat);
   letter-spacing: var(--tracking-wider);
@@ -129,7 +103,7 @@
   color: var(--color-blaze);
 }
 
-/* ── Section label — matches DISCOVER THE LOCALS ───────────────────────────── */
+/* ── Section label ─────────────────────────────────────────────────────────── */
 
 .twb-section-label {
   font-family: var(--font-banner);
@@ -148,12 +122,24 @@
   padding: var(--space-5) var(--space-3);
 }
 
-/* ── Wall cards — matches city card baseline from WallPage ─────────────────── */
+/* ── Wall cards — responsive grid ─────────────────────────────────────────── */
 
 .twb-cards {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 560px) {
+  .twb-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .twb-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .twb-card {
@@ -182,6 +168,7 @@
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  min-width: 0;
 }
 
 .twb-card__school {
@@ -189,6 +176,9 @@
   font-size: var(--text-h3);
   letter-spacing: 0.04em;
   color: var(--color-paper);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .twb-card__sports-line {
@@ -232,106 +222,27 @@
   color: var(--color-heat);
 }
 
-.twb-card__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-family: var(--font-scoreboard);
-  font-size: 0.5rem;
-  letter-spacing: 0.12em;
-  color: var(--color-muted);
-  text-transform: uppercase;
-}
-
-.twb-card__meta-sep {
-  opacity: 0.55;
-}
-
-.twb-card__meta-town {
-  letter-spacing: 0.14em;
-}
-
-.twb-card__location {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: var(--ink-dim);
-}
-
-/* ── BUILDING NOW enrichments ────────────────────────────────────────────── */
-
-/* Wrapper lets the location chip escape the clickable card, so clicking the
-   town doesn't drill into the wall. */
-.twb-card-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.twb-card__top {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-.twb-card__signals {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: 2px;
-  font-family: var(--font-program);
-  font-size: var(--text-caption);
-  color: var(--ink-mid);
-}
-
-.twb-card__signal {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.twb-card__signal--dim {
-  color: var(--ink-low);
-}
-
-/* Town chip — own affordance, sits below the wall card. Click drills into
-   the town browse, not the wall. */
-.twb-card__town {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 3px var(--space-2);
-  margin-left: var(--space-3);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-program);
-  font-size: var(--text-caption);
-  color: var(--ink-dim);
-  cursor: pointer;
-  transition: all var(--motion-hover);
-}
-
-.twb-card__town:hover {
-  color: var(--color-paper);
-  border-color: var(--border-soft);
-  background: var(--surface-2);
-}
-
 /* ── Global interest CTA ────────────────────────────────────────────────── */
 
 .twb-global-cta {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-3) 0;
+  padding: 0 var(--space-3) var(--space-2);
   font-family: var(--font-scoreboard);
   font-size: var(--text-small);
   letter-spacing: 0.08em;
   color: var(--color-muted);
+}
+
+/* ── Mobile CTA — show start-a-wall inline on small screens ──────────────── */
+
+@media (max-width: 559px) {
+  .twb-browse__bar {
+    flex-direction: column;
+  }
+  .twb-browse__cta {
+    width: 100%;
+  }
 }

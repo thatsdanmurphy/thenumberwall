@@ -5,7 +5,8 @@
  * Tap a region label or dot cluster → zoom into that continent.
  * Back button (zoom out) returns to world view.
  *
- * Dots grouped by town_slug. Click dot → drill into town wall list.
+ * Dots grouped by town_slug. Each dot shows the wall count as a number.
+ * Click dot → drill into town wall list.
  */
 
 import { useEffect, useMemo, useState, useCallback } from 'react'
@@ -135,6 +136,7 @@ export default function WallsMap() {
               <MapDot
                 coords={SEED_COORDS}
                 hue={MAP_HUE}
+                count={0}
                 pulsing
                 label="Boston, MA — the first wall lights here."
                 onHoverIn={(x, y, label) => setHover({ x, y, label })}
@@ -150,7 +152,7 @@ export default function WallsMap() {
                   key={node.key}
                   coords={node.coords}
                   hue={MAP_HUE}
-                  radius={4 + Math.min(count - 1, 4) * 1.25}
+                  count={count}
                   pulsing={count >= 3}
                   glowIntensity={Math.min(count / 5, 1)}
                   label={label}
@@ -188,12 +190,19 @@ export default function WallsMap() {
   )
 }
 
-function MapDot({ coords, hue, radius = 5, pulsing = false, glowIntensity = 0.5, label, onClick, onHoverIn, onHoverOut }) {
+/**
+ * MapDot — a single town marker on the map.
+ * Shows a numbered circle when count > 1, plain dot otherwise.
+ */
+function MapDot({ coords, hue, count = 0, pulsing = false, glowIntensity = 0.5, label, onClick, onHoverIn, onHoverOut }) {
   const opacity = 0.55 + glowIntensity * 0.45
+  const showCount = count > 1
+  const radius = showCount ? 8 + Math.min(count - 2, 6) * 0.8 : 5
+
   return (
     <Marker coordinates={coords}>
       {pulsing && (
-        <circle r={radius + 4} className="walls-map__dot-pulse" style={{ fill: hue }} />
+        <circle r={radius + 5} className="walls-map__dot-pulse" style={{ fill: hue }} />
       )}
       <circle
         r={radius}
@@ -203,6 +212,19 @@ function MapDot({ coords, hue, radius = 5, pulsing = false, glowIntensity = 0.5,
         onMouseEnter={e => onHoverIn?.(e.clientX, e.clientY, label)}
         onMouseLeave={onHoverOut}
       />
+      {showCount && (
+        <text
+          className="walls-map__dot-count"
+          textAnchor="middle"
+          dominantBaseline="central"
+          style={{ fontSize: radius < 10 ? 8 : 9 }}
+          onClick={onClick}
+          onMouseEnter={e => onHoverIn?.(e.clientX, e.clientY, label)}
+          onMouseLeave={onHoverOut}
+        >
+          {count}
+        </text>
+      )}
     </Marker>
   )
 }

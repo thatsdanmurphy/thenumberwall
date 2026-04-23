@@ -19,7 +19,7 @@
 
 import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { track } from '@vercel/analytics'
+import { trackEvent } from '../lib/analytics.js'
 import { ChevronDown, ChevronUp, ChevronRight, Plus, ArrowRight } from 'lucide-react'
 import './PipelinePath.css'
 
@@ -131,7 +131,7 @@ export default function PipelinePath({
   const toggle = useCallback(() => {
     setExpanded(prev => {
       if (!prev) {
-        try { track('pipeline_expand', { college, highSchool }) } catch {}
+        trackEvent('pipeline_expand', { college, highSchool })
       }
       return !prev
     })
@@ -159,7 +159,7 @@ export default function PipelinePath({
 
   function handleTimelineTap() {
     if (timelineId) {
-      try { track('timeline_open_from_pipeline', { timelineId }) } catch {}
+      trackEvent('timeline_open_from_pipeline', { timelineId })
       navigate(`/timeline/${timelineId}`)
     }
   }

@@ -44,6 +44,17 @@
   stroke-opacity: 0.6;
 }
 
+/* Count label inside multi-wall dots */
+.walls-map__dot-count {
+  fill: var(--color-paper, #fff);
+  font-family: var(--font-scoreboard);
+  font-weight: 700;
+  letter-spacing: 0;
+  pointer-events: all;
+  cursor: pointer;
+  user-select: none;
+}
+
 /* Pulse ring — sits behind the dot, softly expands + fades on loop. */
 .walls-map__dot-pulse {
   fill-opacity: 0.25;

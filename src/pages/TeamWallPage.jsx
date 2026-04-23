@@ -25,6 +25,7 @@ import {
 import { getSportMatchedLegends } from '../data/index.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
+import { trackEvent } from '../lib/analytics.js'
 import './WallPage.css'        // shared layout: wall-page__body, wall-page__grid-col
 import './TeamWallPage.css'    // team-wall-specific: coach tile, sport picker, add form
 
@@ -202,7 +203,10 @@ export default function TeamWallPage() {
   }, [viewMode, allLoaded, schoolSlug])
 
   useEffect(() => {
-    if (wall) document.title = `${wall.school} ${sportLabel} | The Number Wall`
+    if (wall) {
+      document.title = `${wall.school} ${sportLabel} | The Number Wall`
+      trackEvent('wall_view', { wall: wall.school_slug, sport: wall.sport, school: wall.school })
+    }
   }, [wall, sportLabel])
 
   // Load coaches whenever the wall changes (mount or sport switch).
@@ -321,6 +325,7 @@ export default function TeamWallPage() {
       if (newEntry) {
         setWall(prev => prev ? { ...prev, entries: [...(prev.entries || []), newEntry] } : prev)
       }
+      trackEvent('entry_added', { wall: wall.school_slug, sport: wall.sport, number: selected, type: 'crowd' })
       setAddName(''); setAddPosition(''); setAddGradYear(''); setAddFunFact(''); setAddWentPro(false)
       setAddSuccess(true)
       setShowAddForm(false)  // close form, back to card view
@@ -347,6 +352,7 @@ export default function TeamWallPage() {
     } else {
       navigator.clipboard.writeText(url).catch(() => {})
     }
+    trackEvent('share_tap', { wall: wall?.school_slug, sport: wall?.sport, number: selected || null, context: 'team_wall' })
     setCopied(true)
     setTimeout(() => setCopied(false), 1800)
   }

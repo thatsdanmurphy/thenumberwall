@@ -16,6 +16,7 @@ import WallsMap from '../components/WallsMap.jsx'
 import { getActiveWallsWithSignals, browseTeamWalls, slugify } from '../lib/teamWallStore.js'
 import { TEAM_PALETTES } from '../data/teamColors.js'
 import { getSportIcon } from '../data/sports.js'
+import { trackEvent } from '../lib/analytics.js'
 import './TeamWallsPage.css'
 
 export default function TeamWallsPage() {
@@ -107,43 +108,44 @@ export default function TeamWallsPage() {
       <AppHeader title="TEAM WALLS" back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
 
       <main className="twb-page">
-        {/* ── Left: Hero ───────────────────────────────────── */}
-        <div className="twb-left">
-          <div className="twb-hero">
+        {/* ── Map hero — full width ──────────────────────────── */}
+        <section className="twb-map-hero">
+          <div className="twb-map-hero__text">
             <h2 className="twb-hero__heading">DID YOU PLAY WITH A LEGEND?</h2>
             <p className="twb-hero__sub">
               Every legend came from somewhere. Find their school — and if you played there too, or remember who did, put those names on the wall.
             </p>
-            <button className="tnw-btn tnw-btn--primary twb-hero__cta" onClick={() => setShowCreate(true)}>
-              <Plus size={16} /> Start a wall
-            </button>
           </div>
-
           <WallsMap />
-
           <div className="twb-global-cta">
             <Globe size={16} />
             <span>Legends came from everywhere. Walls across 5 countries and counting.</span>
           </div>
-        </div>
+        </section>
 
-        {/* ── Right: Search + Cards ────────────────────────── */}
-        <div className="twb-right">
-          <form className="twb-search" onSubmit={handleSearch}>
-            <Search size={16} className="twb-search__icon" />
-            <input
-              type="text"
-              className="tnw-input twb-search__input"
-              placeholder="Search by program or school…"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-            />
-            {query && (
-              <button type="submit" className="tnw-btn tnw-btn--ghost twb-search__btn">
-                Search
-              </button>
-            )}
-          </form>
+        {/* ── Search + Card grid ─────────────────────────────── */}
+        <section className="twb-browse">
+          <div className="twb-browse__bar">
+            <form className="twb-search" onSubmit={handleSearch}>
+              <Search size={16} className="twb-search__icon" />
+              <input
+                type="text"
+                className="tnw-input twb-search__input"
+                placeholder="Search by program or school…"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+              />
+              {query && (
+                <button type="submit" className="tnw-btn tnw-btn--ghost twb-search__btn">
+                  Search
+                </button>
+              )}
+            </form>
+
+            <button className="tnw-btn tnw-btn--primary twb-browse__cta" onClick={() => setShowCreate(true)}>
+              <Plus size={16} /> Start a wall
+            </button>
+          </div>
 
           <span className="twb-section-label">
             {searchResults !== null
@@ -164,7 +166,6 @@ export default function TeamWallsPage() {
           ) : (
             <div className="twb-cards">
               {groupedWalls.map(group => {
-                const since = formatSince(group.lastActivityAt)
                 const sportsLabel = group.walls
                   .map(w => w.sport.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()))
                   .join(' · ')
@@ -198,6 +199,7 @@ export default function TeamWallsPage() {
                         } else {
                           navigator.clipboard.writeText(url).catch(() => {})
                         }
+                        trackEvent('share_tap', { wall: group.school_slug, context: 'browse' })
                       }}
                     >
                       <ExternalLink size={12} />
@@ -208,8 +210,7 @@ export default function TeamWallsPage() {
               })}
             </div>
           )}
-        </div>
-
+        </section>
       </main>
 
       <AppFooter />

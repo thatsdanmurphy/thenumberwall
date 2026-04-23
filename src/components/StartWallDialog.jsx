@@ -12,7 +12,7 @@ import Modal from './Modal.jsx'
 import PositionPicker from './PositionPicker.jsx'
 import { createTeamWall, addTeamEntry } from '../lib/teamWallStore.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
-import { track } from '@vercel/analytics'
+import { trackEvent } from '../lib/analytics.js'
 import './StartWallDialog.css'
 
 function locationToTownState(loc) {
@@ -90,7 +90,7 @@ export default function StartWallDialog({
         wentPro,
       })
 
-      try { track('wall_started_from_pipeline', { school, type, sport, legendName }) } catch {}
+      trackEvent('wall_created', { school, type, sport, legendName, context: 'pipeline' })
 
       if (onCreated) {
         onCreated({ schoolSlug: wall.school_slug, sport: wall.sport || sport })

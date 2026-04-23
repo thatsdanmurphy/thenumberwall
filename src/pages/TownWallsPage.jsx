@@ -18,6 +18,7 @@ import { getWallsInTown } from '../lib/teamWallStore.js'
 import { getSportIcon } from '../data/sports.js'
 import { getOrgTypeLabel } from '../data/orgTypes.js'
 import { TEAM_PALETTES } from '../data/teamColors.js'
+import { trackEvent } from '../lib/analytics.js'
 import './TownWallsPage.css'
 
 export default function TownWallsPage() {
@@ -78,6 +79,7 @@ export default function TownWallsPage() {
     } else {
       navigator.clipboard.writeText(url).catch(() => {})
     }
+    trackEvent('share_tap', { town: townSlug, context: 'town_page' })
     setCopied(true)
     setTimeout(() => setCopied(false), 1800)
   }
