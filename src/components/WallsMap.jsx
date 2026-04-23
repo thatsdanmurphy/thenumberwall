@@ -181,19 +181,6 @@ export default function WallsMap({ hoveredTown, onDotClick }) {
                   onMouseEnter={e => setHover({ x: e.clientX, y: e.clientY, label })}
                   onMouseLeave={() => setHover(null)}
                 />
-                {count > 1 && (
-                  <text
-                    className="walls-map__dot-count"
-                    textAnchor="middle"
-                    dominantBaseline="central"
-                    style={{ fontSize: r < 8 ? 7 : 8 }}
-                    onClick={() => handleDotClick(node.key)}
-                    onMouseEnter={e => setHover({ x: e.clientX, y: e.clientY, label })}
-                    onMouseLeave={() => setHover(null)}
-                  >
-                    {count}
-                  </text>
-                )}
               </Marker>
             )
           })}

@@ -22,6 +22,13 @@ import { getActiveWallsWithSignals, browseTeamWalls } from '../lib/teamWallStore
 import { trackEvent } from '../lib/analytics.js'
 import './TeamWallsPage.css'
 
+// Country code → display name for non-US walls
+const COUNTRY_NAMES = { US: '', CA: 'Canada', IT: 'Italy', UK: 'England', GB: 'England', DE: 'Germany', ES: 'Spain', FR: 'France', NL: 'Netherlands', SE: 'Sweden', FI: 'Finland', RU: 'Russia', CZ: 'Czech Republic', CH: 'Switzerland' }
+function countryLabel(code) {
+  if (!code || code === 'US') return ''
+  return COUNTRY_NAMES[code.toUpperCase()] || code
+}
+
 export default function TeamWallsPage() {
   const navigate = useNavigate()
   const [activeWalls, setActiveWalls] = useState([])
@@ -191,7 +198,7 @@ export default function TeamWallsPage() {
                     .join(' · ')
                   const topNames = [...new Set(group.topNames || [])].slice(0, 3)
                   const topNamesStr = topNames.join(', ')
-                  const locParts = [group.town, group.state || group.walls[0]?.country].filter(Boolean)
+                  const locParts = [group.town, group.state || countryLabel(group.walls[0]?.country)].filter(Boolean)
                   const locStr = locParts.join(', ')
 
                   return (
@@ -310,7 +317,7 @@ export default function TeamWallsPage() {
                       .join(' · ')
                     const topNames = [...new Set(group.topNames || [])].slice(0, 3)
                     const topNamesStr = topNames.join(', ')
-                    const locParts = [group.town, group.state || group.walls[0]?.country].filter(Boolean)
+                    const locParts = [group.town, group.state || countryLabel(group.walls[0]?.country)].filter(Boolean)
                     const locStr = locParts.join(', ')
 
                     return (

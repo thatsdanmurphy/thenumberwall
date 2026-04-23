@@ -24,12 +24,12 @@
   margin: -2% 0;
 }
 
-/* Country outlines — stroke only, no fill. Clean wireframe
-   that recedes behind the glowing dots. */
+/* Country shapes — very subtle fill with matching stroke so borders
+   melt into the silhouette. Backdrop, not atlas. */
 .walls-map__state {
-  fill:            transparent;
-  stroke:          rgba(255, 255, 255, 0.22);
-  stroke-width:    0.75;
+  fill:            rgba(255, 255, 255, 0.05);
+  stroke:          rgba(255, 255, 255, 0.10);
+  stroke-width:    0.5;
   stroke-linejoin: round;
 }
 
@@ -38,26 +38,15 @@
 .walls-map__dot {
   cursor: pointer;
   fill-opacity: 0.85;
-  stroke-width: 2;
-  stroke-opacity: 0.35;
+  stroke-width: 1.5;
+  stroke-opacity: 0.25;
   transition: fill-opacity 180ms ease, r 180ms ease, stroke-opacity 180ms ease;
-  filter: drop-shadow(0 0 6px currentColor);
+  filter: drop-shadow(0 0 3px currentColor);
 }
 
 .walls-map__dot:hover {
   fill-opacity: 1;
   stroke-opacity: 0.6;
-}
-
-/* Count label inside multi-wall dots */
-.walls-map__dot-count {
-  fill: var(--color-paper, #fff);
-  font-family: var(--font-scoreboard);
-  font-weight: 700;
-  letter-spacing: 0;
-  pointer-events: all;
-  cursor: pointer;
-  user-select: none;
 }
 
 /* Pulse ring — sits behind the dot, softly expands + fades on loop. */
