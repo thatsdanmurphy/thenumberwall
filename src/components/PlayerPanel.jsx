@@ -10,7 +10,6 @@ import VoteButtons from './VoteButtons.jsx'
 import SubmitLegend from './SubmitLegend.jsx'
 import PipelinePath from './PipelinePath.jsx'
 import StartWallDialog from './StartWallDialog.jsx'
-import './StartWallDialog.css'
 import './PlayerPanel.css'
 
 // Players with a full-career Legend Timeline. Name-matched (case-insensitive).
