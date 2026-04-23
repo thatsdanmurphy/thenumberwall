@@ -243,6 +243,23 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const panelRef = useRef(null)
   useSwipeDown(panelRef, onClear)
 
+  // Scroll pass-through: when the panel hits its scroll boundary,
+  // forward the wheel delta to the page so it doesn't feel "stuck."
+  useEffect(() => {
+    const el = panelRef.current
+    if (!el || window.innerWidth < 768) return
+    function onWheel(e) {
+      const atTop = el.scrollTop <= 0
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1
+      if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
+        e.preventDefault()
+        window.scrollBy({ top: e.deltaY, behavior: 'auto' })
+      }
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
   // ── Internal voting state ──────────────────────────────────────────────────
   // Voting is opt-in: user taps "WHO OWNS THIS NUMBER?" to activate.
   // Panel fetches scores from Supabase when activated — no page-level wiring.

@@ -663,7 +663,7 @@ export default function TeamWallPage() {
 
         {/* Lede — the invitation, right under the school name */}
         <p className="tw-lede">
-          Legends came through here. If you played here too, or remember someone who did — pick a number and add them.
+          If you played here too, or remember someone who did, pick a number and add them.
         </p>
 
         {/* Top row — location + share as one anchored row */}

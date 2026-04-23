@@ -24,14 +24,13 @@
   margin: -2% 0;
 }
 
-/* Country outlines — stroke only, no fill. Reads as a subtle wireframe
+/* Country outlines — stroke only, no fill. Clean wireframe
    that recedes behind the glowing dots. */
 .walls-map__state {
-  fill:          transparent;
-  stroke:        rgba(255, 255, 255, 0.12);
-  stroke-width:  0.5;
+  fill:            transparent;
+  stroke:          rgba(255, 255, 255, 0.22);
+  stroke-width:    0.75;
   stroke-linejoin: round;
-  transition:    stroke 200ms ease;
 }
 
 /* ── Dots ────────────────────────────────────────────────────────────────── */
@@ -85,7 +84,7 @@
 .walls-map__tabs {
   display:         flex;
   gap:             var(--space-2);
-  padding:         var(--space-3) var(--space-4);
+  padding:         var(--space-3) 0;
 }
 
 .walls-map__tab {

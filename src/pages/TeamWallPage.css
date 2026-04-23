@@ -305,12 +305,12 @@
   }
 }
 
-/* ── Lede — orange invitation, right under school name ───────────────────── */
+/* ── Lede — white invitation, right under school name ────────────────────── */
 
 .tw-lede {
   font-family:  var(--font-program);
   font-size:    var(--text-body);
-  color:        var(--color-heat);
+  color:        var(--color-paper);
   margin:       0 0 var(--space-2);
   line-height:  1.5;
   max-width:    540px;

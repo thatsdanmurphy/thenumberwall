@@ -9,14 +9,14 @@ import './WhatsNext.css'
 
 const OPTIONS = [
   {
-    id: 'college_teams',
-    label: 'College Teams',
-    desc: 'Alma maters and college legends on their own walls',
+    id: 'more_timelines',
+    label: 'More Player Timelines',
+    desc: 'Career arcs for more legends — who should be next after Brady?',
   },
   {
-    id: 'player_timelines',
-    label: 'Player Timelines',
-    desc: 'Game-by-game career arcs for the biggest legends',
+    id: 'more_cities',
+    label: 'More City Walls',
+    desc: 'Chicago, LA, Philly, Dallas, and beyond',
   },
   {
     id: 'debate_voting',
@@ -24,9 +24,9 @@ const OPTIONS = [
     desc: 'Vote on who truly owns a contested number',
   },
   {
-    id: 'more_cities',
-    label: 'More City Walls',
-    desc: 'Chicago, LA, Philly, Dallas, and beyond',
+    id: 'college_teams',
+    label: 'More College Walls',
+    desc: 'Every school deserves a wall — which ones should come next?',
   },
 ]
 

@@ -43,8 +43,8 @@
 }
 
 .twb-map-hero-text {
-  padding: var(--space-4) var(--space-4) 0;
-  /* Align left edge with tab row inside map */
+  padding: var(--space-4) 0 0;
+  /* No left padding — AppShell grid-margin handles alignment */
 }
 
 /* ── List column — 38.2% ───────────────────────────────────────────────────── */
