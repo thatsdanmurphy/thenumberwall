@@ -9,16 +9,16 @@
     "Era": "Bronx Zoo",
     "Team": "New York Yankees",
     "Hometown": "",
-    "Signature Stat": "",
-    "Stat Label": "Manager",
+    "Signature Stat": "1",
+    "Stat Label": "World Series Championship as Manager (1977)",
     "Stat Weight": "2",
     "Role": "Manager",
-    "Fun Fact": "Fiery skipper who led the Yankees to 4 World Series titles during the tumultuous Bronx Zoo era",
+    "Fun Fact": "Fiery skipper who led the Yankees to the 1977 World Series championship — hired and fired five times by Steinbrenner, and somehow always came back. The Bronx Zoo was his natural habitat.",
     "Notes": ""
   },
   {
     "Number": "2",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Derek Jeter",
     "Sport": "Baseball",
     "League": "MLB",
@@ -35,7 +35,7 @@
   },
   {
     "Number": "3",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Babe Ruth",
     "Sport": "Baseball",
     "League": "MLB",
@@ -43,8 +43,8 @@
     "Era": "Golden Era",
     "Team": "New York Yankees",
     "Hometown": "",
-    "Signature Stat": "54",
-    "Stat Label": "Home Runs (1920)",
+    "Signature Stat": "714",
+    "Stat Label": "Career Home Runs",
     "Stat Weight": "3",
     "Role": "Outfielder",
     "Fun Fact": "The Sultan of Swat transformed baseball into America's pastime and made the Yankees a dynasty",
@@ -52,7 +52,7 @@
   },
   {
     "Number": "4",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Lou Gehrig",
     "Sport": "Baseball",
     "League": "MLB",
@@ -69,7 +69,7 @@
   },
   {
     "Number": "5",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Joe DiMaggio",
     "Sport": "Baseball",
     "League": "MLB",
@@ -154,7 +154,7 @@
   },
   {
     "Number": "7",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Mickey Mantle",
     "Sport": "Baseball",
     "League": "MLB",
@@ -438,7 +438,7 @@
     "Stat Label": "Career Goals",
     "Stat Weight": "3",
     "Role": "Left Wing",
-    "Fun Fact": "Tough and skilled winger who anchored the Rangers offense and won the Stanley Cup in 1994",
+    "Fun Fact": "Part of the famous Goal-A-Game Line with Jean Ratelle and Rod Gilbert, he became the first Ranger to score 50 goals in a season in 1971-72. The most feared line in Madison Square Garden history.",
     "Notes": ""
   },
   {
@@ -502,7 +502,7 @@
     "Era": "Golden Era",
     "Team": "New York Mets",
     "Hometown": "",
-    "Signature Stat": "1921",
+    "Signature Stat": "1274",
     "Stat Label": "Career RBIs",
     "Stat Weight": "3",
     "Role": "First Baseman",
@@ -638,11 +638,11 @@
     "Era": "Modern Era",
     "Team": "Brooklyn Nets",
     "Hometown": "",
-    "Signature Stat": "2",
-    "Stat Label": "NBA Finals Appearances",
+    "Signature Stat": "15.1",
+    "Stat Label": "Career PPG with Nets (2004-09)",
     "Stat Weight": "3",
     "Role": "Shooting Guard",
-    "Fun Fact": "Vinsanity's electrifying dunks brought the Nets to consecutive Finals appearances and revitalized the franchise",
+    "Fun Fact": "Vinsanity came to Brooklyn in 2004 and gave New York five seasons of gravity-defying highlights — the most electrifying dunker of his generation, in a Nets uniform.",
     "Notes": ""
   },
   {
@@ -778,7 +778,7 @@
     "Stat Label": "Career Goals",
     "Stat Weight": "3",
     "Role": "Center",
-    "Fun Fact": "Classy center and linemate to Mark Messier helped the Rangers end their 54-year Cup drought",
+    "Fun Fact": "Part of the legendary GAG (Goal-A-Game) Line with Vic Hadfield and Rod Gilbert in the 1960s and 70s, Ratelle was the most graceful of the three — a Hall of Famer who put up 100-point seasons while playing the game clean. The Rangers retired his number.",
     "Notes": ""
   },
   {
@@ -1033,7 +1033,7 @@
     "Stat Label": "Career Home Runs (Mets)",
     "Stat Weight": "3",
     "Role": "Catcher",
-    "Fun Fact": "Powerful-hitting catcher whose clutch home run helped win the 1986 World Series",
+    "Fun Fact": "Eight days after 9/11 he hit a home run at Shea Stadium that gave New York something to cheer about at the darkest moment in the city's history. The most prolific power-hitting catcher in baseball history.",
     "Notes": ""
   },
   {
@@ -1097,11 +1097,11 @@
     "Era": "Modern Era",
     "Team": "Brooklyn Nets",
     "Hometown": "",
-    "Signature Stat": "3",
-    "Stat Label": "ABA Championships",
+    "Signature Stat": "2",
+    "Stat Label": "ABA Championships with the Nets (1974, 1976)",
     "Stat Weight": "3",
     "Role": "Forward",
-    "Fun Fact": "The Doctor revolutionized basketball and won 3 ABA championships before joining the NBA",
+    "Fun Fact": "The Doctor revolutionized basketball with his gravity-defying moves — won 2 ABA championships with the Nets (1974 and 1976) before joining the NBA, where he won a third title with the 76ers in 1983.",
     "Notes": ""
   },
   {
@@ -1149,7 +1149,7 @@
     "Team": "New York Mets",
     "Hometown": "",
     "Signature Stat": "222",
-    "Stat Label": "Career Wins (Mets)",
+    "Stat Label": "Career Wins",
     "Stat Weight": "3",
     "Role": "Pitcher",
     "Fun Fact": "Dominant left-hander who won the 1969 World Series and became the Mets' all-time winningest pitcher",
@@ -1390,12 +1390,12 @@
     "Stat Label": "NBA Finals Appearances",
     "Stat Weight": "3",
     "Role": "Power Forward",
-    "Fun Fact": "Tough rebounder and defender who led the Nets to consecutive Finals appearances",
+    "Fun Fact": "The Nets retired his #52 — for eight seasons he was the engine of a franchise still searching for its identity, a relentless rebounder who showed up every night and gave the city something to believe in long before the dynasty ever arrived.",
     "Notes": ""
   },
   {
     "Number": "56",
-    "Tier": "SACRED",
+    "Tier": "LEGEND",
     "Name": "Lawrence Taylor",
     "Sport": "Football",
     "League": "NFL",
@@ -1471,11 +1471,11 @@
     "Era": "Modern Era",
     "Team": "New York Rangers",
     "Hometown": "",
-    "Signature Stat": "1",
-    "Stat Label": "Stanley Cup",
+    "Signature Stat": "1028",
+    "Stat Label": "Career Points",
     "Stat Weight": "3",
     "Role": "Defenseman",
-    "Fun Fact": "Elite offensive defenseman who won the Stanley Cup in 1994 and led the Rangers to the Finals",
+    "Fun Fact": "He won the Conn Smythe in 1994 as a defenseman — only the third D-man ever to win playoff MVP — and ended the Rangers' 54-year Cup drought in the process.",
     "Notes": ""
   },
   {
@@ -1505,8 +1505,8 @@
     "Era": "Modern Era",
     "Team": "New York Jets",
     "Hometown": "",
-    "Signature Stat": "20",
-    "Stat Label": "Seasons with Jets",
+    "Signature Stat": "4",
+    "Stat Label": "Pro Bowl Selections at 3 Different Positions (DE, DT, NT)",
     "Stat Weight": "3",
     "Role": "Defensive End",
     "Fun Fact": "Jets' ironman defensive end who anchored the defense and brought respectability to the team",
@@ -1556,8 +1556,8 @@
     "Era": "Modern Era",
     "Team": "New York Rangers",
     "Hometown": "",
-    "Signature Stat": "1851",
-    "Stat Label": "Career Goals",
+    "Signature Stat": "2857",
+    "Stat Label": "Career Points (NHL all-time record)",
     "Stat Weight": "3",
     "Role": "Right Wing",
     "Fun Fact": "The Great One's brief Rangers tenure brought star power but never won the Cup in New York",
@@ -1628,7 +1628,7 @@
     "Stat Label": "Super Bowl Championships",
     "Stat Weight": "3",
     "Role": "Quarterback",
-    "Fun Fact": "Tough competitor who won 2 Super Bowls with the Giants and threw for 25 TDs in Super Bowl XXI victory",
+    "Fun Fact": "In Super Bowl XXI he completed 22 of 25 passes for 268 yards and 3 touchdowns — an 88% completion rate and 150.9 passer rating that both set Super Bowl records. The most accurate big-game performance in NFL history.",
     "Notes": ""
   },
   {
