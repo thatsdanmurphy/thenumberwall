@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { track } from '@vercel/analytics'
 import AppShell    from '../components/AppShell.jsx'
 import AppHeader   from '../components/AppHeader.jsx'
@@ -10,6 +9,7 @@ import PlayerPanel from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import FirstVisitModal  from '../components/FirstVisitModal.jsx'
 import { wallData, buildFilteredIndex, globalIndex } from '../data/index.js'
+import WallExplore from '../components/WallExplore.jsx'
 import './WallPage.css'
 
 export default function WallPage() {
@@ -67,36 +67,6 @@ export default function WallPage() {
               onSelect={setSelected}
               sportFilter={sportFilter}
             />
-            {/* City boards — discoverable below the global grid */}
-            <div className="wall-page__cities">
-              <p className="wall-page__cities-label">DISCOVER THE LOCALS</p>
-              <Link to="/boston" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'boston' })}>
-                <span className="wall-page__city-name">Boston</span>
-                <span className="wall-page__city-teams">Red Sox · Patriots · Celtics · Bruins</span>
-                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
-              </Link>
-              <Link to="/newyork" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'newyork' })}>
-                <span className="wall-page__city-name">New York</span>
-                <span className="wall-page__city-teams">Yankees · Mets · Giants · Jets · Knicks · Rangers</span>
-                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
-              </Link>
-              <div className="wall-page__city-card wall-page__city-card--soon" aria-hidden="true">
-                <span className="wall-page__city-name">Chicago</span>
-                <span className="wall-page__city-teams"></span>
-                <span className="wall-page__city-soon">COMING SOON</span>
-              </div>
-            </div>
-
-            {/* Team Walls — Disabled until ready
-            <div className="wall-page__team-walls">
-              <p className="wall-page__cities-label">TEAM WALLS</p>
-              <Link to="/walls" className="wall-page__city-card" onClick={() => track('team_walls_open')}>
-                <span className="wall-page__city-name">See where the legends come from.</span>
-                <span className="wall-page__city-teams">Find your team — high school, college, any era</span>
-                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
-              </Link>
-            </div>
-            */}
           </div>
 
           <PlayerPanel
@@ -106,6 +76,7 @@ export default function WallPage() {
             wallId="global"
           />
         </div>
+        <WallExplore />
       </main>
       <AppFooter />
 

@@ -1,0 +1,237 @@
+/* WallExplore — homepage discovery section
+   Thumbnails-first: 4×1 inert mini-tiles above title + CTA.
+   No containers — items float on the page background.
+   Team color values derive from --color-team-* in global.css. */
+
+/* ── Section wrapper ──────────────────────────────────────────────── */
+
+.wall-explore {
+  padding: 0 var(--grid-margin) var(--space-8);
+}
+
+/* ── Divider ──────────────────────────────────────────────────────── */
+
+.wall-explore__head {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-3);
+  padding:     var(--space-6) 0 var(--space-5);
+}
+
+.wall-explore__divider-label {
+  white-space: nowrap;
+}
+
+.wall-explore__divider-line {
+  flex:       1;
+  height:     1px;
+  background: var(--border-faint);
+}
+
+/* ── Discovery grid ───────────────────────────────────────────────── */
+
+.wall-explore__grid {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   var(--space-7) var(--space-5);
+}
+
+@media (max-width: 960px) {
+  .wall-explore__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6) var(--space-4);
+  }
+}
+
+@media (max-width: 580px) {
+  .wall-explore__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6) 0;
+  }
+}
+
+/* ── Item ─────────────────────────────────────────────────────────── */
+
+.wall-explore__item {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
+}
+
+/* ── Mini-tile preview strip ──────────────────────────────────────── */
+
+.wall-explore__preview {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   5px;
+}
+
+.wall-explore__mt {
+  aspect-ratio:   1;
+  border-radius:  var(--radius-sm);
+  border:         1px solid var(--border-soft);
+  background:     var(--surface-2);
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  font-family:    var(--font-banner);
+  font-size:      clamp(15px, 1.8vw, 24px);
+  color:          var(--color-paper);
+  pointer-events: none;
+  user-select:    none;
+}
+
+/* ── Mini-tile accent variants ────────────────────────────────────── */
+
+/* Global wall states re-used */
+.we-mt--heat {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(232,124,42,0.30) 0%, transparent 68%);
+  border-color: rgba(232,124,42,0.32);
+}
+
+.we-mt--sacred {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(200,220,255,0.18) 0%, transparent 68%);
+  border-color: rgba(200,220,255,0.30);
+  color:        var(--color-sacred);
+}
+
+.we-mt--unwritten {
+  opacity: 0.22;
+}
+
+/* Boston city — one tile per team, --color-team-* values */
+/* Sox      #E8182E */
+.we-mt--sox {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(232,24,46,0.36) 0%, transparent 68%);
+  border-color: rgba(232,24,46,0.40);
+  color:        rgba(255,160,165,0.90);
+}
+/* Bruins   #FFB81C */
+.we-mt--bruins {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(255,184,28,0.30) 0%, transparent 68%);
+  border-color: rgba(255,184,28,0.36);
+  color:        rgba(255,218,100,0.90);
+}
+/* Celtics  #00C267 */
+.we-mt--celtics {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(0,194,103,0.28) 0%, transparent 68%);
+  border-color: rgba(0,194,103,0.34);
+  color:        rgba(111,207,151,0.90);
+}
+/* Patriots #1A72FF */
+.we-mt--pats {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(26,114,255,0.30) 0%, transparent 68%);
+  border-color: rgba(26,114,255,0.36);
+  color:        rgba(147,186,255,0.90);
+}
+
+/* Rival walls — hard 2+2 color split */
+.we-mt--rival-red {
+  background:   radial-gradient(ellipse at 30% 35%, rgba(178,34,52,0.44) 0%, transparent 68%);
+  border-color: rgba(178,34,52,0.48);
+  color:        rgba(244,160,166,0.90);
+}
+.we-mt--rival-navy {
+  background:   radial-gradient(ellipse at 70% 35%, rgba(12,35,64,0.65) 0%, transparent 68%);
+  border-color: rgba(0,82,136,0.46);
+  color:        rgba(147,186,232,0.90);
+}
+
+/* Reel Legends — sacred blue, fiction rendered as myth */
+.we-mt--reel {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(200,220,255,0.14) 0%, transparent 68%);
+  border-color: rgba(200,220,255,0.24);
+  color:        rgba(200,220,255,0.72);
+}
+
+/* Era walls — Rock Salt handwritten + amber */
+.we-mt--era {
+  background:    radial-gradient(ellipse at 50% 35%, rgba(230,81,0,0.28) 0%, transparent 68%);
+  border-color:  rgba(255,143,0,0.30);
+  color:         #FFB74D;
+  font-family:   var(--font-handwritten);
+  font-size:     clamp(11px, 1.3vw, 17px); /* Rock Salt renders large — scale down */
+  line-height:   1;
+}
+
+/* Dim/placeholder tile — dashed border, faded */
+.we-mt--dim {
+  opacity:      0.26;
+  border-style: dashed;
+  font-family:  var(--font-banner);             /* override Rock Salt for ? + cells */
+  font-size:    clamp(15px, 1.8vw, 24px);
+  color:        var(--ink-dim);
+}
+
+/* My Wall — personal blue */
+.we-mt--my {
+  background:   radial-gradient(ellipse at 50% 35%, rgba(200,220,255,0.13) 0%, transparent 68%);
+  border-color: rgba(200,220,255,0.20);
+  color:        rgba(200,220,255,0.58);
+}
+
+/* ── Text block ───────────────────────────────────────────────────── */
+
+.wall-explore__text {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+.wall-explore__title {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-h2);
+  letter-spacing: 0.02em;
+  color:          var(--color-paper);
+  line-height:    1.05;
+}
+
+.wall-explore__body {
+  font-size:   var(--text-small);
+  line-height: 1.55;
+  color:       var(--ink-dim);
+}
+
+/* ── CTA link ─────────────────────────────────────────────────────── */
+
+.wall-explore__cta {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            var(--space-2);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color:          var(--ink-low);
+  text-decoration: none;
+  margin-top:     var(--space-1);
+  transition:     color var(--motion-hover);
+}
+
+.wall-explore__cta:hover {
+  color: var(--color-paper);
+}
+
+.wall-explore__arrow {
+  display:    inline-block;
+  transition: transform var(--motion-hover);
+}
+
+.wall-explore__cta:hover .wall-explore__arrow {
+  transform: translateX(4px);
+}
+
+/* ── Coming-soon badge ────────────────────────────────────────────── */
+
+.wall-explore__badge {
+  display:        inline-block;
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding:        3px 9px;
+  border-radius:  999px;
+  border:         1px solid rgba(255,143,0,0.35);
+  color:          #FFB74D;
+  margin-top:     var(--space-1);
+}
