@@ -17,9 +17,14 @@ const CITIES = [
     href:  '/boston',
     tiles: [
       { num: 9,  mod: 'sox'     },  // Ted Williams
+      { num: 8,  mod: 'sox'     },  // Yaz
+      { num: 45, mod: 'sox'     },  // Pedro
       { num: 4,  mod: 'bruins'  },  // Bobby Orr
+      { num: 7,  mod: 'bruins'  },  // Phil Esposito
       { num: 33, mod: 'celtics' },  // Larry Bird
+      { num: 6,  mod: 'celtics' },  // Bill Russell
       { num: 12, mod: 'pats'    },  // Tom Brady
+      { num: 87, mod: 'pats'    },  // Gronk
     ],
   },
   {
@@ -27,12 +32,16 @@ const CITIES = [
     title: 'New York',
     cta:   'Explore New York',
     href:  '/walls',
-    stub:  true,
     tiles: [
-      { num: 2,  mod: 'ny-yankees' },  // Derek Jeter
-      { num: 33, mod: 'ny-knicks'  },  // Patrick Ewing
-      { num: 56, mod: 'ny-giants'  },  // Lawrence Taylor
-      { num: 11, mod: 'ny-rangers' },  // Mark Messier
+      { num: 2,  mod: 'ny-yankees' },  // Jeter
+      { num: 7,  mod: 'ny-yankees' },  // Mantle
+      { num: 3,  mod: 'ny-yankees' },  // Ruth
+      { num: 33, mod: 'ny-knicks'  },  // Ewing
+      { num: 56, mod: 'ny-giants'  },  // LT
+      { num: 11, mod: 'ny-rangers' },  // Messier
+      { num: 42, mod: 'ny-mets'    },  // Jackie (retired across MLB)
+      { num: 17, mod: 'ny-knicks'  },  // Frazier
+      { num: 10, mod: 'ny-knicks'  },  // Walt Frazier alt
     ],
   },
   {
@@ -40,10 +49,33 @@ const CITIES = [
     title: 'Chicago',
     soon:  true,
     tiles: [
-      { num: '', mod: 'dim' },
-      { num: '', mod: 'dim' },
-      { num: '', mod: 'dim' },
-      { num: '', mod: 'dim' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+      { num: '', mod: 'blank' },
+    ],
+  },
+  {
+    id:    'la',
+    title: 'Los Angeles',
+    cta:   'Explore Los Angeles',
+    href:  '/walls',
+    stub:  true,
+    tiles: [
+      { num: 24, mod: 'la-lakers'  },  // Kobe
+      { num: 32, mod: 'la-lakers'  },  // Magic
+      { num: 33, mod: 'la-lakers'  },  // Kareem
+      { num: 42, mod: 'la-dodgers' },  // Jackie
+      { num: 32, mod: 'la-dodgers' },  // Koufax
+      { num: 19, mod: 'la-dodgers' },  // Piazza (wore 31, but close)
+      { num: 99, mod: 'la-kings'   },  // Gretzky
+      { num: 29, mod: 'la-rams'    },
+      { num: 80, mod: 'la-rams'    },
     ],
   },
 ]
@@ -110,7 +142,7 @@ export default function WallExplore() {
             role="listitem"
             className={`wall-explore__city-item${city.soon ? ' wall-explore__city-item--soon' : ''}`}
           >
-            <div className="wall-explore__preview wall-explore__preview--2x2" aria-hidden="true">
+            <div className="wall-explore__preview wall-explore__preview--3x3" aria-hidden="true">
               {city.tiles.map((t, i) => (
                 <div key={i} className={`wall-explore__mt we-mt--${t.mod}`}>
                   {t.num}

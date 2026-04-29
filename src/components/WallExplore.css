@@ -1,16 +1,17 @@
 /* WallExplore — homepage discovery section
-   City row (2×2 thumbs, horizontal scroll on mobile) above
-   3-col wall grid. Cross-hatch background separates from main wall. */
+   City row (3×3 thumbs, horizontal scroll + peek on mobile) above
+   3-col wall grid. Halftone background fades in from the wall above. */
 
 /* ── Section wrapper ──────────────────────────────────────────────── */
 
 .wall-explore {
-  padding:          var(--space-8) var(--grid-margin) var(--space-10);
-  /* solid base so pattern stays behind everything */
-  background-color: var(--bg);
-  /* coarser dot grid — more texture, less maths */
-  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1.5px, transparent 1.5px);
-  background-size:  24px 24px;
+  padding: var(--space-8) var(--grid-margin) var(--space-10);
+  /* halftone: two offset dot layers fade in from top via gradient mask */
+  background:
+    linear-gradient(to bottom, var(--bg) 0px, transparent 90px),
+    radial-gradient(circle, rgba(255,255,255,0.11) 1.5px, transparent 1.5px) 0 0 / 18px 18px,
+    radial-gradient(circle, rgba(255,255,255,0.06) 1px,   transparent 1px)   9px 9px / 18px 18px,
+    var(--bg);
 }
 
 /* ── Section heading ──────────────────────────────────────────────── */
@@ -43,12 +44,12 @@
 
 .wall-explore__cities {
   display:                  flex;
-  gap:                      var(--space-4);
+  gap:                      var(--space-5);
   overflow-x:               auto;
   scroll-snap-type:         x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width:          none;
-  padding-bottom:           var(--space-7);
+  padding-bottom:           var(--space-8);
 }
 
 .wall-explore__cities::-webkit-scrollbar { display: none; }
@@ -59,26 +60,32 @@
   display:           flex;
   flex-direction:    column;
   gap:               var(--space-3);
-  /* peek: ~72% wide so next item is visible */
-  width:             calc(72vw - var(--grid-margin));
-  max-width:         220px;
+  /* peek: ~68% wide so next city is visible */
+  width:             calc(68vw - var(--grid-margin));
+  max-width:         200px;
 }
 
-@media (min-width: 640px) {
-  .wall-explore__city-item { width: 210px; }
+@media (min-width: 600px) {
+  .wall-explore__city-item { width: 190px; }
 }
 
 @media (min-width: 960px) {
   .wall-explore__cities {
     overflow-x: visible;
     display:    grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap:        var(--space-5);
   }
   .wall-explore__city-item {
     width:     auto;
     max-width: none;
   }
+}
+
+/* Faded coming-soon treatment */
+.wall-explore__city-item--soon .wall-explore__preview {
+  opacity: 0.38;
+  filter:  grayscale(0.3);
 }
 
 /* ── Bottom wall grid — 3 col ─────────────────────────────────────── */
@@ -117,128 +124,142 @@
 .wall-explore__preview {
   display:               grid;
   grid-template-columns: repeat(4, 1fr);
-  gap:                   8px;
+  gap:                   6px;
 }
 
-/* 2×2 for city items */
-.wall-explore__preview--2x2 {
-  grid-template-columns: repeat(2, 1fr);
-  gap:                   8px;
+/* 3×3 for city items */
+.wall-explore__preview--3x3 {
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   5px;
 }
 
 /* ── Mini-tile base ───────────────────────────────────────────────── */
 
 .wall-explore__mt {
-  aspect-ratio:    1;
-  /* iOS-ish corner radius — scales proportionally with tile size */
-  border-radius:   18%;
-  border:          none;
-  /* solid dark base ensures cross-hatch never bleeds through */
+  aspect-ratio:     1;
+  /* iOS-ish radius — scales proportionally with tile size */
+  border-radius:    18%;
+  border:           none;
+  /* solid opaque base — blocks halftone bleeding through */
   background-color: #0c0c10;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  font-family:     var(--font-banner);
-  font-size:       clamp(14px, 1.8vw, 26px);
-  color:           var(--color-paper);
-  pointer-events:  none;
-  user-select:     none;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  font-family:      var(--font-banner);
+  font-size:        clamp(12px, 1.6vw, 22px);
+  color:            var(--color-paper);
+  pointer-events:   none;
+  user-select:      none;
 }
 
-/* ── Tile accents — background-color (solid base) + background-image (tint) ── */
-/* Gradient is subtle and shapeless: single stop, centered, fades to transparent. */
+/* ── Tile accents ─────────────────────────────────────────────────── */
+/* Flat colored bg (blocks halftone bleed) + glow only on heat / sacred.
+   Matches the live wall's tile grammar — no radial gradients.         */
 
 .we-mt--heat {
-  background-color: #1a0800;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(240,100,20,0.32) 0%, transparent 68%);
-  box-shadow:       0 0 18px rgba(220,80,10,0.38);
-  color:            rgba(255,190,95,1);
+  background-color: #1f0c00;
+  box-shadow:       0 0 12px rgba(220,80,10,0.40), inset 0 0 8px rgba(240,100,20,0.18);
+  color:            rgba(255,188,90,1);
 }
 
 .we-mt--sacred {
-  background-color: #07101e;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(180,210,255,0.22) 0%, transparent 68%);
-  box-shadow:       0 0 20px rgba(180,210,255,0.32), 0 0 42px rgba(160,200,255,0.14);
+  background-color: #08101f;
+  box-shadow:       0 0 16px rgba(180,210,255,0.32), 0 0 36px rgba(160,200,255,0.12);
   color:            rgba(210,228,255,1);
 }
 
 .we-mt--unwritten {
   background-color: #0e0e12;
-  background-image: none;
-  opacity:          0.40;
-  color:            rgba(255,255,255,0.28);
+  opacity:          0.38;
+  color:            rgba(255,255,255,0.25);
+}
+
+/* Blank placeholder — clean dark square, no border, no number */
+.we-mt--blank {
+  background-color: #111116;
+  color:            transparent;
 }
 
 /* Boston */
 .we-mt--sox {
-  background-color: #180408;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(220,35,50,0.28) 0%, transparent 68%);
-  color:            rgba(255,168,172,1);
+  background-color: #1c0508;
+  color:            rgba(255,155,162,1);
 }
 .we-mt--bruins {
-  background-color: #151000;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(255,184,28,0.28) 0%, transparent 68%);
-  color:            rgba(255,215,90,1);
+  background-color: #181200;
+  color:            rgba(255,208,70,1);
 }
 .we-mt--celtics {
-  background-color: #001a0d;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(0,194,103,0.24) 0%, transparent 68%);
-  color:            rgba(90,215,150,1);
+  background-color: #001f0d;
+  color:            rgba(70,205,130,1);
 }
 .we-mt--pats {
-  background-color: #05091e;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(26,114,255,0.26) 0%, transparent 68%);
-  color:            rgba(145,186,255,1);
+  background-color: #060a20;
+  color:            rgba(130,175,255,1);
 }
 
 /* New York */
 .we-mt--ny-yankees {
-  background-color: #060a18;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(30,80,180,0.26) 0%, transparent 68%);
-  color:            rgba(165,195,240,1);
+  background-color: #070b1a;
+  color:            rgba(155,188,235,1);
 }
 .we-mt--ny-knicks {
-  background-color: #180a00;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(245,110,20,0.26) 0%, transparent 68%);
-  color:            rgba(255,185,100,1);
+  background-color: #1c0c00;
+  color:            rgba(255,175,85,1);
 }
 .we-mt--ny-giants {
-  background-color: #050b1c;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(18,88,200,0.26) 0%, transparent 68%);
-  color:            rgba(155,192,250,1);
+  background-color: #060c1e;
+  color:            rgba(145,182,248,1);
 }
 .we-mt--ny-rangers {
-  background-color: #160408;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(0,56,168,0.24) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(200,35,50,0.20) 0%, transparent 50%);
-  color:            rgba(180,200,245,1);
+  background-color: #080510;
+  color:            rgba(170,195,242,1);
+}
+.we-mt--ny-mets {
+  background-color: #050a1c;
+  color:            rgba(140,182,252,1);
+}
+
+/* LA */
+.we-mt--la-lakers {
+  background-color: #120d00;
+  color:            rgba(255,208,68,1);
+}
+.we-mt--la-dodgers {
+  background-color: #04091e;
+  color:            rgba(135,185,255,1);
+}
+.we-mt--la-kings {
+  background-color: #0c0c0e;
+  color:            rgba(195,195,210,1);
+}
+.we-mt--la-rams {
+  background-color: #05081e;
+  color:            rgba(140,180,255,1);
 }
 
 /* Rival / Series */
 .we-mt--rival-red {
-  background-color: #150306;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(210,40,60,0.28) 0%, transparent 68%);
-  color:            rgba(255,172,178,1);
+  background-color: #180408;
+  color:            rgba(255,162,168,1);
 }
 .we-mt--rival-navy {
-  background-color: #040c1c;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(30,90,200,0.28) 0%, transparent 68%);
-  color:            rgba(148,188,252,1);
+  background-color: #050d1e;
+  color:            rgba(140,182,252,1);
 }
 
 /* Reel Legends */
 .we-mt--reel {
-  background-color: #070d1c;
-  background-image: radial-gradient(ellipse at 50% 50%, rgba(160,200,255,0.16) 0%, transparent 68%);
-  color:            rgba(200,220,255,1);
+  background-color: #080d1e;
+  color:            rgba(195,215,255,1);
 }
 
-/* Dim / placeholder */
+/* Dim / placeholder for wall items */
 .we-mt--dim {
   background-color: #0c0c10;
-  background-image: none;
-  border:           1px dashed rgba(255,255,255,0.10);
-  opacity:          0.32;
-  color:            rgba(255,255,255,0.22);
+  border:           1px dashed rgba(255,255,255,0.09);
+  opacity:          0.30;
+  color:            rgba(255,255,255,0.20);
 }
 
 /* ── Text block ───────────────────────────────────────────────────── */
