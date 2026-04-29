@@ -16,28 +16,29 @@ const CITIES = [
     cta:   'Explore Boston',
     href:  '/boston',
     tiles: [
-      { num: 9,  mod: 'sox'     },
-      { num: 4,  mod: 'bruins'  },
-      { num: 33, mod: 'celtics' },
-      { num: 12, mod: 'pats'    },
+      { num: 9,  mod: 'sox'     },  // Ted Williams
+      { num: 4,  mod: 'bruins'  },  // Bobby Orr
+      { num: 33, mod: 'celtics' },  // Larry Bird
+      { num: 12, mod: 'pats'    },  // Tom Brady
     ],
   },
   {
     id:    'newyork',
     title: 'New York',
-    soon:  true,
+    cta:   'Explore New York',
+    href:  '/walls',
+    stub:  true,
     tiles: [
-      { num: 2,  mod: 'ny-yankees' },
-      { num: 33, mod: 'ny-knicks'  },
-      { num: 56, mod: 'ny-giants'  },
-      { num: 11, mod: 'ny-rangers' },
+      { num: 2,  mod: 'ny-yankees' },  // Derek Jeter
+      { num: 33, mod: 'ny-knicks'  },  // Patrick Ewing
+      { num: 56, mod: 'ny-giants'  },  // Lawrence Taylor
+      { num: 11, mod: 'ny-rangers' },  // Mark Messier
     ],
   },
   {
     id:    'chicago',
     title: 'Chicago',
     soon:  true,
-    blank: true,
     tiles: [
       { num: '', mod: 'dim' },
       { num: '', mod: 'dim' },
@@ -63,7 +64,7 @@ const WALLS = [
   },
   {
     id:    'series',
-    title: 'The Series',
+    title: 'Heated Matchups',
     body:  'Two teams. One defining series. The numbers that lived in those games.',
     cta:   'See the Matchups',
     href:  '/walls',
