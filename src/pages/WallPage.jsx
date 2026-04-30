@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import AppShell    from '../components/AppShell.jsx'
@@ -85,6 +85,27 @@ export default function WallPage() {
                 <span className="wall-page__city-teams"></span>
                 <span className="wall-page__city-soon">COMING SOON</span>
               </div>
+            </div>
+
+            {/* Reel Legends */}
+            <div className="wall-page__cities wall-page__reels">
+              <p className="wall-page__cities-label">REEL LEGENDS</p>
+              <p className="wall-page__cities-sublabel">Numbers worn on film. The athletes who never were — and always will be.</p>
+              <Link to="/reel" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'all' })}>
+                <span className="wall-page__city-name">Space Jam</span>
+                <span className="wall-page__city-teams">Tune Squad · Monstars · 1996</span>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+              <Link to="/reel" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'mighty-ducks' })}>
+                <span className="wall-page__city-name">The Mighty Ducks</span>
+                <span className="wall-page__city-teams">District 5 · Team USA · Hawks · Iceland · 1992–1996</span>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+              <Link to="/reel" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'little-giants' })}>
+                <span className="wall-page__city-name">Little Giants</span>
+                <span className="wall-page__city-teams">Urbania Little Giants · Cowboys · 1994</span>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
             </div>
 
             {/* Team Walls — Disabled until ready

@@ -21,6 +21,7 @@ import bostonCurrentRaw from './bostonCurrent.json'
 import bcLegendsRaw     from './bcLegends.json'
 import nyLegendsRaw     from './nyLegends.json'
 import nyCurrentRaw     from './nyCurrent.json'
+import reelWallDataRaw  from './reelWallData.json'
 
 // ─── Normalise ─────────────────────────────────────────────────────────────
 // Clean and type-cast raw CSV rows into consistent JS objects.
@@ -99,6 +100,22 @@ function buildIndex(entries) {
 
 export const nyLegends = nyLegendsRaw.map(normalise)
 export const nyCurrent = nyCurrentRaw.map(normalise)
+
+// ─── Reel Normalise ────────────────────────────────────────────────────────
+// Extends base normalise with film-specific fields.
+
+function normaliseReel(row) {
+  return {
+    ...normalise(row),
+    film:          row.Film          ?? '',
+    filmYear:      row.FilmYear      ?? null,
+    characterType: row.CharacterType ?? '',
+    actorVoice:    row.ActorVoice    ?? '',
+  }
+}
+
+export const reelData  = reelWallDataRaw.map(normaliseReel)
+export const reelIndex = buildIndex(reelData)
 
 export const globalIndex  = buildIndex(wallData)
 export const bostonIndex  = buildIndex([...bostonLegends, ...bostonCurrent])
@@ -246,6 +263,14 @@ export const SACRED_TILE = {
   text:   'rgba(230,240,255,0.92)',
 }
 
+// RIVAL — villain/antagonist tiles. Matte dark, no glow.
+export const RIVAL_TILE = {
+  bg:     'rgba(12,12,12,0.90)',
+  border: 'rgba(100,100,100,0.30)',
+  glow:   'none',
+  text:   'rgba(160,160,160,0.70)',
+}
+
 // Selected tile — white ring treatment. Heat glow bleeds through underneath.
 export const SELECTED_TILE = {
   bg:     'rgba(255,255,255,0.15)',
@@ -255,6 +280,9 @@ export const SELECTED_TILE = {
 
 export function getHeatStyle(entries, isSacred = false) {
   if (isSacred) return SACRED_TILE
+  // Rival: all real entries are RIVAL tier — matte dark treatment
+  const legends = entries.filter(e => e.tier !== 'UNWRITTEN')
+  if (legends.length > 0 && legends.every(e => e.tier === 'RIVAL')) return RIVAL_TILE
   const level = getHeatLevelByCount(entries)
   return HEAT_TILES[level]
 }

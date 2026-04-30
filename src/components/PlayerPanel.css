@@ -490,6 +490,15 @@
   letter-spacing: 0.14em;
 }
 
+/* Film badge — reel legends only. Warm amber-sepia, cinematic feel. */
+.player-card__badge--film {
+  background:     rgba(120, 80, 20, 0.18);
+  border:         1px solid rgba(180, 130, 40, 0.30);
+  color:          rgba(210, 165, 70, 0.90);
+  font-size:      0.44rem;
+  letter-spacing: 0.10em;
+}
+
 /* ── Fun fact — full width, flush left with name ────────────────────────── */
 
 .player-card__fact {

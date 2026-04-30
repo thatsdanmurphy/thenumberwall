@@ -107,6 +107,14 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
             {entry.role && (
               <span className="player-card__badge player-card__badge--dim">{entry.role}</span>
             )}
+            {entry.film && (
+              <span className="player-card__badge player-card__badge--film">{entry.film}</span>
+            )}
+            {entry.actorVoice && entry.actorVoice !== 'unk' && (
+              <span className="player-card__badge player-card__badge--dim">
+                {entry.characterType === 'animated' ? `Voice: ${entry.actorVoice}` : entry.actorVoice}
+              </span>
+            )}
           </div>
         </div>
 
