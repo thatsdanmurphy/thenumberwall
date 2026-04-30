@@ -27,13 +27,6 @@
   line-height: 1.05;
 }
 
-.reel-page__meta {
-  display:     flex;
-  align-items: center;
-  gap:         var(--space-4);
-  flex-wrap:   wrap;
-}
-
 .reel-page__sub {
   font-family:    var(--font-scoreboard);
   font-size:      var(--text-micro);
@@ -41,11 +34,64 @@
   color:          var(--ink-dim);
 }
 
-.reel-page__coach {
-  font-family:    var(--font-program);
-  font-size:      var(--text-caption);
+/* ── Coaches ─────────────────────────────────────────────────────────────── */
+
+.reel-page__coaches {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  margin-top:     var(--space-2);
+}
+
+.reel-page__coaches-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.16em;
   color:          var(--ink-dim);
 }
+
+.reel-page__coaches-list {
+  display:     flex;
+  flex-wrap:   wrap;
+  align-items: flex-start;
+  gap:         var(--space-1) var(--space-5);
+}
+
+/* Vertical rule between hero and rival coaches */
+.reel-page__coach-divider {
+  width:      1px;
+  height:     2.2rem;
+  background: var(--border-soft);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.reel-page__coach-chip {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.reel-page__coach-name {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-label);
+  letter-spacing: 0.04em;
+  line-height:    1.1;
+}
+
+.reel-page__coach-side {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  letter-spacing: 0.04em;
+}
+
+/* Hero coach — team accent, present */
+.reel-page__coach-chip--hero .reel-page__coach-name { color: var(--color-paper); }
+.reel-page__coach-chip--hero .reel-page__coach-side { color: var(--ink-mid);     }
+
+/* Rival coach — muted, recessive */
+.reel-page__coach-chip--rival .reel-page__coach-name { color: var(--color-muted); }
+.reel-page__coach-chip--rival .reel-page__coach-side { color: var(--ink-dim);     }
 
 /* ── Body: grid + panel side-by-side ─────────────────────────────────────── */
 
