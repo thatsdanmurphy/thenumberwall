@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { X } from 'lucide-react'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { X, ChevronRight } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import AppShell    from '../components/AppShell.jsx'
 import AppHeader   from '../components/AppHeader.jsx'
@@ -133,6 +133,19 @@ export default function ReelWallPage() {
 
   const tileHeatFn = useMemo(() => makeTeamHeat(film), [film])
 
+  // Only show tiles that have entries — no empty cells
+  const reelNumbers = useMemo(
+    () => [...filteredIndex.keys()].sort((a, b) => {
+      const na = a === '00' ? -1 : a === '0' ? -0.5 : Number(a)
+      const nb = b === '00' ? -1 : b === '0' ? -0.5 : Number(b)
+      return na - nb
+    }),
+    [filteredIndex]
+  )
+
+  // Other films for the bottom "more" section
+  const otherFilms = FILMS.filter(f => f.id !== film.id)
+
   function handleClear() { setSelected(null) }
 
   function handleSelect(selection) {
@@ -184,12 +197,31 @@ export default function ReelWallPage() {
           <div className="reel-page__grid-col">
             <WallGrid
               index={filteredIndex}
+              numbers={reelNumbers}
               activeNumber={selected?.number ?? null}
               onSelect={handleSelect}
               wallId="none"
               tileHeatFn={tileHeatFn}
               prefixContent={coachTile}
             />
+
+            {/* Other reel walls */}
+            <div className="reel-page__other-films">
+              <p className="reel-page__other-label">MORE REEL LEGENDS</p>
+              {otherFilms.map(f => (
+                <Link
+                  key={f.id}
+                  to={`/reel/${f.slug}`}
+                  className="reel-page__film-card"
+                >
+                  <div className="reel-page__film-card-content">
+                    <span className="reel-page__film-name">{f.id}</span>
+                    <span className="reel-page__film-sub">{f.sub}</span>
+                  </div>
+                  <ChevronRight size={16} className="reel-page__film-arrow" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Coach panel — shown instead of PlayerPanel when coachView is active */}

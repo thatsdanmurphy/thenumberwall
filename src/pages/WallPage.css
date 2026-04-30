@@ -65,32 +65,6 @@
   line-height: 1.45;
 }
 
-.wall-page__showdowns .wall-page__city-card:hover {
-  background:   rgba(189, 48, 57, 0.08);
-  border-color: rgba(189, 48, 57, 0.28);
-}
-
-.wall-page__showdowns .wall-page__city-arrow {
-  color: rgba(189, 48, 57, 0.55);
-}
-
-.wall-page__showdowns .wall-page__city-card:hover .wall-page__city-arrow {
-  color: rgba(210, 80, 80, 0.90);
-}
-
-.wall-page__reels .wall-page__city-card:hover {
-  background:   rgba(120, 80, 20, 0.10);
-  border-color: rgba(180, 130, 40, 0.30);
-}
-
-.wall-page__reels .wall-page__city-arrow {
-  color: rgba(180, 130, 40, 0.50);
-}
-
-.wall-page__reels .wall-page__city-card:hover .wall-page__city-arrow {
-  color: rgba(210, 165, 70, 0.90);
-}
-
 .wall-page__city-card {
   display:         flex;
   align-items:     center;
@@ -98,7 +72,7 @@
   padding:         var(--space-3) var(--space-4);
   background:      var(--surface-1);
   border:          1px solid var(--border-soft);
-  border-radius: var(--radius-md);
+  border-radius:   var(--radius-md);
   text-decoration: none;
   transition:      background var(--motion-hover), border-color var(--motion-hover);
 }
@@ -108,18 +82,45 @@
   border-color:  rgba(232,124,42,0.22);
 }
 
+/* Stacked content inside card: name on top, details below */
+.wall-page__city-card-content {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
 .wall-page__city-name {
   font-family:    var(--font-scoreboard);
-  font-size: var(--text-label);
+  font-size:      var(--text-label);
   letter-spacing: 0.14em;
   color:          var(--color-paper);
 }
 
 .wall-page__city-teams {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size:   var(--text-caption);
   color:       var(--ink-dim);
-  flex: 1;
+  line-height: 1.4;
+}
+
+/* Beta badge next to section labels */
+.wall-page__cities-label {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+}
+
+.wall-page__section-beta {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.48rem;
+  letter-spacing: 0.14em;
+  color:          var(--ink-dim);
+  border:         1px solid var(--border-soft);
+  border-radius:  var(--radius-sm);
+  padding:        2px 5px;
+  line-height:    1;
+  vertical-align: middle;
 }
 
 .wall-page__city-arrow {

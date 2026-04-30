@@ -72,50 +72,69 @@ export default function WallPage() {
               <p className="wall-page__cities-label">DISCOVER THE LOCALS</p>
               <p className="wall-page__cities-sublabel">The wall for your city. Numbers that belong to a place.</p>
               <Link to="/boston" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'boston' })}>
-                <span className="wall-page__city-name">Boston</span>
-                <span className="wall-page__city-teams">Red Sox · Patriots · Celtics · Bruins</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">Boston</span>
+                  <span className="wall-page__city-teams">Red Sox · Patriots · Celtics · Bruins</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <Link to="/newyork" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'newyork' })}>
-                <span className="wall-page__city-name">New York</span>
-                <span className="wall-page__city-teams">Yankees · Mets · Giants · Jets · Knicks · Rangers</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">New York</span>
+                  <span className="wall-page__city-teams">Yankees · Mets · Giants · Jets · Knicks · Rangers</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <div className="wall-page__city-card wall-page__city-card--soon" aria-hidden="true">
-                <span className="wall-page__city-name">Chicago</span>
-                <span className="wall-page__city-teams"></span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">Chicago</span>
+                </div>
                 <span className="wall-page__city-soon">COMING SOON</span>
               </div>
             </div>
 
             {/* Showdowns */}
-            <div className="wall-page__cities wall-page__showdowns">
-              <p className="wall-page__cities-label">SHOWDOWNS</p>
+            <div className="wall-page__cities">
+              <p className="wall-page__cities-label">
+                SHOWDOWNS
+                <span className="wall-page__section-beta">BETA</span>
+              </p>
               <p className="wall-page__cities-sublabel">The series that defined eras. Numbers from both sides — live, half-inning by half-inning.</p>
               <Link to="/showdown/alcs-2004" className="wall-page__city-card" onClick={() => track('showdown_open', { id: 'alcs-2004' })}>
-                <span className="wall-page__city-name">2004 ALCS</span>
-                <span className="wall-page__city-teams">Boston Red Sox · New York Yankees · Down 3–0</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">2004 ALCS</span>
+                  <span className="wall-page__city-teams">Boston Red Sox · New York Yankees · Down 3–0</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
             </div>
 
             {/* Reel Legends */}
-            <div className="wall-page__cities wall-page__reels">
-              <p className="wall-page__cities-label">REEL LEGENDS</p>
+            <div className="wall-page__cities">
+              <p className="wall-page__cities-label">
+                REEL LEGENDS
+                <span className="wall-page__section-beta">BETA</span>
+              </p>
               <p className="wall-page__cities-sublabel">Numbers worn on film. The athletes who never were — and always will be.</p>
               <Link to="/reel/space-jam" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'space-jam' })}>
-                <span className="wall-page__city-name">Space Jam</span>
-                <span className="wall-page__city-teams">Tune Squad · Monstars · 1996</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">Space Jam</span>
+                  <span className="wall-page__city-teams">Tune Squad · Monstars · 1996</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <Link to="/reel/mighty-ducks" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'mighty-ducks' })}>
-                <span className="wall-page__city-name">The Mighty Ducks</span>
-                <span className="wall-page__city-teams">District 5 · Team USA · Hawks · Iceland · 1992–1996</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">The Mighty Ducks</span>
+                  <span className="wall-page__city-teams">District 5 · Team USA · Hawks · Iceland · 1992–1996</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <Link to="/reel/little-giants" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'little-giants' })}>
-                <span className="wall-page__city-name">Little Giants</span>
-                <span className="wall-page__city-teams">Urbania Little Giants · Cowboys · 1994</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">Little Giants</span>
+                  <span className="wall-page__city-teams">Urbania Little Giants · Cowboys · 1994</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
             </div>

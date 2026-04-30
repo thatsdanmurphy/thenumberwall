@@ -126,6 +126,70 @@
   }
 }
 
+/* ── Other films section (below the grid) ────────────────────────────────── */
+
+.reel-page__other-films {
+  margin-top:     var(--space-5);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+.reel-page__other-label {
+  font-family:    var(--font-banner);
+  font-size:      0.875rem;
+  letter-spacing: 0.06em;
+  color:          var(--color-paper);
+}
+
+.reel-page__film-card {
+  display:         flex;
+  align-items:     center;
+  gap:             var(--space-3);
+  padding:         var(--space-3) var(--space-4);
+  background:      var(--surface-1);
+  border:          1px solid var(--border-soft);
+  border-radius:   var(--radius-md);
+  text-decoration: none;
+  transition:      background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.reel-page__film-card:hover {
+  background:   rgba(232,124,42,0.07);
+  border-color: rgba(232,124,42,0.22);
+}
+
+.reel-page__film-card-content {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+}
+
+.reel-page__film-name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-label);
+  letter-spacing: 0.14em;
+  color:          var(--color-paper);
+}
+
+.reel-page__film-sub {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+}
+
+.reel-page__film-arrow {
+  color:      rgba(232,124,42,0.55);
+  flex-shrink: 0;
+  transition: transform var(--motion-hover), color var(--motion-hover);
+}
+
+.reel-page__film-card:hover .reel-page__film-arrow {
+  transform: translateX(3px);
+  color:     var(--color-heat);
+}
+
 /* ── Mobile backdrop ─────────────────────────────────────────────────────── */
 
 .reel-page__backdrop { display: none; }

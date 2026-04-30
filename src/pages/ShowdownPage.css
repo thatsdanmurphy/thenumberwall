@@ -25,13 +25,6 @@
   gap: 2px;
 }
 
-.showdown-page__eyebrow {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.16em;
-  color:          var(--ink-dim);
-}
-
 .showdown-page__title {
   font-family: var(--font-banner);
   font-size:   2rem;
@@ -40,18 +33,10 @@
   line-height: 1.05;
 }
 
-.showdown-page__sub {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.12em;
-  color:          var(--ink-dim);
-  margin:         0;
-}
-
 .showdown-page__series-note {
   font-family: var(--font-program);
   font-size:   var(--text-caption);
-  color:       var(--color-heat);
+  color:       var(--color-muted);
   margin:      0;
   font-style:  italic;
   line-height: 1.4;
@@ -228,6 +213,52 @@
 .showdown-wall--flash { animation: showdownFlash 0.85s ease-out 2; }
 .showdown-wall--pulse { animation: showdownPulse 2.0s ease-in-out infinite; }
 .showdown-wall--win   { animation: showdownWin   1.5s ease-in-out 3; }
+
+/* ── Mobile combined wall ─────────────────────────────────────────────────── */
+
+/* Hidden on desktop — individual walls show instead */
+.showdown-page__combined-wall { display: none; }
+
+@media (max-width: 767px) {
+  /* Hide individual side walls on mobile */
+  .showdown-wall--sox,
+  .showdown-wall--nyy {
+    display: none;
+  }
+
+  /* Show combined merged grid */
+  .showdown-page__combined-wall {
+    display: block;
+  }
+
+  /* Match mobile main wall density: 10 columns */
+  .showdown-page__combined-wall .wall-grid {
+    grid-template-columns: repeat(10, 1fr) !important;
+  }
+}
+
+/* ── Attribution ──────────────────────────────────────────────────────────── */
+
+.showdown-page__attribution {
+  text-align:  right;
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--ink-dim);
+  padding-top: var(--space-3);
+  letter-spacing: 0.02em;
+}
+
+.showdown-page__attribution a {
+  color:           var(--ink-dim);
+  text-decoration: none;
+  border-bottom:   1px solid var(--border-soft);
+  transition:      color var(--motion-hover), border-color var(--motion-hover);
+}
+
+.showdown-page__attribution a:hover {
+  color:        var(--color-muted);
+  border-color: var(--border-medium);
+}
 
 /* ── Mobile backdrop ─────────────────────────────────────────────────────── */
 

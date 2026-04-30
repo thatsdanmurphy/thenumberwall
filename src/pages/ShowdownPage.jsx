@@ -27,7 +27,6 @@ const NYY_COLORS = {
 }
 
 // ── Build wall index ──────────────────────────────────────────────────────────
-// teamLabel = display name ("Red Sox" / "Yankees") — separates role from team badge
 function buildTeamIndex(roster, teamLabel) {
   const index = new Map()
   for (const player of roster) {
@@ -38,8 +37,8 @@ function buildTeamIndex(roster, teamLabel) {
       number:     player.number,
       sport:      'Baseball',
       tier:       player.tier === 'COACH' ? 'KNOWN' : player.tier,
-      team:       teamLabel,          // "Red Sox" or "Yankees"
-      role:       player.pos,        // position (SS, P, C …) — not duplicated now
+      team:       teamLabel,
+      role:       player.pos,
       funFact:    player.funFact ?? null,
       stat:       player.stat ?? null,
       statLabel:  player.statLabel ?? null,
@@ -50,7 +49,6 @@ function buildTeamIndex(roster, teamLabel) {
 }
 
 // ── Color scaling helper ──────────────────────────────────────────────────────
-// Multiplies the alpha of all rgba() occurrences in a string
 function scaleRgba(str, factor) {
   return str.replace(/rgba\(([^)]+)\)/g, (_, vals) => {
     const p = vals.split(',').map(s => s.trim())
@@ -60,8 +58,6 @@ function scaleRgba(str, factor) {
 }
 
 // ── Tile heat factory ─────────────────────────────────────────────────────────
-// progress (0.0–1.0): how far through the series we are.
-// Lit tiles scale from 35% → 100% brightness as the series builds.
 function makeShowdownHeat(roster, colors, litNames, hotNames, progress) {
   const nameByNumber = new Map()
   for (const p of roster) nameByNumber.set(String(p.number), p.name)
@@ -83,11 +79,38 @@ function makeShowdownHeat(roster, colors, litNames, hotNames, progress) {
     const isLit = litNames.has(name)
     if (isHot) return { heatStyle: colors.hot, textColor: colors.hot.text }
     if (isLit) return { heatStyle: litStyle,    textColor: litStyle.text }
-    // Unlit — very faint presence
     return {
       heatStyle: { bg:'rgba(255,255,255,0.025)', border:'rgba(255,255,255,0.07)', glow:'none', text:'rgba(255,255,255,0.16)' },
       textColor:  'rgba(255,255,255,0.16)',
     }
+  }
+}
+
+// ── Combined heat for mobile merged wall ──────────────────────────────────────
+function makeCombinedHeat(bosRoster, nyyRoster, bosHeatFn, nyyHeatFn) {
+  const bosNums = new Set(bosRoster.map(p => String(p.number)))
+  const nyyNums = new Set(nyyRoster.map(p => String(p.number)))
+  return function(num, entries) {
+    const inBos = bosNums.has(String(num))
+    const inNyy = nyyNums.has(String(num))
+    if (inBos && inNyy) {
+      const b = bosHeatFn(num, entries)
+      const y = nyyHeatFn(num, entries)
+      const bosBg = b.heatStyle?.bg ?? 'rgba(189,48,57,0.40)'
+      const nyyBg = y.heatStyle?.bg ?? 'rgba(12,35,64,0.40)'
+      return {
+        heatStyle: {
+          bg:     `linear-gradient(to right, ${bosBg} 50%, ${nyyBg} 50%)`,
+          border: 'rgba(255,255,255,0.22)',
+          glow:   'none',
+          text:   'rgba(255,255,255,0.72)',
+        },
+        textColor: 'rgba(255,255,255,0.72)',
+      }
+    }
+    if (inBos) return bosHeatFn(num, entries)
+    if (inNyy) return nyyHeatFn(num, entries)
+    return {}
   }
 }
 
@@ -134,23 +157,20 @@ export default function ShowdownPage() {
   const [position,  setPosition]  = useState(0)
   const [playing,   setPlaying]   = useState(false)
   const [speed,     setSpeed]     = useState(1)
-  const [selected,  setSelected]  = useState(null)   // { team, number, entries }
-  const [dimTeam,   setDimTeam]   = useState(null)   // 'BOS' | 'NYY' | null
+  const [selected,  setSelected]  = useState(null)
+  const [dimTeam,   setDimTeam]   = useState(null)
 
   useEffect(() => {
     document.title = `${data.title} — Showdowns | The Number Wall`
     track('showdown_view', { id: data.id })
   }, [data])
 
-  // Series progress for gradation (0.0 at start → 1.0 at end)
   const progress = timeline.length > 1 ? position / (timeline.length - 1) : 0
 
-  // Current slot info
   const currentSlot   = timeline[position] ?? {}
   const currentNote   = currentSlot.note ?? null
   const momentEffect  = getMomentEffect(currentNote)
 
-  // Accumulated + current-slot player sets
   const litNames = useMemo(() => accumulatePlayers(timeline, position), [timeline, position])
   const hotNames = useMemo(() => {
     const slot = timeline[position]
@@ -161,15 +181,12 @@ export default function ShowdownPage() {
     }
   }, [timeline, position])
 
-  // Indexes (built once — roster fixed)
   const bosIndex = useMemo(() => buildTeamIndex(teams.BOS.roster, 'Red Sox'),  [teams])
   const nyyIndex = useMemo(() => buildTeamIndex(teams.NYY.roster, 'Yankees'),  [teams])
 
-  // Number lists
   const bosNumbers = useMemo(() => rosterNumbers(teams.BOS.roster), [teams])
   const nyyNumbers = useMemo(() => rosterNumbers(teams.NYY.roster), [teams])
 
-  // Heat functions — recomputed every position change (progress + litNames + hotNames)
   const bosHeat = useMemo(
     () => makeShowdownHeat(teams.BOS.roster, SOX_COLORS, litNames.BOS, hotNames.BOS, progress),
     [teams, litNames, hotNames, progress]
@@ -179,7 +196,31 @@ export default function ShowdownPage() {
     [teams, litNames, hotNames, progress]
   )
 
-  // Seek
+  // Combined index + numbers + heat for mobile merged wall
+  const combinedIndex = useMemo(() => {
+    const merged = new Map()
+    for (const [num, entries] of bosIndex) merged.set(num, [...entries])
+    for (const [num, entries] of nyyIndex) {
+      if (merged.has(num)) merged.get(num).push(...entries)
+      else merged.set(num, [...entries])
+    }
+    return merged
+  }, [bosIndex, nyyIndex])
+
+  const combinedNumbers = useMemo(() => {
+    const all = new Set([...bosNumbers, ...nyyNumbers])
+    return [...all].sort((a, b) => {
+      const na = a === '00' ? -1 : a === '0' ? -0.5 : Number(a)
+      const nb = b === '00' ? -1 : b === '0' ? -0.5 : Number(b)
+      return na - nb
+    })
+  }, [bosNumbers, nyyNumbers])
+
+  const combinedHeat = useMemo(
+    () => makeCombinedHeat(teams.BOS.roster, teams.NYY.roster, bosHeat, nyyHeat),
+    [teams, bosHeat, nyyHeat]
+  )
+
   const handleSeek = useCallback((idxOrFn) => {
     setPosition(prev => {
       const next = typeof idxOrFn === 'function' ? idxOrFn(prev) : idxOrFn
@@ -187,7 +228,6 @@ export default function ShowdownPage() {
     })
   }, [timeline.length])
 
-  // Tile selection — dim wall is visually faded but still clickable (#8)
   function handleBosSelect(sel) {
     if (!sel || sel.entries.filter(e => e.tier !== 'UNWRITTEN').length === 0) return
     setSelected({ team: 'BOS', ...sel })
@@ -199,6 +239,13 @@ export default function ShowdownPage() {
     setSelected({ team: 'NYY', ...sel })
     setDimTeam('BOS')
     track('showdown_tile', { team: 'NYY', number: sel.number })
+  }
+  function handleCombinedSelect(sel) {
+    if (!sel || sel.entries.filter(e => e.tier !== 'UNWRITTEN').length === 0) return
+    const team = sel.entries.some(e => e.team === 'Red Sox') ? 'BOS' : 'NYY'
+    setSelected({ team, ...sel })
+    setDimTeam(null)
+    track('showdown_tile', { team, number: sel.number })
   }
   function handleClear() { setSelected(null); setDimTeam(null) }
 
@@ -217,11 +264,7 @@ export default function ShowdownPage() {
         {/* ── Page heading ──────────────────────────────────── */}
         <div className="showdown-page__heading">
           <button className="page-back" onClick={() => navigate('/')}>← Main Wall</button>
-          <div className="showdown-page__title-row">
-            <div className="showdown-page__eyebrow">SHOWDOWNS</div>
-            <h1 className="showdown-page__title">{data.title}</h1>
-            <p className="showdown-page__sub">{data.sub}</p>
-          </div>
+          <h1 className="showdown-page__title">{data.title}</h1>
           <p className="showdown-page__series-note">{data.series_note}</p>
         </div>
 
@@ -239,7 +282,7 @@ export default function ShowdownPage() {
         {/* ── Three-column body ─────────────────────────────── */}
         <div className="showdown-page__body">
 
-          {/* Left wall — Red Sox */}
+          {/* Left wall — Red Sox (desktop) */}
           <div className={`showdown-wall showdown-wall--sox${dimTeam === 'BOS' ? ' showdown-wall--dim' : ''}${momentEffect ? ` showdown-wall--${momentEffect}` : ''}`}>
             <WallGrid
               index={bosIndex}
@@ -264,7 +307,6 @@ export default function ShowdownPage() {
               onSpeedChange={setSpeed}
             />
 
-            {/* Moment card — note floats here, fades in on change (#4/#11) */}
             <div className="showdown-page__moment-wrap">
               {currentNote && (
                 <div key={currentNote} className={`showdown-moment${momentEffect ? ` showdown-moment--${momentEffect}` : ''}`}>
@@ -281,7 +323,7 @@ export default function ShowdownPage() {
             />
           </div>
 
-          {/* Right wall — Yankees */}
+          {/* Right wall — Yankees (desktop) */}
           <div className={`showdown-wall showdown-wall--nyy${dimTeam === 'NYY' ? ' showdown-wall--dim' : ''}${momentEffect ? ` showdown-wall--${momentEffect}` : ''}`}>
             <WallGrid
               index={nyyIndex}
@@ -293,6 +335,23 @@ export default function ShowdownPage() {
             />
           </div>
 
+          {/* Mobile combined wall — single merged grid with split-gradient shared numbers */}
+          <div className={`showdown-page__combined-wall${momentEffect ? ` showdown-wall--${momentEffect}` : ''}`}>
+            <WallGrid
+              index={combinedIndex}
+              numbers={combinedNumbers}
+              activeNumber={selected?.number ?? null}
+              onSelect={handleCombinedSelect}
+              wallId="none"
+              tileHeatFn={combinedHeat}
+            />
+          </div>
+
+        </div>
+
+        {/* ── Retrosheet attribution ─────────────────────────── */}
+        <div className="showdown-page__attribution">
+          Play-by-play data: <a href="https://www.retrosheet.org" target="_blank" rel="noopener noreferrer">Retrosheet</a>
         </div>
 
       </main>
