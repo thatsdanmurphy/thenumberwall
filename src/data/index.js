@@ -254,12 +254,12 @@ export const HEAT_TILES = [
   { bg: 'rgba(222,125,0,0.82)',   border: 'rgba(245,180,30,0.92)',  glow: '0 0 24px rgba(245,193,53,0.92), 0 0 48px rgba(255,130,0,0.50), 0 0 64px rgba(255,80,0,0.22)', text: 'rgba(255,210,120,1)' },
 ]
 
-// RIVAL — villain/antagonist tiles. Matte dark, no glow.
+// RIVAL — villain/antagonist tiles. Blackout treatment. White outline, stark white number.
 export const RIVAL_TILE = {
-  bg:     'rgba(12,12,12,0.90)',
-  border: 'rgba(100,100,100,0.30)',
+  bg:     'rgba(0,0,0,0.97)',
+  border: 'rgba(255,255,255,0.22)',
   glow:   'none',
-  text:   'rgba(160,160,160,0.70)',
+  text:   'rgba(255,255,255,0.95)',
 }
 
 export const SACRED_TILE = {

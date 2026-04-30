@@ -40,7 +40,8 @@ export default function App() {
         <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} />
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
-        <Route path="/reel"      element={<ReelWallPage />} />
+        <Route path="/reel/:filmSlug" element={<ReelWallPage />} />
+        <Route path="/reel"           element={<ReelWallPage />} />
 
         {/* Legacy redirect — /design now lives under /behindthecurtains/design */}
         <Route path="/design" element={<Navigate to="/behindthecurtains/design" replace />} />

@@ -1,5 +1,6 @@
 /* ReelWallPage — Reel Legends film wall
-   Mirrors BostonPage layout. Film tabs replace sport tabs. All tokens. */
+   One film per route (/reel/space-jam, /reel/mighty-ducks, /reel/little-giants).
+   No tabs. Mirrors BostonPage layout. All tokens. */
 
 .reel-page {
   flex: 1;
@@ -8,27 +9,29 @@
   gap: var(--space-3);
 }
 
-.reel-page__tabs {
-  display:       flex;
-  gap:           2px;
-  margin-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
-}
+/* ── Heading ─────────────────────────────────────────────────────────────── */
 
 .reel-page__heading {
-  padding: 0 var(--space-3) var(--space-3);
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: var(--space-1);
-  border-bottom: 1px solid var(--border-faint);
+  gap:            var(--space-1);
+  padding-bottom: var(--space-3);
+  border-bottom:  1px solid var(--border-faint);
 }
 
 .reel-page__team {
   font-family: var(--font-banner);
-  font-size:   var(--text-h2, 1.5rem);
+  font-size:   2rem;
   color:       var(--color-paper);
   margin:      0;
-  line-height: 1.1;
+  line-height: 1.05;
+}
+
+.reel-page__meta {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-4);
+  flex-wrap:   wrap;
 }
 
 .reel-page__sub {
@@ -38,13 +41,13 @@
   color:          var(--ink-dim);
 }
 
-.reel-page__copy {
-  font-family: var(--font-program);
-  font-size:   var(--text-caption);
-  color:       var(--color-muted);
-  margin:      0;
-  line-height: 1.5;
+.reel-page__coach {
+  font-family:    var(--font-program);
+  font-size:      var(--text-caption);
+  color:          var(--ink-dim);
 }
+
+/* ── Body: grid + panel side-by-side ─────────────────────────────────────── */
 
 .reel-page__body {
   flex: 1;
@@ -73,6 +76,8 @@
     max-width: var(--panel-max-width);
   }
 }
+
+/* ── Mobile backdrop ─────────────────────────────────────────────────────── */
 
 .reel-page__backdrop { display: none; }
 

@@ -246,7 +246,7 @@ function useSwipeDown(panelRef, onClose) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global' }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global', accentColor = null }) {
   const [copied, setCopied] = useState(false)
   const panelRef = useRef(null)
   useSwipeDown(panelRef, onClear)
@@ -354,8 +354,8 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
 
   const isSacred    = legends.some(e => e.tier === 'SACRED')
   const heat        = getHeatStyle(legends, isSacred)
-  const numberColor = getTileTextColor(legends, isSacred)
-  const numberGlow  = `0 0 28px ${heat.border}`
+  const numberColor = accentColor ?? getTileTextColor(legends, isSacred)
+  const numberGlow  = `0 0 28px ${accentColor ?? heat.border}`
 
   const legendCount = legends.length
 
