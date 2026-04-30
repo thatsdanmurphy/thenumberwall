@@ -88,6 +88,17 @@ export default function WallPage() {
               </div>
             </div>
 
+            {/* Showdowns */}
+            <div className="wall-page__cities wall-page__showdowns">
+              <p className="wall-page__cities-label">SHOWDOWNS</p>
+              <p className="wall-page__cities-sublabel">The series that defined eras. Numbers from both sides — live, half-inning by half-inning.</p>
+              <Link to="/showdown/alcs-2004" className="wall-page__city-card" onClick={() => track('showdown_open', { id: 'alcs-2004' })}>
+                <span className="wall-page__city-name">2004 ALCS</span>
+                <span className="wall-page__city-teams">Boston Red Sox · New York Yankees · Down 3–0</span>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+            </div>
+
             {/* Reel Legends */}
             <div className="wall-page__cities wall-page__reels">
               <p className="wall-page__cities-label">REEL LEGENDS</p>

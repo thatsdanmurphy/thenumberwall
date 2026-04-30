@@ -12,6 +12,7 @@ import TeamWallsPage  from './pages/TeamWallsPage.jsx'
 import TeamWallPage   from './pages/TeamWallPage.jsx'
 import TownWallsPage  from './pages/TownWallsPage.jsx'
 import ReelWallPage   from './pages/ReelWallPage.jsx'
+import ShowdownPage   from './pages/ShowdownPage.jsx'
 import DesignSystem   from './pages/DesignSystem.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
@@ -44,6 +45,8 @@ export default function App() {
         <Route path="/timeline"  element={<TimelinePage />} />
         <Route path="/reel/:filmSlug" element={<ReelWallPage />} />
         <Route path="/reel"           element={<ReelWallPage />} />
+        <Route path="/showdown/:showdownId" element={<ShowdownPage />} />
+        <Route path="/showdown"            element={<ShowdownPage />} />
 
         {/* Legacy redirect — /design now lives under /behindthecurtains/design */}
         <Route path="/design" element={<Navigate to="/behindthecurtains/design" replace />} />

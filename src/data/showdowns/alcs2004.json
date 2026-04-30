@@ -1,0 +1,3303 @@
+{
+  "id": "alcs-2004",
+  "title": "2004 ALCS",
+  "sub": "American League Championship Series",
+  "series_note": "Down 3\u20130, Boston won 4 straight. The greatest comeback in baseball history.",
+  "dataMode": "retrosheet",
+  "teams": {
+    "BOS": {
+      "id": "BOS",
+      "name": "Red Sox",
+      "city": "Boston",
+      "colors": {
+        "dim": {
+          "bg": "rgba(189,48,57,0.28)",
+          "border": "rgba(189,48,57,0.48)",
+          "glow": "0 0 8px rgba(189,48,57,0.28)",
+          "text": "rgba(255,160,160,0.85)"
+        },
+        "full": {
+          "bg": "rgba(189,48,57,0.62)",
+          "border": "rgba(189,48,57,0.85)",
+          "glow": "0 0 18px rgba(189,48,57,0.55)",
+          "text": "rgba(255,195,195,1.0)"
+        },
+        "hot": {
+          "bg": "rgba(210,55,65,0.80)",
+          "border": "rgba(230,80,90,1.0)",
+          "glow": "0 0 26px rgba(210,55,65,0.70)",
+          "text": "rgba(255,220,220,1.0)"
+        }
+      },
+      "roster": [
+        {
+          "name": "Alan Embree",
+          "number": "43",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "embra001"
+        },
+        {
+          "name": "Bill Mueller",
+          "number": "11",
+          "pos": "3B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "muelb001"
+        },
+        {
+          "name": "Bronson Arroyo",
+          "number": "61",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "arrob001"
+        },
+        {
+          "name": "Curt Leskanic",
+          "number": "46",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "leskc001"
+        },
+        {
+          "name": "Curt Schilling",
+          "number": "38",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "schic002"
+        },
+        {
+          "name": "Dave Roberts",
+          "number": "31",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "robed001"
+        },
+        {
+          "name": "David Ortiz",
+          "number": "34",
+          "pos": "DH",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "ortid001"
+        },
+        {
+          "name": "Derek Lowe",
+          "number": "32",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "lowed001"
+        },
+        {
+          "name": "Doug Mientkiewicz",
+          "number": "13",
+          "pos": "1B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "miend001"
+        },
+        {
+          "name": "Doug Mirabelli",
+          "number": "28",
+          "pos": "C",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "mirad001"
+        },
+        {
+          "name": "Gabe Kapler",
+          "number": "19",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "kaplg001"
+        },
+        {
+          "name": "Jason Varitek",
+          "number": "33",
+          "pos": "C",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "varij001"
+        },
+        {
+          "name": "Johnny Damon",
+          "number": "18",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "damoj001"
+        },
+        {
+          "name": "Keith Foulke",
+          "number": "29",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "foulk001"
+        },
+        {
+          "name": "Kevin Millar",
+          "number": "15",
+          "pos": "1B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "millk005"
+        },
+        {
+          "name": "Manny Ramirez",
+          "number": "24",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "ramim002"
+        },
+        {
+          "name": "Mark Bellhorn",
+          "number": "12",
+          "pos": "2B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "bellm002"
+        },
+        {
+          "name": "Mike Myers",
+          "number": "41",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "myerm001"
+        },
+        {
+          "name": "Mike Timlin",
+          "number": "50",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "timlm001"
+        },
+        {
+          "name": "Orlando Cabrera",
+          "number": "44",
+          "pos": "SS",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "cabro001"
+        },
+        {
+          "name": "Pedro Martinez",
+          "number": "45",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "martp001"
+        },
+        {
+          "name": "Pokey Reese",
+          "number": "5",
+          "pos": "SS",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "reesp001"
+        },
+        {
+          "name": "Ramiro Mendoza",
+          "number": "48",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "mendr001"
+        },
+        {
+          "name": "Tim Wakefield",
+          "number": "49",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "waket001"
+        },
+        {
+          "name": "Trot Nixon",
+          "number": "7",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "nixot001"
+        },
+        {
+          "name": "Terry Francona",
+          "number": "47",
+          "pos": "MGR",
+          "tier": "COACH",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": ""
+        }
+      ]
+    },
+    "NYY": {
+      "id": "NYY",
+      "name": "Yankees",
+      "city": "New York",
+      "colors": {
+        "dim": {
+          "bg": "rgba(12,35,64,0.38)",
+          "border": "rgba(50,80,130,0.48)",
+          "glow": "0 0 8px rgba(50,80,130,0.22)",
+          "text": "rgba(170,195,240,0.80)"
+        },
+        "full": {
+          "bg": "rgba(12,35,64,0.68)",
+          "border": "rgba(50,80,130,0.80)",
+          "glow": "0 0 18px rgba(50,80,130,0.50)",
+          "text": "rgba(200,220,255,1.0)"
+        },
+        "hot": {
+          "bg": "rgba(15,45,85,0.88)",
+          "border": "rgba(70,105,175,1.0)",
+          "glow": "0 0 26px rgba(50,80,130,0.65)",
+          "text": "rgba(220,235,255,1.0)"
+        }
+      },
+      "roster": [
+        {
+          "name": "Alex Rodriguez",
+          "number": "13",
+          "pos": "3B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "rodra001"
+        },
+        {
+          "name": "Bernie Williams",
+          "number": "51",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "willb002"
+        },
+        {
+          "name": "Bubba Crosby",
+          "number": "56",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "crosb001"
+        },
+        {
+          "name": "Derek Jeter",
+          "number": "2",
+          "pos": "SS",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "jeted001"
+        },
+        {
+          "name": "Esteban Loaiza",
+          "number": "30",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "loaie001"
+        },
+        {
+          "name": "Felix Heredia",
+          "number": "52",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "heref001"
+        },
+        {
+          "name": "Gary Sheffield",
+          "number": "11",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "shefg001"
+        },
+        {
+          "name": "Hideki Matsui",
+          "number": "55",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "matsh001"
+        },
+        {
+          "name": "Javier Vazquez",
+          "number": "21",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "vazqj001"
+        },
+        {
+          "name": "John Olerud",
+          "number": "19",
+          "pos": "1B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "olerj001"
+        },
+        {
+          "name": "Jon Lieber",
+          "number": "31",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "liebj001"
+        },
+        {
+          "name": "Jorge Posada",
+          "number": "20",
+          "pos": "C",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "posaj001"
+        },
+        {
+          "name": "Kenny Lofton",
+          "number": "7",
+          "pos": "OF",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "loftk001"
+        },
+        {
+          "name": "Kevin Brown",
+          "number": "28",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "browk001"
+        },
+        {
+          "name": "Mariano Rivera",
+          "number": "42",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "rivem002"
+        },
+        {
+          "name": "Miguel Cairo",
+          "number": "12",
+          "pos": "2B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "cairm001"
+        },
+        {
+          "name": "Mike Mussina",
+          "number": "35",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "mussm001"
+        },
+        {
+          "name": "Orlando Hernandez",
+          "number": "26",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "herno001"
+        },
+        {
+          "name": "Paul Quantrill",
+          "number": "34",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "quanp001"
+        },
+        {
+          "name": "Ruben Sierra",
+          "number": "27",
+          "pos": "DH",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "sierr001"
+        },
+        {
+          "name": "Tanyon Sturtze",
+          "number": "46",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "sturt001"
+        },
+        {
+          "name": "Tom Gordon",
+          "number": "36",
+          "pos": "P",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "gordt001"
+        },
+        {
+          "name": "Tony Clark",
+          "number": "3",
+          "pos": "1B",
+          "tier": "KNOWN",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": "clart002"
+        },
+        {
+          "name": "Joe Torre",
+          "number": "6",
+          "pos": "MGR",
+          "tier": "COACH",
+          "funFact": null,
+          "stat": null,
+          "statLabel": null,
+          "verified": true,
+          "retroId": ""
+        }
+      ]
+    }
+  },
+  "games": [
+    {
+      "game": 1,
+      "date": "Oct 12, 2004",
+      "venue": "Yankee Stadium",
+      "score": "NYY 10, BOS 7",
+      "winner": "NYY"
+    },
+    {
+      "game": 2,
+      "date": "Oct 13, 2004",
+      "venue": "Yankee Stadium",
+      "score": "NYY 3, BOS 1",
+      "winner": "NYY"
+    },
+    {
+      "game": 3,
+      "date": "Oct 16, 2004",
+      "venue": "Fenway Park",
+      "score": "NYY 19, BOS 8",
+      "winner": "NYY"
+    },
+    {
+      "game": 4,
+      "date": "Oct 17, 2004",
+      "venue": "Fenway Park",
+      "score": "BOS 6, NYY 4 (12 inn)",
+      "winner": "BOS"
+    },
+    {
+      "game": 5,
+      "date": "Oct 18, 2004",
+      "venue": "Fenway Park",
+      "score": "BOS 5, NYY 4 (14 inn)",
+      "winner": "BOS"
+    },
+    {
+      "game": 6,
+      "date": "Oct 19, 2004",
+      "venue": "Yankee Stadium",
+      "score": "BOS 4, NYY 2",
+      "winner": "BOS"
+    },
+    {
+      "game": 7,
+      "date": "Oct 20, 2004",
+      "venue": "Yankee Stadium",
+      "score": "BOS 10, NYY 3",
+      "winner": "BOS"
+    }
+  ],
+  "gameStarts": {
+    "1": 0,
+    "2": 18,
+    "3": 36,
+    "4": 54,
+    "5": 78,
+    "6": 106,
+    "7": 124
+  },
+  "timeline": [
+    {
+      "game": 1,
+      "inning": 1,
+      "half": "top",
+      "label": "G1 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G1 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 2,
+      "half": "top",
+      "label": "G1 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G1 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Kenny Lofton",
+          "John Olerud"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 3,
+      "half": "top",
+      "label": "G1 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Bill Mueller",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G1 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "John Olerud",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 4,
+      "half": "top",
+      "label": "G1 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G1 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Curt Leskanic"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Kenny Lofton",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 5,
+      "half": "top",
+      "label": "G1 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G1 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Ramiro Mendoza"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Hideki Matsui",
+          "John Olerud",
+          "Jorge Posada",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 6,
+      "half": "top",
+      "label": "G1 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Bill Mueller",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G1 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Kenny Lofton",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 7,
+      "half": "top",
+      "label": "G1 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Tanyon Sturtze"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G1 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Alan Embree"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Kenny Lofton",
+          "John Olerud",
+          "Jorge Posada"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 8,
+      "half": "top",
+      "label": "G1 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G1 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 9,
+      "half": "top",
+      "label": "G1 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Bill Mueller",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 1,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G1 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": []
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 1,
+      "half": "top",
+      "label": "G2 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G2 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 2,
+      "half": "top",
+      "label": "G2 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G2 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Kenny Lofton",
+          "John Olerud",
+          "Alex Rodriguez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 3,
+      "half": "top",
+      "label": "G2 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Bill Mueller"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G2 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 4,
+      "half": "top",
+      "label": "G2 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G2 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Kenny Lofton",
+          "John Olerud",
+          "Jorge Posada"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 5,
+      "half": "top",
+      "label": "G2 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G2 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 6,
+      "half": "top",
+      "label": "G2 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "Bill Mueller"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G2 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Kenny Lofton",
+          "John Olerud",
+          "Jorge Posada",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 7,
+      "half": "top",
+      "label": "G2 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G2 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Alan Embree"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 8,
+      "half": "top",
+      "label": "G2 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Bill Mueller",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G2 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Kenny Lofton",
+          "John Olerud",
+          "Jorge Posada",
+          "Alex Rodriguez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 9,
+      "half": "top",
+      "label": "G2 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Kevin Millar",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 2,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G2 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": []
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 1,
+      "half": "top",
+      "label": "G3 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Bronson Arroyo"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G3 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Kevin Brown"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 2,
+      "half": "top",
+      "label": "G3 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Bronson Arroyo"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "John Olerud",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G3 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Kevin Brown"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 3,
+      "half": "top",
+      "label": "G3 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Ramiro Mendoza"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "John Olerud",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G3 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Javier Vazquez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 4,
+      "half": "top",
+      "label": "G3 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "John Olerud",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G3 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Javier Vazquez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 5,
+      "half": "top",
+      "label": "G3 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G3 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon"
+        ],
+        "NYY": [
+          "Javier Vazquez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 6,
+      "half": "top",
+      "label": "G3 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Tony Clark",
+          "John Olerud",
+          "Jorge Posada",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G3 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Javier Vazquez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 7,
+      "half": "top",
+      "label": "G3 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Alan Embree"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G3 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "David Ortiz",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Paul Quantrill"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 8,
+      "half": "top",
+      "label": "G3 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Mike Myers"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Alex Rodriguez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G3 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Doug Mirabelli",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Paul Quantrill"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 9,
+      "half": "top",
+      "label": "G3 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Mike Myers"
+        ],
+        "NYY": [
+          "Tony Clark",
+          "Bubba Crosby",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 3,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G3 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Doug Mirabelli",
+          "Bill Mueller",
+          "Trot Nixon"
+        ],
+        "NYY": [
+          "Tom Gordon"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 1,
+      "half": "top",
+      "label": "G4 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G4 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Orlando Hernandez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 2,
+      "half": "top",
+      "label": "G4 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G4 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon"
+        ],
+        "NYY": [
+          "Orlando Hernandez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 3,
+      "half": "top",
+      "label": "G4 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G4 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Orlando Hernandez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 4,
+      "half": "top",
+      "label": "G4 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G4 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Trot Nixon",
+          "David Ortiz",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Orlando Hernandez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 5,
+      "half": "top",
+      "label": "G4 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Alex Rodriguez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G4 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Orlando Hernandez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 6,
+      "half": "top",
+      "label": "G4 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Mike Timlin"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G4 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon"
+        ],
+        "NYY": [
+          "Tanyon Sturtze"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 7,
+      "half": "top",
+      "label": "G4 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G4 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon"
+        ],
+        "NYY": [
+          "Tanyon Sturtze"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 8,
+      "half": "top",
+      "label": "G4 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Jorge Posada",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G4 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 9,
+      "half": "top",
+      "label": "G4 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G4 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Doug Mientkiewicz",
+          "Kevin Millar",
+          "Bill Mueller",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Dave Roberts"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": "Millar walks \u2014 Roberts pinch runs \u2014 steals 2nd \u2014 Mueller ties it"
+    },
+    {
+      "game": 4,
+      "inning": 10,
+      "half": "top",
+      "label": "G4 \u00b7 T10",
+      "players": {
+        "BOS": [
+          "Alan Embree"
+        ],
+        "NYY": [
+          "Tony Clark",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 10,
+      "half": "bottom",
+      "label": "G4 \u00b7 B10",
+      "players": {
+        "BOS": [
+          "Doug Mientkiewicz",
+          "Trot Nixon",
+          "Pokey Reese",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Tom Gordon"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 11,
+      "half": "top",
+      "label": "G4 \u00b7 T11",
+      "players": {
+        "BOS": [
+          "Curt Leskanic"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 11,
+      "half": "bottom",
+      "label": "G4 \u00b7 B11",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Doug Mientkiewicz",
+          "Bill Mueller"
+        ],
+        "NYY": [
+          "Tom Gordon"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 12,
+      "half": "top",
+      "label": "G4 \u00b7 T12",
+      "players": {
+        "BOS": [
+          "Curt Leskanic"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Jorge Posada",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 4,
+      "inning": 12,
+      "half": "bottom",
+      "label": "G4 \u00b7 B12",
+      "players": {
+        "BOS": [
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Paul Quantrill"
+        ]
+      },
+      "note": "Ortiz walkoff home run \u2014 series alive"
+    },
+    {
+      "game": 5,
+      "inning": 1,
+      "half": "top",
+      "label": "G5 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G5 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 2,
+      "half": "top",
+      "label": "G5 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G5 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 3,
+      "half": "top",
+      "label": "G5 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G5 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 4,
+      "half": "top",
+      "label": "G5 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Jorge Posada",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G5 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "Bill Mueller"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 5,
+      "half": "top",
+      "label": "G5 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G5 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Kevin Millar",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 6,
+      "half": "top",
+      "label": "G5 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G5 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Bill Mueller",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mike Mussina"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 7,
+      "half": "top",
+      "label": "G5 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Mike Timlin"
+        ],
+        "NYY": [
+          "Tony Clark",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G5 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Tom Gordon"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 8,
+      "half": "top",
+      "label": "G5 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Derek Jeter",
+          "Hideki Matsui",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G5 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Gabe Kapler",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "David Ortiz",
+          "Dave Roberts",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 9,
+      "half": "top",
+      "label": "G5 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G5 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Gabe Kapler",
+          "Doug Mientkiewicz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 10,
+      "half": "top",
+      "label": "G5 \u00b7 T10",
+      "players": {
+        "BOS": [
+          "Bronson Arroyo"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 10,
+      "half": "bottom",
+      "label": "G5 \u00b7 B10",
+      "players": {
+        "BOS": [
+          "Gabe Kapler",
+          "Doug Mientkiewicz",
+          "David Ortiz",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Paul Quantrill"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 11,
+      "half": "top",
+      "label": "G5 \u00b7 T11",
+      "players": {
+        "BOS": [
+          "Alan Embree"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 11,
+      "half": "bottom",
+      "label": "G5 \u00b7 B11",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Bill Mueller"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 12,
+      "half": "top",
+      "label": "G5 \u00b7 T12",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Alex Rodriguez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 12,
+      "half": "bottom",
+      "label": "G5 \u00b7 B12",
+      "players": {
+        "BOS": [
+          "Doug Mientkiewicz",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 13,
+      "half": "top",
+      "label": "G5 \u00b7 T13",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Gary Sheffield",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 13,
+      "half": "bottom",
+      "label": "G5 \u00b7 B13",
+      "players": {
+        "BOS": [
+          "Gabe Kapler",
+          "Bill Mueller",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 14,
+      "half": "top",
+      "label": "G5 \u00b7 T14",
+      "players": {
+        "BOS": [
+          "Tim Wakefield"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 5,
+      "inning": 14,
+      "half": "bottom",
+      "label": "G5 \u00b7 B14",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": "Ortiz walkoff single \u2014 one win away"
+    },
+    {
+      "game": 6,
+      "inning": 1,
+      "half": "top",
+      "label": "G6 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Johnny Damon",
+          "Bill Mueller",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": "Schilling on the mound \u2014 the bloody sock game begins"
+    },
+    {
+      "game": 6,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G6 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 2,
+      "half": "top",
+      "label": "G6 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Kevin Millar",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G6 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 3,
+      "half": "top",
+      "label": "G6 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Johnny Damon",
+          "Bill Mueller",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G6 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 4,
+      "half": "top",
+      "label": "G6 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": "Bellhorn HR off the Pesky Pole"
+    },
+    {
+      "game": 6,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G6 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Alex Rodriguez",
+          "Gary Sheffield",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 5,
+      "half": "top",
+      "label": "G6 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Bill Mueller",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G6 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Ruben Sierra"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 6,
+      "half": "top",
+      "label": "G6 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G6 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 7,
+      "half": "top",
+      "label": "G6 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon"
+        ],
+        "NYY": [
+          "Jon Lieber"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G6 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Curt Schilling"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 8,
+      "half": "top",
+      "label": "G6 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Gabe Kapler",
+          "Doug Mientkiewicz",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Paul Quantrill"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G6 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Bronson Arroyo"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 9,
+      "half": "top",
+      "label": "G6 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Bill Mueller",
+          "Pokey Reese",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Tanyon Sturtze"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 6,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G6 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Keith Foulke"
+        ],
+        "NYY": [
+          "Tony Clark",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 1,
+      "half": "top",
+      "label": "G7 \u00b7 T1",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Johnny Damon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Kevin Brown"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 1,
+      "half": "bottom",
+      "label": "G7 \u00b7 B1",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 2,
+      "half": "top",
+      "label": "G7 \u00b7 T2",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Javier Vazquez"
+        ]
+      },
+      "note": "Johnny Damon 2-run homer"
+    },
+    {
+      "game": 7,
+      "inning": 2,
+      "half": "bottom",
+      "label": "G7 \u00b7 B2",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Kenny Lofton",
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 3,
+      "half": "top",
+      "label": "G7 \u00b7 T3",
+      "players": {
+        "BOS": [
+          "Kevin Millar",
+          "Bill Mueller",
+          "Trot Nixon",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Javier Vazquez"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 3,
+      "half": "bottom",
+      "label": "G7 \u00b7 B3",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 4,
+      "half": "top",
+      "label": "G7 \u00b7 T4",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Kevin Millar",
+          "Trot Nixon",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": "Damon grand slam \u2014 Red Sox lead 6\u20130"
+    },
+    {
+      "game": 7,
+      "inning": 4,
+      "half": "bottom",
+      "label": "G7 \u00b7 B4",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Hideki Matsui",
+          "Jorge Posada",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 5,
+      "half": "top",
+      "label": "G7 \u00b7 T5",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Bill Mueller",
+          "Manny Ramirez"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 5,
+      "half": "bottom",
+      "label": "G7 \u00b7 B5",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Kenny Lofton"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 6,
+      "half": "top",
+      "label": "G7 \u00b7 T6",
+      "players": {
+        "BOS": [
+          "Trot Nixon",
+          "David Ortiz",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Esteban Loaiza"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 6,
+      "half": "bottom",
+      "label": "G7 \u00b7 B6",
+      "players": {
+        "BOS": [
+          "Derek Lowe"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 7,
+      "half": "top",
+      "label": "G7 \u00b7 T7",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Doug Mientkiewicz",
+          "Kevin Millar",
+          "Bill Mueller"
+        ],
+        "NYY": [
+          "Felix Heredia"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 7,
+      "half": "bottom",
+      "label": "G7 \u00b7 B7",
+      "players": {
+        "BOS": [
+          "Pedro Martinez"
+        ],
+        "NYY": [
+          "Miguel Cairo",
+          "Tony Clark",
+          "Kenny Lofton",
+          "Hideki Matsui",
+          "John Olerud",
+          "Jorge Posada",
+          "Bernie Williams"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 8,
+      "half": "top",
+      "label": "G7 \u00b7 T8",
+      "players": {
+        "BOS": [
+          "Mark Bellhorn",
+          "David Ortiz",
+          "Manny Ramirez",
+          "Pokey Reese",
+          "Jason Varitek"
+        ],
+        "NYY": [
+          "Tom Gordon"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 8,
+      "half": "bottom",
+      "label": "G7 \u00b7 B8",
+      "players": {
+        "BOS": [
+          "Mike Timlin"
+        ],
+        "NYY": [
+          "Derek Jeter",
+          "John Olerud",
+          "Alex Rodriguez",
+          "Gary Sheffield"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 9,
+      "half": "top",
+      "label": "G7 \u00b7 T9",
+      "players": {
+        "BOS": [
+          "Orlando Cabrera",
+          "Johnny Damon",
+          "Doug Mientkiewicz",
+          "Bill Mueller",
+          "Trot Nixon"
+        ],
+        "NYY": [
+          "Mariano Rivera"
+        ]
+      },
+      "note": null
+    },
+    {
+      "game": 7,
+      "inning": 9,
+      "half": "bottom",
+      "label": "G7 \u00b7 B9",
+      "players": {
+        "BOS": [
+          "Alan Embree"
+        ],
+        "NYY": [
+          "Kenny Lofton",
+          "Hideki Matsui",
+          "John Olerud",
+          "Jorge Posada",
+          "Ruben Sierra",
+          "Bernie Williams"
+        ]
+      },
+      "note": "Red Sox win the pennant \u2014 86 years ends tonight"
+    }
+  ]
+}
