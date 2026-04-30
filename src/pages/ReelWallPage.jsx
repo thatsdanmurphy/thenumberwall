@@ -170,13 +170,13 @@ export default function ReelWallPage() {
 
   return (
     <AppShell>
-      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
+      <AppHeader />
 
       <main className="reel-page">
 
         <div className="reel-page__heading">
-          <span className="reel-page__overline">REEL LEGENDS</span>
-          <h1 className="reel-page__team">{film.heading}</h1>
+          <button className="page-back" onClick={() => navigate('/')}>← Main Wall</button>
+          <h1 className={`reel-page__team${film.heading.length > 16 ? ' reel-page__team--long' : ''}`}>{film.heading}</h1>
           <span className="reel-page__sub">{film.sub}</span>
         </div>
 
@@ -201,8 +201,8 @@ export default function ReelWallPage() {
                 <div className="player-panel__header">
                   <div className="player-panel__header-left">
                     <div
-                      className="player-panel__number"
-                      style={{ color: film.tileFull.text, textShadow: `0 0 28px ${film.tileFull.border}` }}
+                      className="player-panel__number player-panel__number--label"
+                      style={{ color: film.tileFull.text, textShadow: `0 0 18px ${film.tileFull.border}` }}
                     >
                       COACHES
                     </div>

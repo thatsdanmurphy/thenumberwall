@@ -67,14 +67,15 @@ export default function BostonPage() {
 
   return (
     <AppShell>
-      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
+      <AppHeader />
 
       <main className="boston-page">
 
         {/* ── Page heading ─────────────────────────────────── */}
         <div className="boston-page__heading">
-          <span className="boston-page__overline">DISCOVER THE LOCALS</span>
+          <button className="page-back" onClick={() => navigate('/')}>← Main Wall</button>
           <h1 className="boston-page__title">Boston</h1>
+          <p className="boston-page__sublabel">The city that never forgets a number.</p>
         </div>
 
         {/* ── Tab bar ──────────────────────────────────────── */}

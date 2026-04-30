@@ -8,19 +8,20 @@
   gap:            var(--space-1);
 }
 
-.newyork-page__overline {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.16em;
-  color:          var(--ink-dim);
-}
-
 .newyork-page__title {
   font-family: var(--font-banner);
   font-size:   2rem;
   color:       var(--color-paper);
   margin:      0;
   line-height: 1.05;
+}
+
+.newyork-page__sublabel {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  margin:      0;
+  line-height: 1.4;
 }
 
 /* ── Tab bar ────────────────────────────────────────────────────────────── */

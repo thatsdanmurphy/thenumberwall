@@ -63,14 +63,15 @@ export default function NewYorkPage() {
 
   return (
     <AppShell>
-      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
+      <AppHeader />
 
       <main className="newyork-page">
 
         {/* ── Page heading ─────────────────────────────────── */}
         <div className="newyork-page__heading">
-          <span className="newyork-page__overline">DISCOVER THE LOCALS</span>
+          <button className="page-back" onClick={() => navigate('/')}>← Main Wall</button>
           <h1 className="newyork-page__title">New York</h1>
+          <p className="newyork-page__sublabel">New York doesn't share its legends. It just makes more.</p>
         </div>
 
         {/* ── Tab bar ──────────────────────────────────────── */}

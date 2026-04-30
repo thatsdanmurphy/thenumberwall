@@ -154,6 +154,13 @@
   .player-panel__number { font-size: 3rem; }
 }
 
+/* Modifier for word labels (COACHES) — panel-number class but smaller */
+.player-panel__number--label {
+  font-size:      1.125rem;
+  letter-spacing: 0.12em;
+  white-space:    normal;
+}
+
 .player-panel__subtitle {
   font-family:    var(--font-scoreboard);
   font-size: var(--text-caption);

@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import ErrorBoundary  from './components/ErrorBoundary.jsx'
+import ScrollToTop    from './components/ScrollToTop.jsx'
 import WallPage       from './pages/WallPage.jsx'
 import BostonPage     from './pages/BostonPage.jsx'
 import NewYorkPage    from './pages/NewYorkPage.jsx'
@@ -26,6 +27,7 @@ import HowWorkHappens          from './pages/behindthecurtains/HowWorkHappens.js
 export default function App() {
   return (
     <ErrorBoundary>
+      <ScrollToTop />
       <Routes>
         <Route path="/"              element={<WallPage />} />
         <Route path="/number/:num"   element={<WallPage />} />

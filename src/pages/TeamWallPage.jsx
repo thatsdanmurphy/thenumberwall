@@ -849,10 +849,10 @@ export default function TeamWallPage() {
                   <div className="player-panel__header">
                     <div className="player-panel__header-left">
                       <div
-                        className="player-panel__number"
+                        className="player-panel__number player-panel__number--label"
                         style={{
                           color: TEAM_PALETTES[colorKey]?.[4]?.text || getTeamTileTextColor(colorKey, coaches.length),
-                          textShadow: `0 0 28px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
+                          textShadow: `0 0 18px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
                         }}
                       >COACHES</div>
                     </div>

@@ -305,6 +305,35 @@ textarea:focus-visible {
    Used by city pages (Boston, NY, …). Active state draws a heat
    underline. Place inside a flex container with a 1px bottom border. */
 
+/* ── Page-body back button — eyebrow above entity title ──────────────────── */
+/* Used on city pages and reel pages where back nav lives in the body,
+   not in the header. Same visual treatment as app-header__back. */
+
+.page-back {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             4px;
+  font-family:     var(--font-program);
+  font-size:       var(--text-small);
+  font-weight:     500;
+  color:           var(--color-muted);
+  letter-spacing:  0.04em;
+  background:      none;
+  border:          none;
+  padding:         0;
+  cursor:          pointer;
+  transition:      color var(--motion-hover);
+  margin-bottom:   var(--space-2);
+}
+
+.page-back:hover { color: var(--color-paper); }
+
+.page-back:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 4px;
+  border-radius:  2px;
+}
+
 .tnw-tab {
   font-family:     var(--font-scoreboard);
   font-size:       var(--text-label);

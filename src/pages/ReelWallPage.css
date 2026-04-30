@@ -19,19 +19,16 @@
   border-bottom:  1px solid var(--border-faint);
 }
 
-.reel-page__overline {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.16em;
-  color:          var(--ink-dim);
-}
-
 .reel-page__team {
   font-family: var(--font-banner);
   font-size:   2rem;
   color:       var(--color-paper);
   margin:      0;
   line-height: 1.05;
+}
+
+.reel-page__team--long {
+  font-size: 1.5rem;   /* Urbania Little Giants and future long names */
 }
 
 .reel-page__sub {
@@ -62,8 +59,9 @@
 }
 
 .reel-coach-tile--active {
-  outline:        1px solid rgba(255,255,255,0.55);
-  outline-offset: -1px;
+  background:   var(--surface-raised);
+  border-color: rgba(255,255,255,0.35);
+  box-shadow:   0 0 12px rgba(255,255,255,0.08);
 }
 
 .reel-coach-tile__label {

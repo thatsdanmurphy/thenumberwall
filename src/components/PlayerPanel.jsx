@@ -107,7 +107,9 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
             {entry.role && (
               <span className="player-card__badge player-card__badge--dim">{entry.role}</span>
             )}
-            {entry.film && (
+            {/* Film badge only when it distinguishes within a multi-film franchise (D2, D3).
+                For Space Jam and Little Giants there's one film — badge adds no info. */}
+            {entry.film && (entry.film.startsWith('D2') || entry.film.startsWith('D3')) && (
               <span className="player-card__badge player-card__badge--film">{entry.film}</span>
             )}
             {entry.actorVoice && entry.actorVoice !== 'unk' && (
