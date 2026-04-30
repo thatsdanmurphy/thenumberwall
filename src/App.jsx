@@ -10,6 +10,7 @@ import TimelinePage   from './pages/TimelinePage.jsx'
 import TeamWallsPage  from './pages/TeamWallsPage.jsx'
 import TeamWallPage   from './pages/TeamWallPage.jsx'
 import TownWallsPage  from './pages/TownWallsPage.jsx'
+import ReelWallPage   from './pages/ReelWallPage.jsx'
 import DesignSystem   from './pages/DesignSystem.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/walls/:schoolSlug/:sport" element={<TeamWallPage />} />
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
+        <Route path="/reel"      element={<ReelWallPage />} />
 
         {/* Legacy redirect — /design now lives under /behindthecurtains/design */}
         <Route path="/design" element={<Navigate to="/behindthecurtains/design" replace />} />

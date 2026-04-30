@@ -1,0 +1,84 @@
+/* ReelWallPage — Reel Legends film wall
+   Mirrors BostonPage layout. Film tabs replace sport tabs. All tokens. */
+
+.reel-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.reel-page__tabs {
+  display:       flex;
+  gap:           2px;
+  margin-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reel-page__heading {
+  padding: 0 var(--space-3) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.reel-page__team {
+  font-family: var(--font-banner);
+  font-size:   var(--text-h2, 1.5rem);
+  color:       var(--color-paper);
+  margin:      0;
+  line-height: 1.1;
+}
+
+.reel-page__sub {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.12em;
+  color:          var(--ink-dim);
+}
+
+.reel-page__copy {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--color-muted);
+  margin:      0;
+  line-height: 1.5;
+}
+
+.reel-page__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.reel-page__grid-col {
+  display:        flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .reel-page__body {
+    flex-direction: row;
+    align-items:    stretch;
+    gap:            var(--space-4);
+  }
+
+  .reel-page__grid-col {
+    flex: 0 0 61.8%;
+  }
+
+  .reel-page__body .player-panel {
+    flex:      1;
+    max-width: var(--panel-max-width);
+  }
+}
+
+.reel-page__backdrop { display: none; }
+
+@media (max-width: 767px) {
+  .reel-page__backdrop {
+    display: block;
+    z-index: 199;
+  }
+}

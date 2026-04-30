@@ -57,6 +57,27 @@
   color:          var(--color-paper);
 }
 
+.wall-page__cities-sublabel {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  margin:      0;
+  line-height: 1.45;
+}
+
+.wall-page__reels .wall-page__city-card:hover {
+  background:   rgba(120, 80, 20, 0.10);
+  border-color: rgba(180, 130, 40, 0.30);
+}
+
+.wall-page__reels .wall-page__city-arrow {
+  color: rgba(180, 130, 40, 0.50);
+}
+
+.wall-page__reels .wall-page__city-card:hover .wall-page__city-arrow {
+  color: rgba(210, 165, 70, 0.90);
+}
+
 .wall-page__city-card {
   display:         flex;
   align-items:     center;
