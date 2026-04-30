@@ -419,13 +419,16 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
               </div>
 
               <div className="player-panel__header-actions">
-                <button
-                  className={`player-panel__share${copied ? ' player-panel__share--copied' : ''}`}
-                  onClick={handleShare}
-                  aria-label={`Share #${number}`}
-                >
-                  {copied ? <Check size={14} /> : <ExternalLink size={14} />}
-                </button>
+                {/* Share hidden in showdown/reel walls where wallId==='none' */}
+                {wallId !== 'none' && (
+                  <button
+                    className={`player-panel__share${copied ? ' player-panel__share--copied' : ''}`}
+                    onClick={handleShare}
+                    aria-label={`Share #${number}`}
+                  >
+                    {copied ? <Check size={14} /> : <ExternalLink size={14} />}
+                  </button>
+                )}
                 <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
                   <X size={14} />
                 </button>
@@ -476,12 +479,15 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                     <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} voteData={cardVoteData} />
                   )
                 })}
-                {showSubmit ? (
-                  <SubmitLegend number={number} wall={wallId} onClose={() => setShowSubmit(false)} />
-                ) : (
-                  <button className="player-panel__add-legend" onClick={() => setShowSubmit(true)}>
-                    <Plus size={12} /> Add a Legend
-                  </button>
+                {/* Add a Legend hidden in showdown/reel walls (wallId==='none') */}
+                {wallId !== 'none' && (
+                  showSubmit ? (
+                    <SubmitLegend number={number} wall={wallId} onClose={() => setShowSubmit(false)} />
+                  ) : (
+                    <button className="player-panel__add-legend" onClick={() => setShowSubmit(true)}>
+                      <Plus size={12} /> Add a Legend
+                    </button>
+                  )
                 )}
               </div>
             )}

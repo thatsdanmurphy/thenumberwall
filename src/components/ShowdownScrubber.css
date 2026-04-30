@@ -1,86 +1,89 @@
-/* ShowdownScrubber — series timeline with game markers, drag thumb, play controls */
+/* ShowdownScrubber — big accessible controls, taller track */
 
 .showdown-scrubber {
   display:        flex;
   flex-direction: column;
-  gap:            var(--space-2);
-  padding:        var(--space-3) 0 var(--space-3);
-  border-bottom:  1px solid var(--border-faint);
+  gap:            var(--space-3);
+  padding:        var(--space-3) 0;
   user-select:    none;
 }
 
 /* ── Controls row ─────────────────────────────────────────────────────────── */
 
 .showdown-scrubber__controls {
-  display:         flex;
-  align-items:     center;
-  gap:             var(--space-2);
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-3);
 }
 
+/* Play/pause — 48px minimum touch target */
 .showdown-scrubber__playpause {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           28px;
-  height:          28px;
+  width:           48px;
+  height:          48px;
   background:      var(--surface-1);
-  border:          1px solid var(--border-soft);
+  border:          1px solid var(--border-medium);
   border-radius:   50%;
   color:           var(--color-paper);
   cursor:          pointer;
   flex-shrink:     0;
-  transition:      background var(--motion-hover), border-color var(--motion-hover);
+  transition:      background var(--motion-hover), border-color var(--motion-hover), box-shadow var(--motion-hover);
 }
 
 .showdown-scrubber__playpause:hover {
   background:   var(--surface-raised);
-  border-color: var(--border-medium);
+  border-color: var(--color-heat);
+  box-shadow:   0 0 12px rgba(232,124,42,0.30);
 }
 
+/* Position label */
 .showdown-scrubber__pos-label {
   display:     flex;
   align-items: center;
-  gap:         4px;
+  gap:         6px;
   flex:        1;
 }
 
 .showdown-scrubber__game {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-label);
+  font-size:      1.05rem;
   letter-spacing: 0.12em;
   color:          var(--color-paper);
 }
 
 .showdown-scrubber__dot {
-  color: var(--ink-dim);
-  font-size: var(--text-micro);
+  color:     var(--ink-dim);
+  font-size: 0.8rem;
 }
 
 .showdown-scrubber__half {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-label);
+  font-size:      1.05rem;
   letter-spacing: 0.08em;
   color:          var(--ink-dim);
 }
 
-/* Speed selector */
+/* Speed buttons */
 .showdown-scrubber__speeds {
-  display:    flex;
-  gap:        2px;
+  display:     flex;
+  gap:         4px;
   flex-shrink: 0;
 }
 
 .showdown-scrubber__speed {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
+  font-size:      var(--text-small);
   letter-spacing: 0.08em;
   color:          var(--color-muted);
   background:     none;
   border:         1px solid transparent;
   border-radius:  var(--radius-sm);
-  padding:        2px 6px;
+  padding:        6px 10px;
+  min-height:     36px;
   cursor:         pointer;
-  transition:     color var(--motion-hover), border-color var(--motion-hover);
+  transition:     color var(--motion-hover), border-color var(--motion-hover), background var(--motion-hover);
 }
 
 .showdown-scrubber__speed:hover {
@@ -94,50 +97,34 @@
   background:   var(--surface-1);
 }
 
-/* ── Note label ───────────────────────────────────────────────────────────── */
-
-.showdown-scrubber__note {
-  font-family:    var(--font-program);
-  font-size:      var(--text-caption);
-  color:          var(--color-heat);
-  letter-spacing: 0.02em;
-  min-height:     1.2em;
-  opacity:        0;
-  transition:     opacity 200ms ease;
-}
-
-.showdown-scrubber__note--visible {
-  opacity: 1;
-}
-
-/* ── Track wrap — contains markers + track ────────────────────────────────── */
+/* ── Track wrap ───────────────────────────────────────────────────────────── */
 
 .showdown-scrubber__track-wrap {
-  display:  flex;
+  display:        flex;
   flex-direction: column;
-  gap:      var(--space-1);
-  position: relative;
+  gap:            var(--space-2);
+  position:       relative;
 }
 
-/* Game markers row — sits above the track */
+/* Game markers */
 .showdown-scrubber__markers {
   position: relative;
-  height:   16px;
+  height:   22px;
 }
 
 .showdown-scrubber__marker {
-  position:    absolute;
-  transform:   translateX(-50%);
-  font-family: var(--font-scoreboard);
-  font-size:   var(--text-micro);
-  letter-spacing: 0.08em;
-  color:       var(--color-muted);
-  background:  none;
-  border:      none;
-  padding:     0;
-  cursor:      pointer;
-  transition:  color var(--motion-hover);
-  white-space: nowrap;
+  position:       absolute;
+  transform:      translateX(-50%);
+  font-family:    var(--font-scoreboard);
+  font-size:      0.75rem;
+  letter-spacing: 0.10em;
+  color:          var(--color-muted);
+  background:     none;
+  border:         none;
+  padding:        3px 4px;
+  cursor:         pointer;
+  transition:     color var(--motion-hover);
+  white-space:    nowrap;
 }
 
 .showdown-scrubber__marker:hover,
@@ -145,47 +132,45 @@
   color: var(--color-paper);
 }
 
-/* Track bar */
+/* Track — taller for easier dragging */
 .showdown-scrubber__track {
   position:      relative;
-  height:        6px;
+  height:        12px;
   background:    var(--surface-1);
   border:        1px solid var(--border-soft);
-  border-radius: 3px;
+  border-radius: 6px;
   cursor:        pointer;
   touch-action:  none;
 }
 
 .showdown-scrubber__fill {
-  position:      absolute;
-  left:          0;
-  top:           0;
-  bottom:        0;
-  background:    var(--color-heat);
-  border-radius: 3px 0 0 3px;
+  position:       absolute;
+  left:           0; top: 0; bottom: 0;
+  background:     var(--color-heat);
+  border-radius:  6px 0 0 6px;
   pointer-events: none;
 }
 
+/* Thumb — large enough to grab */
 .showdown-scrubber__thumb {
-  position:      absolute;
-  top:           50%;
-  transform:     translate(-50%, -50%);
-  width:         14px;
-  height:        14px;
-  background:    var(--color-paper);
-  border:        2px solid var(--color-heat);
-  border-radius: 50%;
+  position:       absolute;
+  top:            50%;
+  transform:      translate(-50%, -50%);
+  width:          24px;
+  height:         24px;
+  background:     var(--color-paper);
+  border:         2px solid var(--color-heat);
+  border-radius:  50%;
   pointer-events: none;
-  box-shadow:    0 0 8px rgba(232,124,42,0.40);
+  box-shadow:     0 0 12px rgba(232,124,42,0.55);
 }
 
 /* Game boundary ticks */
 .showdown-scrubber__tick {
-  position:      absolute;
-  top:           -3px;
-  bottom:        -3px;
-  width:         1px;
-  background:    var(--border-medium);
+  position:       absolute;
+  top:            -4px; bottom: -4px;
+  width:          1px;
+  background:     var(--border-medium);
   pointer-events: none;
-  transform:     translateX(-50%);
+  transform:      translateX(-50%);
 }

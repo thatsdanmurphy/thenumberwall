@@ -4,16 +4,13 @@ import './ShowdownScrubber.css'
 
 const SPEEDS = [1, 2, 4]
 
-// ── ShowdownScrubber ──────────────────────────────────────────────────────────
-// Horizontal timeline across all half-innings of the series.
-// Game markers (G1–G7) sit above the track. Thumb is draggable.
-// Play/pause auto-advances at configurable speed.
+// Note removed from scrubber — now lives in ShowdownPage moment card.
 
 export default function ShowdownScrubber({
-  timeline,        // flat array of half-inning objects
-  gameStarts,      // { 1: idx, 2: idx, ... } — first slot index per game
-  position,        // current index into timeline
-  onSeek,          // (idx) => void
+  timeline,
+  gameStarts,
+  position,
+  onSeek,
   playing,
   onPlayPause,
   speed,
@@ -28,7 +25,6 @@ export default function ShowdownScrubber({
   // ── Auto-advance ────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!playing) return
-    // ms per half-inning: 800ms at 1x, 400ms at 2x, 200ms at 4x
     const ms = Math.round(800 / speed)
     const id = setInterval(() => {
       onSeek(prev => {
@@ -44,9 +40,9 @@ export default function ShowdownScrubber({
   const posFromEvent = useCallback((e) => {
     const track = trackRef.current
     if (!track) return position
-    const rect = track.getBoundingClientRect()
+    const rect   = track.getBoundingClientRect()
     const clientX = e.touches ? e.touches[0].clientX : e.clientX
-    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
+    const ratio  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
     return Math.round(ratio * (totalSlots - 1))
   }, [totalSlots, position])
 
@@ -63,24 +59,22 @@ export default function ShowdownScrubber({
 
   const onPointerUp = useCallback(() => { dragging.current = false }, [])
 
-  // ── Current slot info ────────────────────────────────────────────────────────
-  const slot     = timeline[position] ?? {}
-  const gameNum  = slot.game ?? 1
-  const half     = slot.half === 'top' ? 'T' : 'B'
-  const inningN  = slot.inning ?? 1
-  const note     = slot.note ?? null
+  const slot    = timeline[position] ?? {}
+  const gameNum = slot.game ?? 1
+  const half    = slot.half === 'top' ? 'T' : 'B'
+  const inningN = slot.inning ?? 1
 
   return (
     <div className="showdown-scrubber">
 
-      {/* ── Controls row ──────────────────────────────────────────────────── */}
+      {/* ── Controls ──────────────────────────────────────────────────────── */}
       <div className="showdown-scrubber__controls">
         <button
           className="showdown-scrubber__playpause"
           onClick={() => onPlayPause(!playing)}
           aria-label={playing ? 'Pause' : 'Play'}
         >
-          {playing ? <Pause size={14} /> : <Play size={14} />}
+          {playing ? <Pause size={20} /> : <Play size={20} />}
         </button>
 
         <div className="showdown-scrubber__pos-label">
@@ -100,11 +94,6 @@ export default function ShowdownScrubber({
             </button>
           ))}
         </div>
-      </div>
-
-      {/* ── Note (key moments) ────────────────────────────────────────────── */}
-      <div className={`showdown-scrubber__note${note ? ' showdown-scrubber__note--visible' : ''}`}>
-        {note ?? ''}
       </div>
 
       {/* ── Track ─────────────────────────────────────────────────────────── */}
@@ -135,26 +124,13 @@ export default function ShowdownScrubber({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
         >
-          {/* Filled portion */}
-          <div
-            className="showdown-scrubber__fill"
-            style={{ width: `${pct}%` }}
-          />
-          {/* Thumb */}
-          <div
-            className="showdown-scrubber__thumb"
-            style={{ left: `${pct}%` }}
-          />
-          {/* Game boundary ticks */}
+          <div className="showdown-scrubber__fill" style={{ width: `${pct}%` }} />
+          <div className="showdown-scrubber__thumb" style={{ left: `${pct}%` }} />
           {Object.entries(gameStarts).map(([g, idx]) => {
             if (idx === 0) return null
             const tickPct = (idx / (totalSlots - 1)) * 100
             return (
-              <div
-                key={g}
-                className="showdown-scrubber__tick"
-                style={{ left: `${tickPct}%` }}
-              />
+              <div key={g} className="showdown-scrubber__tick" style={{ left: `${tickPct}%` }} />
             )
           })}
         </div>
