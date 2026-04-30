@@ -19,6 +19,13 @@
   border-bottom:  1px solid var(--border-faint);
 }
 
+.reel-page__overline {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.16em;
+  color:          var(--ink-dim);
+}
+
 .reel-page__team {
   font-family: var(--font-banner);
   font-size:   2rem;

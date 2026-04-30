@@ -1,5 +1,28 @@
 /* NewYorkPage — city legend wall + current roster tab */
 
+/* ── Page heading ────────────────────────────────────────────────────────── */
+
+.newyork-page__heading {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+}
+
+.newyork-page__overline {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.16em;
+  color:          var(--ink-dim);
+}
+
+.newyork-page__title {
+  font-family: var(--font-banner);
+  font-size:   2rem;
+  color:       var(--color-paper);
+  margin:      0;
+  line-height: 1.05;
+}
+
 /* ── Tab bar ────────────────────────────────────────────────────────────── */
 
 .newyork-page__tabs {

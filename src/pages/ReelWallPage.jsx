@@ -170,14 +170,12 @@ export default function ReelWallPage() {
 
   return (
     <AppShell>
-      <AppHeader
-        title="REEL LEGENDS"
-        back={{ label: 'Main Wall', onClick: () => navigate('/') }}
-      />
+      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
 
       <main className="reel-page">
 
         <div className="reel-page__heading">
+          <span className="reel-page__overline">REEL LEGENDS</span>
           <h1 className="reel-page__team">{film.heading}</h1>
           <span className="reel-page__sub">{film.sub}</span>
         </div>

@@ -63,9 +63,15 @@ export default function NewYorkPage() {
 
   return (
     <AppShell>
-      <AppHeader title="THE NEW YORK WALL" back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
+      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
 
       <main className="newyork-page">
+
+        {/* ── Page heading ─────────────────────────────────── */}
+        <div className="newyork-page__heading">
+          <span className="newyork-page__overline">DISCOVER THE LOCALS</span>
+          <h1 className="newyork-page__title">New York</h1>
+        </div>
 
         {/* ── Tab bar ──────────────────────────────────────── */}
         <div className="newyork-page__tabs" role="tablist">

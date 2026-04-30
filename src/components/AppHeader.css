@@ -1,10 +1,22 @@
 /* AppHeader
-   Wordmark + tagline + nav. Tight vertical rhythm.
-   Back-button row always reserves its height — wordmark never jumps. */
+   Brand row (wordmark + nav) always visible.
+   Back row appears below — only on sub-pages.
+   Single bottom border on the whole header. */
 
 .app-header {
-  padding: var(--space-6) 0 var(--space-4);
+  padding: var(--space-5) 0 var(--space-3);
+  border-bottom: 1px solid var(--border-faint);
+  margin-bottom: var(--space-4);
   flex-shrink: 0;
+}
+
+/* Brand row — wordmark+tagline left, nav right */
+
+.app-header__brand-row {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             var(--space-3);
 }
 
 /* Brand block — wordmark + tagline stacked, left-aligned, tight gap */
@@ -13,7 +25,6 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-bottom: var(--space-1);
 }
 
 /* Wordmark link — no underline, inherits color */
@@ -52,20 +63,10 @@
   }
 }
 
-/* Nav row — back button left, nav right.
-   Both slots always present so wordmark never jumps. */
+/* Back row — below brand row, sub-pages only */
 
 .app-header__back-row {
-  height:          24px;
-  display:         flex;
-  align-items:     center;
-  justify-content: space-between;
-  margin-bottom:   var(--space-3);
-}
-
-/* Left slot — always reserves space even when back button is absent */
-.app-header__back-slot {
-  min-width: 60px;
+  margin-top: var(--space-2);
 }
 
 /* About link — right slot, always visible */

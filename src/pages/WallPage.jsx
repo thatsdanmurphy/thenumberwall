@@ -70,6 +70,7 @@ export default function WallPage() {
             {/* City boards — discoverable below the global grid */}
             <div className="wall-page__cities">
               <p className="wall-page__cities-label">DISCOVER THE LOCALS</p>
+              <p className="wall-page__cities-sublabel">The wall for your city. Numbers that belong to a place.</p>
               <Link to="/boston" className="wall-page__city-card" onClick={() => track('city_board_open', { city: 'boston' })}>
                 <span className="wall-page__city-name">Boston</span>
                 <span className="wall-page__city-teams">Red Sox · Patriots · Celtics · Bruins</span>
