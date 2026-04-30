@@ -34,64 +34,63 @@
   color:          var(--ink-dim);
 }
 
-/* ── Coaches ─────────────────────────────────────────────────────────────── */
+/* ── Coach tile — prefixContent, lives inside the wall grid ─────────────── */
 
-.reel-page__coaches {
-  display:        flex;
-  flex-direction: column;
-  gap:            var(--space-1);
-  margin-top:     var(--space-2);
+.reel-coach-tile {
+  grid-column:     span 3;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         0 var(--space-2);
+  background:      var(--surface-1);
+  border:          1px solid var(--border-soft);
+  border-radius:   4px;
+  cursor:          pointer;
+  transition:      background var(--motion-hover), border-color var(--motion-hover);
 }
 
-.reel-page__coaches-label {
+.reel-coach-tile:hover {
+  background:   var(--surface-raised);
+  border-color: var(--border-medium);
+}
+
+.reel-coach-tile--active {
+  outline:        1px solid rgba(255,255,255,0.55);
+  outline-offset: -1px;
+}
+
+.reel-coach-tile__label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--color-muted);
+  line-height:    1;
+  transition:     color var(--motion-hover);
+}
+
+.reel-coach-tile:hover .reel-coach-tile__label,
+.reel-coach-tile--active .reel-coach-tile__label {
+  color: var(--color-paper);
+}
+
+/* ── Coach panel content ─────────────────────────────────────────────────── */
+/* Uses player-panel__header and player-panel__cards — no custom panel chrome needed */
+
+/* "RIVAL BENCH" section divider inside the coach panel */
+.reel-page__coach-section {
   font-family:    var(--font-scoreboard);
   font-size:      var(--text-micro);
   letter-spacing: 0.16em;
   color:          var(--ink-dim);
+  padding-top:    var(--space-3);
+  border-top:     1px solid var(--border-faint);
+  margin-top:     var(--space-1);
 }
 
-.reel-page__coaches-list {
-  display:     flex;
-  flex-wrap:   wrap;
-  align-items: flex-start;
-  gap:         var(--space-1) var(--space-5);
+/* Rival coach cards — recessive name */
+.reel-coach-card--rival .player-card__name {
+  color: var(--color-muted);
 }
-
-/* Vertical rule between hero and rival coaches */
-.reel-page__coach-divider {
-  width:      1px;
-  height:     2.2rem;
-  background: var(--border-soft);
-  flex-shrink: 0;
-  align-self: center;
-}
-
-.reel-page__coach-chip {
-  display:        flex;
-  flex-direction: column;
-  gap:            2px;
-}
-
-.reel-page__coach-name {
-  font-family:    var(--font-banner);
-  font-size:      var(--text-label);
-  letter-spacing: 0.04em;
-  line-height:    1.1;
-}
-
-.reel-page__coach-side {
-  font-family: var(--font-program);
-  font-size:   var(--text-caption);
-  letter-spacing: 0.04em;
-}
-
-/* Hero coach — team accent, present */
-.reel-page__coach-chip--hero .reel-page__coach-name { color: var(--color-paper); }
-.reel-page__coach-chip--hero .reel-page__coach-side { color: var(--ink-mid);     }
-
-/* Rival coach — muted, recessive */
-.reel-page__coach-chip--rival .reel-page__coach-name { color: var(--color-muted); }
-.reel-page__coach-chip--rival .reel-page__coach-side { color: var(--ink-dim);     }
 
 /* ── Body: grid + panel side-by-side ─────────────────────────────────────── */
 

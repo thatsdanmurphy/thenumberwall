@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { X } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import AppShell    from '../components/AppShell.jsx'
 import AppHeader   from '../components/AppHeader.jsx'
@@ -28,9 +29,9 @@ const FILMS = [
     heading: 'District 5 Ducks',
     sub:     'The Mighty Ducks · 1992–1996',
     coaches: [
-      { name: 'Gordon Bombay', side: 'Ducks',    role: 'hero'  },
-      { name: 'Jack Reilly',   side: 'Hawks',    role: 'rival' },
-      { name: 'Wolf Stansson', side: 'Iceland',  role: 'rival' },
+      { name: 'Gordon Bombay', side: 'Ducks',   role: 'hero'  },
+      { name: 'Jack Reilly',   side: 'Hawks',   role: 'rival' },
+      { name: 'Wolf Stansson', side: 'Iceland', role: 'rival' },
     ],
     tileDim:  { bg: 'rgba(0,88,80,0.38)',   border: 'rgba(0,140,128,0.55)', glow: '0 0 10px rgba(0,140,128,0.35)', text: 'rgba(70,202,185,0.80)' },
     tileFull: { bg: 'rgba(0,108,98,0.58)',  border: 'rgba(0,165,150,0.74)', glow: '0 0 18px rgba(0,165,150,0.54)', text: 'rgba(92,228,210,1)'    },
@@ -42,7 +43,7 @@ const FILMS = [
     sub:     'Little Giants · 1994',
     coaches: [
       { name: "Danny O'Shea", side: 'Little Giants', role: 'hero'  },
-      { name: 'Kevin O\'Shea', side: 'Cowboys',      role: 'rival' },
+      { name: "Kevin O'Shea", side: 'Cowboys',       role: 'rival' },
     ],
     tileDim:  { bg: 'rgba(158,18,18,0.38)', border: 'rgba(208,40,40,0.55)', glow: '0 0 10px rgba(208,40,40,0.38)', text: 'rgba(245,120,100,0.80)' },
     tileFull: { bg: 'rgba(188,22,22,0.58)', border: 'rgba(232,48,48,0.74)', glow: '0 0 18px rgba(232,48,48,0.54)', text: 'rgba(255,142,118,1)'    },
@@ -67,7 +68,6 @@ function filmGroup(filmStr) {
 // Pure-rival   → jet black, white outline, white number
 // Pure-hero    → team color, scaled by stat weight
 // Mixed        → diagonal split: rival black fading into team color
-// SACRED       → sacred tile (should not occur on reel wall but handled)
 
 function makeTeamHeat(film) {
   return function(num, entries) {
@@ -87,7 +87,6 @@ function makeTeamHeat(film) {
     const teamTile  = maxWeight >= 2 ? film.tileFull : film.tileDim
 
     if (hasRival && hasHero) {
-      // Diagonal split — rival black bleeding into team color
       return {
         heatStyle: {
           bg:     `linear-gradient(135deg, rgba(0,0,0,0.92) 0%, ${teamTile.bg} 100%)`,
@@ -106,7 +105,8 @@ function makeTeamHeat(film) {
 export default function ReelWallPage() {
   const navigate     = useNavigate()
   const { filmSlug } = useParams()
-  const [selected, setSelected] = useState(null)
+  const [selected,   setSelected]   = useState(null)
+  const [coachView,  setCoachView]  = useState(false)
 
   const filmId = SLUG_TO_ID[filmSlug] ?? 'Space Jam'
   const film   = FILMS.find(f => f.id === filmId) ?? FILMS[0]
@@ -138,17 +138,35 @@ export default function ReelWallPage() {
   function handleSelect(selection) {
     if (!selection || selection.entries.filter(e => e.tier !== 'UNWRITTEN').length === 0) return
     const style = tileHeatFn(selection.number, selection.entries)
+    setCoachView(false)
     setSelected({ ...selection, tileStyle: style })
   }
 
+  function openCoachPanel() {
+    setSelected(null)
+    setCoachView(v => !v)
+    track('reel_coaches', { film: film.id })
+  }
+
   useEffect(() => {
-    function onKey(e) { if (e.key === 'Escape') handleClear() }
+    function onKey(e) { if (e.key === 'Escape') { handleClear(); setCoachView(false) } }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   const heroCoaches  = film.coaches?.filter(c => c.role === 'hero')  ?? []
   const rivalCoaches = film.coaches?.filter(c => c.role === 'rival') ?? []
+
+  // Coach tile injected before the number grid via prefixContent
+  const coachTile = (
+    <button
+      className={`reel-coach-tile${coachView ? ' reel-coach-tile--active' : ''}`}
+      onClick={openCoachPanel}
+      aria-label="View coaches"
+    >
+      <span className="reel-coach-tile__label">COACHES</span>
+    </button>
+  )
 
   return (
     <AppShell>
@@ -162,29 +180,6 @@ export default function ReelWallPage() {
         <div className="reel-page__heading">
           <h1 className="reel-page__team">{film.heading}</h1>
           <span className="reel-page__sub">{film.sub}</span>
-
-          {film.coaches && film.coaches.length > 0 && (
-            <div className="reel-page__coaches">
-              <span className="reel-page__coaches-label">COACHES</span>
-              <div className="reel-page__coaches-list">
-                {heroCoaches.map(c => (
-                  <div key={c.name} className="reel-page__coach-chip reel-page__coach-chip--hero">
-                    <span className="reel-page__coach-name">{c.name}</span>
-                    <span className="reel-page__coach-side">{c.side}</span>
-                  </div>
-                ))}
-                {rivalCoaches.length > 0 && heroCoaches.length > 0 && (
-                  <div className="reel-page__coach-divider" aria-hidden="true" />
-                )}
-                {rivalCoaches.map(c => (
-                  <div key={c.name} className="reel-page__coach-chip reel-page__coach-chip--rival">
-                    <span className="reel-page__coach-name">{c.name}</span>
-                    <span className="reel-page__coach-side">{c.side}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="reel-page__body">
@@ -195,25 +190,93 @@ export default function ReelWallPage() {
               onSelect={handleSelect}
               wallId="none"
               tileHeatFn={tileHeatFn}
+              prefixContent={coachTile}
             />
           </div>
 
-          <PlayerPanel
-            selected={selected}
-            onClear={handleClear}
-            wallId="none"
-            accentColor={selected?.tileStyle?.textColor ?? null}
-          />
+          {/* Coach panel — shown instead of PlayerPanel when coachView is active */}
+          {coachView && !selected ? (
+            <aside className="player-panel">
+              <div className="player-panel__handle" aria-hidden="true" />
+              <div className="player-panel__inner">
+
+                <div className="player-panel__header">
+                  <div className="player-panel__header-left">
+                    <div
+                      className="player-panel__number"
+                      style={{ color: film.tileFull.text, textShadow: `0 0 28px ${film.tileFull.border}` }}
+                    >
+                      COACHES
+                    </div>
+                  </div>
+                  <div className="player-panel__header-actions">
+                    <button
+                      className="player-panel__close"
+                      onClick={() => setCoachView(false)}
+                      aria-label="Close coaches"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="player-panel__cards">
+                  {heroCoaches.map((c, i) => (
+                    <div key={c.name} className={`player-card${i === 0 ? ' player-card--top' : ''}`}>
+                      <div className="player-card__row">
+                        <div className="player-card__info">
+                          <div className="player-card__name-row">
+                            <span className="player-card__name">{c.name}</span>
+                          </div>
+                          <div className="player-card__badges">
+                            <span className="player-card__badge">{c.side}</span>
+                            <span className="player-card__badge player-card__badge--dim">Head Coach</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {rivalCoaches.length > 0 && (
+                    <div className="reel-page__coach-section">RIVAL BENCH</div>
+                  )}
+
+                  {rivalCoaches.map(c => (
+                    <div key={c.name} className="player-card reel-coach-card--rival">
+                      <div className="player-card__row">
+                        <div className="player-card__info">
+                          <div className="player-card__name-row">
+                            <span className="player-card__name">{c.name}</span>
+                          </div>
+                          <div className="player-card__badges">
+                            <span className="player-card__badge player-card__badge--dim">{c.side}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </aside>
+          ) : (
+            <PlayerPanel
+              selected={selected}
+              onClear={handleClear}
+              wallId="none"
+              accentColor={selected?.tileStyle?.textColor ?? null}
+            />
+          )}
         </div>
 
       </main>
 
       <AppFooter />
 
-      {selected && (
+      {(selected || coachView) && (
         <div
           className="tnw-backdrop reel-page__backdrop"
-          onClick={handleClear}
+          onClick={() => { handleClear(); setCoachView(false) }}
           aria-hidden="true"
         />
       )}

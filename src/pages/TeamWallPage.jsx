@@ -846,17 +846,21 @@ export default function TeamWallPage() {
               {/* Coach detail / edit panel — multi-row */}
               {coachView && !selected && (
                 <>
-                  <div className="tw-panel-header">
-                    <div
-                      className="tw-coach-panel__title"
-                      style={{
-                        color: TEAM_PALETTES[colorKey]?.[4]?.text || getTeamTileTextColor(colorKey, coaches.length),
-                        textShadow: `0 0 28px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
-                      }}
-                    >COACHES</div>
-                    <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditingId(null) }} aria-label="Close panel">
-                      <X size={14} />
-                    </button>
+                  <div className="player-panel__header">
+                    <div className="player-panel__header-left">
+                      <div
+                        className="player-panel__number"
+                        style={{
+                          color: TEAM_PALETTES[colorKey]?.[4]?.text || getTeamTileTextColor(colorKey, coaches.length),
+                          textShadow: `0 0 28px ${TEAM_PALETTES[colorKey]?.[4]?.border || 'var(--color-heat)'}`,
+                        }}
+                      >COACHES</div>
+                    </div>
+                    <div className="player-panel__header-actions">
+                      <button className="player-panel__close" onClick={() => { setCoachView(false); setCoachEditingId(null) }} aria-label="Close panel">
+                        <X size={14} />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="tw-coach-panel">
