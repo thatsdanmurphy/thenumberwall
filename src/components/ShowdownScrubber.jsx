@@ -39,7 +39,11 @@ export default function ShowdownScrubber({
       const startPct = (startIdx / (total - 1)) * 100
       const endPct   = (Math.min(endIdx, total) / (total - 1)) * 100
       const played   = position >= startIdx
-      const complete = position >= endIdx       // game fully done
+      // For the last game endIdx === total, so >= total is never true.
+      // Treat the last game as complete when the scrubber reaches the final play.
+      const complete = endIdx >= total
+        ? position >= total - 1
+        : position >= endIdx
       const active   = played && !complete      // game currently in progress
       return { gNum, startIdx, endIdx, startPct, endPct, winner, played, complete, active }
     })

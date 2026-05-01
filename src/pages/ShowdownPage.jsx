@@ -544,7 +544,11 @@ export default function ShowdownPage() {
                 stats={bosStats}
                 note={bosNote}
                 accentColor={TEAM_ACCENT.BOS}
-                intensity={bosRole === 'batter' || intensity === 'k' ? intensity : 'normal'}
+                intensity={
+                  // BOS is the winner — they get the win flash
+                  intensity === 'win' ? 'win'
+                  : bosRole === 'batter' || intensity === 'k' ? intensity : 'normal'
+                }
               />
             )}
             <div className="showdown-wall showdown-wall--sox">
@@ -577,7 +581,11 @@ export default function ShowdownPage() {
                 stats={nyyStats}
                 note={nyyNote}
                 accentColor={TEAM_ACCENT.NYY}
-                intensity={nyyRole === 'batter' || intensity === 'k' ? intensity : 'normal'}
+                intensity={
+                  // NYY is the loser — never gets the win flash
+                  intensity === 'win' ? 'normal'
+                  : nyyRole === 'batter' || intensity === 'k' ? intensity : 'normal'
+                }
               />
             )}
             <div className="showdown-wall showdown-wall--nyy">
