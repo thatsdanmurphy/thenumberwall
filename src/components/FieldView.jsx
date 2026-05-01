@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import './FieldView.css'
 
-// ── Field position → SVG coordinate [x, y] ──────────────────────────────────
+// ── Field geometry ────────────────────────────────────────────────────────────
 const POS_XY = {
   P:    [280, 330],
   C:    [280, 418],
@@ -11,112 +11,204 @@ const POS_XY = {
   '3B': [164, 302],
   LF:   [115, 182],
   CF:   [280, 108],
-  RF:   [450, 182],
+  RF:   [452, 182],
 }
 
-// ── Base bag positions ────────────────────────────────────────────────────────
 const BASE_XY = {
   '1B': [375, 315],
   '2B': [280, 220],
   '3B': [185, 315],
-  home: [280, 412],
 }
 
-// ── Prototype lineups (prototype: pitcher from play data, rest approximated) ──
-// These reflect the typical starters for this series.
+// ── Prototype lineups — pitcher comes from play data, others approximated ─────
 const NYY_FIELD = {
-  C:    { number: '20', name: 'Posada'    },
-  '1B': { number: '3',  name: 'Clark'     },
-  '2B': { number: '12', name: 'Cairo'     },
-  SS:   { number: '2',  name: 'Jeter'     },
-  '3B': { number: '13', name: 'A-Rod'     },
-  LF:   { number: '55', name: 'Matsui'    },
-  CF:   { number: '51', name: 'Williams'  },
-  RF:   { number: '11', name: 'Sheffield' },
+  C:    { number: '20', name: 'Posada',    pid: 'posaj001' },
+  '1B': { number: '3',  name: 'Clark',     pid: 'clart002' },
+  '2B': { number: '12', name: 'Cairo',     pid: 'cairm001' },
+  SS:   { number: '2',  name: 'Jeter',     pid: 'jeted001' },
+  '3B': { number: '13', name: 'A-Rod',     pid: 'rodra001' },
+  LF:   { number: '55', name: 'Matsui',    pid: 'matsh001' },
+  CF:   { number: '51', name: 'Williams',  pid: 'willb002' },
+  RF:   { number: '11', name: 'Sheffield', pid: 'shefg001' },
 }
 
 const BOS_FIELD = {
-  C:    { number: '33', name: 'Varitek'  },
-  '1B': { number: '15', name: 'Millar'   },
-  '2B': { number: '12', name: 'Bellhorn' },
-  SS:   { number: '44', name: 'Cabrera'  },
-  '3B': { number: '11', name: 'Mueller'  },
-  LF:   { number: '24', name: 'Ramirez'  },
-  CF:   { number: '18', name: 'Damon'    },
-  RF:   { number: '7',  name: 'Nixon'    },
+  C:    { number: '33', name: 'Varitek',  pid: 'varij001' },
+  '1B': { number: '15', name: 'Millar',   pid: 'millk005' },
+  '2B': { number: '12', name: 'Bellhorn', pid: 'bellm002' },
+  SS:   { number: '44', name: 'Cabrera',  pid: 'cabro001' },
+  '3B': { number: '11', name: 'Mueller',  pid: 'muelb001' },
+  LF:   { number: '24', name: 'Ramirez',  pid: 'ramim002' },
+  CF:   { number: '18', name: 'Damon',    pid: 'damoj001' },
+  RF:   { number: '7',  name: 'Nixon',    pid: 'nixot001' },
 }
 
-// ── Team accent colors ────────────────────────────────────────────────────────
-const TEAM_COLOR = {
-  BOS: { fill: 'rgba(210,50,60,0.92)',   glow: '0 0 16px rgba(240,65,75,0.95), 0 0 40px rgba(200,40,50,0.60)', text: '#FFE8E8', dim: 'rgba(180,40,50,0.28)', dimText: 'rgba(255,140,145,0.65)' },
-  NYY: { fill: 'rgba(18,48,105,0.92)',   glow: '0 0 16px rgba(85,125,200,0.95), 0 0 40px rgba(50,90,180,0.55)', text: '#DFF0FF', dim: 'rgba(12,35,80,0.32)',  dimText: 'rgba(140,180,230,0.65)' },
+// ── Team heat color ramps ─────────────────────────────────────────────────────
+// Each level: { fill, stroke, text, filter }
+const RAMP = {
+  BOS: [
+    // 0 – off
+    { fill:'rgba(255,255,255,0.06)', stroke:'rgba(255,255,255,0.10)', text:'rgba(255,255,255,0.18)', filter:'none' },
+    // 1 – cool (appeared, low heat)
+    { fill:'rgba(145,30,42,0.25)',   stroke:'rgba(185,50,62,0.38)',   text:'rgba(255,140,148,0.60)', filter:'none' },
+    // 2 – warm
+    { fill:'rgba(185,42,55,0.50)',   stroke:'rgba(215,68,80,0.72)',   text:'rgba(255,190,196,0.85)', filter:'drop-shadow(0 0 4px rgba(210,50,62,0.50))' },
+    // 3 – hot
+    { fill:'rgba(215,50,62,0.82)',   stroke:'rgba(245,85,98,0.95)',   text:'#FFE8EA',                filter:'drop-shadow(0 0 8px rgba(235,58,70,0.90)) drop-shadow(0 0 20px rgba(200,38,52,0.55))' },
+    // 4 – sacred (active on big moment)
+    { fill:'rgba(240,55,68,1.0)',    stroke:'rgba(255,130,140,1.0)',  text:'#FFF0F1',                filter:'drop-shadow(0 0 12px rgba(255,70,82,1.0)) drop-shadow(0 0 30px rgba(215,42,55,0.80))' },
+  ],
+  NYY: [
+    { fill:'rgba(255,255,255,0.06)', stroke:'rgba(255,255,255,0.10)', text:'rgba(255,255,255,0.18)', filter:'none' },
+    { fill:'rgba(12,32,80,0.28)',    stroke:'rgba(48,75,148,0.38)',   text:'rgba(138,172,228,0.60)', filter:'none' },
+    { fill:'rgba(14,40,100,0.52)',   stroke:'rgba(70,108,188,0.72)',  text:'rgba(190,215,255,0.85)', filter:'drop-shadow(0 0 4px rgba(55,95,185,0.50))' },
+    { fill:'rgba(18,50,118,0.84)',   stroke:'rgba(100,148,235,0.95)', text:'#DFF0FF',                filter:'drop-shadow(0 0 8px rgba(82,128,215,0.90)) drop-shadow(0 0 20px rgba(45,85,180,0.55))' },
+    { fill:'rgba(22,58,135,1.0)',    stroke:'rgba(130,175,255,1.0)',  text:'#EAF4FF',                filter:'drop-shadow(0 0 12px rgba(100,155,255,1.0)) drop-shadow(0 0 30px rgba(55,100,210,0.80))' },
+  ],
 }
-const OFF_STYLE = { fill: 'rgba(255,255,255,0.07)', text: 'rgba(255,255,255,0.18)' }
 
-// ── Where should the ball travel for this result? ─────────────────────────────
-function getBallTarget(play) {
-  if (!play || !play.pitcher) return null
-  const { result, fielders } = play
+function heatLevel(heatVal, isActive, intensity) {
+  if (isActive && (intensity === 'big' || intensity === 'hr' || intensity === 'win')) return 4
+  if (isActive) return 3
+  if (heatVal >= 0.65) return 3
+  if (heatVal >= 0.35) return 2
+  if (heatVal >= 0.10) return 1
+  return 0
+}
 
-  // No ball travel
-  if (['SB','CS','DI','BK','WP','PB','NP','?'].includes(result)) return null
-
-  // Strikeout / walk / hit-by-pitch → catcher
-  if (['K','W','IW','HP'].includes(result)) return POS_XY.C
-
-  // HR → deep center (over fence)
-  if (result === 'HR') return [280, 58]
-
-  // If we have fielder position data, use it
-  if (fielders && fielders.length > 0) {
-    const pos = fielders[0].pos
-    if (POS_XY[pos]) return POS_XY[pos]
+// ── Player heat — builds over the series ─────────────────────────────────────
+function computePlayerHeat(plays, upToIdx) {
+  const heat = {}
+  for (let i = 0; i <= upToIdx; i++) {
+    const p = plays[i]; if (!p) break
+    // Gentle global decay every 15 plays keeps old heat from dominating
+    if (i > 0 && i % 15 === 0) {
+      for (const k in heat) heat[k] = Math.max(0, heat[k] * 0.90)
+    }
+    const bid = p.batter?.pid
+    const pid = p.pitcher?.pid
+    if (bid) {
+      if (!heat[bid]) heat[bid] = 0
+      if      (p.result === 'HR')                       heat[bid] = Math.min(1, heat[bid] + 0.42)
+      else if (p.result === 'T')                        heat[bid] = Math.min(1, heat[bid] + 0.28)
+      else if (p.result === 'D')                        heat[bid] = Math.min(1, heat[bid] + 0.18)
+      else if (p.result === 'S')                        heat[bid] = Math.min(1, heat[bid] + 0.11)
+      else if (['W','HP','IW'].includes(p.result))      heat[bid] = Math.min(1, heat[bid] + 0.05)
+      else if (p.result === 'K')                        heat[bid] = Math.max(0, heat[bid] - 0.03)
+    }
+    if (pid && !['SB','CS','BK','WP','PB','DI','NP'].includes(p.result)) {
+      if (!heat[pid]) heat[pid] = 0
+      if      (p.result === 'K')                        heat[pid] = Math.min(1, heat[pid] + 0.22)
+      else if (p.result === 'HR')                       heat[pid] = Math.max(0, heat[pid] - 0.22)
+      else if (['D','T'].includes(p.result))            heat[pid] = Math.max(0, heat[pid] - 0.12)
+      else if (p.result === 'S')                        heat[pid] = Math.max(0, heat[pid] - 0.06)
+      else if (['W','IW'].includes(p.result))           heat[pid] = Math.max(0, heat[pid] - 0.05)
+    }
   }
-
-  // Fallback
-  return POS_XY.C
+  return heat
 }
 
-// ── Is this play an arc (fly ball) or line (grounder/liner)? ─────────────────
-function isArcPlay(play) {
-  const { result, fielders } = play
-  if (result === 'HR') return true
-  if (['D','T','OUT','SF'].includes(result) && fielders?.length > 0) {
-    const pos = fielders[0].pos
-    return ['LF','CF','RF'].includes(pos)
+// ── Base state simulation ─────────────────────────────────────────────────────
+function computeBaseState(plays, upToIdx) {
+  let bases = { '1B': null, '2B': null, '3B': null }
+  let outs = 0
+  let lastHalf = null
+
+  for (let i = 0; i <= upToIdx; i++) {
+    const p = plays[i]; if (!p || !p.batter) continue
+    const hk = `${p.game}-${p.inning}-${p.half}`
+    if (hk !== lastHalf) { bases = { '1B': null, '2B': null, '3B': null }; outs = 0; lastHalf = hk }
+
+    const b = { pid: p.batter.pid, number: p.batter.number, name: p.batter.name, team: p.batter.team }
+
+    switch (p.result) {
+      case 'K': case 'OUT':
+        outs++; break
+      case 'DP':
+        outs += 2
+        bases = { '1B': null, '2B': bases['3B'] ?? null, '3B': null }; break
+      case 'SF': case 'SH':
+        outs++
+        bases = { '1B': bases['2B'] ?? bases['1B'] ?? null, '2B': bases['3B'] ? bases['2B'] : null, '3B': null }; break
+      case 'W': case 'HP': case 'IW':
+        if (bases['1B'] && bases['2B']) bases['3B'] = bases['2B']
+        if (bases['1B']) bases['2B'] = bases['1B']
+        bases['1B'] = b; break
+      case 'S':
+        // Runners advance 1; runner from 2B scores (simplified)
+        bases = { '1B': b, '2B': bases['1B'], '3B': null }; break
+      case 'D':
+        bases = { '1B': null, '2B': b, '3B': bases['1B'] ?? bases['2B'] ?? null }; break
+      case 'T':
+        bases = { '1B': null, '2B': null, '3B': b }; break
+      case 'HR':
+        bases = { '1B': null, '2B': null, '3B': null }; break
+      case 'FC': case 'E':
+        bases = { '1B': b, '2B': bases['1B'], '3B': bases['2B'] }
+        if (p.result === 'FC') outs++; break
+      case 'SB':
+        if (bases['2B']) { bases['3B'] = bases['2B']; bases['2B'] = null }
+        else if (bases['1B']) { bases['2B'] = bases['1B']; bases['1B'] = null }
+        break
+      case 'CS':
+        if (bases['2B']) bases['2B'] = null
+        else if (bases['1B']) bases['1B'] = null
+        outs++; break
+      default: break
+    }
+    if (outs >= 3) { bases = { '1B': null, '2B': null, '3B': null }; outs = 0 }
   }
-  return false
+  return bases
 }
 
-// ── Position tile component ───────────────────────────────────────────────────
-function PosTile({ x, y, number, name, team, active, appeared, isHot }) {
+// ── Ball target ───────────────────────────────────────────────────────────────
+function getBallTargets(play) {
+  const { result, fielders } = play
+  if (!play.pitcher) return []
+  if (['SB','CS','DI','BK','WP','PB','NP','?'].includes(result)) return []
+  if (result === 'HR') return [[280, 60]]
+  if (['K','W','IW','HP'].includes(result)) return [POS_XY.C]
+  // DP: up to 2 sequential targets
+  const targets = (fielders || []).map(f => POS_XY[f.pos]).filter(Boolean)
+  return targets.length ? targets : [POS_XY.C]
+}
+
+function playIntensity(play) {
+  if (!play) return 'normal'
+  if (play.isSeriesEnd) return 'win'
+  if (play.note && (play.note.includes('WALKOFF') || play.note.includes('GRAND SLAM'))) return 'big'
+  if (play.result === 'HR') return 'hr'
+  if (play.result === 'K')  return 'k'
+  if (play.result === 'DP') return 'dp'
+  if (play.result === 'SB') return 'sb'
+  return 'normal'
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 17 }) {
   if (!number) return null
-  const tc = TEAM_COLOR[team]
-  const fill   = active && isHot ? tc.fill : appeared ? tc.dim  : OFF_STYLE.fill
-  const text   = active && isHot ? tc.text : appeared ? tc.dimText : OFF_STYLE.text
-  const shadow = active && isHot ? tc.glow : 'none'
+  const lvl   = heatLevel(heatVal, isActive, intensity)
+  const style = RAMP[team][lvl]
+  const pulse = isActive && ['hr','big','win','dp'].includes(intensity)
 
   return (
-    <g className={`field-pos${active && isHot ? ' field-pos--active' : ''}`} transform={`translate(${x},${y})`}>
-      {/* Glow halo */}
-      {active && isHot && (
-        <circle r={22} fill={tc.fill} opacity={0.22} />
+    <g className={`fv-tile${pulse ? ' fv-tile--pulse' : ''}`} transform={`translate(${x},${y})`}>
+      {lvl >= 2 && (
+        <circle r={r + 7} fill={style.fill} opacity={0.18} />
       )}
-      {/* Tile */}
       <circle
-        r={17}
-        fill={fill}
-        stroke={active && isHot ? tc.text : 'rgba(255,255,255,0.12)'}
-        strokeWidth={active && isHot ? 1.5 : 0.8}
-        style={{ filter: active && isHot ? `drop-shadow(0 0 8px ${tc.fill})` : 'none' }}
+        r={r}
+        fill={style.fill}
+        stroke={style.stroke}
+        strokeWidth={lvl >= 3 ? 1.5 : 0.8}
+        style={{ filter: style.filter }}
       />
-      {/* Number */}
       <text
-        textAnchor="middle"
-        dominantBaseline="central"
-        className="field-pos__num"
-        fill={text}
-        fontSize={number.length > 2 ? 9 : 11}
+        textAnchor="middle" dominantBaseline="central"
+        className="fv-tile__num"
+        fill={style.text}
+        fontSize={String(number).length > 2 ? 9 : 11}
         fontWeight="700"
       >
         #{number}
@@ -125,255 +217,235 @@ function PosTile({ x, y, number, name, team, active, appeared, isHot }) {
   )
 }
 
-// ── Ball component ────────────────────────────────────────────────────────────
-function Ball({ x, y, visible, arc, intensity }) {
-  if (!visible) return null
-  const color = intensity === 'hr' || intensity === 'big' ? '#FFDD55'
-    : intensity === 'k' ? '#AACCFF'
-    : '#FFFFFF'
-  return (
-    <g
-      className="field-ball"
-      style={{ transform: `translate(${x}px,${y}px)` }}
-    >
-      <circle r={5} fill={color} opacity={0.92}
-        style={{ filter: `drop-shadow(0 0 5px ${color})` }}
-      />
-    </g>
-  )
-}
+function RunnerTile({ base, runner }) {
+  if (!runner) return null
+  const [x, y] = BASE_XY[base]
+  const team   = runner.team
+  const style  = RAMP[team][3] // runners always hot — they're in scoring position
 
-// ── Batter tile (at plate) ────────────────────────────────────────────────────
-function BatterTile({ batter, active }) {
-  if (!batter) return null
-  const team = batter.team
-  const tc   = TEAM_COLOR[team]
   return (
-    <g className={`field-pos${active ? ' field-pos--active' : ''}`} transform="translate(280,442)">
-      {active && <circle r={22} fill={tc.fill} opacity={0.20} />}
-      <circle
-        r={17}
-        fill={active ? tc.fill : 'rgba(255,255,255,0.07)'}
-        stroke={active ? tc.text : 'rgba(255,255,255,0.12)'}
-        strokeWidth={active ? 1.5 : 0.8}
-        style={{ filter: active ? `drop-shadow(0 0 8px ${tc.fill})` : 'none' }}
+    <g className="fv-runner" transform={`translate(${x},${y})`}>
+      <circle r={13} fill={style.fill} stroke={style.stroke} strokeWidth={1.2}
+        style={{ filter: style.filter }}
       />
       <text textAnchor="middle" dominantBaseline="central"
-        className="field-pos__num"
-        fill={active ? tc.text : 'rgba(255,255,255,0.18)'}
-        fontSize={String(batter.number).length > 2 ? 9 : 11}
-        fontWeight="700"
+        className="fv-tile__num" fill={style.text}
+        fontSize={String(runner.number).length > 2 ? 8 : 10} fontWeight="700"
       >
-        #{batter.number}
+        #{runner.number}
       </text>
     </g>
   )
 }
 
-// ── Zone label ────────────────────────────────────────────────────────────────
-function ZoneLabel({ x, y, label }) {
+function FieldBall({ x, y, visible, color, size = 5 }) {
+  if (!visible) return null
   return (
-    <text x={x} y={y} textAnchor="middle" className="field-zone-label" fill="rgba(255,255,255,0.08)" fontSize={10} letterSpacing={1}>
-      {label}
-    </text>
+    <g className="fv-ball" style={{ transform: `translate(${x}px,${y}px)` }}>
+      <circle r={size + 3} fill={color} opacity={0.20} />
+      <circle r={size} fill={color} style={{ filter: `drop-shadow(0 0 5px ${color})` }} />
+    </g>
   )
 }
 
 // ── Main FieldView ────────────────────────────────────────────────────────────
-export default function FieldView({ play, position, appearedNumbers }) {
-  const [ballX, setBallX]       = useState(280)
-  const [ballY, setBallY]       = useState(330)
-  const [ballVisible, setBallVisible] = useState(false)
-  const [ballArc, setBallArc]   = useState(false)
+export default function FieldView({ play, plays, position }) {
 
-  // Animate ball on every play change
+  // ── Heat map (builds over series) ─────────────────────────────────────────
+  const heatMap = useMemo(() => computePlayerHeat(plays, position), [plays, position])
+
+  // ── Base state ────────────────────────────────────────────────────────────
+  const bases = useMemo(() => computeBaseState(plays, position), [plays, position])
+
+  // ── Ball animation ────────────────────────────────────────────────────────
+  const [ball1, setBall1] = useState({ x: 280, y: 330, vis: false })
+  const [ball2, setBall2] = useState({ x: 280, y: 330, vis: false })
+
   useEffect(() => {
-    if (!play || !play.pitcher) return
-    const target = getBallTarget(play)
-    if (!target) { setBallVisible(false); return }
+    if (!play?.pitcher) { setBall1(b => ({ ...b, vis: false })); return }
+    const targets = getBallTargets(play)
+    if (!targets.length) { setBall1(b => ({ ...b, vis: false })); return }
 
-    const arc = isArcPlay(play)
-    // Snap to pitcher
-    setBallX(280); setBallY(330)
-    setBallVisible(true); setBallArc(arc)
+    // Snap to mound
+    setBall1({ x: 280, y: 330, vis: true })
+    setBall2(b => ({ ...b, vis: false }))
 
-    // Animate to target after a brief frame
-    const t1 = setTimeout(() => { setBallX(target[0]); setBallY(target[1]) }, 60)
-    // Hide
-    const t2 = setTimeout(() => setBallVisible(false), 900)
+    // Move to first target
+    const t1 = setTimeout(() => setBall1({ x: targets[0][0], y: targets[0][1], vis: true }), 60)
+
+    // DP: second ball from first fielder to second fielder
+    if (targets.length > 1) {
+      const t2 = setTimeout(() => setBall2({ x: targets[0][0], y: targets[0][1], vis: true }), 380)
+      const t3 = setTimeout(() => setBall2({ x: targets[1][0], y: targets[1][1], vis: true }), 440)
+      const t4 = setTimeout(() => { setBall1(b => ({ ...b, vis: false })); setBall2(b => ({ ...b, vis: false })) }, 950)
+      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
+    }
+
+    const t2 = setTimeout(() => setBall1(b => ({ ...b, vis: false })), 900)
     return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [position])  // eslint-disable-line
+  }, [position]) // eslint-disable-line
 
   if (!play) return null
 
   const battingTeam  = play.batter?.team ?? 'BOS'
   const fieldingTeam = battingTeam === 'BOS' ? 'NYY' : 'BOS'
-  const lineup = fieldingTeam === 'NYY' ? NYY_FIELD : BOS_FIELD
+  const lineup       = fieldingTeam === 'NYY' ? NYY_FIELD : BOS_FIELD
+  const intensity    = playIntensity(play)
 
-  // Active fielder positions (from this play's fielder data)
-  const activePositions = new Set(play.fielders?.map(f => f.pos) ?? [])
-  // Pitcher is always "active" in terms of lighting up
-  const pitcherActive = !!play.pitcher
+  const activePositionSet = new Set(play.fielders?.map(f => f.pos) ?? [])
+  const pitcherActive = true // pitcher always involved
 
-  // Appeared numbers for the fielding team (for dim glow)
-  const fieldAppearedNums = appearedNumbers[fieldingTeam] ?? new Set()
+  const ballColor = intensity === 'hr' || intensity === 'big' ? '#FFDD55'
+    : intensity === 'win' ? '#FFDD55'
+    : intensity === 'k'   ? '#AACCFF'
+    : '#FFFFFF'
 
-  // Build the active set from the play
-  const activeFielderNums = new Set(play.fielders?.map(f => String(f.number)) ?? [])
-  const pitcherNum = play.pitcher ? String(play.pitcher.number) : null
-
-  const intensity = play.result === 'HR' ? 'hr'
-    : (play.note && (play.note.includes('WALKOFF') || play.note.includes('GRAND SLAM'))) ? 'big'
-    : play.result === 'K' ? 'k'
-    : 'normal'
+  const isHR = play.result === 'HR'
 
   return (
-    <div className="field-view">
-      <svg viewBox="0 0 560 480" className="field-view__svg" aria-label="Baseball field">
-
-        {/* ── Filters / defs ──────────────────────────────────────────── */}
+    <div className="fv-wrap">
+      <svg viewBox="0 0 560 470" className="fv-svg">
         <defs>
-          <clipPath id="fv-fair">
-            <path d="M 280 415 L 42 360 Q 280 28 518 360 Z" />
+          <clipPath id="fv-fair-clip">
+            <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" />
           </clipPath>
-          <radialGradient id="fv-mound-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#2E1E12" />
-            <stop offset="100%" stopColor="#221510" />
+          <radialGradient id="fv-bg-grad" cx="50%" cy="70%" r="65%">
+            <stop offset="0%" stopColor="#0E1018" />
+            <stop offset="100%" stopColor="#07080D" />
           </radialGradient>
         </defs>
 
-        {/* ── Dark canvas background ──────────────────────────────────── */}
-        <rect width="560" height="480" fill="#080E0A" />
+        {/* ── Dark canvas ─────────────────────────────────────────────── */}
+        <rect width="560" height="470" fill="url(#fv-bg-grad)" />
 
-        {/* ── Outfield grass ──────────────────────────────────────────── */}
-        <path
-          d="M 280 415 L 42 360 Q 280 28 518 360 Z"
-          fill="#0B2016"
-        />
+        {/* ── Outfield area (slightly lighter) ────────────────────────── */}
+        <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" fill="#0C0F18" />
 
-        {/* ── Outfield zone bands (subtle) ─────────────────────────────  */}
-        <path d="M 280 415 L 42 360 Q 280 28 518 360 Z"
-          fill="none" stroke="rgba(255,255,255,0.025)" strokeWidth="1"
-        />
+        {/* ── Infield dirt circle ──────────────────────────────────────── */}
+        <circle cx="280" cy="316" r="112" fill="#0E1120" clipPath="url(#fv-fair-clip)" />
 
-        {/* ── Foul lines ──────────────────────────────────────────────── */}
-        <line x1="280" y1="415" x2="40" y2="355" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
-        <line x1="280" y1="415" x2="520" y2="355" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
-
-        {/* ── Outfield fence arc ──────────────────────────────────────── */}
-        <path d="M 42 360 Q 280 28 518 360" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeDasharray="4 3" />
-
-        {/* ── Infield dirt ────────────────────────────────────────────── */}
-        <circle cx="280" cy="315" r="108" fill="#221510" clipPath="url(#fv-fair)" />
-
-        {/* ── Infield grass diamond ───────────────────────────────────── */}
-        <path d="M 280 415 L 375 315 L 280 220 L 185 315 Z" fill="#0D2419" />
+        {/* ── Infield grass diamond ────────────────────────────────────── */}
+        <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z" fill="#0A0D19" />
 
         {/* ── Base paths ──────────────────────────────────────────────── */}
-        <line x1="280" y1="415" x2="375" y2="315" stroke="#2A1710" strokeWidth="12" />
-        <line x1="375" y1="315" x2="280" y2="220" stroke="#2A1710" strokeWidth="12" />
-        <line x1="280" y1="220" x2="185" y2="315" stroke="#2A1710" strokeWidth="12" />
-        <line x1="185" y1="315" x2="280" y2="415" stroke="#2A1710" strokeWidth="12" />
+        {[[[280,416],[375,316]],[[375,316],[280,220]],[[280,220],[185,316]],[[185,316],[280,416]]].map(([[x1,y1],[x2,y2]],i) => (
+          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#1A1D2E" strokeWidth={10} />
+        ))}
 
         {/* ── Diamond outline ──────────────────────────────────────────── */}
-        <path d="M 280 415 L 375 315 L 280 220 L 185 315 Z"
-          fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+        <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z"
+          fill="none" stroke="rgba(160,185,235,0.14)" strokeWidth={1} />
 
-        {/* ── Pitcher's mound ─────────────────────────────────────────── */}
-        <circle cx="280" cy="330" r="10" fill="url(#fv-mound-grad)" stroke="rgba(255,255,255,0.10)" strokeWidth="0.5" />
+        {/* ── Foul lines ──────────────────────────────────────────────── */}
+        <line x1="280" y1="416" x2="38" y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
+        <line x1="280" y1="416" x2="522" y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
 
-        {/* ── Bases ───────────────────────────────────────────────────── */}
-        {[['1B',375,315],['2B',280,220],['3B',185,315]].map(([b,bx,by]) => (
-          <rect key={b} x={bx-5} y={by-5} width={10} height={10}
-            fill="rgba(255,255,255,0.50)" transform={`rotate(45,${bx},${by})`}
-            rx="1"
-          />
-        ))}
-        {/* Home plate */}
-        <polygon points="280,418 286,412 286,406 274,406 274,412"
-          fill="rgba(255,255,255,0.60)" />
+        {/* ── Outfield fence ──────────────────────────────────────────── */}
+        <path d="M 40 356 Q 280 22 520 356"
+          fill="none" stroke="rgba(160,185,235,0.22)" strokeWidth={2} strokeDasharray="5 4" />
 
         {/* ── Zone labels ─────────────────────────────────────────────── */}
-        <ZoneLabel x={115} y={250} label="LF" />
-        <ZoneLabel x={280} y={168} label="CF" />
-        <ZoneLabel x={450} y={250} label="RF" />
-        <ZoneLabel x={210} y={300} label="3B" />
-        <ZoneLabel x={350} y={300} label="1B" />
-        <ZoneLabel x={240} y={260} label="SS" />
-        <ZoneLabel x={320} y={258} label="2B" />
+        {[['LF',115,250],['CF',280,165],['RF',447,250]].map(([l,x,y]) => (
+          <text key={l} x={x} y={y} textAnchor="middle" fill="rgba(160,185,235,0.07)"
+            fontSize={9} letterSpacing={2} fontFamily="var(--font-scoreboard)">{l}</text>
+        ))}
 
-        {/* ── Fielder position tiles ───────────────────────────────────── */}
-        {/* Pitcher */}
+        {/* ── Pitcher's mound ──────────────────────────────────────────── */}
+        <circle cx="280" cy="330" r="9" fill="#13162A" stroke="rgba(160,185,235,0.12)" strokeWidth={0.6} />
+
+        {/* ── Base bags ────────────────────────────────────────────────── */}
+        {Object.entries(BASE_XY).map(([base, [bx,by]]) => (
+          <rect key={base} x={bx-5} y={by-5} width={10} height={10}
+            fill="rgba(210,225,255,0.55)" transform={`rotate(45,${bx},${by})`} rx={1} />
+        ))}
+        {/* Home plate */}
+        <polygon points="280,420 286,414 286,408 274,408 274,414"
+          fill="rgba(210,225,255,0.60)" />
+
+        {/* ── Base runners ─────────────────────────────────────────────── */}
+        {Object.entries(bases).map(([base, runner]) => (
+          <RunnerTile key={base} base={base} runner={runner} />
+        ))}
+
+        {/* ── Fielding team positions ───────────────────────────────────── */}
+        {/* Pitcher from live play data */}
         {play.pitcher && (
           <PosTile
             x={POS_XY.P[0]} y={POS_XY.P[1]}
             number={play.pitcher.number}
-            name={play.pitcher.name}
             team={fieldingTeam}
-            active={pitcherActive}
-            appeared={fieldAppearedNums.has(pitcherNum)}
-            isHot={pitcherActive}
+            pid={play.pitcher.pid}
+            heatVal={heatMap[play.pitcher.pid] ?? 0}
+            isActive={pitcherActive}
+            intensity={intensity}
           />
         )}
 
-        {/* Other 8 fielding positions */}
+        {/* Other 8 fielding positions (prototype: fixed lineup) */}
         {Object.entries(lineup).map(([pos, player]) => {
-          const [px, py] = POS_XY[pos] ?? [0, 0]
-          const isActive  = activePositions.has(pos)
-          const appeared  = fieldAppearedNums.has(player.number)
+          const [px, py] = POS_XY[pos]
+          const isActive  = activePositionSet.has(pos)
           return (
-            <PosTile
-              key={pos}
+            <PosTile key={pos}
               x={px} y={py}
               number={player.number}
-              name={player.name}
               team={fieldingTeam}
-              active={isActive}
-              appeared={appeared}
-              isHot={isActive}
+              pid={player.pid}
+              heatVal={heatMap[player.pid] ?? 0}
+              isActive={isActive}
+              intensity={intensity}
             />
           )
         })}
 
-        {/* ── Batter tile ──────────────────────────────────────────────── */}
-        <BatterTile batter={play.batter} active={true} />
-
-        {/* ── Ball ────────────────────────────────────────────────────── */}
-        <Ball
-          x={ballX} y={ballY}
-          visible={ballVisible}
-          arc={ballArc}
-          intensity={intensity}
-        />
-
-        {/* ── HR arc path (shown while ball is in HR play) ─────────────  */}
-        {ballVisible && play.result === 'HR' && (
-          <path
-            d={`M 280 330 Q 370 100 ${ballX} ${ballY}`}
-            fill="none"
-            stroke="rgba(255,221,85,0.35)"
-            strokeWidth="1.5"
-            strokeDasharray="4 3"
+        {/* ── Batter at plate ───────────────────────────────────────────── */}
+        {play.batter && (
+          <PosTile
+            x={280} y={445}
+            number={play.batter.number}
+            team={battingTeam}
+            pid={play.batter.pid}
+            heatVal={heatMap[play.batter.pid] ?? 0}
+            isActive={true}
+            intensity={intensity}
+            r={18}
           />
+        )}
+
+        {/* ── Ball ─────────────────────────────────────────────────────── */}
+        <FieldBall x={ball1.x} y={ball1.y} visible={ball1.vis} color={ballColor} size={isHR ? 6 : 5} />
+        <FieldBall x={ball2.x} y={ball2.y} visible={ball2.vis} color={ballColor} size={4} />
+
+        {/* ── HR arc ───────────────────────────────────────────────────── */}
+        {ball1.vis && isHR && (
+          <>
+            <path d={`M 280 330 Q 340 120 ${ball1.x} ${ball1.y}`}
+              fill="none" stroke="rgba(255,221,68,0.30)" strokeWidth={1.5} strokeDasharray="4 3" />
+            <circle cx={ball1.x} cy={ball1.y} r={22}
+              fill="rgba(255,221,68,0.08)" stroke="none" />
+          </>
         )}
 
       </svg>
 
-      {/* ── Play caption ─────────────────────────────────────────────── */}
-      <div className="field-view__caption">
-        <span className="field-view__batter">
+      {/* ── Caption ──────────────────────────────────────────────────── */}
+      <div className="fv-caption">
+        <span className="fv-caption__batter">
           #{play.batter?.number} {play.batter?.name}
         </span>
         {play.pitcher && (
           <>
-            <span className="field-view__sep">vs</span>
-            <span className="field-view__pitcher">
+            <span className="fv-caption__sep">vs</span>
+            <span className="fv-caption__pitcher">
               #{play.pitcher.number} {play.pitcher.name}
             </span>
           </>
         )}
         {play.resultText && (
-          <span className="field-view__result">{play.resultText}</span>
+          <span className="fv-caption__result">{play.resultText}</span>
+        )}
+        {play.note && (
+          <span className="fv-caption__note">{play.note}</span>
         )}
       </div>
     </div>

@@ -1,6 +1,10 @@
-/* FieldView — jersey numbers plotted on a baseball diamond */
+/* FieldView — jersey numbers on a charcoal/blue baseball diamond
+   Class names: fv-wrap, fv-svg, fv-tile, fv-tile--pulse, fv-tile__num,
+                fv-runner, fv-ball, fv-caption + children */
 
-.field-view {
+/* ── Wrapper ──────────────────────────────────────────────────────────────── */
+
+.fv-wrap {
   display:        flex;
   flex-direction: column;
   gap:            var(--space-2);
@@ -9,60 +13,57 @@
   margin:         0 auto;
 }
 
-/* ── SVG ────────────────────────────────────────────────────────────────────── */
+/* ── SVG canvas ───────────────────────────────────────────────────────────── */
 
-.field-view__svg {
-  width:     100%;
-  height:    auto;
-  display:   block;
-  border:    1px solid var(--border-faint);
+.fv-svg {
+  width:         100%;
+  height:        auto;
+  display:       block;
+  border:        1px solid var(--border-faint);
   border-radius: var(--radius-md);
-  overflow:  visible; /* let glows breathe */
+  overflow:      visible; /* let glows breathe outside the SVG box */
 }
 
-/* ── Position tiles ──────────────────────────────────────────────────────────── */
+/* ── Position tiles ──────────────────────────────────────────────────────── */
 
-.field-pos {
-  cursor: default;
+.fv-tile {
+  cursor:     default;
   transition: opacity 0.25s ease;
 }
 
-.field-pos__num {
+.fv-tile__num {
   font-family:    var(--font-scoreboard);
   letter-spacing: 0.05em;
   pointer-events: none;
 }
 
-/* Active tile gets a CSS pulse */
-.field-pos--active circle:first-of-type {
-  animation: field-tile-pop 0.35s ease-out 1;
+/* Pulse on big-moment active tile */
+.fv-tile--pulse circle:first-of-type {
+  animation: fv-tile-pop 0.38s ease-out 1;
 }
 
-@keyframes field-tile-pop {
+@keyframes fv-tile-pop {
   0%   { r: 17; }
-  40%  { r: 20; }
+  40%  { r: 22; }
   100% { r: 17; }
 }
 
-/* ── Ball ────────────────────────────────────────────────────────────────────── */
+/* ── Runner tiles ────────────────────────────────────────────────────────── */
 
-.field-ball {
+.fv-runner {
+  pointer-events: none;
+}
+
+/* ── Ball ────────────────────────────────────────────────────────────────── */
+
+.fv-ball {
   pointer-events: none;
   transition:     transform 0.38s cubic-bezier(0.22, 0.68, 0, 1.15);
 }
 
-/* ── Zone labels ─────────────────────────────────────────────────────────────── */
+/* ── Caption ─────────────────────────────────────────────────────────────── */
 
-.field-zone-label {
-  font-family:    var(--font-scoreboard);
-  letter-spacing: 0.12em;
-  pointer-events: none;
-  text-transform: uppercase;
-}
-
-/* ── Play caption ────────────────────────────────────────────────────────────── */
-
-.field-view__caption {
+.fv-caption {
   display:     flex;
   align-items: center;
   gap:         var(--space-2);
@@ -70,27 +71,27 @@
   padding:     var(--space-1) 0;
 }
 
-.field-view__batter {
-  font-family:    var(--font-program);
-  font-size:      var(--text-small);
-  font-weight:    600;
-  color:          var(--color-paper);
+.fv-caption__batter {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  font-weight: 600;
+  color:       var(--color-paper);
 }
 
-.field-view__sep {
-  font-family: var(--font-scoreboard);
-  font-size:   var(--text-micro);
-  color:       var(--ink-dim);
+.fv-caption__sep {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
   letter-spacing: 0.08em;
 }
 
-.field-view__pitcher {
+.fv-caption__pitcher {
   font-family: var(--font-program);
   font-size:   var(--text-small);
   color:       var(--color-muted);
 }
 
-.field-view__result {
+.fv-caption__result {
   font-family:    var(--font-scoreboard);
   font-size:      var(--text-micro);
   letter-spacing: 0.10em;
@@ -98,4 +99,13 @@
   font-weight:    700;
   text-transform: uppercase;
   margin-left:    auto;
+}
+
+.fv-caption__note {
+  font-family:    var(--font-program);
+  font-size:      var(--text-caption);
+  color:          var(--color-paper);
+  font-weight:    500;
+  font-style:     italic;
+  line-height:    1.4;
 }

@@ -531,8 +531,8 @@ export default function ShowdownPage() {
         {viewMode === 'field' && (
           <FieldView
             play={currentPlay}
+            plays={plays}
             position={position}
-            appearedNumbers={appearedNumbers}
           />
         )}
 
