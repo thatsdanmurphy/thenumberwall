@@ -257,13 +257,12 @@ export default function ShowdownPage() {
 
   return (
     <AppShell>
-      <AppHeader />
+      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
 
       <main className="showdown-page">
 
         {/* ── Page heading ──────────────────────────────────── */}
         <div className="showdown-page__heading">
-          <button className="page-back" onClick={() => navigate('/')}>← Main Wall</button>
           <h1 className="showdown-page__title">{data.title}</h1>
           <p className="showdown-page__series-note">{data.series_note}</p>
         </div>

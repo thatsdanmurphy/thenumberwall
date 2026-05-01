@@ -183,12 +183,11 @@ export default function ReelWallPage() {
 
   return (
     <AppShell>
-      <AppHeader />
+      <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} />
 
       <main className="reel-page">
 
         <div className="reel-page__heading">
-          <button className="page-back" onClick={() => navigate('/')}>← Main Wall</button>
           <h1 className={`reel-page__team${film.heading.length > 16 ? ' reel-page__team--long' : ''}`}>{film.heading}</h1>
           <span className="reel-page__sub">{film.sub}</span>
         </div>
