@@ -1,20 +1,23 @@
 /* ShowdownPage — play-by-play series showdown
    Desktop: [BOS col: panel + wall] | [NYY col: panel + wall]
-   Mobile:  scrubber → combined wall → single batter panel */
+   Mobile:  scrubber → combined table → batter panel */
 
 .showdown-page {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  /* Prevent overflow from pushing outside viewport */
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 /* ── Page heading ─────────────────────────────────────────────────────────── */
 
 .showdown-page__heading {
-  display:        flex;
+  display: flex;
   flex-direction: column;
-  gap:            var(--space-1);
+  gap: var(--space-1);
   padding-bottom: var(--space-2);
 }
 
@@ -37,15 +40,13 @@
 
 /* ── Team label headers (desktop only) ────────────────────────────────────── */
 
-.showdown-page__team-headers {
-  display: none;
-}
+.showdown-page__team-headers { display: none; }
 
 @media (min-width: 768px) {
   .showdown-page__team-headers {
     display:         flex;
-    align-items:     flex-end;
     justify-content: space-between;
+    align-items:     flex-end;
   }
 }
 
@@ -55,58 +56,89 @@
   letter-spacing: 0.04em;
   line-height:    1;
 }
-
 .showdown-page__team-label--sox { color: rgba(245,95,105,0.92); }
 .showdown-page__team-label--nyy { color: rgba(160,200,255,0.92); text-align: right; }
 
-/* ── Body — desktop two columns, mobile stacked ───────────────────────────── */
+/* ── Body ─────────────────────────────────────────────────────────────────── */
 
 .showdown-page__body {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
   .showdown-page__body {
     flex-direction: row;
     align-items:    stretch;
-    gap:            var(--space-3);
   }
 }
 
 /* ── Team columns ─────────────────────────────────────────────────────────── */
 
 .showdown-team-col {
-  display:        none;   /* hidden on mobile — mobile-col shows instead */
+  display: none;
   flex-direction: column;
-  gap:            var(--space-2);
-  flex:           1;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
   .showdown-team-col { display: flex; }
 }
 
-/* ── Compact play card (panel slot above each wall) ───────────────────────── */
+/* ── Play card ────────────────────────────────────────────────────────────── */
+/* Fixed min-height so the walls never jump when note appears/disappears */
 
 .showdown-play-card {
   display:       flex;
-  align-items:   center;
+  align-items:   flex-start;
   gap:           var(--space-2);
   padding:       var(--space-2) var(--space-3);
   background:    var(--surface-1);
   border:        1px solid var(--border-faint);
   border-radius: var(--radius-md);
-  min-height:    72px;
+  min-height:    100px;   /* tall enough to absorb note line without shifting grid */
+  position:      relative;
+  transition:    border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .showdown-play-card--empty {
-  min-height:  72px;
-  opacity:     0;
+  min-height:     100px;
+  opacity:        0;
   pointer-events: none;
 }
+
+.showdown-play-card--selected {
+  border-color: rgba(255,255,255,0.20);
+  background:   var(--surface-raised);
+}
+
+/* Expanded version for full series stats */
+.showdown-play-card--expanded {
+  min-height: 120px;
+}
+
+.showdown-play-card__close {
+  position:        absolute;
+  top:             var(--space-2);
+  right:           var(--space-2);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           22px;
+  height:          22px;
+  background:      none;
+  border:          1px solid var(--border-soft);
+  border-radius:   50%;
+  color:           var(--color-muted);
+  cursor:          pointer;
+  transition:      color var(--motion-hover), border-color var(--motion-hover);
+}
+.showdown-play-card__close:hover { color: var(--color-paper); border-color: var(--border-medium); }
 
 .showdown-play-card__num {
   font-family:    var(--font-banner);
@@ -114,14 +146,16 @@
   line-height:    1;
   letter-spacing: 0.02em;
   flex-shrink:    0;
-  min-width:      2.8rem;
+  min-width:      3rem;
+  padding-top:    2px;
 }
 
 .showdown-play-card__info {
   display:        flex;
   flex-direction: column;
-  gap:            2px;
+  gap:            3px;
   min-width:      0;
+  flex:           1;
 }
 
 .showdown-play-card__name {
@@ -157,45 +191,110 @@
   letter-spacing: 0.10em;
   color:          var(--color-heat);
   text-transform: uppercase;
-  margin-top:     2px;
 }
 
 .showdown-play-card__note {
+  font-family:    var(--font-program);
+  font-size:      var(--text-caption);
+  color:          var(--color-paper);
+  font-weight:    500;
+  line-height:    1.4;
+  padding-top:    var(--space-1);
+  border-top:     1px solid var(--border-faint);
+  margin-top:     var(--space-1);
+}
+
+/* Series moments list (selected player) */
+.showdown-play-card__moments {
+  list-style:     none;
+  margin:         var(--space-1) 0 0;
+  padding:        0;
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+  border-top:     1px solid var(--border-faint);
+  padding-top:    var(--space-1);
+}
+
+.showdown-play-card__moments li {
   font-family: var(--font-program);
   font-size:   var(--text-caption);
   color:       var(--color-paper);
   font-weight: 500;
   line-height: 1.4;
-  margin-top:  var(--space-1);
-  padding-top: var(--space-1);
-  border-top:  1px solid var(--border-faint);
 }
 
-/* Mobile panel — shown below the combined wall */
-.showdown-play-card--mobile {
-  margin-top: var(--space-2);
+/* ── Play card moment animations ──────────────────────────────────────────── */
+
+/* K — pitcher card pulses */
+@keyframes cardPulse {
+  0%, 100% { box-shadow: none; border-color: var(--border-faint); }
+  50%       { box-shadow: 0 0 0 2px rgba(255,255,255,0.18), 0 0 18px rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.22); }
 }
+
+/* HR — batter card flashes once */
+@keyframes cardFlash {
+  0%   { box-shadow: none; }
+  15%  { box-shadow: 0 0 0 2px var(--border-medium), 0 0 30px rgba(255,80,80,0.55); border-color: rgba(255,120,120,0.60); }
+  50%  { box-shadow: 0 0 0 2px var(--border-soft), 0 0 14px rgba(255,80,80,0.25); }
+  100% { box-shadow: none; border-color: var(--border-faint); }
+}
+
+/* Big moment / walkoff — double flash */
+@keyframes cardBig {
+  0%   { box-shadow: none; }
+  10%  { box-shadow: 0 0 0 3px rgba(255,210,80,0.80), 0 0 40px rgba(255,180,40,0.70); border-color: rgba(255,210,80,0.70); }
+  28%  { box-shadow: 0 0 0 1px rgba(255,210,80,0.30), 0 0 16px rgba(255,180,40,0.25); }
+  42%  { box-shadow: 0 0 0 3px rgba(255,210,80,0.70), 0 0 36px rgba(255,180,40,0.60); border-color: rgba(255,210,80,0.60); }
+  65%  { box-shadow: 0 0 0 1px rgba(255,210,80,0.25), 0 0 12px rgba(255,180,40,0.20); }
+  100% { box-shadow: none; border-color: var(--border-faint); }
+}
+
+/* Win — championship celebration */
+@keyframes cardWin {
+  0%   { box-shadow: none; }
+  8%   { box-shadow: 0 0 0 4px rgba(210,55,65,0.90), 0 0 60px rgba(210,55,65,0.80); border-color: rgba(255,120,130,0.90); }
+  22%  { box-shadow: 0 0 0 2px rgba(210,55,65,0.50), 0 0 25px rgba(210,55,65,0.40); }
+  36%  { box-shadow: 0 0 0 4px rgba(210,55,65,0.85), 0 0 55px rgba(210,55,65,0.75); }
+  52%  { box-shadow: 0 0 0 2px rgba(210,55,65,0.40), 0 0 20px rgba(210,55,65,0.35); }
+  65%  { box-shadow: 0 0 0 3px rgba(210,55,65,0.70), 0 0 40px rgba(210,55,65,0.60); }
+  82%  { box-shadow: 0 0 0 1px rgba(210,55,65,0.30), 0 0 15px rgba(210,55,65,0.25); }
+  100% { box-shadow: 0 0 0 1px rgba(210,55,65,0.20), 0 0 10px rgba(210,55,65,0.15); }
+}
+
+.showdown-play-card--k   { animation: cardPulse 1.8s ease-in-out 2; }
+.showdown-play-card--hr  { animation: cardFlash 0.9s ease-out 1; }
+.showdown-play-card--big { animation: cardBig   1.4s ease-out 1; }
+.showdown-play-card--win { animation: cardWin   2.2s ease-out 1 forwards; }
 
 /* ── Individual walls ─────────────────────────────────────────────────────── */
 
 .showdown-wall {
   flex: 1;
+  min-width: 0;
 }
 
-/* 7 columns — fits narrow column on desktop */
 .showdown-wall .wall-grid {
   grid-template-columns: repeat(7, 1fr) !important;
 }
 
-/* ── Mobile combined column — shown instead of team cols on mobile ─────────── */
+/* ── Mobile column ────────────────────────────────────────────────────────── */
 
 .showdown-page__mobile-col {
   display:        flex;
   flex-direction: column;
+  min-width:      0;
+  width:          100%;
 }
 
 @media (min-width: 768px) {
   .showdown-page__mobile-col { display: none; }
+}
+
+/* Constrain combined grid to viewport, 10 cols */
+.showdown-page__combined-wall {
+  width:    100%;
+  overflow: hidden;
 }
 
 .showdown-page__combined-wall .wall-grid {

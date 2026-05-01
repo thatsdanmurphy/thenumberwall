@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { X } from 'lucide-react'
 import { track } from '@vercel/analytics'
 import AppShell         from '../components/AppShell.jsx'
 import AppHeader        from '../components/AppHeader.jsx'
@@ -9,24 +10,37 @@ import ShowdownScrubber from '../components/ShowdownScrubber.jsx'
 import alcs2004         from '../data/showdowns/alcs2004.json'
 import './ShowdownPage.css'
 
-// ── Showdown registry ─────────────────────────────────────────────────────────
 const SHOWDOWNS = { 'alcs-2004': alcs2004 }
 
-// ── Team accent colors ────────────────────────────────────────────────────────
+// ── Team colors ───────────────────────────────────────────────────────────────
 const SOX_COLORS = {
-  dim:  { bg:'rgba(189,48,57,0.20)', border:'rgba(200,55,65,0.40)', glow:'0 0 10px rgba(230,60,70,0.28)', text:'rgba(255,145,150,0.70)' },
-  full: { bg:'rgba(189,48,57,0.52)', border:'rgba(225,70,80,0.88)', glow:'0 0 12px rgba(240,65,75,0.80), 0 0 28px rgba(200,40,50,0.45)', text:'rgba(255,200,200,1.0)' },
-  hot:  { bg:'rgba(215,50,60,0.84)', border:'rgba(245,85,95,1.0)',  glow:'0 0 14px rgba(255,70,80,1.0),  0 0 36px rgba(210,45,55,0.70)', text:'rgba(255,225,225,1.0)' },
+  dim:    { bg:'rgba(189,48,57,0.20)', border:'rgba(200,55,65,0.40)', glow:'0 0 10px rgba(230,60,70,0.28)', text:'rgba(255,145,150,0.70)' },
+  full:   { bg:'rgba(189,48,57,0.52)', border:'rgba(225,70,80,0.88)', glow:'0 0 12px rgba(240,65,75,0.80), 0 0 28px rgba(200,40,50,0.45)', text:'rgba(255,200,200,1.0)' },
+  hot:    { bg:'rgba(215,50,60,0.84)', border:'rgba(245,85,95,1.0)',  glow:'0 0 14px rgba(255,70,80,1.0),  0 0 36px rgba(210,45,55,0.70)', text:'rgba(255,225,225,1.0)' },
+  sacred: { bg:'rgba(240,55,65,1.0)',  border:'rgba(255,120,130,1.0)', glow:'0 0 20px rgba(255,80,90,1.0), 0 0 50px rgba(220,40,50,0.90), 0 0 80px rgba(200,30,40,0.50)', text:'rgba(255,240,240,1.0)' },
 }
 const NYY_COLORS = {
-  dim:  { bg:'rgba(12,35,64,0.28)',  border:'rgba(50,80,130,0.40)', glow:'0 0 10px rgba(60,95,155,0.26)', text:'rgba(155,185,230,0.70)' },
-  full: { bg:'rgba(12,35,64,0.58)',  border:'rgba(65,100,170,0.88)', glow:'0 0 12px rgba(75,115,185,0.80), 0 0 28px rgba(40,70,130,0.45)', text:'rgba(205,222,255,1.0)' },
-  hot:  { bg:'rgba(15,45,88,0.88)',  border:'rgba(85,120,190,1.0)', glow:'0 0 14px rgba(90,130,200,1.0),  0 0 36px rgba(55,88,155,0.70)', text:'rgba(220,235,255,1.0)' },
+  dim:    { bg:'rgba(12,35,64,0.28)',  border:'rgba(50,80,130,0.40)', glow:'0 0 10px rgba(60,95,155,0.26)', text:'rgba(155,185,230,0.70)' },
+  full:   { bg:'rgba(12,35,64,0.58)',  border:'rgba(65,100,170,0.88)', glow:'0 0 12px rgba(75,115,185,0.80), 0 0 28px rgba(40,70,130,0.45)', text:'rgba(205,222,255,1.0)' },
+  hot:    { bg:'rgba(15,45,88,0.88)',  border:'rgba(85,120,190,1.0)', glow:'0 0 14px rgba(90,130,200,1.0),  0 0 36px rgba(55,88,155,0.70)', text:'rgba(220,235,255,1.0)' },
+  sacred: { bg:'rgba(20,60,120,1.0)',  border:'rgba(120,165,240,1.0)', glow:'0 0 20px rgba(100,150,255,1.0), 0 0 50px rgba(60,100,200,0.90), 0 0 80px rgba(30,70,160,0.50)', text:'rgba(235,245,255,1.0)' },
 }
 const DARK_TILE = {
   bg:'rgba(255,255,255,0.018)', border:'rgba(255,255,255,0.055)', glow:'none', text:'rgba(255,255,255,0.12)',
 }
 const TEAM_ACCENT = { BOS: 'rgba(245,95,105,0.92)', NYY: 'rgba(160,200,255,0.92)' }
+
+// ── Classify play intensity ───────────────────────────────────────────────────
+// Returns 'normal' | 'k' | 'hit' | 'hr' | 'big' | 'win'
+function playIntensity(play) {
+  if (!play) return 'normal'
+  if (play.isSeriesEnd) return 'win'
+  if (play.note && (play.note.includes('WALKOFF') || play.note.includes('GRAND SLAM'))) return 'big'
+  if (play.result === 'HR') return 'hr'
+  if (play.result === 'K')  return 'k'
+  if (['S','D','T'].includes(play.result)) return 'hit'
+  return 'normal'
+}
 
 // ── Build wall index ──────────────────────────────────────────────────────────
 function buildTeamIndex(roster, teamLabel) {
@@ -35,22 +49,14 @@ function buildTeamIndex(roster, teamLabel) {
     const key = String(player.number)
     if (!index.has(key)) index.set(key, [])
     index.get(key).push({
-      name:       player.name,
-      number:     player.number,
-      sport:      'Baseball',
-      tier:       'KNOWN',
-      team:       teamLabel,
-      role:       player.pos,
-      funFact:    null,
-      stat:       null,
-      statLabel:  null,
-      statWeight: 1,
+      name: player.name, number: player.number, sport: 'Baseball',
+      tier: 'KNOWN', team: teamLabel, role: player.pos,
+      funFact: null, stat: null, statLabel: null, statWeight: 1,
     })
   }
   return index
 }
 
-// ── Sorted unique numbers from roster ─────────────────────────────────────────
 function rosterNumbers(roster) {
   return [...new Set(roster.map(p => String(p.number)))].sort((a, b) => {
     const na = a === '00' ? -1 : a === '0' ? -0.5 : Number(a)
@@ -59,66 +65,89 @@ function rosterNumbers(roster) {
   })
 }
 
-// ── Tile heat factory (number-based, per-play) ────────────────────────────────
-// activeSet   = Set<string number> — currently spotlit (hot)
-// appearedSet = Set<string number> — have appeared so far (dim)
-// isSeriesEnd = boolean — only winner lights up
-// winner      = 'BOS'|'NYY' — winner at series end
+// ── Number → pid lookup (first player with that number on that roster) ─────────
+function buildNumberToPid(roster) {
+  const map = {}
+  for (const p of roster) {
+    const n = String(p.number)
+    if (!map[n]) map[n] = p.retroId
+  }
+  return map
+}
 
-function makePlayHeat(colors, activeSet, appearedSet, isSeriesEnd, isWinner) {
+// ── Tile heat ─────────────────────────────────────────────────────────────────
+function makePlayHeat(colors, activeSet, appearedSet, isSeriesEnd, isWinner, intensity, selectedNum) {
   return function(num, entries) {
     if (entries.length === 0) return {}
     const n = String(num)
+
+    // Series end celebration
     if (isSeriesEnd) {
-      if (isWinner && appearedSet.has(n)) return { heatStyle: colors.hot,  textColor: colors.hot.text }
+      if (isWinner && appearedSet.has(n)) return { heatStyle: colors.sacred, textColor: colors.sacred.text }
       return { heatStyle: DARK_TILE, textColor: DARK_TILE.text }
     }
-    if (activeSet.has(n))   return { heatStyle: colors.hot,  textColor: colors.hot.text }
-    if (appearedSet.has(n)) return { heatStyle: colors.dim,  textColor: colors.dim.text }
+
+    // Selected player always stays hot
+    if (selectedNum && selectedNum === n) {
+      return { heatStyle: colors.hot, textColor: colors.hot.text }
+    }
+
+    const isActive = activeSet.has(n)
+    if (isActive) {
+      const style = (intensity === 'big' || intensity === 'hr' || intensity === 'win')
+        ? colors.sacred : colors.hot
+      return { heatStyle: style, textColor: style.text }
+    }
+    if (appearedSet.has(n)) return { heatStyle: colors.dim, textColor: colors.dim.text }
     return { heatStyle: DARK_TILE, textColor: DARK_TILE.text }
   }
 }
 
-// ── Combined heat for mobile merged wall ──────────────────────────────────────
+// ── Combined heat for mobile ──────────────────────────────────────────────────
 function makeCombinedHeat(bosNums, nyyNums, bosHeatFn, nyyHeatFn) {
   return function(num, entries) {
     const inBos = bosNums.has(String(num))
     const inNyy = nyyNums.has(String(num))
+    if (!inBos && !inNyy) return {}
+
+    const b = bosHeatFn(num, entries)
+    const y = nyyHeatFn(num, entries)
+
     if (inBos && inNyy) {
-      const b = bosHeatFn(num, entries)
-      const y = nyyHeatFn(num, entries)
+      // Both teams share this number — diagonal split gradient
       const bosBg = b.heatStyle?.bg ?? DARK_TILE.bg
       const nyyBg = y.heatStyle?.bg ?? DARK_TILE.bg
+      // Skip the gradient if both are dark (looks messy)
+      const bosDark = bosBg === DARK_TILE.bg
+      const nyyDark = nyyBg === DARK_TILE.bg
+      if (bosDark && nyyDark) return { heatStyle: DARK_TILE, textColor: DARK_TILE.text }
       return {
         heatStyle: {
-          bg:     `linear-gradient(to right, ${bosBg} 50%, ${nyyBg} 50%)`,
-          border: 'rgba(255,255,255,0.20)',
+          bg:     `linear-gradient(135deg, ${bosBg} 50%, ${nyyBg} 50%)`,
+          border: !bosDark || !nyyDark
+            ? 'rgba(255,255,255,0.28)'
+            : DARK_TILE.border,
           glow:   'none',
-          text:   'rgba(255,255,255,0.70)',
+          text:   'rgba(255,255,255,0.85)',
         },
-        textColor: 'rgba(255,255,255,0.70)',
+        textColor: 'rgba(255,255,255,0.85)',
       }
     }
-    if (inBos) return bosHeatFn(num, entries)
-    if (inNyy) return nyyHeatFn(num, entries)
-    return {}
+    if (inBos) return b
+    return y
   }
 }
 
-// ── Running stats for current game (scans plays up to position) ───────────────
+// ── Running game stats ─────────────────────────────────────────────────────────
 const HIT_RESULTS = new Set(['S','D','T','HR'])
 const AB_RESULTS  = new Set(['S','D','T','HR','OUT','DP','SF','SH','K','FC','E'])
 const OUT_RESULTS = new Set(['OUT','SF','SH','K','FC'])
-const SKIP_PITCH  = new Set(['SB','CS','BK','WP','PB','DI','NP'])
 
 function computeGameStats(plays, upToIdx) {
-  // Returns { [pid:game]: { ab, h, hr, k, bb, hp, outs, kp, hp_allowed, bb_allowed } }
   const stats = {}
   for (let i = 0; i <= upToIdx; i++) {
     const p = plays[i]
     if (!p) break
-
-    // Batter
     const bk = `${p.batter.pid}:${p.game}`
     if (!stats[bk]) stats[bk] = { ab:0, h:0, hr:0, k:0, bb:0, hp:0, outs:0, kp:0, hp_a:0, bb_a:0 }
     const bs = stats[bk]
@@ -129,39 +158,67 @@ function computeGameStats(plays, upToIdx) {
     if (p.result === 'W' || p.result === 'IW') bs.bb++
     if (p.result === 'HP')            bs.hp++
 
-    // Pitcher
-    if (p.pitcher.pid && !SKIP_PITCH.has(p.result)) {
+    if (p.pitcher.pid && !['SB','CS','BK','WP','PB','DI','NP'].includes(p.result)) {
       const pk = `${p.pitcher.pid}:${p.game}`
       if (!stats[pk]) stats[pk] = { ab:0, h:0, hr:0, k:0, bb:0, hp:0, outs:0, kp:0, hp_a:0, bb_a:0 }
       const ps = stats[pk]
-      if (OUT_RESULTS.has(p.result))  { ps.outs++; if (p.result === 'DP') ps.outs++ }
-      if (p.result === 'K')           ps.kp++
-      if (HIT_RESULTS.has(p.result))  ps.hp_a++
+      if (OUT_RESULTS.has(p.result)) { ps.outs++; if (p.result === 'DP') ps.outs++ }
+      if (p.result === 'K')   ps.kp++
+      if (HIT_RESULTS.has(p.result)) ps.hp_a++
       if (p.result === 'W' || p.result === 'IW') ps.bb_a++
     }
   }
   return stats
 }
 
-function fmtIP(outs) {
-  return `${Math.floor(outs / 3)}.${outs % 3}`
+// Full-series stats (for selected player view)
+function computeSeriesStats(plays, pid) {
+  let ab = 0, h = 0, hr = 0, k = 0, bb = 0, hp = 0
+  let outs = 0, kp = 0, hp_a = 0, bb_a = 0
+  for (const p of plays) {
+    if (p.batter.pid === pid) {
+      if (AB_RESULTS.has(p.result))     ab++
+      if (HIT_RESULTS.has(p.result))    h++
+      if (p.result === 'HR')            hr++
+      if (p.result === 'K')             k++
+      if (p.result === 'W' || p.result === 'IW') bb++
+      if (p.result === 'HP')            hp++
+    }
+    if (p.pitcher.pid === pid && !['SB','CS','BK','WP','PB','DI','NP'].includes(p.result)) {
+      if (OUT_RESULTS.has(p.result)) { outs++; if (p.result === 'DP') outs++ }
+      if (p.result === 'K')   kp++
+      if (HIT_RESULTS.has(p.result)) hp_a++
+      if (p.result === 'W' || p.result === 'IW') bb_a++
+    }
+  }
+  return { ab, h, hr, k, bb, hp, outs, kp, hp_a, bb_a }
 }
 
-// ── Compact PlayCard ──────────────────────────────────────────────────────────
-function PlayCard({ player, role, result, resultText, stats, note, accentColor, isMobile }) {
+function fmtIP(outs) { return `${Math.floor(outs / 3)}.${outs % 3}` }
+
+// ── PlayCard ──────────────────────────────────────────────────────────────────
+function PlayCard({ player, role, result, resultText, stats, note, accentColor, intensity, isSelected, onDeselect }) {
   if (!player || !player.name) {
-    return <div className={`showdown-play-card showdown-play-card--empty${isMobile ? ' showdown-play-card--mobile' : ''}`} />
+    return <div className="showdown-play-card showdown-play-card--empty" />
   }
 
   const isBatter  = role === 'batter'
   const isPitcher = role === 'pitcher'
+  const showResult = isBatter && result && !['SB','CS','DI','BK','WP','PB','NP','?'].includes(result)
+
+  // Animation class based on intensity + role
+  let animClass = ''
+  if (intensity === 'win')               animClass = ' showdown-play-card--win'
+  else if (intensity === 'big' && isBatter) animClass = ' showdown-play-card--big'
+  else if (intensity === 'hr' && isBatter)  animClass = ' showdown-play-card--hr'
+  else if (intensity === 'k' && isPitcher)  animClass = ' showdown-play-card--k'
 
   let statLine = null
-  if (stats) {
+  if (stats && !isSelected) {
     if (isBatter) {
       const parts = [`${stats.h}-for-${stats.ab}`]
-      if (stats.hr)   parts.push(`${stats.hr} HR`)
-      if (stats.k)    parts.push(`${stats.k} K`)
+      if (stats.hr)           parts.push(`${stats.hr} HR`)
+      if (stats.k)            parts.push(`${stats.k} K`)
       if (stats.bb + stats.hp > 0) parts.push(`${stats.bb + stats.hp} BB`)
       statLine = parts.join(' · ')
     } else if (isPitcher) {
@@ -172,27 +229,69 @@ function PlayCard({ player, role, result, resultText, stats, note, accentColor, 
     }
   }
 
-  // Result badge only on batter card
-  const showResult = isBatter && result && !['SB','CS','DI','BK','WP','PB','NP','?'].includes(result)
-
   return (
-    <div className={`showdown-play-card${isMobile ? ' showdown-play-card--mobile' : ''}`}>
+    <div className={`showdown-play-card${animClass}${isSelected ? ' showdown-play-card--selected' : ''}`}>
       <div className="showdown-play-card__num" style={{ color: accentColor }}>
         #{player.number}
       </div>
       <div className="showdown-play-card__info">
         <div className="showdown-play-card__name">{player.name}</div>
-        <div className="showdown-play-card__role">{player.pos ?? role}</div>
-        {statLine && (
-          <div className="showdown-play-card__stats">{statLine}</div>
-        )}
-        {showResult && (
-          <div className="showdown-play-card__result">{resultText}</div>
-        )}
-        {note && (
-          <div className="showdown-play-card__note">{note}</div>
+        <div className="showdown-play-card__role">{player.pos || role}</div>
+        {statLine && <div className="showdown-play-card__stats">{statLine}</div>}
+        {showResult && <div className="showdown-play-card__result">{resultText}</div>}
+        {note && <div className="showdown-play-card__note">{note}</div>}
+      </div>
+      {isSelected && onDeselect && (
+        <button className="showdown-play-card__close" onClick={onDeselect} aria-label="Deselect player">
+          <X size={12} />
+        </button>
+      )}
+    </div>
+  )
+}
+
+// ── Selected player panel ─────────────────────────────────────────────────────
+function SelectedPlayerPanel({ player, plays, accentColor, onDeselect }) {
+  if (!player) return null
+  const { pid, name, number, pos, team } = player
+
+  const seriesStats = useMemo(() => computeSeriesStats(plays, pid), [plays, pid])
+  const moments = useMemo(
+    () => plays.filter(p => (p.batter.pid === pid || p.pitcher.pid === pid) && p.note).map(p => p.note),
+    [plays, pid]
+  )
+  // Deduplicate notes
+  const uniqueMoments = [...new Set(moments)]
+
+  const isPitcher = pos === 'P'
+  let statLine
+  if (isPitcher) {
+    const parts = [`${fmtIP(seriesStats.outs)} IP series`, `${seriesStats.kp} K`]
+    if (seriesStats.hp_a) parts.push(`${seriesStats.hp_a} H`)
+    statLine = parts.join(' · ')
+  } else {
+    const parts = [`${seriesStats.h}-for-${seriesStats.ab} series`]
+    if (seriesStats.hr) parts.push(`${seriesStats.hr} HR`)
+    if (seriesStats.k)  parts.push(`${seriesStats.k} K`)
+    statLine = parts.join(' · ')
+  }
+
+  return (
+    <div className="showdown-play-card showdown-play-card--selected showdown-play-card--expanded">
+      <div className="showdown-play-card__num" style={{ color: accentColor }}>#{number}</div>
+      <div className="showdown-play-card__info">
+        <div className="showdown-play-card__name">{name}</div>
+        <div className="showdown-play-card__role">{pos} · {team}</div>
+        <div className="showdown-play-card__stats">{statLine}</div>
+        {uniqueMoments.length > 0 && (
+          <ul className="showdown-play-card__moments">
+            {uniqueMoments.map((m, i) => <li key={i}>{m}</li>)}
+          </ul>
         )}
       </div>
+      <button className="showdown-play-card__close" onClick={onDeselect} aria-label="Deselect">
+        <X size={12} />
+      </button>
     </div>
   )
 }
@@ -203,73 +302,68 @@ export default function ShowdownPage() {
   const { showdownId } = useParams()
 
   const data = SHOWDOWNS[showdownId] ?? SHOWDOWNS['alcs-2004']
-  const { plays, gameStarts, teams } = data
+  const { plays, gameStarts, games, teams } = data
 
   const [position, setPosition] = useState(0)
   const [playing,  setPlaying]  = useState(false)
   const [speed,    setSpeed]    = useState(1)
+  // Selected player state: { pid, name, number, pos, team }
+  const [selectedBos, setSelectedBos] = useState(null)
+  const [selectedNyy, setSelectedNyy] = useState(null)
 
   useEffect(() => {
     document.title = `${data.title} — Showdowns | The Number Wall`
     track('showdown_view', { id: data.id })
   }, [data])
 
-  // ── Current play ──────────────────────────────────────────────────────────
   const currentPlay = plays[position] ?? {}
   const isSeriesEnd = currentPlay.isSeriesEnd ?? false
+  const intensity   = playIntensity(currentPlay)
 
-  // ── Numbers appeared so far (for dim heat) ────────────────────────────────
+  // ── Number→pid lookup ─────────────────────────────────────────────────────
+  const bosNumToPid = useMemo(() => buildNumberToPid(teams.BOS.roster), [teams])
+  const nyyNumToPid = useMemo(() => buildNumberToPid(teams.NYY.roster), [teams])
+
+  // ── Accumulated appeared numbers ──────────────────────────────────────────
   const appearedNumbers = useMemo(() => {
-    const bos = new Set()
-    const nyy = new Set()
+    const bos = new Set(), nyy = new Set()
     for (let i = 0; i <= position; i++) {
-      const p = plays[i]
-      if (!p) break
+      const p = plays[i]; if (!p) break
       for (const n of (p.activeNumbers?.BOS ?? [])) bos.add(n)
       for (const n of (p.activeNumbers?.NYY ?? [])) nyy.add(n)
     }
     return { BOS: bos, NYY: nyy }
   }, [plays, position])
 
-  // ── Active numbers for current play ──────────────────────────────────────
   const activeNums = useMemo(() => ({
     BOS: new Set(currentPlay.activeNumbers?.BOS ?? []),
     NYY: new Set(currentPlay.activeNumbers?.NYY ?? []),
   }), [currentPlay])
 
-  // ── Running game stats ────────────────────────────────────────────────────
+  // ── Game stats ────────────────────────────────────────────────────────────
   const gameStats = useMemo(() => computeGameStats(plays, position), [plays, position])
-
-  function getStats(pid, gameNum) {
-    return gameStats[`${pid}:${gameNum}`] ?? null
-  }
+  function getStats(pid, gameNum) { return gameStats[`${pid}:${gameNum}`] ?? null }
 
   // ── Wall indexes + numbers ────────────────────────────────────────────────
-  const bosIndex   = useMemo(() => buildTeamIndex(teams.BOS.roster, 'Red Sox'),  [teams])
-  const nyyIndex   = useMemo(() => buildTeamIndex(teams.NYY.roster, 'Yankees'),  [teams])
-  const bosNumbers = useMemo(() => rosterNumbers(teams.BOS.roster),  [teams])
-  const nyyNumbers = useMemo(() => rosterNumbers(teams.NYY.roster),  [teams])
+  const bosIndex   = useMemo(() => buildTeamIndex(teams.BOS.roster, 'Red Sox'), [teams])
+  const nyyIndex   = useMemo(() => buildTeamIndex(teams.NYY.roster, 'Yankees'), [teams])
+  const bosNumbers = useMemo(() => rosterNumbers(teams.BOS.roster), [teams])
+  const nyyNumbers = useMemo(() => rosterNumbers(teams.NYY.roster), [teams])
   const bosNumSet  = useMemo(() => new Set(bosNumbers), [bosNumbers])
   const nyyNumSet  = useMemo(() => new Set(nyyNumbers), [nyyNumbers])
 
-  // ── Tile heat functions ───────────────────────────────────────────────────
+  // ── Tile heat ─────────────────────────────────────────────────────────────
   const bosHeat = useMemo(() => makePlayHeat(
-    SOX_COLORS,
-    activeNums.BOS,
-    appearedNumbers.BOS,
-    isSeriesEnd,
-    true   // BOS is the winner
-  ), [activeNums, appearedNumbers, isSeriesEnd])
+    SOX_COLORS, activeNums.BOS, appearedNumbers.BOS,
+    isSeriesEnd, true, intensity, selectedBos?.number ?? null
+  ), [activeNums, appearedNumbers, isSeriesEnd, intensity, selectedBos])
 
   const nyyHeat = useMemo(() => makePlayHeat(
-    NYY_COLORS,
-    activeNums.NYY,
-    appearedNumbers.NYY,
-    isSeriesEnd,
-    false  // NYY is not the winner
-  ), [activeNums, appearedNumbers, isSeriesEnd])
+    NYY_COLORS, activeNums.NYY, appearedNumbers.NYY,
+    isSeriesEnd, false, intensity, selectedNyy?.number ?? null
+  ), [activeNums, appearedNumbers, isSeriesEnd, intensity, selectedNyy])
 
-  // ── Combined index + numbers for mobile ───────────────────────────────────
+  // ── Combined mobile ───────────────────────────────────────────────────────
   const combinedIndex = useMemo(() => {
     const merged = new Map()
     for (const [num, entries] of bosIndex) merged.set(num, [...entries])
@@ -282,7 +376,7 @@ export default function ShowdownPage() {
 
   const combinedNumbers = useMemo(() => {
     const all = new Set([...bosNumbers, ...nyyNumbers])
-    return [...all].sort((a, b) => {
+    return [...all].sort((a,b) => {
       const na = a === '00' ? -1 : a === '0' ? -0.5 : Number(a)
       const nb = b === '00' ? -1 : b === '0' ? -0.5 : Number(b)
       return na - nb
@@ -294,7 +388,23 @@ export default function ShowdownPage() {
     [bosNumSet, nyyNumSet, bosHeat, nyyHeat]
   )
 
-  // ── Seek handler ──────────────────────────────────────────────────────────
+  // ── Extra-inning zones for scrubber ──────────────────────────────────────
+  const extraZones = useMemo(() => {
+    const zones = []
+    let zoneStart = null
+    for (let i = 0; i < plays.length; i++) {
+      const inExtra = plays[i].inning > 9
+      if (inExtra && zoneStart === null) zoneStart = i
+      if (!inExtra && zoneStart !== null) {
+        zones.push({ start: zoneStart, end: i - 1 })
+        zoneStart = null
+      }
+    }
+    if (zoneStart !== null) zones.push({ start: zoneStart, end: plays.length - 1 })
+    return zones
+  }, [plays])
+
+  // ── Seek + keyboard ───────────────────────────────────────────────────────
   const handleSeek = useCallback((idxOrFn) => {
     setPosition(prev => {
       const next = typeof idxOrFn === 'function' ? idxOrFn(prev) : idxOrFn
@@ -302,40 +412,66 @@ export default function ShowdownPage() {
     })
   }, [plays.length])
 
-  // Arrow key navigation
   useEffect(() => {
     function onKey(e) {
       if (e.key === 'ArrowRight') { e.preventDefault(); handleSeek(p => p + 1) }
       if (e.key === 'ArrowLeft')  { e.preventDefault(); handleSeek(p => p - 1) }
+      if (e.key === 'Escape')     { setSelectedBos(null); setSelectedNyy(null) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [handleSeek])
 
-  // ── Derive panel players ──────────────────────────────────────────────────
-  // Each team panel shows the player from that team who is "active" this play:
-  //  - batting team → their batter
-  //  - fielding team → their pitcher
+  // ── Tile click → select player, pause scrubber ───────────────────────────
+  function handleBosSelect(sel) {
+    if (!sel || !sel.number) return
+    const pid = bosNumToPid[String(sel.number)]
+    if (!pid) return
+    const player = teams.BOS.roster.find(p => p.retroId === pid)
+    if (!player) return
+    setPlaying(false)
+    setSelectedBos({ pid, name: player.name, number: player.number, pos: player.pos, team: 'BOS' })
+    track('showdown_tile', { team: 'BOS', number: sel.number })
+  }
+
+  function handleNyySelect(sel) {
+    if (!sel || !sel.number) return
+    const pid = nyyNumToPid[String(sel.number)]
+    if (!pid) return
+    const player = teams.NYY.roster.find(p => p.retroId === pid)
+    if (!player) return
+    setPlaying(false)
+    setSelectedNyy({ pid, name: player.name, number: player.number, pos: player.pos, team: 'NYY' })
+    track('showdown_tile', { team: 'NYY', number: sel.number })
+  }
+
+  function handleCombinedSelect(sel) {
+    if (!sel || !sel.number) return
+    const inBos = bosNumSet.has(String(sel.number))
+    if (inBos) handleBosSelect(sel)
+    else handleNyySelect(sel)
+  }
+
+  // ── Panel player derivation ───────────────────────────────────────────────
   const batter  = currentPlay.batter  ?? null
   const pitcher = currentPlay.pitcher ?? null
 
-  const bosPlayer = batter?.team === 'BOS' ? batter  : pitcher?.team === 'BOS' ? pitcher : null
-  const bosRole   = batter?.team === 'BOS' ? 'batter' : 'pitcher'
-  const nyyPlayer = batter?.team === 'NYY' ? batter  : pitcher?.team === 'NYY' ? pitcher : null
-  const nyyRole   = batter?.team === 'NYY' ? 'batter' : 'pitcher'
+  const bosLive = batter?.team === 'BOS' ? batter : pitcher?.team === 'BOS' ? pitcher : null
+  const bosRole = batter?.team === 'BOS' ? 'batter' : 'pitcher'
+  const nyyLive = batter?.team === 'NYY' ? batter : pitcher?.team === 'NYY' ? pitcher : null
+  const nyyRole = batter?.team === 'NYY' ? 'batter' : 'pitcher'
 
-  // Mobile panel: always show the batter
-  const mobilePlayer = batter ?? null
-  const mobileRole   = 'batter'
+  const bosStats = bosLive ? getStats(bosLive.pid, currentPlay.game) : null
+  const nyyStats = nyyLive ? getStats(nyyLive.pid, currentPlay.game) : null
 
-  const bosStats = bosPlayer ? getStats(bosPlayer.pid, currentPlay.game) : null
-  const nyyStats = nyyPlayer ? getStats(nyyPlayer.pid, currentPlay.game) : null
-  const mobileStats = mobilePlayer ? getStats(mobilePlayer.pid, currentPlay.game) : null
-
-  // Note goes to the batting team's panel
   const note = currentPlay.note ?? null
   const bosNote = (bosRole === 'batter' && note) ? note : null
   const nyyNote = (nyyRole === 'batter' && note) ? note : null
+
+  // Mobile panel always shows the batter
+  const mobilePlayer = batter ?? null
+  const mobileStats  = mobilePlayer ? getStats(mobilePlayer.pid, currentPlay.game) : null
+  const mobileNote   = note
 
   return (
     <AppShell>
@@ -343,15 +479,14 @@ export default function ShowdownPage() {
 
       <main className="showdown-page">
 
-        {/* ── Page heading ──────────────────────────────────── */}
         <div className="showdown-page__heading">
           <h1 className="showdown-page__title">{data.title}</h1>
           <p className="showdown-page__series-note">{data.series_note}</p>
         </div>
 
-        {/* ── Scrubber — full width ─────────────────────────── */}
         <ShowdownScrubber
           plays={plays}
+          games={games}
           gameStarts={gameStarts}
           position={position}
           onSeek={handleSeek}
@@ -359,9 +494,10 @@ export default function ShowdownPage() {
           onPlayPause={setPlaying}
           speed={speed}
           onSpeedChange={setSpeed}
+          extraZones={extraZones}
         />
 
-        {/* ── Desktop team label headers ────────────────────── */}
+        {/* ── Desktop team headers ──────────────────────────────────────── */}
         <div className="showdown-page__team-headers">
           <div className="showdown-page__team-label showdown-page__team-label--sox">
             {teams.BOS.city} {teams.BOS.name}
@@ -371,82 +507,102 @@ export default function ShowdownPage() {
           </div>
         </div>
 
-        {/* ── Body: two team columns (desktop) + combined (mobile) ── */}
+        {/* ── Body ─────────────────────────────────────────────────────── */}
         <div className="showdown-page__body">
 
-          {/* BOS column: panel + wall */}
+          {/* BOS column */}
           <div className="showdown-team-col showdown-team-col--bos">
-            <PlayCard
-              player={bosPlayer}
-              role={bosRole}
-              result={currentPlay.result}
-              resultText={currentPlay.resultText}
-              stats={bosStats}
-              note={bosNote}
-              accentColor={TEAM_ACCENT.BOS}
-            />
+            {selectedBos ? (
+              <SelectedPlayerPanel
+                player={selectedBos}
+                plays={plays}
+                accentColor={TEAM_ACCENT.BOS}
+                onDeselect={() => setSelectedBos(null)}
+              />
+            ) : (
+              <PlayCard
+                player={bosLive}
+                role={bosRole}
+                result={currentPlay.result}
+                resultText={currentPlay.resultText}
+                stats={bosStats}
+                note={bosNote}
+                accentColor={TEAM_ACCENT.BOS}
+                intensity={bosRole === 'batter' || intensity === 'k' ? intensity : 'normal'}
+              />
+            )}
             <div className="showdown-wall showdown-wall--sox">
               <WallGrid
                 index={bosIndex}
                 numbers={bosNumbers}
-                activeNumber={null}
-                onSelect={() => {}}
+                activeNumber={selectedBos?.number ?? null}
+                onSelect={handleBosSelect}
                 wallId="none"
                 tileHeatFn={bosHeat}
               />
             </div>
           </div>
 
-          {/* NYY column: panel + wall */}
+          {/* NYY column */}
           <div className="showdown-team-col showdown-team-col--nyy">
-            <PlayCard
-              player={nyyPlayer}
-              role={nyyRole}
-              result={currentPlay.result}
-              resultText={currentPlay.resultText}
-              stats={nyyStats}
-              note={nyyNote}
-              accentColor={TEAM_ACCENT.NYY}
-            />
+            {selectedNyy ? (
+              <SelectedPlayerPanel
+                player={selectedNyy}
+                plays={plays}
+                accentColor={TEAM_ACCENT.NYY}
+                onDeselect={() => setSelectedNyy(null)}
+              />
+            ) : (
+              <PlayCard
+                player={nyyLive}
+                role={nyyRole}
+                result={currentPlay.result}
+                resultText={currentPlay.resultText}
+                stats={nyyStats}
+                note={nyyNote}
+                accentColor={TEAM_ACCENT.NYY}
+                intensity={nyyRole === 'batter' || intensity === 'k' ? intensity : 'normal'}
+              />
+            )}
             <div className="showdown-wall showdown-wall--nyy">
               <WallGrid
                 index={nyyIndex}
                 numbers={nyyNumbers}
-                activeNumber={null}
-                onSelect={() => {}}
+                activeNumber={selectedNyy?.number ?? null}
+                onSelect={handleNyySelect}
                 wallId="none"
                 tileHeatFn={nyyHeat}
               />
             </div>
           </div>
 
-          {/* Mobile: combined table + single panel */}
+          {/* Mobile col */}
           <div className="showdown-page__mobile-col">
             <div className="showdown-page__combined-wall">
               <WallGrid
                 index={combinedIndex}
                 numbers={combinedNumbers}
                 activeNumber={null}
-                onSelect={() => {}}
+                onSelect={handleCombinedSelect}
                 wallId="none"
                 tileHeatFn={combinedHeat}
               />
             </div>
             <PlayCard
               player={mobilePlayer}
-              role={mobileRole}
+              role="batter"
               result={currentPlay.result}
               resultText={currentPlay.resultText}
               stats={mobileStats}
-              note={note}
+              note={mobileNote}
               accentColor={mobilePlayer?.team === 'BOS' ? TEAM_ACCENT.BOS : TEAM_ACCENT.NYY}
-              isMobile={true}
+              intensity={intensity}
+              isMobile
             />
           </div>
 
         </div>
 
-        {/* ── Retrosheet attribution ─────────────────────────── */}
         <div className="showdown-page__attribution">
           Play-by-play data: <a href="https://www.retrosheet.org" target="_blank" rel="noopener noreferrer">Retrosheet</a>
         </div>
