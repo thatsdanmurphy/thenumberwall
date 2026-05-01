@@ -1,6 +1,6 @@
-/* ShowdownPage — three-column series showdown
-   Desktop: Sox wall | scrubber + moment card + panel | Yankees wall
-   Mobile:  scrubber top, combined wall, panel bottom sheet */
+/* ShowdownPage — play-by-play series showdown
+   Desktop: [BOS col: panel + wall] | [NYY col: panel + wall]
+   Mobile:  scrubber → combined wall → single batter panel */
 
 .showdown-page {
   flex: 1;
@@ -12,17 +12,10 @@
 /* ── Page heading ─────────────────────────────────────────────────────────── */
 
 .showdown-page__heading {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding-bottom: var(--space-3);
-  /* no border-bottom — clean handoff to the walls */
-}
-
-.showdown-page__title-row {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  gap:            var(--space-1);
+  padding-bottom: var(--space-2);
 }
 
 .showdown-page__title {
@@ -42,7 +35,7 @@
   line-height: 1.4;
 }
 
-/* ── Team headers (desktop) ───────────────────────────────────────────────── */
+/* ── Team label headers (desktop only) ────────────────────────────────────── */
 
 .showdown-page__team-headers {
   display: none;
@@ -50,9 +43,9 @@
 
 @media (min-width: 768px) {
   .showdown-page__team-headers {
-    display:     flex;
-    align-items: flex-end;
-    gap:         var(--space-3);
+    display:         flex;
+    align-items:     flex-end;
+    justify-content: space-between;
   }
 }
 
@@ -61,24 +54,12 @@
   font-size:      0.875rem;
   letter-spacing: 0.04em;
   line-height:    1;
-  flex:           1;
 }
 
-.showdown-page__team-label--sox {
-  color: rgba(245, 95, 105, 0.92);
-}
+.showdown-page__team-label--sox { color: rgba(245,95,105,0.92); }
+.showdown-page__team-label--nyy { color: rgba(160,200,255,0.92); text-align: right; }
 
-.showdown-page__team-label--nyy {
-  color:      rgba(160, 200, 255, 0.92);
-  text-align: right;
-}
-
-/* Placeholder that keeps team-headers aligned with center column */
-.showdown-page__center-label {
-  flex: 0 0 clamp(260px, 34%, 380px);
-}
-
-/* ── Three-column body ────────────────────────────────────────────────────── */
+/* ── Body — desktop two columns, mobile stacked ───────────────────────────── */
 
 .showdown-page__body {
   flex: 1;
@@ -95,156 +76,140 @@
   }
 }
 
-/* Center column */
-.showdown-page__center {
-  display:        flex;
+/* ── Team columns ─────────────────────────────────────────────────────────── */
+
+.showdown-team-col {
+  display:        none;   /* hidden on mobile — mobile-col shows instead */
   flex-direction: column;
   gap:            var(--space-2);
-  order:          -1;   /* scrubber first on mobile */
+  flex:           1;
 }
 
 @media (min-width: 768px) {
-  .showdown-page__center {
-    order:   0;
-    flex:    0 0 clamp(260px, 34%, 380px);
-  }
-
-  .showdown-page__center .player-panel {
-    flex: 1;
-  }
+  .showdown-team-col { display: flex; }
 }
 
-/* ── Moment card ──────────────────────────────────────────────────────────── */
+/* ── Compact play card (panel slot above each wall) ───────────────────────── */
 
-.showdown-page__moment-wrap {
-  min-height:  3.2rem;   /* prevents layout shift when note appears */
-  display:     flex;
-  align-items: flex-start;
-}
-
-.showdown-moment {
-  width:         100%;
-  padding:       var(--space-3);
-  border-radius: var(--radius-md);
+.showdown-play-card {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--space-2);
+  padding:       var(--space-2) var(--space-3);
   background:    var(--surface-1);
   border:        1px solid var(--border-faint);
-  animation:     momentFadeIn 0.35s ease-out both;
+  border-radius: var(--radius-md);
+  min-height:    72px;
 }
 
-.showdown-moment__text {
+.showdown-play-card--empty {
+  min-height:  72px;
+  opacity:     0;
+  pointer-events: none;
+}
+
+.showdown-play-card__num {
+  font-family:    var(--font-banner);
+  font-size:      1.5rem;
+  line-height:    1;
+  letter-spacing: 0.02em;
+  flex-shrink:    0;
+  min-width:      2.8rem;
+}
+
+.showdown-play-card__info {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      0;
+}
+
+.showdown-play-card__name {
   font-family:    var(--font-program);
   font-size:      var(--text-small);
-  font-weight:    500;
-  line-height:    1.5;
+  font-weight:    600;
   color:          var(--color-paper);
   letter-spacing: 0.01em;
+  white-space:    nowrap;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
 }
 
-/* Moment type variants */
-.showdown-moment--flash {
-  border-color: rgba(240, 185, 55, 0.45);
-  background:   rgba(240, 185, 55, 0.06);
-}
-.showdown-moment--flash .showdown-moment__text {
-  color: rgba(255, 215, 130, 1.0);
-}
-
-.showdown-moment--pulse {
-  border-color: rgba(225, 75, 85, 0.45);
-  background:   rgba(225, 75, 85, 0.07);
-}
-.showdown-moment--pulse .showdown-moment__text {
-  color: rgba(255, 175, 175, 1.0);
+.showdown-play-card__role {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.08em;
+  color:          var(--color-muted);
+  text-transform: uppercase;
 }
 
-.showdown-moment--win {
-  border-color: rgba(150, 220, 100, 0.50);
-  background:   rgba(100, 190, 80, 0.08);
-}
-.showdown-moment--win .showdown-moment__text {
-  color:       rgba(185, 240, 145, 1.0);
-  font-weight: 600;
+.showdown-play-card__stats {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  line-height: 1.3;
 }
 
-@keyframes momentFadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to   { opacity: 1; transform: translateY(0); }
+.showdown-play-card__result {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: 0.10em;
+  color:          var(--color-heat);
+  text-transform: uppercase;
+  margin-top:     2px;
+}
+
+.showdown-play-card__note {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--color-paper);
+  font-weight: 500;
+  line-height: 1.4;
+  margin-top:  var(--space-1);
+  padding-top: var(--space-1);
+  border-top:  1px solid var(--border-faint);
+}
+
+/* Mobile panel — shown below the combined wall */
+.showdown-play-card--mobile {
+  margin-top: var(--space-2);
 }
 
 /* ── Individual walls ─────────────────────────────────────────────────────── */
 
 .showdown-wall {
   flex: 1;
-  transition: opacity 350ms ease;
 }
 
-/* 7 columns — tiles match main wall scale in the narrower column */
+/* 7 columns — fits narrow column on desktop */
 .showdown-wall .wall-grid {
   grid-template-columns: repeat(7, 1fr) !important;
 }
 
-/* Dim: visual fade only — pointer-events active so clicking switches team */
-.showdown-wall--dim {
-  opacity: 0.28;
+/* ── Mobile combined column — shown instead of team cols on mobile ─────────── */
+
+.showdown-page__mobile-col {
+  display:        flex;
+  flex-direction: column;
 }
 
-/* ── Wall moment animations ───────────────────────────────────────────────── */
-
-@keyframes showdownFlash {
-  0%   { filter: brightness(1); }
-  25%  { filter: brightness(2.4) saturate(1.5); }
-  55%  { filter: brightness(1.3); }
-  100% { filter: brightness(1); }
+@media (min-width: 768px) {
+  .showdown-page__mobile-col { display: none; }
 }
 
-@keyframes showdownPulse {
-  0%, 100% { filter: brightness(1); }
-  50%      { filter: brightness(1.4) saturate(1.25); }
-}
-
-@keyframes showdownWin {
-  0%   { filter: brightness(1); }
-  18%  { filter: brightness(3.0) saturate(0.6) hue-rotate(22deg); }
-  45%  { filter: brightness(1.6) hue-rotate(12deg); }
-  72%  { filter: brightness(2.2) saturate(0.75) hue-rotate(18deg); }
-  100% { filter: brightness(1); }
-}
-
-.showdown-wall--flash { animation: showdownFlash 0.85s ease-out 2; }
-.showdown-wall--pulse { animation: showdownPulse 2.0s ease-in-out infinite; }
-.showdown-wall--win   { animation: showdownWin   1.5s ease-in-out 3; }
-
-/* ── Mobile combined wall ─────────────────────────────────────────────────── */
-
-/* Hidden on desktop — individual walls show instead */
-.showdown-page__combined-wall { display: none; }
-
-@media (max-width: 767px) {
-  /* Hide individual side walls on mobile */
-  .showdown-wall--sox,
-  .showdown-wall--nyy {
-    display: none;
-  }
-
-  /* Show combined merged grid */
-  .showdown-page__combined-wall {
-    display: block;
-  }
-
-  /* Match mobile main wall density: 10 columns */
-  .showdown-page__combined-wall .wall-grid {
-    grid-template-columns: repeat(10, 1fr) !important;
-  }
+.showdown-page__combined-wall .wall-grid {
+  grid-template-columns: repeat(10, 1fr) !important;
 }
 
 /* ── Attribution ──────────────────────────────────────────────────────────── */
 
 .showdown-page__attribution {
-  text-align:  right;
-  font-family: var(--font-program);
-  font-size:   var(--text-micro);
-  color:       var(--ink-dim);
-  padding-top: var(--space-3);
+  text-align:     right;
+  font-family:    var(--font-program);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
+  padding-top:    var(--space-2);
   letter-spacing: 0.02em;
 }
 
@@ -258,15 +223,4 @@
 .showdown-page__attribution a:hover {
   color:        var(--color-muted);
   border-color: var(--border-medium);
-}
-
-/* ── Mobile backdrop ─────────────────────────────────────────────────────── */
-
-.showdown-page__backdrop { display: none; }
-
-@media (max-width: 767px) {
-  .showdown-page__backdrop {
-    display: block;
-    z-index: 199;
-  }
 }

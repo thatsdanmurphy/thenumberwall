@@ -38,6 +38,32 @@
   box-shadow:   0 0 12px rgba(232,124,42,0.30);
 }
 
+/* Prev / next step buttons */
+.showdown-scrubber__step {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  background:      none;
+  border:          1px solid var(--border-soft);
+  border-radius:   var(--radius-sm);
+  color:           var(--color-muted);
+  cursor:          pointer;
+  flex-shrink:     0;
+  transition:      color var(--motion-hover), border-color var(--motion-hover);
+}
+
+.showdown-scrubber__step:hover:not(:disabled) {
+  color:        var(--color-paper);
+  border-color: var(--border-medium);
+}
+
+.showdown-scrubber__step:disabled {
+  opacity: 0.28;
+  cursor:  default;
+}
+
 /* Position label */
 .showdown-scrubber__pos-label {
   display:     flex;
@@ -63,6 +89,14 @@
   font-size:      1.05rem;
   letter-spacing: 0.08em;
   color:          var(--ink-dim);
+}
+
+.showdown-scrubber__result {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.85rem;
+  letter-spacing: 0.10em;
+  color:          var(--color-heat);
+  font-weight:    700;
 }
 
 /* Speed buttons */
