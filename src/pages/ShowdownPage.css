@@ -19,6 +19,47 @@
   padding-bottom: var(--space-2);
 }
 
+.showdown-page__title-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             var(--space-3);
+}
+
+/* ── View toggle: WALL / FIELD ────────────────────────────────────────────── */
+
+.showdown-page__view-toggle {
+  display:       flex;
+  gap:           2px;
+  background:    var(--surface-1);
+  border:        1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding:       2px;
+  flex-shrink:   0;
+}
+
+.showdown-page__view-btn {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.12em;
+  color:          var(--color-muted);
+  background:     none;
+  border:         none;
+  border-radius:  3px;
+  padding:        5px 12px;
+  cursor:         pointer;
+  transition:     color var(--motion-hover), background var(--motion-hover);
+}
+
+.showdown-page__view-btn:hover {
+  color: var(--color-paper);
+}
+
+.showdown-page__view-btn--active {
+  background: var(--surface-raised);
+  color:      var(--color-paper);
+}
+
 .showdown-page__title {
   font-family: var(--font-banner);
   font-size:   2rem;

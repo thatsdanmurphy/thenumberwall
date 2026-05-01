@@ -7,6 +7,7 @@ import AppHeader        from '../components/AppHeader.jsx'
 import AppFooter        from '../components/AppFooter.jsx'
 import WallGrid         from '../components/WallGrid.jsx'
 import ShowdownScrubber from '../components/ShowdownScrubber.jsx'
+import FieldView        from '../components/FieldView.jsx'
 import alcs2004         from '../data/showdowns/alcs2004.json'
 import './ShowdownPage.css'
 
@@ -313,6 +314,7 @@ export default function ShowdownPage() {
   // Selected player state: { pid, name, number, pos, team }
   const [selectedBos, setSelectedBos] = useState(null)
   const [selectedNyy, setSelectedNyy] = useState(null)
+  const [viewMode,    setViewMode]    = useState('wall') // 'wall' | 'field'
 
   useEffect(() => {
     document.title = `${data.title} — Showdowns | The Number Wall`
@@ -496,7 +498,19 @@ export default function ShowdownPage() {
       <main className="showdown-page">
 
         <div className="showdown-page__heading">
-          <h1 className="showdown-page__title">{data.title}</h1>
+          <div className="showdown-page__title-row">
+            <h1 className="showdown-page__title">{data.title}</h1>
+            <div className="showdown-page__view-toggle">
+              <button
+                className={`showdown-page__view-btn${viewMode === 'wall' ? ' showdown-page__view-btn--active' : ''}`}
+                onClick={() => setViewMode('wall')}
+              >WALL</button>
+              <button
+                className={`showdown-page__view-btn${viewMode === 'field' ? ' showdown-page__view-btn--active' : ''}`}
+                onClick={() => setViewMode('field')}
+              >FIELD</button>
+            </div>
+          </div>
           <p className="showdown-page__series-note">{data.series_note}</p>
         </div>
 
@@ -512,6 +526,18 @@ export default function ShowdownPage() {
           onSpeedChange={setSpeed}
           extraZones={extraZones}
         />
+
+        {/* ── Field view ───────────────────────────────────────────────── */}
+        {viewMode === 'field' && (
+          <FieldView
+            play={currentPlay}
+            position={position}
+            appearedNumbers={appearedNumbers}
+          />
+        )}
+
+        {/* ── Wall view ─────────────────────────────────────────────────── */}
+        {viewMode === 'wall' && <>
 
         {/* ── Desktop team headers ──────────────────────────────────────── */}
         <div className="showdown-page__team-headers">
@@ -626,6 +652,8 @@ export default function ShowdownPage() {
           </div>
 
         </div>
+
+        </> /* end wall view */}
 
         <div className="showdown-page__attribution">
           Play-by-play data: <a href="https://www.retrosheet.org" target="_blank" rel="noopener noreferrer">Retrosheet</a>
