@@ -661,10 +661,18 @@ export default function TeamWallPage() {
 
       <main className="tw-page">
 
-        {/* Lede — the invitation, right under the school name */}
-        <p className="tw-lede">
-          If you played here too, or remember someone who did, pick a number and add them.
-        </p>
+        {/* ── Page heading ─────────────────────────────────────────────── */}
+        <div className="tw-page__heading">
+          <h1 className={`tw-page__school${wall.school.length > 22 ? ' tw-page__school--long' : ''}`}>
+            {wall.school}
+          </h1>
+          {!isAllRoute && sportLabel && (
+            <span className="tw-page__sport-label">{sportLabel}</span>
+          )}
+          <p className="tw-lede">
+            If you played here too, or remember someone who did, pick a number and add them.
+          </p>
+        </div>
 
         {/* Top row — location + share as one anchored row */}
         <div className="tw-top-row">

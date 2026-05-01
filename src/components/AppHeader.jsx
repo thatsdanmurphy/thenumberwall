@@ -17,7 +17,7 @@ export default function AppHeader({ back = null, badge = null, title = null }) {
   const navigate = useNavigate()
 
   return (
-    <header className="app-header">
+    <header className={`app-header${back ? ' app-header--sub' : ''}`}>
 
       {/* ── Brand row — always present ───────────────────────────────────── */}
       <div className="app-header__brand-row">

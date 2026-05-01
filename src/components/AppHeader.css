@@ -116,6 +116,11 @@
   border-radius:  2px;
 }
 
+/* Sub-pages: tighten the gap below the header — back row adds height */
+.app-header--sub {
+  margin-bottom: var(--space-2);
+}
+
 /* ── Back row — below brand row, sub-pages only ─────────────────────────── */
 
 .app-header__back-row {
