@@ -91,10 +91,12 @@
   color:          var(--ink-dim);
 }
 
+/* Result label — always brand orange, never team color */
 .showdown-scrubber__result {
   font-family:    var(--font-scoreboard);
   font-size:      0.85rem;
   letter-spacing: 0.10em;
+  color:          var(--color-heat);
   font-weight:    700;
 }
 
@@ -127,6 +129,7 @@
 
 /* ── Track ─────────────────────────────────────────────────────────────────── */
 
+/* Outer: no overflow — lets the thumb protrude above/below */
 .showdown-scrubber__track {
   position:      relative;
   height:        16px;
@@ -135,35 +138,39 @@
   border-radius: 8px;
   cursor:        pointer;
   touch-action:  none;
-  overflow:      hidden;   /* clip segments + crosshatch to rounded corners */
+  /* extra vertical space so the 28px thumb is visually comfy */
+  margin-top:    6px;
+  margin-bottom: 6px;
 }
 
-/* Game segment — colored block for each game, wins get team color */
+/* Inner: clips all segment/overlay children to the rounded shape */
+.showdown-scrubber__track-inner {
+  position:      absolute;
+  inset:         0;
+  overflow:      hidden;
+  border-radius: 7px;  /* just inside the 1px border */
+}
+
+/* Game segment — absolute block inside inner (safe to clip) */
 .showdown-scrubber__segment {
   position:       absolute;
   top:            0;
   bottom:         0;
   pointer-events: none;
-  border-radius:  0;
-  transition:     background 0.4s ease;
+  transition:     background 0.35s ease;
 }
 
-/* First and last segments get matching outer rounded ends */
-.showdown-scrubber__segment:first-child { border-radius: 8px 0 0 8px; }
-.showdown-scrubber__segment:last-child  { border-radius: 0 8px 8px 0; }
-
-/* Brightness overlay — from left edge to thumb; whitens the played portion slightly */
+/* Brightness overlay — from left edge to thumb */
 .showdown-scrubber__fill-highlight {
   position:       absolute;
   left:           0;
   top:            0;
   bottom:         0;
-  background:     rgba(255,255,255,0.10);
+  background:     rgba(255,255,255,0.09);
   pointer-events: none;
-  border-radius:  8px 0 0 8px;
 }
 
-/* Extra-inning crosshatch overlay */
+/* Extra-inning crosshatch */
 .showdown-scrubber__extra-zone {
   position:       absolute;
   top:            0;
@@ -171,30 +178,30 @@
   pointer-events: none;
   background-image: repeating-linear-gradient(
     45deg,
-    rgba(255,255,255,0.11) 0px,
-    rgba(255,255,255,0.11) 2px,
+    rgba(255,255,255,0.12) 0px,
+    rgba(255,255,255,0.12) 2px,
     transparent            2px,
     transparent            7px
   );
   mix-blend-mode: overlay;
 }
 
-/* Thumb — bigger, drop shadow, no orange border */
+/* Thumb — lives outside the inner clip layer, sits on top of the track */
 .showdown-scrubber__thumb {
   position:       absolute;
   top:            50%;
   transform:      translate(-50%, -50%);
-  width:          28px;
-  height:         28px;
+  width:          26px;
+  height:         26px;
   background:     var(--color-paper);
   border:         none;
   border-radius:  50%;
   pointer-events: none;
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.60),
-    0 0 0 1px rgba(255,255,255,0.18),
-    0 4px 14px rgba(0,0,0,0.45);
   z-index:        2;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.65),
+    0 0 0 1.5px rgba(255,255,255,0.22),
+    0 4px 16px rgba(0,0,0,0.40);
 }
 
 /* ── Speed buttons — below track ──────────────────────────────────────────── */
@@ -203,7 +210,6 @@
   display:         flex;
   gap:             4px;
   justify-content: flex-end;
-  flex-shrink:     0;
 }
 
 .showdown-scrubber__speed {

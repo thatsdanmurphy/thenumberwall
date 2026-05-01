@@ -2,7 +2,7 @@
   "id": "alcs-2004",
   "title": "2004 ALCS",
   "sub": "American League Championship Series",
-  "series_note": "Down 3\u20130, Boston won 4 straight. The greatest comeback in baseball history.",
+  "series_note": "Down 3–0, Boston won 4 straight. The greatest comeback in baseball history.",
   "dataMode": "retrosheet-v2",
   "teams": {
     "BOS": {
@@ -403,7 +403,7 @@
       "venue": "Yankee Stadium",
       "score": "NYY 10, BOS 7",
       "winner": "NYY",
-      "context": "Series tied 0\u20130"
+      "context": "Series tied 0–0"
     },
     {
       "game": 2,
@@ -411,7 +411,7 @@
       "venue": "Yankee Stadium",
       "score": "NYY 3, BOS 1",
       "winner": "NYY",
-      "context": "NYY leads 2\u20130"
+      "context": "NYY leads 2–0"
     },
     {
       "game": 3,
@@ -419,7 +419,7 @@
       "venue": "Fenway Park",
       "score": "NYY 19, BOS 8",
       "winner": "NYY",
-      "context": "NYY leads 3\u20130"
+      "context": "NYY leads 3–0"
     },
     {
       "game": 4,
@@ -427,7 +427,7 @@
       "venue": "Fenway Park",
       "score": "BOS 6, NYY 4 (12 inn)",
       "winner": "BOS",
-      "context": "NYY leads 3\u20131"
+      "context": "NYY leads 3–1"
     },
     {
       "game": 5,
@@ -435,7 +435,7 @@
       "venue": "Fenway Park",
       "score": "BOS 5, NYY 4 (14 inn)",
       "winner": "BOS",
-      "context": "NYY leads 3\u20132"
+      "context": "NYY leads 3–2"
     },
     {
       "game": 6,
@@ -443,7 +443,7 @@
       "venue": "Yankee Stadium",
       "score": "BOS 4, NYY 2",
       "winner": "BOS",
-      "context": "Series tied 3\u20133"
+      "context": "Series tied 3–3"
     },
     {
       "game": 7,
@@ -468,7 +468,7 @@
       "game": 1,
       "inning": 1,
       "half": "top",
-      "label": "G1 \u00b7 T1",
+      "label": "G1 · T1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -510,7 +510,7 @@
       "game": 1,
       "inning": 1,
       "half": "top",
-      "label": "G1 \u00b7 T1",
+      "label": "G1 · T1",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -552,7 +552,7 @@
       "game": 1,
       "inning": 1,
       "half": "top",
-      "label": "G1 \u00b7 T1",
+      "label": "G1 · T1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -594,7 +594,7 @@
       "game": 1,
       "inning": 1,
       "half": "bottom",
-      "label": "G1 \u00b7 B1",
+      "label": "G1 · B1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -636,7 +636,7 @@
       "game": 1,
       "inning": 1,
       "half": "bottom",
-      "label": "G1 \u00b7 B1",
+      "label": "G1 · B1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -678,7 +678,7 @@
       "game": 1,
       "inning": 1,
       "half": "bottom",
-      "label": "G1 \u00b7 B1",
+      "label": "G1 · B1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -720,7 +720,7 @@
       "game": 1,
       "inning": 1,
       "half": "bottom",
-      "label": "G1 \u00b7 B1",
+      "label": "G1 · B1",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -762,7 +762,7 @@
       "game": 1,
       "inning": 1,
       "half": "bottom",
-      "label": "G1 \u00b7 B1",
+      "label": "G1 · B1",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -804,7 +804,7 @@
       "game": 1,
       "inning": 1,
       "half": "bottom",
-      "label": "G1 \u00b7 B1",
+      "label": "G1 · B1",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -854,7 +854,7 @@
       "game": 1,
       "inning": 2,
       "half": "top",
-      "label": "G1 \u00b7 T2",
+      "label": "G1 · T2",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -896,7 +896,7 @@
       "game": 1,
       "inning": 2,
       "half": "top",
-      "label": "G1 \u00b7 T2",
+      "label": "G1 · T2",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -946,7 +946,7 @@
       "game": 1,
       "inning": 2,
       "half": "top",
-      "label": "G1 \u00b7 T2",
+      "label": "G1 · T2",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -988,7 +988,7 @@
       "game": 1,
       "inning": 2,
       "half": "bottom",
-      "label": "G1 \u00b7 B2",
+      "label": "G1 · B2",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -1038,7 +1038,7 @@
       "game": 1,
       "inning": 2,
       "half": "bottom",
-      "label": "G1 \u00b7 B2",
+      "label": "G1 · B2",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -1080,7 +1080,7 @@
       "game": 1,
       "inning": 2,
       "half": "bottom",
-      "label": "G1 \u00b7 B2",
+      "label": "G1 · B2",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -1122,7 +1122,7 @@
       "game": 1,
       "inning": 3,
       "half": "top",
-      "label": "G1 \u00b7 T3",
+      "label": "G1 · T3",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -1164,7 +1164,7 @@
       "game": 1,
       "inning": 3,
       "half": "top",
-      "label": "G1 \u00b7 T3",
+      "label": "G1 · T3",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -1206,7 +1206,7 @@
       "game": 1,
       "inning": 3,
       "half": "top",
-      "label": "G1 \u00b7 T3",
+      "label": "G1 · T3",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -1248,7 +1248,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -1290,7 +1290,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -1332,7 +1332,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -1374,7 +1374,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -1416,7 +1416,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -1466,7 +1466,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -1508,7 +1508,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -1550,7 +1550,7 @@
       "game": 1,
       "inning": 3,
       "half": "bottom",
-      "label": "G1 \u00b7 B3",
+      "label": "G1 · B3",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -1592,7 +1592,7 @@
       "game": 1,
       "inning": 4,
       "half": "top",
-      "label": "G1 \u00b7 T4",
+      "label": "G1 · T4",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -1634,7 +1634,7 @@
       "game": 1,
       "inning": 4,
       "half": "top",
-      "label": "G1 \u00b7 T4",
+      "label": "G1 · T4",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -1676,7 +1676,7 @@
       "game": 1,
       "inning": 4,
       "half": "top",
-      "label": "G1 \u00b7 T4",
+      "label": "G1 · T4",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -1718,7 +1718,7 @@
       "game": 1,
       "inning": 4,
       "half": "bottom",
-      "label": "G1 \u00b7 B4",
+      "label": "G1 · B4",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -1760,7 +1760,7 @@
       "game": 1,
       "inning": 4,
       "half": "bottom",
-      "label": "G1 \u00b7 B4",
+      "label": "G1 · B4",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -1802,7 +1802,7 @@
       "game": 1,
       "inning": 4,
       "half": "bottom",
-      "label": "G1 \u00b7 B4",
+      "label": "G1 · B4",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -1852,7 +1852,7 @@
       "game": 1,
       "inning": 4,
       "half": "bottom",
-      "label": "G1 \u00b7 B4",
+      "label": "G1 · B4",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -1894,7 +1894,7 @@
       "game": 1,
       "inning": 5,
       "half": "top",
-      "label": "G1 \u00b7 T5",
+      "label": "G1 · T5",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -1936,7 +1936,7 @@
       "game": 1,
       "inning": 5,
       "half": "top",
-      "label": "G1 \u00b7 T5",
+      "label": "G1 · T5",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -1986,7 +1986,7 @@
       "game": 1,
       "inning": 5,
       "half": "top",
-      "label": "G1 \u00b7 T5",
+      "label": "G1 · T5",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -2028,7 +2028,7 @@
       "game": 1,
       "inning": 5,
       "half": "bottom",
-      "label": "G1 \u00b7 B5",
+      "label": "G1 · B5",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -2070,7 +2070,7 @@
       "game": 1,
       "inning": 5,
       "half": "bottom",
-      "label": "G1 \u00b7 B5",
+      "label": "G1 · B5",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -2120,7 +2120,7 @@
       "game": 1,
       "inning": 5,
       "half": "bottom",
-      "label": "G1 \u00b7 B5",
+      "label": "G1 · B5",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -2153,7 +2153,7 @@
       "game": 1,
       "inning": 5,
       "half": "bottom",
-      "label": "G1 \u00b7 B5",
+      "label": "G1 · B5",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -2195,7 +2195,7 @@
       "game": 1,
       "inning": 5,
       "half": "bottom",
-      "label": "G1 \u00b7 B5",
+      "label": "G1 · B5",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -2237,7 +2237,7 @@
       "game": 1,
       "inning": 6,
       "half": "top",
-      "label": "G1 \u00b7 T6",
+      "label": "G1 · T6",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -2279,7 +2279,7 @@
       "game": 1,
       "inning": 6,
       "half": "top",
-      "label": "G1 \u00b7 T6",
+      "label": "G1 · T6",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -2321,7 +2321,7 @@
       "game": 1,
       "inning": 6,
       "half": "top",
-      "label": "G1 \u00b7 T6",
+      "label": "G1 · T6",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -2363,7 +2363,7 @@
       "game": 1,
       "inning": 6,
       "half": "bottom",
-      "label": "G1 \u00b7 B6",
+      "label": "G1 · B6",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -2389,14 +2389,14 @@
           "7"
         ]
       },
-      "note": null,
+      "note": "Kenny Lofton goes deep — Yankees seize the lead, Game 1",
       "isSeriesEnd": false
     },
     {
       "game": 1,
       "inning": 6,
       "half": "bottom",
-      "label": "G1 \u00b7 B6",
+      "label": "G1 · B6",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -2446,7 +2446,7 @@
       "game": 1,
       "inning": 6,
       "half": "bottom",
-      "label": "G1 \u00b7 B6",
+      "label": "G1 · B6",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -2488,7 +2488,7 @@
       "game": 1,
       "inning": 6,
       "half": "bottom",
-      "label": "G1 \u00b7 B6",
+      "label": "G1 · B6",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -2530,7 +2530,7 @@
       "game": 1,
       "inning": 6,
       "half": "bottom",
-      "label": "G1 \u00b7 B6",
+      "label": "G1 · B6",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -2572,7 +2572,7 @@
       "game": 1,
       "inning": 6,
       "half": "bottom",
-      "label": "G1 \u00b7 B6",
+      "label": "G1 · B6",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -2614,7 +2614,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -2656,7 +2656,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -2698,7 +2698,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -2748,7 +2748,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -2790,7 +2790,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -2832,7 +2832,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -2874,7 +2874,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -2916,7 +2916,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -2949,7 +2949,7 @@
       "game": 1,
       "inning": 7,
       "half": "top",
-      "label": "G1 \u00b7 T7",
+      "label": "G1 · T7",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -2991,7 +2991,7 @@
       "game": 1,
       "inning": 7,
       "half": "bottom",
-      "label": "G1 \u00b7 B7",
+      "label": "G1 · B7",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -3041,7 +3041,7 @@
       "game": 1,
       "inning": 7,
       "half": "bottom",
-      "label": "G1 \u00b7 B7",
+      "label": "G1 · B7",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -3083,7 +3083,7 @@
       "game": 1,
       "inning": 7,
       "half": "bottom",
-      "label": "G1 \u00b7 B7",
+      "label": "G1 · B7",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -3125,7 +3125,7 @@
       "game": 1,
       "inning": 7,
       "half": "bottom",
-      "label": "G1 \u00b7 B7",
+      "label": "G1 · B7",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -3167,7 +3167,7 @@
       "game": 1,
       "inning": 8,
       "half": "top",
-      "label": "G1 \u00b7 T8",
+      "label": "G1 · T8",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -3209,7 +3209,7 @@
       "game": 1,
       "inning": 8,
       "half": "top",
-      "label": "G1 \u00b7 T8",
+      "label": "G1 · T8",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -3251,7 +3251,7 @@
       "game": 1,
       "inning": 8,
       "half": "top",
-      "label": "G1 \u00b7 T8",
+      "label": "G1 · T8",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -3293,7 +3293,7 @@
       "game": 1,
       "inning": 8,
       "half": "top",
-      "label": "G1 \u00b7 T8",
+      "label": "G1 · T8",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -3335,7 +3335,7 @@
       "game": 1,
       "inning": 8,
       "half": "top",
-      "label": "G1 \u00b7 T8",
+      "label": "G1 · T8",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -3377,7 +3377,7 @@
       "game": 1,
       "inning": 8,
       "half": "top",
-      "label": "G1 \u00b7 T8",
+      "label": "G1 · T8",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -3419,7 +3419,7 @@
       "game": 1,
       "inning": 8,
       "half": "bottom",
-      "label": "G1 \u00b7 B8",
+      "label": "G1 · B8",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -3469,7 +3469,7 @@
       "game": 1,
       "inning": 8,
       "half": "bottom",
-      "label": "G1 \u00b7 B8",
+      "label": "G1 · B8",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -3511,7 +3511,7 @@
       "game": 1,
       "inning": 8,
       "half": "bottom",
-      "label": "G1 \u00b7 B8",
+      "label": "G1 · B8",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -3553,7 +3553,7 @@
       "game": 1,
       "inning": 8,
       "half": "bottom",
-      "label": "G1 \u00b7 B8",
+      "label": "G1 · B8",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -3595,7 +3595,7 @@
       "game": 1,
       "inning": 8,
       "half": "bottom",
-      "label": "G1 \u00b7 B8",
+      "label": "G1 · B8",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -3637,7 +3637,7 @@
       "game": 1,
       "inning": 8,
       "half": "bottom",
-      "label": "G1 \u00b7 B8",
+      "label": "G1 · B8",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -3679,7 +3679,7 @@
       "game": 1,
       "inning": 9,
       "half": "top",
-      "label": "G1 \u00b7 T9",
+      "label": "G1 · T9",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -3721,7 +3721,7 @@
       "game": 1,
       "inning": 9,
       "half": "top",
-      "label": "G1 \u00b7 T9",
+      "label": "G1 · T9",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -3763,7 +3763,7 @@
       "game": 1,
       "inning": 9,
       "half": "top",
-      "label": "G1 \u00b7 T9",
+      "label": "G1 · T9",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -3805,7 +3805,7 @@
       "game": 1,
       "inning": 9,
       "half": "top",
-      "label": "G1 \u00b7 T9",
+      "label": "G1 · T9",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -3847,7 +3847,7 @@
       "game": 2,
       "inning": 1,
       "half": "top",
-      "label": "G2 \u00b7 T1",
+      "label": "G2 · T1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -3889,7 +3889,7 @@
       "game": 2,
       "inning": 1,
       "half": "top",
-      "label": "G2 \u00b7 T1",
+      "label": "G2 · T1",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -3931,7 +3931,7 @@
       "game": 2,
       "inning": 1,
       "half": "top",
-      "label": "G2 \u00b7 T1",
+      "label": "G2 · T1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -3973,7 +3973,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -4015,7 +4015,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -4048,7 +4048,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -4081,7 +4081,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -4123,7 +4123,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -4165,7 +4165,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -4207,7 +4207,7 @@
       "game": 2,
       "inning": 1,
       "half": "bottom",
-      "label": "G2 \u00b7 B1",
+      "label": "G2 · B1",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -4257,7 +4257,7 @@
       "game": 2,
       "inning": 2,
       "half": "top",
-      "label": "G2 \u00b7 T2",
+      "label": "G2 · T2",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -4299,7 +4299,7 @@
       "game": 2,
       "inning": 2,
       "half": "top",
-      "label": "G2 \u00b7 T2",
+      "label": "G2 · T2",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -4341,7 +4341,7 @@
       "game": 2,
       "inning": 2,
       "half": "top",
-      "label": "G2 \u00b7 T2",
+      "label": "G2 · T2",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -4383,7 +4383,7 @@
       "game": 2,
       "inning": 2,
       "half": "top",
-      "label": "G2 \u00b7 T2",
+      "label": "G2 · T2",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -4433,7 +4433,7 @@
       "game": 2,
       "inning": 2,
       "half": "bottom",
-      "label": "G2 \u00b7 B2",
+      "label": "G2 · B2",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -4483,7 +4483,7 @@
       "game": 2,
       "inning": 2,
       "half": "bottom",
-      "label": "G2 \u00b7 B2",
+      "label": "G2 · B2",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -4525,7 +4525,7 @@
       "game": 2,
       "inning": 2,
       "half": "bottom",
-      "label": "G2 \u00b7 B2",
+      "label": "G2 · B2",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -4567,7 +4567,7 @@
       "game": 2,
       "inning": 2,
       "half": "bottom",
-      "label": "G2 \u00b7 B2",
+      "label": "G2 · B2",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -4609,7 +4609,7 @@
       "game": 2,
       "inning": 2,
       "half": "bottom",
-      "label": "G2 \u00b7 B2",
+      "label": "G2 · B2",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -4651,7 +4651,7 @@
       "game": 2,
       "inning": 3,
       "half": "top",
-      "label": "G2 \u00b7 T3",
+      "label": "G2 · T3",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -4693,7 +4693,7 @@
       "game": 2,
       "inning": 3,
       "half": "top",
-      "label": "G2 \u00b7 T3",
+      "label": "G2 · T3",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -4735,7 +4735,7 @@
       "game": 2,
       "inning": 3,
       "half": "top",
-      "label": "G2 \u00b7 T3",
+      "label": "G2 · T3",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -4785,7 +4785,7 @@
       "game": 2,
       "inning": 3,
       "half": "top",
-      "label": "G2 \u00b7 T3",
+      "label": "G2 · T3",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -4827,7 +4827,7 @@
       "game": 2,
       "inning": 3,
       "half": "bottom",
-      "label": "G2 \u00b7 B3",
+      "label": "G2 · B3",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -4869,7 +4869,7 @@
       "game": 2,
       "inning": 3,
       "half": "bottom",
-      "label": "G2 \u00b7 B3",
+      "label": "G2 · B3",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -4911,7 +4911,7 @@
       "game": 2,
       "inning": 3,
       "half": "bottom",
-      "label": "G2 \u00b7 B3",
+      "label": "G2 · B3",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -4953,7 +4953,7 @@
       "game": 2,
       "inning": 4,
       "half": "top",
-      "label": "G2 \u00b7 T4",
+      "label": "G2 · T4",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -4995,7 +4995,7 @@
       "game": 2,
       "inning": 4,
       "half": "top",
-      "label": "G2 \u00b7 T4",
+      "label": "G2 · T4",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -5037,7 +5037,7 @@
       "game": 2,
       "inning": 4,
       "half": "top",
-      "label": "G2 \u00b7 T4",
+      "label": "G2 · T4",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -5079,7 +5079,7 @@
       "game": 2,
       "inning": 4,
       "half": "bottom",
-      "label": "G2 \u00b7 B4",
+      "label": "G2 · B4",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -5121,7 +5121,7 @@
       "game": 2,
       "inning": 4,
       "half": "bottom",
-      "label": "G2 \u00b7 B4",
+      "label": "G2 · B4",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -5163,7 +5163,7 @@
       "game": 2,
       "inning": 4,
       "half": "bottom",
-      "label": "G2 \u00b7 B4",
+      "label": "G2 · B4",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -5205,7 +5205,7 @@
       "game": 2,
       "inning": 4,
       "half": "bottom",
-      "label": "G2 \u00b7 B4",
+      "label": "G2 · B4",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -5247,7 +5247,7 @@
       "game": 2,
       "inning": 5,
       "half": "top",
-      "label": "G2 \u00b7 T5",
+      "label": "G2 · T5",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -5289,7 +5289,7 @@
       "game": 2,
       "inning": 5,
       "half": "top",
-      "label": "G2 \u00b7 T5",
+      "label": "G2 · T5",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -5331,7 +5331,7 @@
       "game": 2,
       "inning": 5,
       "half": "top",
-      "label": "G2 \u00b7 T5",
+      "label": "G2 · T5",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -5373,7 +5373,7 @@
       "game": 2,
       "inning": 5,
       "half": "bottom",
-      "label": "G2 \u00b7 B5",
+      "label": "G2 · B5",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -5423,7 +5423,7 @@
       "game": 2,
       "inning": 5,
       "half": "bottom",
-      "label": "G2 \u00b7 B5",
+      "label": "G2 · B5",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -5465,7 +5465,7 @@
       "game": 2,
       "inning": 5,
       "half": "bottom",
-      "label": "G2 \u00b7 B5",
+      "label": "G2 · B5",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -5507,7 +5507,7 @@
       "game": 2,
       "inning": 5,
       "half": "bottom",
-      "label": "G2 \u00b7 B5",
+      "label": "G2 · B5",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -5549,7 +5549,7 @@
       "game": 2,
       "inning": 6,
       "half": "top",
-      "label": "G2 \u00b7 T6",
+      "label": "G2 · T6",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -5591,7 +5591,7 @@
       "game": 2,
       "inning": 6,
       "half": "top",
-      "label": "G2 \u00b7 T6",
+      "label": "G2 · T6",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -5633,7 +5633,7 @@
       "game": 2,
       "inning": 6,
       "half": "top",
-      "label": "G2 \u00b7 T6",
+      "label": "G2 · T6",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -5675,7 +5675,7 @@
       "game": 2,
       "inning": 6,
       "half": "bottom",
-      "label": "G2 \u00b7 B6",
+      "label": "G2 · B6",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -5717,7 +5717,7 @@
       "game": 2,
       "inning": 6,
       "half": "bottom",
-      "label": "G2 \u00b7 B6",
+      "label": "G2 · B6",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -5759,7 +5759,7 @@
       "game": 2,
       "inning": 6,
       "half": "bottom",
-      "label": "G2 \u00b7 B6",
+      "label": "G2 · B6",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -5785,14 +5785,14 @@
           "19"
         ]
       },
-      "note": null,
+      "note": "John Olerud solo shot — Yankees go up 2-0 in the series",
       "isSeriesEnd": false
     },
     {
       "game": 2,
       "inning": 6,
       "half": "bottom",
-      "label": "G2 \u00b7 B6",
+      "label": "G2 · B6",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -5834,7 +5834,7 @@
       "game": 2,
       "inning": 6,
       "half": "bottom",
-      "label": "G2 \u00b7 B6",
+      "label": "G2 · B6",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -5876,7 +5876,7 @@
       "game": 2,
       "inning": 7,
       "half": "top",
-      "label": "G2 \u00b7 T7",
+      "label": "G2 · T7",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -5926,7 +5926,7 @@
       "game": 2,
       "inning": 7,
       "half": "top",
-      "label": "G2 \u00b7 T7",
+      "label": "G2 · T7",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -5968,7 +5968,7 @@
       "game": 2,
       "inning": 7,
       "half": "top",
-      "label": "G2 \u00b7 T7",
+      "label": "G2 · T7",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -6018,7 +6018,7 @@
       "game": 2,
       "inning": 7,
       "half": "bottom",
-      "label": "G2 \u00b7 B7",
+      "label": "G2 · B7",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -6068,7 +6068,7 @@
       "game": 2,
       "inning": 7,
       "half": "bottom",
-      "label": "G2 \u00b7 B7",
+      "label": "G2 · B7",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -6110,7 +6110,7 @@
       "game": 2,
       "inning": 7,
       "half": "bottom",
-      "label": "G2 \u00b7 B7",
+      "label": "G2 · B7",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -6152,7 +6152,7 @@
       "game": 2,
       "inning": 7,
       "half": "bottom",
-      "label": "G2 \u00b7 B7",
+      "label": "G2 · B7",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -6194,7 +6194,7 @@
       "game": 2,
       "inning": 7,
       "half": "bottom",
-      "label": "G2 \u00b7 B7",
+      "label": "G2 · B7",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -6236,7 +6236,7 @@
       "game": 2,
       "inning": 8,
       "half": "top",
-      "label": "G2 \u00b7 T8",
+      "label": "G2 · T8",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -6278,7 +6278,7 @@
       "game": 2,
       "inning": 8,
       "half": "top",
-      "label": "G2 \u00b7 T8",
+      "label": "G2 · T8",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -6320,7 +6320,7 @@
       "game": 2,
       "inning": 8,
       "half": "top",
-      "label": "G2 \u00b7 T8",
+      "label": "G2 · T8",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -6370,7 +6370,7 @@
       "game": 2,
       "inning": 8,
       "half": "top",
-      "label": "G2 \u00b7 T8",
+      "label": "G2 · T8",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -6420,7 +6420,7 @@
       "game": 2,
       "inning": 8,
       "half": "top",
-      "label": "G2 \u00b7 T8",
+      "label": "G2 · T8",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -6462,7 +6462,7 @@
       "game": 2,
       "inning": 8,
       "half": "bottom",
-      "label": "G2 \u00b7 B8",
+      "label": "G2 · B8",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -6504,7 +6504,7 @@
       "game": 2,
       "inning": 8,
       "half": "bottom",
-      "label": "G2 \u00b7 B8",
+      "label": "G2 · B8",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -6546,7 +6546,7 @@
       "game": 2,
       "inning": 8,
       "half": "bottom",
-      "label": "G2 \u00b7 B8",
+      "label": "G2 · B8",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -6579,7 +6579,7 @@
       "game": 2,
       "inning": 8,
       "half": "bottom",
-      "label": "G2 \u00b7 B8",
+      "label": "G2 · B8",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -6621,7 +6621,7 @@
       "game": 2,
       "inning": 8,
       "half": "bottom",
-      "label": "G2 \u00b7 B8",
+      "label": "G2 · B8",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -6663,7 +6663,7 @@
       "game": 2,
       "inning": 8,
       "half": "bottom",
-      "label": "G2 \u00b7 B8",
+      "label": "G2 · B8",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -6705,7 +6705,7 @@
       "game": 2,
       "inning": 9,
       "half": "top",
-      "label": "G2 \u00b7 T9",
+      "label": "G2 · T9",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -6747,7 +6747,7 @@
       "game": 2,
       "inning": 9,
       "half": "top",
-      "label": "G2 \u00b7 T9",
+      "label": "G2 · T9",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -6789,7 +6789,7 @@
       "game": 2,
       "inning": 9,
       "half": "top",
-      "label": "G2 \u00b7 T9",
+      "label": "G2 · T9",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -6831,7 +6831,7 @@
       "game": 2,
       "inning": 9,
       "half": "top",
-      "label": "G2 \u00b7 T9",
+      "label": "G2 · T9",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -6873,7 +6873,7 @@
       "game": 3,
       "inning": 1,
       "half": "top",
-      "label": "G3 \u00b7 T1",
+      "label": "G3 · T1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -6915,7 +6915,7 @@
       "game": 3,
       "inning": 1,
       "half": "top",
-      "label": "G3 \u00b7 T1",
+      "label": "G3 · T1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -6957,7 +6957,7 @@
       "game": 3,
       "inning": 1,
       "half": "top",
-      "label": "G3 \u00b7 T1",
+      "label": "G3 · T1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -6999,7 +6999,7 @@
       "game": 3,
       "inning": 1,
       "half": "top",
-      "label": "G3 \u00b7 T1",
+      "label": "G3 · T1",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -7025,14 +7025,14 @@
           "55"
         ]
       },
-      "note": null,
+      "note": "Hideki Matsui homers — the Game 3 rout has begun",
       "isSeriesEnd": false
     },
     {
       "game": 3,
       "inning": 1,
       "half": "top",
-      "label": "G3 \u00b7 T1",
+      "label": "G3 · T1",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -7074,7 +7074,7 @@
       "game": 3,
       "inning": 1,
       "half": "top",
-      "label": "G3 \u00b7 T1",
+      "label": "G3 · T1",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -7116,7 +7116,7 @@
       "game": 3,
       "inning": 1,
       "half": "bottom",
-      "label": "G3 \u00b7 B1",
+      "label": "G3 · B1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -7166,7 +7166,7 @@
       "game": 3,
       "inning": 1,
       "half": "bottom",
-      "label": "G3 \u00b7 B1",
+      "label": "G3 · B1",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -7208,7 +7208,7 @@
       "game": 3,
       "inning": 1,
       "half": "bottom",
-      "label": "G3 \u00b7 B1",
+      "label": "G3 · B1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -7250,7 +7250,7 @@
       "game": 3,
       "inning": 1,
       "half": "bottom",
-      "label": "G3 \u00b7 B1",
+      "label": "G3 · B1",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -7292,7 +7292,7 @@
       "game": 3,
       "inning": 2,
       "half": "top",
-      "label": "G3 \u00b7 T2",
+      "label": "G3 · T2",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -7334,7 +7334,7 @@
       "game": 3,
       "inning": 2,
       "half": "top",
-      "label": "G3 \u00b7 T2",
+      "label": "G3 · T2",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -7376,7 +7376,7 @@
       "game": 3,
       "inning": 2,
       "half": "top",
-      "label": "G3 \u00b7 T2",
+      "label": "G3 · T2",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -7418,7 +7418,7 @@
       "game": 3,
       "inning": 2,
       "half": "top",
-      "label": "G3 \u00b7 T2",
+      "label": "G3 · T2",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -7460,7 +7460,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -7502,7 +7502,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -7535,7 +7535,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -7577,7 +7577,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -7619,7 +7619,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -7669,7 +7669,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -7711,7 +7711,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -7744,7 +7744,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -7786,7 +7786,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -7828,7 +7828,7 @@
       "game": 3,
       "inning": 2,
       "half": "bottom",
-      "label": "G3 \u00b7 B2",
+      "label": "G3 · B2",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -7878,7 +7878,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -7904,14 +7904,14 @@
           "13"
         ]
       },
-      "note": null,
+      "note": "Alex Rodriguez goes deep — Yankees pouring it on, 19-8 blowout",
       "isSeriesEnd": false
     },
     {
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -7953,7 +7953,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -7995,7 +7995,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -8037,7 +8037,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -8070,7 +8070,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -8112,7 +8112,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -8154,7 +8154,7 @@
       "game": 3,
       "inning": 3,
       "half": "top",
-      "label": "G3 \u00b7 T3",
+      "label": "G3 · T3",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -8204,7 +8204,7 @@
       "game": 3,
       "inning": 3,
       "half": "bottom",
-      "label": "G3 \u00b7 B3",
+      "label": "G3 · B3",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -8246,7 +8246,7 @@
       "game": 3,
       "inning": 3,
       "half": "bottom",
-      "label": "G3 \u00b7 B3",
+      "label": "G3 · B3",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -8288,7 +8288,7 @@
       "game": 3,
       "inning": 3,
       "half": "bottom",
-      "label": "G3 \u00b7 B3",
+      "label": "G3 · B3",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -8330,7 +8330,7 @@
       "game": 3,
       "inning": 3,
       "half": "bottom",
-      "label": "G3 \u00b7 B3",
+      "label": "G3 · B3",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -8372,7 +8372,7 @@
       "game": 3,
       "inning": 3,
       "half": "bottom",
-      "label": "G3 \u00b7 B3",
+      "label": "G3 · B3",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -8414,7 +8414,7 @@
       "game": 3,
       "inning": 3,
       "half": "bottom",
-      "label": "G3 \u00b7 B3",
+      "label": "G3 · B3",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -8456,7 +8456,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -8489,7 +8489,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -8531,7 +8531,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -8573,7 +8573,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -8599,14 +8599,14 @@
           "11"
         ]
       },
-      "note": null,
+      "note": "Gary Sheffield launches one — the pummeling continues",
       "isSeriesEnd": false
     },
     {
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -8648,7 +8648,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -8690,7 +8690,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -8732,7 +8732,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -8774,7 +8774,7 @@
       "game": 3,
       "inning": 4,
       "half": "top",
-      "label": "G3 \u00b7 T4",
+      "label": "G3 · T4",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -8816,7 +8816,7 @@
       "game": 3,
       "inning": 4,
       "half": "bottom",
-      "label": "G3 \u00b7 B4",
+      "label": "G3 · B4",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -8858,7 +8858,7 @@
       "game": 3,
       "inning": 4,
       "half": "bottom",
-      "label": "G3 \u00b7 B4",
+      "label": "G3 · B4",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -8900,7 +8900,7 @@
       "game": 3,
       "inning": 4,
       "half": "bottom",
-      "label": "G3 \u00b7 B4",
+      "label": "G3 · B4",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -8942,7 +8942,7 @@
       "game": 3,
       "inning": 4,
       "half": "bottom",
-      "label": "G3 \u00b7 B4",
+      "label": "G3 · B4",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -8984,7 +8984,7 @@
       "game": 3,
       "inning": 5,
       "half": "top",
-      "label": "G3 \u00b7 T5",
+      "label": "G3 · T5",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -9034,7 +9034,7 @@
       "game": 3,
       "inning": 5,
       "half": "top",
-      "label": "G3 \u00b7 T5",
+      "label": "G3 · T5",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -9076,7 +9076,7 @@
       "game": 3,
       "inning": 5,
       "half": "top",
-      "label": "G3 \u00b7 T5",
+      "label": "G3 · T5",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -9118,7 +9118,7 @@
       "game": 3,
       "inning": 5,
       "half": "top",
-      "label": "G3 \u00b7 T5",
+      "label": "G3 · T5",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -9160,7 +9160,7 @@
       "game": 3,
       "inning": 5,
       "half": "top",
-      "label": "G3 \u00b7 T5",
+      "label": "G3 · T5",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -9202,7 +9202,7 @@
       "game": 3,
       "inning": 5,
       "half": "top",
-      "label": "G3 \u00b7 T5",
+      "label": "G3 · T5",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -9244,7 +9244,7 @@
       "game": 3,
       "inning": 5,
       "half": "bottom",
-      "label": "G3 \u00b7 B5",
+      "label": "G3 · B5",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -9286,7 +9286,7 @@
       "game": 3,
       "inning": 5,
       "half": "bottom",
-      "label": "G3 \u00b7 B5",
+      "label": "G3 · B5",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -9328,7 +9328,7 @@
       "game": 3,
       "inning": 5,
       "half": "bottom",
-      "label": "G3 \u00b7 B5",
+      "label": "G3 · B5",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -9378,7 +9378,7 @@
       "game": 3,
       "inning": 6,
       "half": "top",
-      "label": "G3 \u00b7 T6",
+      "label": "G3 · T6",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -9420,7 +9420,7 @@
       "game": 3,
       "inning": 6,
       "half": "top",
-      "label": "G3 \u00b7 T6",
+      "label": "G3 · T6",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -9462,7 +9462,7 @@
       "game": 3,
       "inning": 6,
       "half": "top",
-      "label": "G3 \u00b7 T6",
+      "label": "G3 · T6",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -9512,7 +9512,7 @@
       "game": 3,
       "inning": 6,
       "half": "bottom",
-      "label": "G3 \u00b7 B6",
+      "label": "G3 · B6",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -9554,7 +9554,7 @@
       "game": 3,
       "inning": 6,
       "half": "bottom",
-      "label": "G3 \u00b7 B6",
+      "label": "G3 · B6",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -9596,7 +9596,7 @@
       "game": 3,
       "inning": 6,
       "half": "bottom",
-      "label": "G3 \u00b7 B6",
+      "label": "G3 · B6",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -9638,7 +9638,7 @@
       "game": 3,
       "inning": 6,
       "half": "bottom",
-      "label": "G3 \u00b7 B6",
+      "label": "G3 · B6",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -9680,7 +9680,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -9722,7 +9722,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -9764,7 +9764,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -9814,7 +9814,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -9856,7 +9856,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -9898,7 +9898,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -9940,7 +9940,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -9982,7 +9982,7 @@
       "game": 3,
       "inning": 7,
       "half": "top",
-      "label": "G3 \u00b7 T7",
+      "label": "G3 · T7",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -10032,7 +10032,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -10074,7 +10074,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -10107,7 +10107,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -10149,7 +10149,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -10199,7 +10199,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -10241,7 +10241,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -10283,7 +10283,7 @@
       "game": 3,
       "inning": 7,
       "half": "bottom",
-      "label": "G3 \u00b7 B7",
+      "label": "G3 · B7",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -10325,7 +10325,7 @@
       "game": 3,
       "inning": 8,
       "half": "top",
-      "label": "G3 \u00b7 T8",
+      "label": "G3 · T8",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -10367,7 +10367,7 @@
       "game": 3,
       "inning": 8,
       "half": "top",
-      "label": "G3 \u00b7 T8",
+      "label": "G3 · T8",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -10409,7 +10409,7 @@
       "game": 3,
       "inning": 8,
       "half": "top",
-      "label": "G3 \u00b7 T8",
+      "label": "G3 · T8",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -10451,7 +10451,7 @@
       "game": 3,
       "inning": 8,
       "half": "top",
-      "label": "G3 \u00b7 T8",
+      "label": "G3 · T8",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -10501,7 +10501,7 @@
       "game": 3,
       "inning": 8,
       "half": "bottom",
-      "label": "G3 \u00b7 B8",
+      "label": "G3 · B8",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -10543,7 +10543,7 @@
       "game": 3,
       "inning": 8,
       "half": "bottom",
-      "label": "G3 \u00b7 B8",
+      "label": "G3 · B8",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -10585,7 +10585,7 @@
       "game": 3,
       "inning": 8,
       "half": "bottom",
-      "label": "G3 \u00b7 B8",
+      "label": "G3 · B8",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -10627,7 +10627,7 @@
       "game": 3,
       "inning": 9,
       "half": "top",
-      "label": "G3 \u00b7 T9",
+      "label": "G3 · T9",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -10669,7 +10669,7 @@
       "game": 3,
       "inning": 9,
       "half": "top",
-      "label": "G3 \u00b7 T9",
+      "label": "G3 · T9",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -10695,14 +10695,14 @@
           "55"
         ]
       },
-      "note": null,
+      "note": "Matsui's second homer of the game — a dominating night",
       "isSeriesEnd": false
     },
     {
       "game": 3,
       "inning": 9,
       "half": "top",
-      "label": "G3 \u00b7 T9",
+      "label": "G3 · T9",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -10744,7 +10744,7 @@
       "game": 3,
       "inning": 9,
       "half": "top",
-      "label": "G3 \u00b7 T9",
+      "label": "G3 · T9",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -10786,7 +10786,7 @@
       "game": 3,
       "inning": 9,
       "half": "top",
-      "label": "G3 \u00b7 T9",
+      "label": "G3 · T9",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -10828,7 +10828,7 @@
       "game": 3,
       "inning": 9,
       "half": "top",
-      "label": "G3 \u00b7 T9",
+      "label": "G3 · T9",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -10870,7 +10870,7 @@
       "game": 3,
       "inning": 9,
       "half": "bottom",
-      "label": "G3 \u00b7 B9",
+      "label": "G3 · B9",
       "batter": {
         "team": "BOS",
         "pid": "mirad001",
@@ -10912,7 +10912,7 @@
       "game": 3,
       "inning": 9,
       "half": "bottom",
-      "label": "G3 \u00b7 B9",
+      "label": "G3 · B9",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -10954,7 +10954,7 @@
       "game": 3,
       "inning": 9,
       "half": "bottom",
-      "label": "G3 \u00b7 B9",
+      "label": "G3 · B9",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -10987,7 +10987,7 @@
       "game": 3,
       "inning": 9,
       "half": "bottom",
-      "label": "G3 \u00b7 B9",
+      "label": "G3 · B9",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -11029,7 +11029,7 @@
       "game": 3,
       "inning": 9,
       "half": "bottom",
-      "label": "G3 \u00b7 B9",
+      "label": "G3 · B9",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -11071,7 +11071,7 @@
       "game": 4,
       "inning": 1,
       "half": "top",
-      "label": "G4 \u00b7 T1",
+      "label": "G4 · T1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -11121,7 +11121,7 @@
       "game": 4,
       "inning": 1,
       "half": "top",
-      "label": "G4 \u00b7 T1",
+      "label": "G4 · T1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -11163,7 +11163,7 @@
       "game": 4,
       "inning": 1,
       "half": "top",
-      "label": "G4 \u00b7 T1",
+      "label": "G4 · T1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -11205,7 +11205,7 @@
       "game": 4,
       "inning": 1,
       "half": "bottom",
-      "label": "G4 \u00b7 B1",
+      "label": "G4 · B1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -11255,7 +11255,7 @@
       "game": 4,
       "inning": 1,
       "half": "bottom",
-      "label": "G4 \u00b7 B1",
+      "label": "G4 · B1",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -11297,7 +11297,7 @@
       "game": 4,
       "inning": 1,
       "half": "bottom",
-      "label": "G4 \u00b7 B1",
+      "label": "G4 · B1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -11339,7 +11339,7 @@
       "game": 4,
       "inning": 1,
       "half": "bottom",
-      "label": "G4 \u00b7 B1",
+      "label": "G4 · B1",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -11381,7 +11381,7 @@
       "game": 4,
       "inning": 1,
       "half": "bottom",
-      "label": "G4 \u00b7 B1",
+      "label": "G4 · B1",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -11423,7 +11423,7 @@
       "game": 4,
       "inning": 2,
       "half": "top",
-      "label": "G4 \u00b7 T2",
+      "label": "G4 · T2",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -11465,7 +11465,7 @@
       "game": 4,
       "inning": 2,
       "half": "top",
-      "label": "G4 \u00b7 T2",
+      "label": "G4 · T2",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -11515,7 +11515,7 @@
       "game": 4,
       "inning": 2,
       "half": "top",
-      "label": "G4 \u00b7 T2",
+      "label": "G4 · T2",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -11557,7 +11557,7 @@
       "game": 4,
       "inning": 2,
       "half": "top",
-      "label": "G4 \u00b7 T2",
+      "label": "G4 · T2",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -11599,7 +11599,7 @@
       "game": 4,
       "inning": 2,
       "half": "bottom",
-      "label": "G4 \u00b7 B2",
+      "label": "G4 · B2",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -11641,7 +11641,7 @@
       "game": 4,
       "inning": 2,
       "half": "bottom",
-      "label": "G4 \u00b7 B2",
+      "label": "G4 · B2",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -11683,7 +11683,7 @@
       "game": 4,
       "inning": 2,
       "half": "bottom",
-      "label": "G4 \u00b7 B2",
+      "label": "G4 · B2",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -11725,7 +11725,7 @@
       "game": 4,
       "inning": 2,
       "half": "bottom",
-      "label": "G4 \u00b7 B2",
+      "label": "G4 · B2",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -11767,7 +11767,7 @@
       "game": 4,
       "inning": 3,
       "half": "top",
-      "label": "G4 \u00b7 T3",
+      "label": "G4 · T3",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -11809,7 +11809,7 @@
       "game": 4,
       "inning": 3,
       "half": "top",
-      "label": "G4 \u00b7 T3",
+      "label": "G4 · T3",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -11859,7 +11859,7 @@
       "game": 4,
       "inning": 3,
       "half": "top",
-      "label": "G4 \u00b7 T3",
+      "label": "G4 · T3",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -11901,7 +11901,7 @@
       "game": 4,
       "inning": 3,
       "half": "top",
-      "label": "G4 \u00b7 T3",
+      "label": "G4 · T3",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -11934,7 +11934,7 @@
       "game": 4,
       "inning": 3,
       "half": "top",
-      "label": "G4 \u00b7 T3",
+      "label": "G4 · T3",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -11976,7 +11976,7 @@
       "game": 4,
       "inning": 3,
       "half": "bottom",
-      "label": "G4 \u00b7 B3",
+      "label": "G4 · B3",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -12018,7 +12018,7 @@
       "game": 4,
       "inning": 3,
       "half": "bottom",
-      "label": "G4 \u00b7 B3",
+      "label": "G4 · B3",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -12060,7 +12060,7 @@
       "game": 4,
       "inning": 3,
       "half": "bottom",
-      "label": "G4 \u00b7 B3",
+      "label": "G4 · B3",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -12102,7 +12102,7 @@
       "game": 4,
       "inning": 4,
       "half": "top",
-      "label": "G4 \u00b7 T4",
+      "label": "G4 · T4",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -12152,7 +12152,7 @@
       "game": 4,
       "inning": 4,
       "half": "top",
-      "label": "G4 \u00b7 T4",
+      "label": "G4 · T4",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -12194,7 +12194,7 @@
       "game": 4,
       "inning": 4,
       "half": "top",
-      "label": "G4 \u00b7 T4",
+      "label": "G4 · T4",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -12236,7 +12236,7 @@
       "game": 4,
       "inning": 4,
       "half": "top",
-      "label": "G4 \u00b7 T4",
+      "label": "G4 · T4",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -12278,7 +12278,7 @@
       "game": 4,
       "inning": 4,
       "half": "bottom",
-      "label": "G4 \u00b7 B4",
+      "label": "G4 · B4",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -12320,7 +12320,7 @@
       "game": 4,
       "inning": 4,
       "half": "bottom",
-      "label": "G4 \u00b7 B4",
+      "label": "G4 · B4",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -12362,7 +12362,7 @@
       "game": 4,
       "inning": 4,
       "half": "bottom",
-      "label": "G4 \u00b7 B4",
+      "label": "G4 · B4",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -12404,7 +12404,7 @@
       "game": 4,
       "inning": 5,
       "half": "top",
-      "label": "G4 \u00b7 T5",
+      "label": "G4 · T5",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -12446,7 +12446,7 @@
       "game": 4,
       "inning": 5,
       "half": "top",
-      "label": "G4 \u00b7 T5",
+      "label": "G4 · T5",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -12488,7 +12488,7 @@
       "game": 4,
       "inning": 5,
       "half": "top",
-      "label": "G4 \u00b7 T5",
+      "label": "G4 · T5",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -12538,7 +12538,7 @@
       "game": 4,
       "inning": 5,
       "half": "top",
-      "label": "G4 \u00b7 T5",
+      "label": "G4 · T5",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -12588,7 +12588,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -12630,7 +12630,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -12680,7 +12680,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -12722,7 +12722,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -12772,7 +12772,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -12814,7 +12814,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -12856,7 +12856,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -12898,7 +12898,7 @@
       "game": 4,
       "inning": 5,
       "half": "bottom",
-      "label": "G4 \u00b7 B5",
+      "label": "G4 · B5",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -12940,7 +12940,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -12990,7 +12990,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -13032,7 +13032,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -13074,7 +13074,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -13107,7 +13107,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -13149,7 +13149,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -13182,7 +13182,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -13224,7 +13224,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -13266,7 +13266,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -13308,7 +13308,7 @@
       "game": 4,
       "inning": 6,
       "half": "top",
-      "label": "G4 \u00b7 T6",
+      "label": "G4 · T6",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -13358,7 +13358,7 @@
       "game": 4,
       "inning": 6,
       "half": "bottom",
-      "label": "G4 \u00b7 B6",
+      "label": "G4 · B6",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -13400,7 +13400,7 @@
       "game": 4,
       "inning": 6,
       "half": "bottom",
-      "label": "G4 \u00b7 B6",
+      "label": "G4 · B6",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -13442,7 +13442,7 @@
       "game": 4,
       "inning": 6,
       "half": "bottom",
-      "label": "G4 \u00b7 B6",
+      "label": "G4 · B6",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -13492,7 +13492,7 @@
       "game": 4,
       "inning": 7,
       "half": "top",
-      "label": "G4 \u00b7 T7",
+      "label": "G4 · T7",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -13534,7 +13534,7 @@
       "game": 4,
       "inning": 7,
       "half": "top",
-      "label": "G4 \u00b7 T7",
+      "label": "G4 · T7",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -13576,7 +13576,7 @@
       "game": 4,
       "inning": 7,
       "half": "top",
-      "label": "G4 \u00b7 T7",
+      "label": "G4 · T7",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -13618,7 +13618,7 @@
       "game": 4,
       "inning": 7,
       "half": "top",
-      "label": "G4 \u00b7 T7",
+      "label": "G4 · T7",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -13660,7 +13660,7 @@
       "game": 4,
       "inning": 7,
       "half": "bottom",
-      "label": "G4 \u00b7 B7",
+      "label": "G4 · B7",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -13702,7 +13702,7 @@
       "game": 4,
       "inning": 7,
       "half": "bottom",
-      "label": "G4 \u00b7 B7",
+      "label": "G4 · B7",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -13744,7 +13744,7 @@
       "game": 4,
       "inning": 7,
       "half": "bottom",
-      "label": "G4 \u00b7 B7",
+      "label": "G4 · B7",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -13786,7 +13786,7 @@
       "game": 4,
       "inning": 8,
       "half": "top",
-      "label": "G4 \u00b7 T8",
+      "label": "G4 · T8",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -13828,7 +13828,7 @@
       "game": 4,
       "inning": 8,
       "half": "top",
-      "label": "G4 \u00b7 T8",
+      "label": "G4 · T8",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -13878,7 +13878,7 @@
       "game": 4,
       "inning": 8,
       "half": "top",
-      "label": "G4 \u00b7 T8",
+      "label": "G4 · T8",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -13920,7 +13920,7 @@
       "game": 4,
       "inning": 8,
       "half": "top",
-      "label": "G4 \u00b7 T8",
+      "label": "G4 · T8",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -13962,7 +13962,7 @@
       "game": 4,
       "inning": 8,
       "half": "bottom",
-      "label": "G4 \u00b7 B8",
+      "label": "G4 · B8",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -14004,7 +14004,7 @@
       "game": 4,
       "inning": 8,
       "half": "bottom",
-      "label": "G4 \u00b7 B8",
+      "label": "G4 · B8",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -14046,7 +14046,7 @@
       "game": 4,
       "inning": 8,
       "half": "bottom",
-      "label": "G4 \u00b7 B8",
+      "label": "G4 · B8",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -14088,7 +14088,7 @@
       "game": 4,
       "inning": 8,
       "half": "bottom",
-      "label": "G4 \u00b7 B8",
+      "label": "G4 · B8",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -14130,7 +14130,7 @@
       "game": 4,
       "inning": 9,
       "half": "top",
-      "label": "G4 \u00b7 T9",
+      "label": "G4 · T9",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -14172,7 +14172,7 @@
       "game": 4,
       "inning": 9,
       "half": "top",
-      "label": "G4 \u00b7 T9",
+      "label": "G4 · T9",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -14214,7 +14214,7 @@
       "game": 4,
       "inning": 9,
       "half": "top",
-      "label": "G4 \u00b7 T9",
+      "label": "G4 · T9",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -14256,7 +14256,7 @@
       "game": 4,
       "inning": 9,
       "half": "top",
-      "label": "G4 \u00b7 T9",
+      "label": "G4 · T9",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -14298,7 +14298,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -14340,7 +14340,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -14366,14 +14366,14 @@
           "42"
         ]
       },
-      "note": "Dave Roberts steals 2nd \u2014 the most important stolen base in Sox history",
+      "note": "Dave Roberts steals 2nd — the most important stolen base in Sox history",
       "isSeriesEnd": false
     },
     {
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -14408,14 +14408,14 @@
           "51"
         ]
       },
-      "note": "Bill Mueller singles \u2014 Roberts scores \u2014 game tied 4-4",
+      "note": "Bill Mueller singles — Roberts scores — game tied 4-4",
       "isSeriesEnd": false
     },
     {
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "miend001",
@@ -14457,7 +14457,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -14499,7 +14499,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -14541,7 +14541,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -14574,7 +14574,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -14616,7 +14616,7 @@
       "game": 4,
       "inning": 9,
       "half": "bottom",
-      "label": "G4 \u00b7 B9",
+      "label": "G4 · B9",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -14658,7 +14658,7 @@
       "game": 4,
       "inning": 10,
       "half": "top",
-      "label": "G4 \u00b7 T10",
+      "label": "G4 · T10",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -14700,7 +14700,7 @@
       "game": 4,
       "inning": 10,
       "half": "top",
-      "label": "G4 \u00b7 T10",
+      "label": "G4 · T10",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -14742,7 +14742,7 @@
       "game": 4,
       "inning": 10,
       "half": "top",
-      "label": "G4 \u00b7 T10",
+      "label": "G4 · T10",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -14784,7 +14784,7 @@
       "game": 4,
       "inning": 10,
       "half": "top",
-      "label": "G4 \u00b7 T10",
+      "label": "G4 · T10",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -14826,7 +14826,7 @@
       "game": 4,
       "inning": 10,
       "half": "bottom",
-      "label": "G4 \u00b7 B10",
+      "label": "G4 · B10",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -14868,7 +14868,7 @@
       "game": 4,
       "inning": 10,
       "half": "bottom",
-      "label": "G4 \u00b7 B10",
+      "label": "G4 · B10",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -14918,7 +14918,7 @@
       "game": 4,
       "inning": 10,
       "half": "bottom",
-      "label": "G4 \u00b7 B10",
+      "label": "G4 · B10",
       "batter": {
         "team": "BOS",
         "pid": "reesp001",
@@ -14960,7 +14960,7 @@
       "game": 4,
       "inning": 11,
       "half": "top",
-      "label": "G4 \u00b7 T11",
+      "label": "G4 · T11",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -15002,7 +15002,7 @@
       "game": 4,
       "inning": 11,
       "half": "top",
-      "label": "G4 \u00b7 T11",
+      "label": "G4 · T11",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -15044,7 +15044,7 @@
       "game": 4,
       "inning": 11,
       "half": "top",
-      "label": "G4 \u00b7 T11",
+      "label": "G4 · T11",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -15086,7 +15086,7 @@
       "game": 4,
       "inning": 11,
       "half": "top",
-      "label": "G4 \u00b7 T11",
+      "label": "G4 · T11",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -15128,7 +15128,7 @@
       "game": 4,
       "inning": 11,
       "half": "top",
-      "label": "G4 \u00b7 T11",
+      "label": "G4 · T11",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -15170,7 +15170,7 @@
       "game": 4,
       "inning": 11,
       "half": "top",
-      "label": "G4 \u00b7 T11",
+      "label": "G4 · T11",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -15212,7 +15212,7 @@
       "game": 4,
       "inning": 11,
       "half": "bottom",
-      "label": "G4 \u00b7 B11",
+      "label": "G4 · B11",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -15254,7 +15254,7 @@
       "game": 4,
       "inning": 11,
       "half": "bottom",
-      "label": "G4 \u00b7 B11",
+      "label": "G4 · B11",
       "batter": {
         "team": "BOS",
         "pid": "miend001",
@@ -15296,7 +15296,7 @@
       "game": 4,
       "inning": 11,
       "half": "bottom",
-      "label": "G4 \u00b7 B11",
+      "label": "G4 · B11",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -15338,7 +15338,7 @@
       "game": 4,
       "inning": 11,
       "half": "bottom",
-      "label": "G4 \u00b7 B11",
+      "label": "G4 · B11",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -15371,7 +15371,7 @@
       "game": 4,
       "inning": 11,
       "half": "bottom",
-      "label": "G4 \u00b7 B11",
+      "label": "G4 · B11",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -15421,7 +15421,7 @@
       "game": 4,
       "inning": 12,
       "half": "top",
-      "label": "G4 \u00b7 T12",
+      "label": "G4 · T12",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -15463,7 +15463,7 @@
       "game": 4,
       "inning": 12,
       "half": "top",
-      "label": "G4 \u00b7 T12",
+      "label": "G4 · T12",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -15505,7 +15505,7 @@
       "game": 4,
       "inning": 12,
       "half": "top",
-      "label": "G4 \u00b7 T12",
+      "label": "G4 · T12",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -15547,7 +15547,7 @@
       "game": 4,
       "inning": 12,
       "half": "top",
-      "label": "G4 \u00b7 T12",
+      "label": "G4 · T12",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -15589,7 +15589,7 @@
       "game": 4,
       "inning": 12,
       "half": "bottom",
-      "label": "G4 \u00b7 B12",
+      "label": "G4 · B12",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -15631,7 +15631,7 @@
       "game": 4,
       "inning": 12,
       "half": "bottom",
-      "label": "G4 \u00b7 B12",
+      "label": "G4 · B12",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -15657,14 +15657,14 @@
           "34"
         ]
       },
-      "note": "DAVID ORTIZ \u2014 WALKOFF HOME RUN \u2014 Series alive! Down 3\u20131",
+      "note": "DAVID ORTIZ — WALKOFF HOME RUN — Series alive! Down 3–1",
       "isSeriesEnd": false
     },
     {
       "game": 5,
       "inning": 1,
       "half": "top",
-      "label": "G5 \u00b7 T1",
+      "label": "G5 · T1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -15706,7 +15706,7 @@
       "game": 5,
       "inning": 1,
       "half": "top",
-      "label": "G5 \u00b7 T1",
+      "label": "G5 · T1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -15748,7 +15748,7 @@
       "game": 5,
       "inning": 1,
       "half": "top",
-      "label": "G5 \u00b7 T1",
+      "label": "G5 · T1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -15790,7 +15790,7 @@
       "game": 5,
       "inning": 1,
       "half": "top",
-      "label": "G5 \u00b7 T1",
+      "label": "G5 · T1",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -15832,7 +15832,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -15882,7 +15882,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -15924,7 +15924,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -15966,7 +15966,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -16008,7 +16008,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -16050,7 +16050,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -16100,7 +16100,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -16142,7 +16142,7 @@
       "game": 5,
       "inning": 1,
       "half": "bottom",
-      "label": "G5 \u00b7 B1",
+      "label": "G5 · B1",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -16184,7 +16184,7 @@
       "game": 5,
       "inning": 2,
       "half": "top",
-      "label": "G5 \u00b7 T2",
+      "label": "G5 · T2",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -16217,7 +16217,7 @@
       "game": 5,
       "inning": 2,
       "half": "top",
-      "label": "G5 \u00b7 T2",
+      "label": "G5 · T2",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -16267,7 +16267,7 @@
       "game": 5,
       "inning": 2,
       "half": "top",
-      "label": "G5 \u00b7 T2",
+      "label": "G5 · T2",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -16309,7 +16309,7 @@
       "game": 5,
       "inning": 2,
       "half": "top",
-      "label": "G5 \u00b7 T2",
+      "label": "G5 · T2",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -16351,7 +16351,7 @@
       "game": 5,
       "inning": 2,
       "half": "top",
-      "label": "G5 \u00b7 T2",
+      "label": "G5 · T2",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -16393,7 +16393,7 @@
       "game": 5,
       "inning": 2,
       "half": "bottom",
-      "label": "G5 \u00b7 B2",
+      "label": "G5 · B2",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -16443,7 +16443,7 @@
       "game": 5,
       "inning": 2,
       "half": "bottom",
-      "label": "G5 \u00b7 B2",
+      "label": "G5 · B2",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -16493,7 +16493,7 @@
       "game": 5,
       "inning": 2,
       "half": "bottom",
-      "label": "G5 \u00b7 B2",
+      "label": "G5 · B2",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -16535,7 +16535,7 @@
       "game": 5,
       "inning": 3,
       "half": "top",
-      "label": "G5 \u00b7 T3",
+      "label": "G5 · T3",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -16577,7 +16577,7 @@
       "game": 5,
       "inning": 3,
       "half": "top",
-      "label": "G5 \u00b7 T3",
+      "label": "G5 · T3",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -16619,7 +16619,7 @@
       "game": 5,
       "inning": 3,
       "half": "top",
-      "label": "G5 \u00b7 T3",
+      "label": "G5 · T3",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -16661,7 +16661,7 @@
       "game": 5,
       "inning": 3,
       "half": "top",
-      "label": "G5 \u00b7 T3",
+      "label": "G5 · T3",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -16703,7 +16703,7 @@
       "game": 5,
       "inning": 3,
       "half": "top",
-      "label": "G5 \u00b7 T3",
+      "label": "G5 · T3",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -16745,7 +16745,7 @@
       "game": 5,
       "inning": 3,
       "half": "bottom",
-      "label": "G5 \u00b7 B3",
+      "label": "G5 · B3",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -16787,7 +16787,7 @@
       "game": 5,
       "inning": 3,
       "half": "bottom",
-      "label": "G5 \u00b7 B3",
+      "label": "G5 · B3",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -16829,7 +16829,7 @@
       "game": 5,
       "inning": 3,
       "half": "bottom",
-      "label": "G5 \u00b7 B3",
+      "label": "G5 · B3",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -16871,7 +16871,7 @@
       "game": 5,
       "inning": 3,
       "half": "bottom",
-      "label": "G5 \u00b7 B3",
+      "label": "G5 · B3",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -16913,7 +16913,7 @@
       "game": 5,
       "inning": 3,
       "half": "bottom",
-      "label": "G5 \u00b7 B3",
+      "label": "G5 · B3",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -16955,7 +16955,7 @@
       "game": 5,
       "inning": 4,
       "half": "top",
-      "label": "G5 \u00b7 T4",
+      "label": "G5 · T4",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -16997,7 +16997,7 @@
       "game": 5,
       "inning": 4,
       "half": "top",
-      "label": "G5 \u00b7 T4",
+      "label": "G5 · T4",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -17039,7 +17039,7 @@
       "game": 5,
       "inning": 4,
       "half": "top",
-      "label": "G5 \u00b7 T4",
+      "label": "G5 · T4",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -17081,7 +17081,7 @@
       "game": 5,
       "inning": 4,
       "half": "top",
-      "label": "G5 \u00b7 T4",
+      "label": "G5 · T4",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -17123,7 +17123,7 @@
       "game": 5,
       "inning": 4,
       "half": "top",
-      "label": "G5 \u00b7 T4",
+      "label": "G5 · T4",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -17165,7 +17165,7 @@
       "game": 5,
       "inning": 4,
       "half": "bottom",
-      "label": "G5 \u00b7 B4",
+      "label": "G5 · B4",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -17207,7 +17207,7 @@
       "game": 5,
       "inning": 4,
       "half": "bottom",
-      "label": "G5 \u00b7 B4",
+      "label": "G5 · B4",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -17249,7 +17249,7 @@
       "game": 5,
       "inning": 4,
       "half": "bottom",
-      "label": "G5 \u00b7 B4",
+      "label": "G5 · B4",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -17291,7 +17291,7 @@
       "game": 5,
       "inning": 5,
       "half": "top",
-      "label": "G5 \u00b7 T5",
+      "label": "G5 · T5",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -17333,7 +17333,7 @@
       "game": 5,
       "inning": 5,
       "half": "top",
-      "label": "G5 \u00b7 T5",
+      "label": "G5 · T5",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -17383,7 +17383,7 @@
       "game": 5,
       "inning": 5,
       "half": "top",
-      "label": "G5 \u00b7 T5",
+      "label": "G5 · T5",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -17425,7 +17425,7 @@
       "game": 5,
       "inning": 5,
       "half": "bottom",
-      "label": "G5 \u00b7 B5",
+      "label": "G5 · B5",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -17467,7 +17467,7 @@
       "game": 5,
       "inning": 5,
       "half": "bottom",
-      "label": "G5 \u00b7 B5",
+      "label": "G5 · B5",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -17509,7 +17509,7 @@
       "game": 5,
       "inning": 5,
       "half": "bottom",
-      "label": "G5 \u00b7 B5",
+      "label": "G5 · B5",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -17551,7 +17551,7 @@
       "game": 5,
       "inning": 5,
       "half": "bottom",
-      "label": "G5 \u00b7 B5",
+      "label": "G5 · B5",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -17601,7 +17601,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -17643,7 +17643,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -17685,7 +17685,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -17727,7 +17727,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -17769,7 +17769,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -17802,7 +17802,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -17844,7 +17844,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -17877,7 +17877,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -17919,7 +17919,7 @@
       "game": 5,
       "inning": 6,
       "half": "top",
-      "label": "G5 \u00b7 T6",
+      "label": "G5 · T6",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -17961,7 +17961,7 @@
       "game": 5,
       "inning": 6,
       "half": "bottom",
-      "label": "G5 \u00b7 B6",
+      "label": "G5 · B6",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -18003,7 +18003,7 @@
       "game": 5,
       "inning": 6,
       "half": "bottom",
-      "label": "G5 \u00b7 B6",
+      "label": "G5 · B6",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -18053,7 +18053,7 @@
       "game": 5,
       "inning": 6,
       "half": "bottom",
-      "label": "G5 \u00b7 B6",
+      "label": "G5 · B6",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -18095,7 +18095,7 @@
       "game": 5,
       "inning": 7,
       "half": "top",
-      "label": "G5 \u00b7 T7",
+      "label": "G5 · T7",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -18137,7 +18137,7 @@
       "game": 5,
       "inning": 7,
       "half": "top",
-      "label": "G5 \u00b7 T7",
+      "label": "G5 · T7",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -18179,7 +18179,7 @@
       "game": 5,
       "inning": 7,
       "half": "top",
-      "label": "G5 \u00b7 T7",
+      "label": "G5 · T7",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -18221,7 +18221,7 @@
       "game": 5,
       "inning": 7,
       "half": "top",
-      "label": "G5 \u00b7 T7",
+      "label": "G5 · T7",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -18271,7 +18271,7 @@
       "game": 5,
       "inning": 7,
       "half": "bottom",
-      "label": "G5 \u00b7 B7",
+      "label": "G5 · B7",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -18313,7 +18313,7 @@
       "game": 5,
       "inning": 7,
       "half": "bottom",
-      "label": "G5 \u00b7 B7",
+      "label": "G5 · B7",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -18355,7 +18355,7 @@
       "game": 5,
       "inning": 7,
       "half": "bottom",
-      "label": "G5 \u00b7 B7",
+      "label": "G5 · B7",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -18397,7 +18397,7 @@
       "game": 5,
       "inning": 7,
       "half": "bottom",
-      "label": "G5 \u00b7 B7",
+      "label": "G5 · B7",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -18447,7 +18447,7 @@
       "game": 5,
       "inning": 8,
       "half": "top",
-      "label": "G5 \u00b7 T8",
+      "label": "G5 · T8",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -18489,7 +18489,7 @@
       "game": 5,
       "inning": 8,
       "half": "top",
-      "label": "G5 \u00b7 T8",
+      "label": "G5 · T8",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -18531,7 +18531,7 @@
       "game": 5,
       "inning": 8,
       "half": "top",
-      "label": "G5 \u00b7 T8",
+      "label": "G5 · T8",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -18573,7 +18573,7 @@
       "game": 5,
       "inning": 8,
       "half": "top",
-      "label": "G5 \u00b7 T8",
+      "label": "G5 · T8",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -18615,7 +18615,7 @@
       "game": 5,
       "inning": 8,
       "half": "top",
-      "label": "G5 \u00b7 T8",
+      "label": "G5 · T8",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -18657,7 +18657,7 @@
       "game": 5,
       "inning": 8,
       "half": "bottom",
-      "label": "G5 \u00b7 B8",
+      "label": "G5 · B8",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -18690,7 +18690,7 @@
       "game": 5,
       "inning": 8,
       "half": "bottom",
-      "label": "G5 \u00b7 B8",
+      "label": "G5 · B8",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -18732,7 +18732,7 @@
       "game": 5,
       "inning": 8,
       "half": "bottom",
-      "label": "G5 \u00b7 B8",
+      "label": "G5 · B8",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -18774,7 +18774,7 @@
       "game": 5,
       "inning": 8,
       "half": "bottom",
-      "label": "G5 \u00b7 B8",
+      "label": "G5 · B8",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -18816,7 +18816,7 @@
       "game": 5,
       "inning": 8,
       "half": "bottom",
-      "label": "G5 \u00b7 B8",
+      "label": "G5 · B8",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -18858,7 +18858,7 @@
       "game": 5,
       "inning": 8,
       "half": "bottom",
-      "label": "G5 \u00b7 B8",
+      "label": "G5 · B8",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -18900,7 +18900,7 @@
       "game": 5,
       "inning": 9,
       "half": "top",
-      "label": "G5 \u00b7 T9",
+      "label": "G5 · T9",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -18942,7 +18942,7 @@
       "game": 5,
       "inning": 9,
       "half": "top",
-      "label": "G5 \u00b7 T9",
+      "label": "G5 · T9",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -18984,7 +18984,7 @@
       "game": 5,
       "inning": 9,
       "half": "top",
-      "label": "G5 \u00b7 T9",
+      "label": "G5 · T9",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -19026,7 +19026,7 @@
       "game": 5,
       "inning": 9,
       "half": "top",
-      "label": "G5 \u00b7 T9",
+      "label": "G5 · T9",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -19059,7 +19059,7 @@
       "game": 5,
       "inning": 9,
       "half": "top",
-      "label": "G5 \u00b7 T9",
+      "label": "G5 · T9",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -19101,7 +19101,7 @@
       "game": 5,
       "inning": 9,
       "half": "bottom",
-      "label": "G5 \u00b7 B9",
+      "label": "G5 · B9",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -19143,7 +19143,7 @@
       "game": 5,
       "inning": 9,
       "half": "bottom",
-      "label": "G5 \u00b7 B9",
+      "label": "G5 · B9",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -19193,7 +19193,7 @@
       "game": 5,
       "inning": 9,
       "half": "bottom",
-      "label": "G5 \u00b7 B9",
+      "label": "G5 · B9",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -19243,7 +19243,7 @@
       "game": 5,
       "inning": 9,
       "half": "bottom",
-      "label": "G5 \u00b7 B9",
+      "label": "G5 · B9",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -19285,7 +19285,7 @@
       "game": 5,
       "inning": 10,
       "half": "top",
-      "label": "G5 \u00b7 T10",
+      "label": "G5 · T10",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -19327,7 +19327,7 @@
       "game": 5,
       "inning": 10,
       "half": "top",
-      "label": "G5 \u00b7 T10",
+      "label": "G5 · T10",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -19369,7 +19369,7 @@
       "game": 5,
       "inning": 10,
       "half": "top",
-      "label": "G5 \u00b7 T10",
+      "label": "G5 · T10",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -19411,7 +19411,7 @@
       "game": 5,
       "inning": 10,
       "half": "bottom",
-      "label": "G5 \u00b7 B10",
+      "label": "G5 · B10",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -19453,7 +19453,7 @@
       "game": 5,
       "inning": 10,
       "half": "bottom",
-      "label": "G5 \u00b7 B10",
+      "label": "G5 · B10",
       "batter": {
         "team": "BOS",
         "pid": "miend001",
@@ -19486,7 +19486,7 @@
       "game": 5,
       "inning": 10,
       "half": "bottom",
-      "label": "G5 \u00b7 B10",
+      "label": "G5 · B10",
       "batter": {
         "team": "BOS",
         "pid": "kaplg001",
@@ -19536,7 +19536,7 @@
       "game": 5,
       "inning": 10,
       "half": "bottom",
-      "label": "G5 \u00b7 B10",
+      "label": "G5 · B10",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -19578,7 +19578,7 @@
       "game": 5,
       "inning": 11,
       "half": "top",
-      "label": "G5 \u00b7 T11",
+      "label": "G5 · T11",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -19620,7 +19620,7 @@
       "game": 5,
       "inning": 11,
       "half": "top",
-      "label": "G5 \u00b7 T11",
+      "label": "G5 · T11",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -19662,7 +19662,7 @@
       "game": 5,
       "inning": 11,
       "half": "top",
-      "label": "G5 \u00b7 T11",
+      "label": "G5 · T11",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -19704,7 +19704,7 @@
       "game": 5,
       "inning": 11,
       "half": "top",
-      "label": "G5 \u00b7 T11",
+      "label": "G5 · T11",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -19746,7 +19746,7 @@
       "game": 5,
       "inning": 11,
       "half": "bottom",
-      "label": "G5 \u00b7 B11",
+      "label": "G5 · B11",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -19788,7 +19788,7 @@
       "game": 5,
       "inning": 11,
       "half": "bottom",
-      "label": "G5 \u00b7 B11",
+      "label": "G5 · B11",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -19830,7 +19830,7 @@
       "game": 5,
       "inning": 11,
       "half": "bottom",
-      "label": "G5 \u00b7 B11",
+      "label": "G5 · B11",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -19872,7 +19872,7 @@
       "game": 5,
       "inning": 11,
       "half": "bottom",
-      "label": "G5 \u00b7 B11",
+      "label": "G5 · B11",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -19922,7 +19922,7 @@
       "game": 5,
       "inning": 12,
       "half": "top",
-      "label": "G5 \u00b7 T12",
+      "label": "G5 · T12",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -19964,7 +19964,7 @@
       "game": 5,
       "inning": 12,
       "half": "top",
-      "label": "G5 \u00b7 T12",
+      "label": "G5 · T12",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -20006,7 +20006,7 @@
       "game": 5,
       "inning": 12,
       "half": "top",
-      "label": "G5 \u00b7 T12",
+      "label": "G5 · T12",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -20048,7 +20048,7 @@
       "game": 5,
       "inning": 12,
       "half": "top",
-      "label": "G5 \u00b7 T12",
+      "label": "G5 · T12",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -20090,7 +20090,7 @@
       "game": 5,
       "inning": 12,
       "half": "bottom",
-      "label": "G5 \u00b7 B12",
+      "label": "G5 · B12",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -20132,7 +20132,7 @@
       "game": 5,
       "inning": 12,
       "half": "bottom",
-      "label": "G5 \u00b7 B12",
+      "label": "G5 · B12",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -20174,7 +20174,7 @@
       "game": 5,
       "inning": 12,
       "half": "bottom",
-      "label": "G5 \u00b7 B12",
+      "label": "G5 · B12",
       "batter": {
         "team": "BOS",
         "pid": "miend001",
@@ -20224,7 +20224,7 @@
       "game": 5,
       "inning": 12,
       "half": "bottom",
-      "label": "G5 \u00b7 B12",
+      "label": "G5 · B12",
       "batter": {
         "team": "BOS",
         "pid": "miend001",
@@ -20266,7 +20266,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -20308,7 +20308,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -20358,7 +20358,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -20400,7 +20400,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -20442,7 +20442,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -20484,7 +20484,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -20526,7 +20526,7 @@
       "game": 5,
       "inning": 13,
       "half": "top",
-      "label": "G5 \u00b7 T13",
+      "label": "G5 · T13",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -20568,7 +20568,7 @@
       "game": 5,
       "inning": 13,
       "half": "bottom",
-      "label": "G5 \u00b7 B13",
+      "label": "G5 · B13",
       "batter": {
         "team": "BOS",
         "pid": "kaplg001",
@@ -20601,7 +20601,7 @@
       "game": 5,
       "inning": 13,
       "half": "bottom",
-      "label": "G5 \u00b7 B13",
+      "label": "G5 · B13",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -20651,7 +20651,7 @@
       "game": 5,
       "inning": 13,
       "half": "bottom",
-      "label": "G5 \u00b7 B13",
+      "label": "G5 · B13",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -20693,7 +20693,7 @@
       "game": 5,
       "inning": 14,
       "half": "top",
-      "label": "G5 \u00b7 T14",
+      "label": "G5 · T14",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -20735,7 +20735,7 @@
       "game": 5,
       "inning": 14,
       "half": "top",
-      "label": "G5 \u00b7 T14",
+      "label": "G5 · T14",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -20777,7 +20777,7 @@
       "game": 5,
       "inning": 14,
       "half": "top",
-      "label": "G5 \u00b7 T14",
+      "label": "G5 · T14",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -20827,7 +20827,7 @@
       "game": 5,
       "inning": 14,
       "half": "bottom",
-      "label": "G5 \u00b7 B14",
+      "label": "G5 · B14",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -20869,7 +20869,7 @@
       "game": 5,
       "inning": 14,
       "half": "bottom",
-      "label": "G5 \u00b7 B14",
+      "label": "G5 · B14",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -20911,7 +20911,7 @@
       "game": 5,
       "inning": 14,
       "half": "bottom",
-      "label": "G5 \u00b7 B14",
+      "label": "G5 · B14",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -20953,7 +20953,7 @@
       "game": 5,
       "inning": 14,
       "half": "bottom",
-      "label": "G5 \u00b7 B14",
+      "label": "G5 · B14",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -20995,7 +20995,7 @@
       "game": 5,
       "inning": 14,
       "half": "bottom",
-      "label": "G5 \u00b7 B14",
+      "label": "G5 · B14",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -21030,14 +21030,14 @@
           "51"
         ]
       },
-      "note": "DAVID ORTIZ \u2014 WALKOFF SINGLE \u2014 Sox one win away",
+      "note": "DAVID ORTIZ — WALKOFF SINGLE — Sox one win away",
       "isSeriesEnd": false
     },
     {
       "game": 6,
       "inning": 1,
       "half": "top",
-      "label": "G6 \u00b7 T1",
+      "label": "G6 · T1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -21079,7 +21079,7 @@
       "game": 6,
       "inning": 1,
       "half": "top",
-      "label": "G6 \u00b7 T1",
+      "label": "G6 · T1",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -21112,7 +21112,7 @@
       "game": 6,
       "inning": 1,
       "half": "top",
-      "label": "G6 \u00b7 T1",
+      "label": "G6 · T1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -21154,7 +21154,7 @@
       "game": 6,
       "inning": 1,
       "half": "top",
-      "label": "G6 \u00b7 T1",
+      "label": "G6 · T1",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -21196,7 +21196,7 @@
       "game": 6,
       "inning": 1,
       "half": "bottom",
-      "label": "G6 \u00b7 B1",
+      "label": "G6 · B1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -21238,7 +21238,7 @@
       "game": 6,
       "inning": 1,
       "half": "bottom",
-      "label": "G6 \u00b7 B1",
+      "label": "G6 · B1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -21280,7 +21280,7 @@
       "game": 6,
       "inning": 1,
       "half": "bottom",
-      "label": "G6 \u00b7 B1",
+      "label": "G6 · B1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -21322,7 +21322,7 @@
       "game": 6,
       "inning": 2,
       "half": "top",
-      "label": "G6 \u00b7 T2",
+      "label": "G6 · T2",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -21372,7 +21372,7 @@
       "game": 6,
       "inning": 2,
       "half": "top",
-      "label": "G6 \u00b7 T2",
+      "label": "G6 · T2",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -21414,7 +21414,7 @@
       "game": 6,
       "inning": 2,
       "half": "top",
-      "label": "G6 \u00b7 T2",
+      "label": "G6 · T2",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -21456,7 +21456,7 @@
       "game": 6,
       "inning": 2,
       "half": "top",
-      "label": "G6 \u00b7 T2",
+      "label": "G6 · T2",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -21498,7 +21498,7 @@
       "game": 6,
       "inning": 2,
       "half": "top",
-      "label": "G6 \u00b7 T2",
+      "label": "G6 · T2",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -21548,7 +21548,7 @@
       "game": 6,
       "inning": 2,
       "half": "bottom",
-      "label": "G6 \u00b7 B2",
+      "label": "G6 · B2",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -21590,7 +21590,7 @@
       "game": 6,
       "inning": 2,
       "half": "bottom",
-      "label": "G6 \u00b7 B2",
+      "label": "G6 · B2",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -21632,7 +21632,7 @@
       "game": 6,
       "inning": 2,
       "half": "bottom",
-      "label": "G6 \u00b7 B2",
+      "label": "G6 · B2",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -21674,7 +21674,7 @@
       "game": 6,
       "inning": 3,
       "half": "top",
-      "label": "G6 \u00b7 T3",
+      "label": "G6 · T3",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -21716,7 +21716,7 @@
       "game": 6,
       "inning": 3,
       "half": "top",
-      "label": "G6 \u00b7 T3",
+      "label": "G6 · T3",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -21758,7 +21758,7 @@
       "game": 6,
       "inning": 3,
       "half": "top",
-      "label": "G6 \u00b7 T3",
+      "label": "G6 · T3",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -21800,7 +21800,7 @@
       "game": 6,
       "inning": 3,
       "half": "bottom",
-      "label": "G6 \u00b7 B3",
+      "label": "G6 · B3",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -21842,7 +21842,7 @@
       "game": 6,
       "inning": 3,
       "half": "bottom",
-      "label": "G6 \u00b7 B3",
+      "label": "G6 · B3",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -21884,7 +21884,7 @@
       "game": 6,
       "inning": 3,
       "half": "bottom",
-      "label": "G6 \u00b7 B3",
+      "label": "G6 · B3",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -21917,7 +21917,7 @@
       "game": 6,
       "inning": 3,
       "half": "bottom",
-      "label": "G6 \u00b7 B3",
+      "label": "G6 · B3",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -21959,7 +21959,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -22009,7 +22009,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -22059,7 +22059,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -22101,7 +22101,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -22134,7 +22134,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -22176,7 +22176,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -22218,7 +22218,7 @@
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -22244,14 +22244,14 @@
           "31"
         ]
       },
-      "note": "Mark Bellhorn HR off the Pesky Pole \u2014 Sox take the lead",
+      "note": "Mark Bellhorn HR off the Pesky Pole — Sox take the lead",
       "isSeriesEnd": false
     },
     {
       "game": 6,
       "inning": 4,
       "half": "top",
-      "label": "G6 \u00b7 T4",
+      "label": "G6 · T4",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -22293,7 +22293,7 @@
       "game": 6,
       "inning": 4,
       "half": "bottom",
-      "label": "G6 \u00b7 B4",
+      "label": "G6 · B4",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -22335,7 +22335,7 @@
       "game": 6,
       "inning": 4,
       "half": "bottom",
-      "label": "G6 \u00b7 B4",
+      "label": "G6 · B4",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -22377,7 +22377,7 @@
       "game": 6,
       "inning": 4,
       "half": "bottom",
-      "label": "G6 \u00b7 B4",
+      "label": "G6 · B4",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -22419,7 +22419,7 @@
       "game": 6,
       "inning": 4,
       "half": "bottom",
-      "label": "G6 \u00b7 B4",
+      "label": "G6 · B4",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -22461,7 +22461,7 @@
       "game": 6,
       "inning": 4,
       "half": "bottom",
-      "label": "G6 \u00b7 B4",
+      "label": "G6 · B4",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -22503,7 +22503,7 @@
       "game": 6,
       "inning": 5,
       "half": "top",
-      "label": "G6 \u00b7 T5",
+      "label": "G6 · T5",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -22545,7 +22545,7 @@
       "game": 6,
       "inning": 5,
       "half": "top",
-      "label": "G6 \u00b7 T5",
+      "label": "G6 · T5",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -22587,7 +22587,7 @@
       "game": 6,
       "inning": 5,
       "half": "top",
-      "label": "G6 \u00b7 T5",
+      "label": "G6 · T5",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -22629,7 +22629,7 @@
       "game": 6,
       "inning": 5,
       "half": "bottom",
-      "label": "G6 \u00b7 B5",
+      "label": "G6 · B5",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -22671,7 +22671,7 @@
       "game": 6,
       "inning": 5,
       "half": "bottom",
-      "label": "G6 \u00b7 B5",
+      "label": "G6 · B5",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -22713,7 +22713,7 @@
       "game": 6,
       "inning": 5,
       "half": "bottom",
-      "label": "G6 \u00b7 B5",
+      "label": "G6 · B5",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -22763,7 +22763,7 @@
       "game": 6,
       "inning": 6,
       "half": "top",
-      "label": "G6 \u00b7 T6",
+      "label": "G6 · T6",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -22805,7 +22805,7 @@
       "game": 6,
       "inning": 6,
       "half": "top",
-      "label": "G6 \u00b7 T6",
+      "label": "G6 · T6",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -22855,7 +22855,7 @@
       "game": 6,
       "inning": 6,
       "half": "top",
-      "label": "G6 \u00b7 T6",
+      "label": "G6 · T6",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -22897,7 +22897,7 @@
       "game": 6,
       "inning": 6,
       "half": "bottom",
-      "label": "G6 \u00b7 B6",
+      "label": "G6 · B6",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -22947,7 +22947,7 @@
       "game": 6,
       "inning": 6,
       "half": "bottom",
-      "label": "G6 \u00b7 B6",
+      "label": "G6 · B6",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -22989,7 +22989,7 @@
       "game": 6,
       "inning": 6,
       "half": "bottom",
-      "label": "G6 \u00b7 B6",
+      "label": "G6 · B6",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -23031,7 +23031,7 @@
       "game": 6,
       "inning": 7,
       "half": "top",
-      "label": "G6 \u00b7 T7",
+      "label": "G6 · T7",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -23073,7 +23073,7 @@
       "game": 6,
       "inning": 7,
       "half": "top",
-      "label": "G6 \u00b7 T7",
+      "label": "G6 · T7",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -23115,7 +23115,7 @@
       "game": 6,
       "inning": 7,
       "half": "top",
-      "label": "G6 \u00b7 T7",
+      "label": "G6 · T7",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -23165,7 +23165,7 @@
       "game": 6,
       "inning": 7,
       "half": "bottom",
-      "label": "G6 \u00b7 B7",
+      "label": "G6 · B7",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -23207,7 +23207,7 @@
       "game": 6,
       "inning": 7,
       "half": "bottom",
-      "label": "G6 \u00b7 B7",
+      "label": "G6 · B7",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -23240,7 +23240,7 @@
       "game": 6,
       "inning": 7,
       "half": "bottom",
-      "label": "G6 \u00b7 B7",
+      "label": "G6 · B7",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -23282,7 +23282,7 @@
       "game": 6,
       "inning": 7,
       "half": "bottom",
-      "label": "G6 \u00b7 B7",
+      "label": "G6 · B7",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -23324,7 +23324,7 @@
       "game": 6,
       "inning": 8,
       "half": "top",
-      "label": "G6 \u00b7 T8",
+      "label": "G6 · T8",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -23366,7 +23366,7 @@
       "game": 6,
       "inning": 8,
       "half": "top",
-      "label": "G6 \u00b7 T8",
+      "label": "G6 · T8",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -23408,7 +23408,7 @@
       "game": 6,
       "inning": 8,
       "half": "top",
-      "label": "G6 \u00b7 T8",
+      "label": "G6 · T8",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -23450,7 +23450,7 @@
       "game": 6,
       "inning": 8,
       "half": "top",
-      "label": "G6 \u00b7 T8",
+      "label": "G6 · T8",
       "batter": {
         "team": "BOS",
         "pid": "kaplg001",
@@ -23492,7 +23492,7 @@
       "game": 6,
       "inning": 8,
       "half": "top",
-      "label": "G6 \u00b7 T8",
+      "label": "G6 · T8",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -23542,7 +23542,7 @@
       "game": 6,
       "inning": 8,
       "half": "bottom",
-      "label": "G6 \u00b7 B8",
+      "label": "G6 · B8",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -23584,7 +23584,7 @@
       "game": 6,
       "inning": 8,
       "half": "bottom",
-      "label": "G6 \u00b7 B8",
+      "label": "G6 · B8",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -23626,7 +23626,7 @@
       "game": 6,
       "inning": 8,
       "half": "bottom",
-      "label": "G6 \u00b7 B8",
+      "label": "G6 · B8",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -23668,7 +23668,7 @@
       "game": 6,
       "inning": 8,
       "half": "bottom",
-      "label": "G6 \u00b7 B8",
+      "label": "G6 · B8",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -23701,7 +23701,7 @@
       "game": 6,
       "inning": 8,
       "half": "bottom",
-      "label": "G6 \u00b7 B8",
+      "label": "G6 · B8",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -23743,7 +23743,7 @@
       "game": 6,
       "inning": 9,
       "half": "top",
-      "label": "G6 \u00b7 T9",
+      "label": "G6 · T9",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -23785,7 +23785,7 @@
       "game": 6,
       "inning": 9,
       "half": "top",
-      "label": "G6 \u00b7 T9",
+      "label": "G6 · T9",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -23835,7 +23835,7 @@
       "game": 6,
       "inning": 9,
       "half": "top",
-      "label": "G6 \u00b7 T9",
+      "label": "G6 · T9",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -23868,7 +23868,7 @@
       "game": 6,
       "inning": 9,
       "half": "top",
-      "label": "G6 \u00b7 T9",
+      "label": "G6 · T9",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -23910,7 +23910,7 @@
       "game": 6,
       "inning": 9,
       "half": "top",
-      "label": "G6 \u00b7 T9",
+      "label": "G6 · T9",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -23952,7 +23952,7 @@
       "game": 6,
       "inning": 9,
       "half": "top",
-      "label": "G6 \u00b7 T9",
+      "label": "G6 · T9",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -23994,7 +23994,7 @@
       "game": 6,
       "inning": 9,
       "half": "bottom",
-      "label": "G6 \u00b7 B9",
+      "label": "G6 · B9",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -24036,7 +24036,7 @@
       "game": 6,
       "inning": 9,
       "half": "bottom",
-      "label": "G6 \u00b7 B9",
+      "label": "G6 · B9",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -24078,7 +24078,7 @@
       "game": 6,
       "inning": 9,
       "half": "bottom",
-      "label": "G6 \u00b7 B9",
+      "label": "G6 · B9",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -24120,7 +24120,7 @@
       "game": 6,
       "inning": 9,
       "half": "bottom",
-      "label": "G6 \u00b7 B9",
+      "label": "G6 · B9",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -24162,7 +24162,7 @@
       "game": 6,
       "inning": 9,
       "half": "bottom",
-      "label": "G6 \u00b7 B9",
+      "label": "G6 · B9",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -24204,7 +24204,7 @@
       "game": 7,
       "inning": 1,
       "half": "top",
-      "label": "G7 \u00b7 T1",
+      "label": "G7 · T1",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -24246,7 +24246,7 @@
       "game": 7,
       "inning": 1,
       "half": "top",
-      "label": "G7 \u00b7 T1",
+      "label": "G7 · T1",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -24279,7 +24279,7 @@
       "game": 7,
       "inning": 1,
       "half": "top",
-      "label": "G7 \u00b7 T1",
+      "label": "G7 · T1",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -24321,7 +24321,7 @@
       "game": 7,
       "inning": 1,
       "half": "top",
-      "label": "G7 \u00b7 T1",
+      "label": "G7 · T1",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -24363,7 +24363,7 @@
       "game": 7,
       "inning": 1,
       "half": "top",
-      "label": "G7 \u00b7 T1",
+      "label": "G7 · T1",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -24396,7 +24396,7 @@
       "game": 7,
       "inning": 1,
       "half": "top",
-      "label": "G7 \u00b7 T1",
+      "label": "G7 · T1",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -24429,7 +24429,7 @@
       "game": 7,
       "inning": 1,
       "half": "bottom",
-      "label": "G7 \u00b7 B1",
+      "label": "G7 · B1",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -24471,7 +24471,7 @@
       "game": 7,
       "inning": 1,
       "half": "bottom",
-      "label": "G7 \u00b7 B1",
+      "label": "G7 · B1",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -24521,7 +24521,7 @@
       "game": 7,
       "inning": 1,
       "half": "bottom",
-      "label": "G7 \u00b7 B1",
+      "label": "G7 · B1",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -24563,7 +24563,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -24613,7 +24613,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -24655,7 +24655,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -24697,7 +24697,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -24739,7 +24739,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -24772,7 +24772,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -24814,7 +24814,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -24856,7 +24856,7 @@
       "game": 7,
       "inning": 2,
       "half": "top",
-      "label": "G7 \u00b7 T2",
+      "label": "G7 · T2",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -24906,7 +24906,7 @@
       "game": 7,
       "inning": 2,
       "half": "bottom",
-      "label": "G7 \u00b7 B2",
+      "label": "G7 · B2",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -24956,7 +24956,7 @@
       "game": 7,
       "inning": 2,
       "half": "bottom",
-      "label": "G7 \u00b7 B2",
+      "label": "G7 · B2",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -25006,7 +25006,7 @@
       "game": 7,
       "inning": 2,
       "half": "bottom",
-      "label": "G7 \u00b7 B2",
+      "label": "G7 · B2",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -25048,7 +25048,7 @@
       "game": 7,
       "inning": 2,
       "half": "bottom",
-      "label": "G7 \u00b7 B2",
+      "label": "G7 · B2",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -25098,7 +25098,7 @@
       "game": 7,
       "inning": 3,
       "half": "top",
-      "label": "G7 \u00b7 T3",
+      "label": "G7 · T3",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -25140,7 +25140,7 @@
       "game": 7,
       "inning": 3,
       "half": "top",
-      "label": "G7 \u00b7 T3",
+      "label": "G7 · T3",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -25182,7 +25182,7 @@
       "game": 7,
       "inning": 3,
       "half": "top",
-      "label": "G7 \u00b7 T3",
+      "label": "G7 · T3",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -25224,7 +25224,7 @@
       "game": 7,
       "inning": 3,
       "half": "top",
-      "label": "G7 \u00b7 T3",
+      "label": "G7 · T3",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -25266,7 +25266,7 @@
       "game": 7,
       "inning": 3,
       "half": "bottom",
-      "label": "G7 \u00b7 B3",
+      "label": "G7 · B3",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -25308,7 +25308,7 @@
       "game": 7,
       "inning": 3,
       "half": "bottom",
-      "label": "G7 \u00b7 B3",
+      "label": "G7 · B3",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -25341,7 +25341,7 @@
       "game": 7,
       "inning": 3,
       "half": "bottom",
-      "label": "G7 \u00b7 B3",
+      "label": "G7 · B3",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -25374,7 +25374,7 @@
       "game": 7,
       "inning": 3,
       "half": "bottom",
-      "label": "G7 \u00b7 B3",
+      "label": "G7 · B3",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -25416,7 +25416,7 @@
       "game": 7,
       "inning": 3,
       "half": "bottom",
-      "label": "G7 \u00b7 B3",
+      "label": "G7 · B3",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -25458,7 +25458,7 @@
       "game": 7,
       "inning": 3,
       "half": "bottom",
-      "label": "G7 \u00b7 B3",
+      "label": "G7 · B3",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -25508,7 +25508,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -25550,7 +25550,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -25576,14 +25576,14 @@
           "21"
         ]
       },
-      "note": "JOHNNY DAMON GRAND SLAM \u2014 Red Sox lead 6\u20130",
+      "note": "JOHNNY DAMON GRAND SLAM — Red Sox lead 6–0",
       "isSeriesEnd": false
     },
     {
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -25625,7 +25625,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -25667,7 +25667,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -25709,7 +25709,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -25751,7 +25751,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -25793,7 +25793,7 @@
       "game": 7,
       "inning": 4,
       "half": "top",
-      "label": "G7 \u00b7 T4",
+      "label": "G7 · T4",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -25843,7 +25843,7 @@
       "game": 7,
       "inning": 4,
       "half": "bottom",
-      "label": "G7 \u00b7 B4",
+      "label": "G7 · B4",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -25885,7 +25885,7 @@
       "game": 7,
       "inning": 4,
       "half": "bottom",
-      "label": "G7 \u00b7 B4",
+      "label": "G7 · B4",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -25927,7 +25927,7 @@
       "game": 7,
       "inning": 4,
       "half": "bottom",
-      "label": "G7 \u00b7 B4",
+      "label": "G7 · B4",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -25969,7 +25969,7 @@
       "game": 7,
       "inning": 5,
       "half": "top",
-      "label": "G7 \u00b7 T5",
+      "label": "G7 · T5",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -26011,7 +26011,7 @@
       "game": 7,
       "inning": 5,
       "half": "top",
-      "label": "G7 \u00b7 T5",
+      "label": "G7 · T5",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -26061,7 +26061,7 @@
       "game": 7,
       "inning": 5,
       "half": "top",
-      "label": "G7 \u00b7 T5",
+      "label": "G7 · T5",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -26094,7 +26094,7 @@
       "game": 7,
       "inning": 5,
       "half": "top",
-      "label": "G7 \u00b7 T5",
+      "label": "G7 · T5",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -26136,7 +26136,7 @@
       "game": 7,
       "inning": 5,
       "half": "top",
-      "label": "G7 \u00b7 T5",
+      "label": "G7 · T5",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -26186,7 +26186,7 @@
       "game": 7,
       "inning": 5,
       "half": "bottom",
-      "label": "G7 \u00b7 B5",
+      "label": "G7 · B5",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -26236,7 +26236,7 @@
       "game": 7,
       "inning": 5,
       "half": "bottom",
-      "label": "G7 \u00b7 B5",
+      "label": "G7 · B5",
       "batter": {
         "team": "NYY",
         "pid": "clart002",
@@ -26278,7 +26278,7 @@
       "game": 7,
       "inning": 5,
       "half": "bottom",
-      "label": "G7 \u00b7 B5",
+      "label": "G7 · B5",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -26320,7 +26320,7 @@
       "game": 7,
       "inning": 6,
       "half": "top",
-      "label": "G7 \u00b7 T6",
+      "label": "G7 · T6",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -26362,7 +26362,7 @@
       "game": 7,
       "inning": 6,
       "half": "top",
-      "label": "G7 \u00b7 T6",
+      "label": "G7 · T6",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -26412,7 +26412,7 @@
       "game": 7,
       "inning": 6,
       "half": "top",
-      "label": "G7 \u00b7 T6",
+      "label": "G7 · T6",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -26454,7 +26454,7 @@
       "game": 7,
       "inning": 6,
       "half": "bottom",
-      "label": "G7 \u00b7 B6",
+      "label": "G7 · B6",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -26504,7 +26504,7 @@
       "game": 7,
       "inning": 6,
       "half": "bottom",
-      "label": "G7 \u00b7 B6",
+      "label": "G7 · B6",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -26554,7 +26554,7 @@
       "game": 7,
       "inning": 6,
       "half": "bottom",
-      "label": "G7 \u00b7 B6",
+      "label": "G7 · B6",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -26596,7 +26596,7 @@
       "game": 7,
       "inning": 7,
       "half": "top",
-      "label": "G7 \u00b7 T7",
+      "label": "G7 · T7",
       "batter": {
         "team": "BOS",
         "pid": "millk005",
@@ -26638,7 +26638,7 @@
       "game": 7,
       "inning": 7,
       "half": "top",
-      "label": "G7 \u00b7 T7",
+      "label": "G7 · T7",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -26680,7 +26680,7 @@
       "game": 7,
       "inning": 7,
       "half": "top",
-      "label": "G7 \u00b7 T7",
+      "label": "G7 · T7",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -26722,7 +26722,7 @@
       "game": 7,
       "inning": 7,
       "half": "top",
-      "label": "G7 \u00b7 T7",
+      "label": "G7 · T7",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -26764,7 +26764,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -26806,7 +26806,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -26848,7 +26848,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -26890,7 +26890,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -26932,7 +26932,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -26965,7 +26965,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "olerj001",
@@ -27007,7 +27007,7 @@
       "game": 7,
       "inning": 7,
       "half": "bottom",
-      "label": "G7 \u00b7 B7",
+      "label": "G7 · B7",
       "batter": {
         "team": "NYY",
         "pid": "cairm001",
@@ -27049,7 +27049,7 @@
       "game": 7,
       "inning": 8,
       "half": "top",
-      "label": "G7 \u00b7 T8",
+      "label": "G7 · T8",
       "batter": {
         "team": "BOS",
         "pid": "bellm002",
@@ -27082,7 +27082,7 @@
       "game": 7,
       "inning": 8,
       "half": "top",
-      "label": "G7 \u00b7 T8",
+      "label": "G7 · T8",
       "batter": {
         "team": "BOS",
         "pid": "ramim002",
@@ -27124,7 +27124,7 @@
       "game": 7,
       "inning": 8,
       "half": "top",
-      "label": "G7 \u00b7 T8",
+      "label": "G7 · T8",
       "batter": {
         "team": "BOS",
         "pid": "ortid001",
@@ -27166,7 +27166,7 @@
       "game": 7,
       "inning": 8,
       "half": "top",
-      "label": "G7 \u00b7 T8",
+      "label": "G7 · T8",
       "batter": {
         "team": "BOS",
         "pid": "varij001",
@@ -27208,7 +27208,7 @@
       "game": 7,
       "inning": 8,
       "half": "bottom",
-      "label": "G7 \u00b7 B8",
+      "label": "G7 · B8",
       "batter": {
         "team": "NYY",
         "pid": "jeted001",
@@ -27258,7 +27258,7 @@
       "game": 7,
       "inning": 8,
       "half": "bottom",
-      "label": "G7 \u00b7 B8",
+      "label": "G7 · B8",
       "batter": {
         "team": "NYY",
         "pid": "rodra001",
@@ -27300,7 +27300,7 @@
       "game": 7,
       "inning": 8,
       "half": "bottom",
-      "label": "G7 \u00b7 B8",
+      "label": "G7 · B8",
       "batter": {
         "team": "NYY",
         "pid": "shefg001",
@@ -27350,7 +27350,7 @@
       "game": 7,
       "inning": 9,
       "half": "top",
-      "label": "G7 \u00b7 T9",
+      "label": "G7 · T9",
       "batter": {
         "team": "BOS",
         "pid": "nixot001",
@@ -27392,7 +27392,7 @@
       "game": 7,
       "inning": 9,
       "half": "top",
-      "label": "G7 \u00b7 T9",
+      "label": "G7 · T9",
       "batter": {
         "team": "BOS",
         "pid": "miend001",
@@ -27434,7 +27434,7 @@
       "game": 7,
       "inning": 9,
       "half": "top",
-      "label": "G7 \u00b7 T9",
+      "label": "G7 · T9",
       "batter": {
         "team": "BOS",
         "pid": "muelb001",
@@ -27476,7 +27476,7 @@
       "game": 7,
       "inning": 9,
       "half": "top",
-      "label": "G7 \u00b7 T9",
+      "label": "G7 · T9",
       "batter": {
         "team": "BOS",
         "pid": "cabro001",
@@ -27518,7 +27518,7 @@
       "game": 7,
       "inning": 9,
       "half": "top",
-      "label": "G7 \u00b7 T9",
+      "label": "G7 · T9",
       "batter": {
         "team": "BOS",
         "pid": "damoj001",
@@ -27560,7 +27560,7 @@
       "game": 7,
       "inning": 9,
       "half": "bottom",
-      "label": "G7 \u00b7 B9",
+      "label": "G7 · B9",
       "batter": {
         "team": "NYY",
         "pid": "matsh001",
@@ -27602,7 +27602,7 @@
       "game": 7,
       "inning": 9,
       "half": "bottom",
-      "label": "G7 \u00b7 B9",
+      "label": "G7 · B9",
       "batter": {
         "team": "NYY",
         "pid": "willb002",
@@ -27652,7 +27652,7 @@
       "game": 7,
       "inning": 9,
       "half": "bottom",
-      "label": "G7 \u00b7 B9",
+      "label": "G7 · B9",
       "batter": {
         "team": "NYY",
         "pid": "posaj001",
@@ -27694,7 +27694,7 @@
       "game": 7,
       "inning": 9,
       "half": "bottom",
-      "label": "G7 \u00b7 B9",
+      "label": "G7 · B9",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -27727,7 +27727,7 @@
       "game": 7,
       "inning": 9,
       "half": "bottom",
-      "label": "G7 \u00b7 B9",
+      "label": "G7 · B9",
       "batter": {
         "team": "NYY",
         "pid": "loftk001",
@@ -27769,7 +27769,7 @@
       "game": 7,
       "inning": 9,
       "half": "bottom",
-      "label": "G7 \u00b7 B9",
+      "label": "G7 · B9",
       "batter": {
         "team": "NYY",
         "pid": "sierr001",
@@ -27810,7 +27810,7 @@
         ],
         "NYY": []
       },
-      "note": "Red Sox win the pennant \u2014 86 years ends tonight",
+      "note": "Red Sox win the pennant — 86 years ends tonight",
       "isSeriesEnd": true
     }
   ]

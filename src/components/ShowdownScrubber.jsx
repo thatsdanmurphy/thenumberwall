@@ -2,9 +2,10 @@ import { useEffect, useRef, useCallback, useMemo } from 'react'
 import { Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react'
 import './ShowdownScrubber.css'
 
-const SOX_FILL = 'rgba(210,50,60,0.88)'
-const NYY_FILL = 'rgba(20,50,105,0.88)'
-const FUTURE   = 'rgba(255,255,255,0.06)'
+const SOX_FILL    = 'rgba(210,50,60,0.88)'
+const NYY_FILL    = 'rgba(20,50,105,0.88)'
+const ORANGE_FILL = 'rgba(232,124,42,0.88)'
+const FUTURE      = 'rgba(255,255,255,0.06)'
 
 // Short result labels shown in the position display
 const RESULT_SHORT = {
@@ -32,14 +33,15 @@ export default function ShowdownScrubber({
       .sort((a, b) => a[0] - b[0])
 
     return entries.map(([gNum, startIdx], i) => {
-      const endIdx = entries[i + 1]?.[1] ?? total
-      const game   = games[gNum - 1]
-      const winner = game?.winner ?? 'NYY'
+      const endIdx   = entries[i + 1]?.[1] ?? total
+      const game     = games[gNum - 1]
+      const winner   = game?.winner ?? 'NYY'
       const startPct = (startIdx / (total - 1)) * 100
       const endPct   = (Math.min(endIdx, total) / (total - 1)) * 100
-      const complete  = position >= endIdx - 1
-      const active    = position >= startIdx && position < endIdx
-      return { gNum, startIdx, endIdx, startPct, endPct, winner, complete, active }
+      const played   = position >= startIdx
+      const complete = position >= endIdx       // game fully done
+      const active   = played && !complete      // game currently in progress
+      return { gNum, startIdx, endIdx, startPct, endPct, winner, played, complete, active }
     })
   }, [gameStarts, games, total, position])
 
@@ -67,9 +69,9 @@ export default function ShowdownScrubber({
   const posFromEvent = useCallback((e) => {
     const track = trackRef.current
     if (!track) return position
-    const rect   = track.getBoundingClientRect()
+    const rect    = track.getBoundingClientRect()
     const clientX = e.touches ? e.touches[0].clientX : e.clientX
-    const ratio  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
+    const ratio   = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
     return Math.round(ratio * (total - 1))
   }, [total, position])
 
@@ -92,9 +94,6 @@ export default function ShowdownScrubber({
   const half    = play.half === 'top' ? 'T' : 'B'
   const inningN = play.inning ?? 1
   const result  = RESULT_SHORT[play.result] ?? ''
-
-  const currentSeg = segments.find(s => s.gNum === gameNum)
-  const accentColor = currentSeg?.winner === 'BOS' ? SOX_FILL : NYY_FILL
 
   return (
     <div className="showdown-scrubber">
@@ -126,7 +125,7 @@ export default function ShowdownScrubber({
           {result && (
             <>
               <span className="showdown-scrubber__dot">·</span>
-              <span className="showdown-scrubber__result" style={{ color: accentColor }}>{result}</span>
+              <span className="showdown-scrubber__result">{result}</span>
             </>
           )}
         </div>
@@ -164,48 +163,53 @@ export default function ShowdownScrubber({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       >
-        {/* Game segments — colored by winner, chunk gaps between them */}
-        {segments.map((seg, i) => {
-          const GAP   = 0.5  // percent gap between game chunks
-          const start = seg.startPct + (i === 0 ? 0 : GAP / 2)
-          const end   = seg.endPct   - (i === segments.length - 1 ? 0 : GAP / 2)
-          const width = Math.max(0, end - start)
-          const played = position >= seg.startIdx
-          const bg = played
-            ? (seg.winner === 'BOS' ? SOX_FILL : NYY_FILL)
-            : FUTURE
-          return (
-            <div
-              key={seg.gNum}
-              className="showdown-scrubber__segment"
-              style={{
-                left:       `${start}%`,
-                width:      `${width}%`,
-                background: bg,
-              }}
-            />
-          )
-        })}
+        {/* Inner layer — clips segments + overlays to rounded track shape */}
+        <div className="showdown-scrubber__track-inner">
 
-        {/* Brightness fill: highlights only the portion BEFORE thumb */}
-        <div
-          className="showdown-scrubber__fill-highlight"
-          style={{ width: `${pct}%` }}
-        />
+          {/* Game segments — orange while in progress, team color when complete */}
+          {segments.map((seg, i) => {
+            const GAP   = 0.5
+            const start = seg.startPct + (i === 0 ? 0 : GAP / 2)
+            const end   = seg.endPct   - (i === segments.length - 1 ? 0 : GAP / 2)
+            const width = Math.max(0, end - start)
 
-        {/* Extra-inning crosshatch overlays */}
-        {extraRects.map((r, i) => (
+            const bg = !seg.played
+              ? FUTURE
+              : seg.active
+                ? ORANGE_FILL
+                : (seg.winner === 'BOS' ? SOX_FILL : NYY_FILL)
+
+            const shadow = seg.active
+              ? '0 0 10px rgba(232,124,42,0.65), 0 0 22px rgba(232,124,42,0.28)'
+              : 'none'
+
+            return (
+              <div
+                key={seg.gNum}
+                className="showdown-scrubber__segment"
+                style={{ left: `${start}%`, width: `${width}%`, background: bg, boxShadow: shadow }}
+              />
+            )
+          })}
+
+          {/* Brightness overlay: whitens the played portion slightly */}
           <div
-            key={i}
-            className="showdown-scrubber__extra-zone"
-            style={{
-              left:  `${r.startPct}%`,
-              width: `${r.endPct - r.startPct}%`,
-            }}
+            className="showdown-scrubber__fill-highlight"
+            style={{ width: `${pct}%` }}
           />
-        ))}
 
-        {/* Thumb */}
+          {/* Extra-inning crosshatch overlays */}
+          {extraRects.map((r, i) => (
+            <div
+              key={i}
+              className="showdown-scrubber__extra-zone"
+              style={{ left: `${r.startPct}%`, width: `${r.endPct - r.startPct}%` }}
+            />
+          ))}
+
+        </div>
+
+        {/* Thumb — sibling to inner, never clipped, sits on top */}
         <div
           className="showdown-scrubber__thumb"
           style={{ left: `${pct}%` }}

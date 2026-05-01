@@ -121,16 +121,17 @@ function makeCombinedHeat(bosNums, nyyNums, bosHeatFn, nyyHeatFn) {
       const bosDark = bosBg === DARK_TILE.bg
       const nyyDark = nyyBg === DARK_TILE.bg
       if (bosDark && nyyDark) return { heatStyle: DARK_TILE, textColor: DARK_TILE.text }
+      // Soft top-to-bottom blend — BOS on top, NYY on bottom, blend zone in the middle
+      const topColor = bosDark ? nyyBg : bosBg
+      const botColor = nyyDark ? bosBg : nyyBg
       return {
         heatStyle: {
-          bg:     `linear-gradient(135deg, ${bosBg} 50%, ${nyyBg} 50%)`,
-          border: !bosDark || !nyyDark
-            ? 'rgba(255,255,255,0.28)'
-            : DARK_TILE.border,
+          bg:     `linear-gradient(to bottom, ${topColor} 20%, ${botColor} 80%)`,
+          border: 'rgba(255,255,255,0.26)',
           glow:   'none',
-          text:   'rgba(255,255,255,0.85)',
+          text:   'rgba(255,255,255,0.88)',
         },
-        textColor: 'rgba(255,255,255,0.85)',
+        textColor: 'rgba(255,255,255,0.88)',
       }
     }
     if (inBos) return b
@@ -257,7 +258,9 @@ function SelectedPlayerPanel({ player, plays, accentColor, onDeselect }) {
 
   const seriesStats = useMemo(() => computeSeriesStats(plays, pid), [plays, pid])
   const moments = useMemo(
-    () => plays.filter(p => (p.batter.pid === pid || p.pitcher.pid === pid) && p.note).map(p => p.note),
+    () => plays
+      .filter(p => (p.batter.pid === pid || p.pitcher.pid === pid) && p.note)
+      .map(p => `G${p.game} · ${p.note}`),
     [plays, pid]
   )
   // Deduplicate notes
@@ -464,14 +467,27 @@ export default function ShowdownPage() {
   const bosStats = bosLive ? getStats(bosLive.pid, currentPlay.game) : null
   const nyyStats = nyyLive ? getStats(nyyLive.pid, currentPlay.game) : null
 
-  const note = currentPlay.note ?? null
-  const bosNote = (bosRole === 'batter' && note) ? note : null
-  const nyyNote = (nyyRole === 'batter' && note) ? note : null
+  // Persist the most recent note for up to 4 plays so it reads long enough
+  // and prevents the card from jumping in height when the note disappears
+  const visibleNote = useMemo(() => {
+    if (currentPlay.note) return currentPlay.note
+    for (let i = position - 1; i >= Math.max(0, position - 4); i--) {
+      if (plays[i]?.game !== currentPlay.game) break
+      if (plays[i]?.note) return plays[i].note
+    }
+    return null
+  }, [plays, position, currentPlay])
+
+  // Prefix with game label so it's clear which game the moment belongs to
+  const noteWithGame = visibleNote ? `G${currentPlay.game} · ${visibleNote}` : null
+
+  const bosNote = (bosRole === 'batter' && noteWithGame) ? noteWithGame : null
+  const nyyNote = (nyyRole === 'batter' && noteWithGame) ? noteWithGame : null
 
   // Mobile panel always shows the batter
   const mobilePlayer = batter ?? null
   const mobileStats  = mobilePlayer ? getStats(mobilePlayer.pid, currentPlay.game) : null
-  const mobileNote   = note
+  const mobileNote   = noteWithGame
 
   return (
     <AppShell>
