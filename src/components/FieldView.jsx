@@ -166,7 +166,7 @@ function getBallTargets(play) {
   const { result, fielders } = play
   if (!play.pitcher) return []
   if (['SB','CS','DI','BK','WP','PB','NP','?'].includes(result)) return []
-  if (result === 'HR') return [[280, 60]]
+  if (result === 'HR') return [[280, 46]] // shoots to the fence/border
   if (['K','W','IW','HP'].includes(result)) return [POS_XY.C]
   // DP: up to 2 sequential targets
   const targets = (fielders || []).map(f => POS_XY[f.pos]).filter(Boolean)
@@ -186,29 +186,33 @@ function playIntensity(play) {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 20 }) {
+function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 24, onClick }) {
   if (!number) return null
   const lvl   = heatLevel(heatVal, isActive, intensity)
   const style = RAMP[team][lvl]
   const pulse = isActive && ['hr','big','win','dp'].includes(intensity)
 
   return (
-    <g className={`fv-tile${pulse ? ' fv-tile--pulse' : ''}`} transform={`translate(${x},${y})`}>
+    <g
+      className={`fv-tile${pulse ? ' fv-tile--pulse' : ''}${onClick ? ' fv-tile--clickable' : ''}`}
+      transform={`translate(${x},${y})`}
+      onClick={onClick}
+    >
       {lvl >= 2 && (
-        <circle r={r + 8} fill={style.fill} opacity={0.18} />
+        <circle r={r + 9} fill={style.fill} opacity={0.16} />
       )}
       <circle
         r={r}
         fill={style.fill}
         stroke={style.stroke}
-        strokeWidth={lvl >= 3 ? 1.5 : 0.8}
+        strokeWidth={lvl >= 3 ? 1.8 : 0.9}
         style={{ filter: style.filter }}
       />
       <text
         textAnchor="middle" dominantBaseline="central"
         className="fv-tile__num"
         fill={style.text}
-        fontSize={String(number).length > 2 ? 9 : 11}
+        fontSize={String(number).length > 2 ? 10 : 13}
         fontWeight="700"
       >
         #{number}
@@ -257,6 +261,11 @@ export default function FieldView({ play, plays, position }) {
   // ── Base state ────────────────────────────────────────────────────────────
   const bases = useMemo(() => computeBaseState(plays, position), [plays, position])
 
+  // ── Selected tile (tap to see player info on mobile) ──────────────────────
+  const [selectedTile, setSelectedTile] = useState(null)
+  // Clear selection on play change
+  useEffect(() => { setSelectedTile(null) }, [position])
+
   // ── Ball animation ────────────────────────────────────────────────────────
   const [ball1, setBall1] = useState({ x: 280, y: 330, vis: false })
   const [ball2, setBall2] = useState({ x: 280, y: 330, vis: false })
@@ -295,16 +304,48 @@ export default function FieldView({ play, plays, position }) {
   const activePositionSet = new Set(play.fielders?.map(f => f.pos) ?? [])
   const pitcherActive = true // pitcher always involved
 
-  const ballColor = intensity === 'hr' || intensity === 'big' ? '#FFDD55'
-    : intensity === 'win' ? '#FFDD55'
-    : intensity === 'k'   ? '#AACCFF'
+  // HR color = batting team color, bright
+  const hrColor = battingTeam === 'BOS' ? '#FF4D5E' : '#7AAEFF'
+  const ballColor = intensity === 'hr'  ? hrColor
+    : intensity === 'big'  ? '#FFDD55'
+    : intensity === 'win'  ? '#FFDD55'
+    : intensity === 'k'    ? '#AACCFF'
     : '#FFFFFF'
 
   const isHR = play.result === 'HR'
 
+  // Build tile click handlers
+  function makeTileClick(player, pos) {
+    return () => setSelectedTile(
+      selectedTile?.pid === player.pid ? null
+      : { pid: player.pid, number: player.number, name: player.name, pos, team: player.team ?? fieldingTeam }
+    )
+  }
+
   return (
     <div className="fv-wrap">
-      <svg viewBox="0 45 560 435" className="fv-svg">
+      {/* ── Play caption — ABOVE the field ─────────────────────────── */}
+      <div className="fv-caption">
+        <span className="fv-caption__batter">
+          #{play.batter?.number} {play.batter?.name}
+        </span>
+        {play.pitcher && (
+          <>
+            <span className="fv-caption__sep">vs</span>
+            <span className="fv-caption__pitcher">
+              #{play.pitcher.number} {play.pitcher.name}
+            </span>
+          </>
+        )}
+        {play.resultText && (
+          <span className="fv-caption__result">{play.resultText}</span>
+        )}
+        {play.note && (
+          <span className="fv-caption__note">{play.note}</span>
+        )}
+      </div>
+
+      <svg viewBox="55 45 450 435" className="fv-svg">
         <defs>
           <clipPath id="fv-fair-clip">
             <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" />
@@ -378,6 +419,7 @@ export default function FieldView({ play, plays, position }) {
             heatVal={heatMap[play.pitcher.pid] ?? 0}
             isActive={pitcherActive}
             intensity={intensity}
+            onClick={makeTileClick(play.pitcher, 'P')}
           />
         )}
 
@@ -394,6 +436,7 @@ export default function FieldView({ play, plays, position }) {
               heatVal={heatMap[player.pid] ?? 0}
               isActive={isActive}
               intensity={intensity}
+              onClick={makeTileClick(player, pos)}
             />
           )
         })}
@@ -408,7 +451,8 @@ export default function FieldView({ play, plays, position }) {
             heatVal={heatMap[play.batter.pid] ?? 0}
             isActive={true}
             intensity={intensity}
-            r={22}
+            r={26}
+            onClick={makeTileClick(play.batter, play.batter.pos ?? 'DH')}
           />
         )}
 
@@ -416,24 +460,19 @@ export default function FieldView({ play, plays, position }) {
         <FieldBall x={ball1.x} y={ball1.y} visible={ball1.vis} color={ballColor} size={isHR ? 6 : 5} />
         <FieldBall x={ball2.x} y={ball2.y} visible={ball2.vis} color={ballColor} size={4} />
 
-        {/* ── HR arc + ripple explosion ─────────────────────────────────── */}
+        {/* ── HR — ball bombs to the fence, ripple echoes from the border ── */}
         {ball1.vis && isHR && (
-          <>
-            <path d={`M 280 330 Q 340 120 ${ball1.x} ${ball1.y}`}
-              fill="none" stroke="rgba(255,221,68,0.30)" strokeWidth={1.5} strokeDasharray="4 3" />
-            <circle cx={ball1.x} cy={ball1.y} r={24}
-              fill="rgba(255,221,68,0.10)" stroke="none" />
-            {/* Ripple rings at landing spot */}
-            <g key={`hr-ripple-${position}`}>
-              {[0,1,2].map(i => (
-                <circle key={i}
-                  cx={ball1.x} cy={ball1.y} r={10}
-                  fill="none" stroke="rgba(255,221,68,0.72)" strokeWidth={1.8}
-                  className={`fv-ripple fv-ripple--${i}`}
-                />
-              ))}
-            </g>
-          </>
+          <g key={`hr-ripple-${position}`}>
+            {[0,1,2,3].map(i => (
+              <circle key={i}
+                cx={ball1.x} cy={ball1.y} r={15}
+                fill="none"
+                stroke={hrColor}
+                strokeWidth={2}
+                className={`fv-ripple fv-ripple--${i}`}
+              />
+            ))}
+          </g>
         )}
 
         {/* ── Win — championship ripple from home plate ─────────────────── */}
@@ -451,26 +490,15 @@ export default function FieldView({ play, plays, position }) {
 
       </svg>
 
-      {/* ── Caption ──────────────────────────────────────────────────── */}
-      <div className="fv-caption">
-        <span className="fv-caption__batter">
-          #{play.batter?.number} {play.batter?.name}
-        </span>
-        {play.pitcher && (
-          <>
-            <span className="fv-caption__sep">vs</span>
-            <span className="fv-caption__pitcher">
-              #{play.pitcher.number} {play.pitcher.name}
-            </span>
-          </>
-        )}
-        {play.resultText && (
-          <span className="fv-caption__result">{play.resultText}</span>
-        )}
-        {play.note && (
-          <span className="fv-caption__note">{play.note}</span>
-        )}
-      </div>
+      {/* ── Tapped tile info (mobile) ─────────────────────────────────── */}
+      {selectedTile && (
+        <div className="fv-tile-popup">
+          <span className="fv-tile-popup__num">#{selectedTile.number}</span>
+          <span className="fv-tile-popup__name">{selectedTile.name}</span>
+          <span className="fv-tile-popup__pos">{selectedTile.pos}</span>
+          <button className="fv-tile-popup__close" onClick={() => setSelectedTile(null)}>✕</button>
+        </div>
+      )}
     </div>
   )
 }

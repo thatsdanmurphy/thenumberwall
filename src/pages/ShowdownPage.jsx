@@ -59,6 +59,85 @@ function computeGameStats(plays, upToIdx) {
 
 function fmtIP(outs) { return `${Math.floor(outs / 3)}.${outs % 3}` }
 
+// ── Live running score (approximate from play results) ────────────────────
+function computeRunningScore(plays, upToIdx) {
+  const scores = {} // { game: { BOS: n, NYY: n } }
+  let bases     = { '1B': null, '2B': null, '3B': null }
+  let outs      = 0
+  let lastHalf  = null
+
+  for (let i = 0; i <= upToIdx; i++) {
+    const p = plays[i]
+    if (!p?.batter) continue
+    const g    = p.game
+    const team = p.batter.team
+    if (!scores[g]) scores[g] = { BOS: 0, NYY: 0 }
+
+    const hk = `${g}-${p.inning}-${p.half}`
+    if (hk !== lastHalf) { bases = { '1B': null, '2B': null, '3B': null }; outs = 0; lastHalf = hk }
+
+    const b = { pid: p.batter.pid, number: p.batter.number, team }
+    let runs = 0
+
+    switch (p.result) {
+      case 'HR': {
+        runs = [bases['1B'], bases['2B'], bases['3B']].filter(Boolean).length + 1
+        bases = { '1B': null, '2B': null, '3B': null }; break
+      }
+      case 'T': {
+        runs = [bases['1B'], bases['2B'], bases['3B']].filter(Boolean).length
+        bases = { '1B': null, '2B': null, '3B': b }; break
+      }
+      case 'D': {
+        if (bases['3B']) runs++
+        if (bases['2B']) runs++
+        bases = { '1B': null, '2B': b, '3B': bases['1B'] ?? null }; break
+      }
+      case 'S': {
+        if (bases['3B']) runs++
+        bases = { '1B': b, '2B': bases['1B'], '3B': null }; break
+      }
+      case 'W': case 'HP': case 'IW': {
+        if (bases['1B'] && bases['2B'] && bases['3B']) runs++
+        if (bases['1B'] && bases['2B']) bases['3B'] = bases['2B']
+        if (bases['1B']) bases['2B'] = bases['1B']
+        bases['1B'] = b; break
+      }
+      case 'SF': {
+        if (bases['3B']) runs++
+        outs++
+        bases = { '1B': bases['2B'], '2B': null, '3B': null }; break
+      }
+      case 'SH':   { outs++; bases = { '1B': bases['2B'] ?? bases['1B'] ?? null, '2B': null, '3B': null }; break }
+      case 'K': case 'OUT': { outs++; break }
+      case 'DP': {
+        outs += 2
+        if (bases['3B'] && outs < 3) runs++
+        bases = { '1B': null, '2B': null, '3B': null }; break
+      }
+      case 'FC': case 'E': {
+        bases = { '1B': b, '2B': bases['1B'], '3B': bases['2B'] }
+        if (p.result === 'FC') outs++; break
+      }
+      case 'SB': {
+        if (bases['2B']) { bases['3B'] = bases['2B']; bases['2B'] = null }
+        else if (bases['1B']) { bases['2B'] = bases['1B']; bases['1B'] = null }
+        break
+      }
+      case 'CS': {
+        if (bases['2B']) bases['2B'] = null
+        else if (bases['1B']) bases['1B'] = null
+        outs++; break
+      }
+      default: break
+    }
+
+    if (runs > 0) scores[g][team] += runs
+    if (outs >= 3) { bases = { '1B': null, '2B': null, '3B': null }; outs = 0 }
+  }
+  return scores
+}
+
 // ── Outs in current half-inning ────────────────────────────────────────────
 function computeCurrentOuts(plays, upToIdx) {
   if (!plays[upToIdx]) return 0
@@ -81,7 +160,7 @@ function computeCurrentOuts(plays, upToIdx) {
 }
 
 // ── FieldScoreboard ───────────────────────────────────────────────────────────
-function FieldScoreboard({ play, plays, position, games }) {
+function FieldScoreboard({ play, plays, position, games, gameScores }) {
   const outs    = computeCurrentOuts(plays, position)
   const gameNum = play.game ?? 1
   const game    = games[gameNum - 1]
@@ -90,6 +169,8 @@ function FieldScoreboard({ play, plays, position, games }) {
   // Series record: games completed before this one
   const bosWins = games.filter((g, i) => i < gameNum - 1 && g.winner === 'BOS').length
   const nyyWins = games.filter((g, i) => i < gameNum - 1 && g.winner === 'NYY').length
+  // Live game score
+  const liveScore = gameScores?.[gameNum] ?? { BOS: 0, NYY: 0 }
 
   return (
     <div className="field-scoreboard">
@@ -109,12 +190,23 @@ function FieldScoreboard({ play, plays, position, games }) {
 
       <div className="field-scoreboard__divider" />
 
-      <div className="field-scoreboard__series">
+      {/* Live game score */}
+      <div className="field-scoreboard__live">
         <span className="field-scoreboard__team field-scoreboard__team--nyy">NYY</span>
-        <span className="field-scoreboard__wins">{nyyWins}</span>
-        <span className="field-scoreboard__dash">—</span>
-        <span className="field-scoreboard__wins">{bosWins}</span>
+        <span className="field-scoreboard__score">{liveScore.NYY}</span>
+        <span className="field-scoreboard__dash">–</span>
+        <span className="field-scoreboard__score">{liveScore.BOS}</span>
         <span className="field-scoreboard__team field-scoreboard__team--bos">BOS</span>
+      </div>
+
+      <div className="field-scoreboard__divider" />
+
+      {/* Series record */}
+      <div className="field-scoreboard__series">
+        <span className="field-scoreboard__series-label">SERIES</span>
+        <span className="field-scoreboard__team field-scoreboard__team--nyy">{nyyWins}</span>
+        <span className="field-scoreboard__dash">—</span>
+        <span className="field-scoreboard__team field-scoreboard__team--bos">{bosWins}</span>
       </div>
 
       {game?.venue && (
@@ -194,7 +286,8 @@ export default function ShowdownPage() {
   const intensity   = playIntensity(currentPlay)
 
   // ── Game stats for player panels ─────────────────────────────────────────
-  const gameStats = useMemo(() => computeGameStats(plays, position), [plays, position])
+  const gameStats   = useMemo(() => computeGameStats(plays, position),    [plays, position])
+  const gameScores  = useMemo(() => computeRunningScore(plays, position),  [plays, position])
   function getStats(pid, gameNum) { return gameStats[`${pid}:${gameNum}`] ?? null }
 
   // ── Extra-inning zones for scrubber ──────────────────────────────────────
@@ -283,6 +376,7 @@ export default function ShowdownPage() {
           plays={plays}
           position={position}
           games={games}
+          gameScores={gameScores}
         />
 
         {/* ── Main layout — pitcher | field | batter ─────────────────── */}
