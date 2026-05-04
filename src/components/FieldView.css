@@ -153,27 +153,18 @@
   text-align:     center;
 }
 
-/* ── Tile popup — overlays the bottom of the field ──────────────────────── */
+/* ── Tile popup — sits between caption and field in normal flow ──────────── */
 
 .fv-tile-popup {
-  position:        absolute;
-  bottom:          8px;
-  left:            50%;
-  transform:       translateX(-50%);
-  width:           calc(100% - 24px);
-  max-width:       460px;
-  display:         flex;
-  align-items:     center;
-  gap:             var(--space-2);
-  padding:         var(--space-2) var(--space-3);
-  background:      rgba(6, 8, 18, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border:          1px solid var(--border-soft);
-  border-radius:   var(--radius-sm);
-  font-family:     var(--font-program);
-  font-size:       var(--text-small);
-  z-index:         10;
+  display:       flex;
+  align-items:   center;
+  gap:           var(--space-2);
+  padding:       var(--space-2) var(--space-3);
+  background:    var(--surface-1);
+  border:        1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family:   var(--font-program);
+  font-size:     var(--text-small);
 }
 
 .fv-tile-popup__num {
@@ -192,12 +183,15 @@
   min-width:      0;
 }
 
+.fv-tile-popup__namerow {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-1);
+}
+
 .fv-tile-popup__name {
   font-weight: 600;
   color:       var(--color-paper);
-  white-space: nowrap;
-  overflow:    hidden;
-  text-overflow: ellipsis;
 }
 
 .fv-tile-popup__pos {
@@ -206,6 +200,7 @@
   letter-spacing: 0.10em;
   color:          var(--color-muted);
   text-transform: uppercase;
+  flex-shrink:    0;
 }
 
 .fv-tile-popup__stats {

@@ -320,8 +320,8 @@ export default function FieldView({ play, plays, position, seriesStats }) {
 
   const hrColor  = battingTeam === 'BOS' ? '#FF4D5E' : '#7AAEFF'
   const ballColor = intensity === 'hr'  ? hrColor
-    : intensity === 'big'  ? '#FFDD55'
-    : intensity === 'win'  ? '#FFDD55'
+    : intensity === 'big'  ? hrColor    // team color, not gold
+    : intensity === 'win'  ? '#FFD84A'  // gold only for the series clincher
     : intensity === 'k'    ? '#AACCFF'
     : '#FFFFFF'
 
@@ -362,7 +362,24 @@ export default function FieldView({ play, plays, position, seriesStats }) {
         )}
       </div>
 
-      {/* ── Field container — position: relative for popup overlay ──── */}
+      {/* ── Tile popup — below caption, above field ─────────────────── */}
+      {selectedTile && (
+        <div className="fv-tile-popup">
+          <span className="fv-tile-popup__num">#{selectedTile.number}</span>
+          <div className="fv-tile-popup__body">
+            <div className="fv-tile-popup__namerow">
+              <span className="fv-tile-popup__name">{selectedTile.name}</span>
+              <span className="fv-tile-popup__pos">{selectedTile.pos}</span>
+            </div>
+            {popupStats && (
+              <span className="fv-tile-popup__stats">{popupStats}</span>
+            )}
+          </div>
+          <button className="fv-tile-popup__close" onClick={() => setSelectedTile(null)}>✕</button>
+        </div>
+      )}
+
+      {/* ── Field container ───────────────────────────────────────────── */}
       <div className="fv-field-container">
 
         <svg viewBox="0 45 560 425" className="fv-svg">
@@ -487,21 +504,6 @@ export default function FieldView({ play, plays, position, seriesStats }) {
           )}
 
         </svg>
-
-        {/* ── Tile popup — overlays the field ──────────────────────────── */}
-        {selectedTile && (
-          <div className="fv-tile-popup">
-            <span className="fv-tile-popup__num">#{selectedTile.number}</span>
-            <div className="fv-tile-popup__body">
-              <span className="fv-tile-popup__name">{selectedTile.name}</span>
-              <span className="fv-tile-popup__pos">{selectedTile.pos}</span>
-              {popupStats && (
-                <span className="fv-tile-popup__stats">{popupStats}</span>
-              )}
-            </div>
-            <button className="fv-tile-popup__close" onClick={() => setSelectedTile(null)}>✕</button>
-          </div>
-        )}
 
       </div>
     </div>

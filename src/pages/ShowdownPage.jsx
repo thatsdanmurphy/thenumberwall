@@ -33,8 +33,8 @@ const fmtIP = outs => `${Math.floor(outs / 3)}.${outs % 3}`
 
 // ── Series stats (across all games) ──────────────────────────────────────────
 function computeSeriesStats(plays, upToIdx) {
-  const bat = {} // pid → { ab, h, hr, k, bb, hp, d, t }
-  const pit = {} // pid → { outs, kp, hp_a, bb_a, hr_a }
+  const bat = {}
+  const pit = {}
 
   for (let i = 0; i <= upToIdx; i++) {
     const p = plays[i]; if (!p) break
@@ -73,7 +73,7 @@ function getSeriesStatLine(pid, role, seriesStats) {
     const s = seriesStats.pit[pid]
     if (!s) return null
     const parts = [`${fmtIP(s.outs)} IP`, `${s.kp} K`]
-    if (s.hr_a)  parts.push(`${s.hr_a} HR`)
+    if (s.hr_a)      parts.push(`${s.hr_a} HR`)
     else if (s.hp_a) parts.push(`${s.hp_a} H`)
     return parts.join(' · ')
   }
@@ -237,8 +237,42 @@ function FieldScoreboard({ play, plays, position, games, gameScores }) {
   )
 }
 
-// ── MatchupCard — compact pitcher/batter strip ────────────────────────────────
-function MatchupCard({ role, player, statLine, accentColor, intensity }) {
+// ── FieldPlayerPanel — desktop side card ─────────────────────────────────────
+function FieldPlayerPanel({ role, player, seriesLine, accentColor, intensity }) {
+  if (!player?.name) {
+    return <div className="field-player-panel field-player-panel--empty" />
+  }
+
+  const isPitcher = role === 'pitcher'
+
+  const glowClass =
+    intensity === 'win'                               ? ' field-player-panel--win'
+    : (intensity === 'big' || intensity === 'hr') && !isPitcher ? ' field-player-panel--big'
+    : intensity === 'k' && isPitcher                  ? ' field-player-panel--k'
+    : ''
+
+  return (
+    <div
+      className={`field-player-panel${glowClass}`}
+      style={{ '--card-accent': accentColor }}
+    >
+      <div className="field-player-panel__role">
+        {isPitcher ? 'PITCHING' : 'AT BAT'}
+      </div>
+      <div className="field-player-panel__num" style={{ color: accentColor }}>
+        #{player.number}
+      </div>
+      <div className="field-player-panel__name">{player.name}</div>
+      <div className="field-player-panel__pos">{player.pos}</div>
+      {seriesLine && (
+        <div className="field-player-panel__stats">{seriesLine}</div>
+      )}
+    </div>
+  )
+}
+
+// ── MatchupCard — compact strip for mobile ────────────────────────────────────
+function MatchupCard({ role, player, seriesLine, accentColor, intensity }) {
   if (!player?.name) {
     return <div className="field-matchup-card field-matchup-card--empty" />
   }
@@ -252,7 +286,10 @@ function MatchupCard({ role, player, statLine, accentColor, intensity }) {
     : ''
 
   return (
-    <div className={`field-matchup-card${glowClass}`}>
+    <div
+      className={`field-matchup-card${glowClass}`}
+      style={{ '--card-accent': accentColor }}
+    >
       <div className="field-matchup-card__num" style={{ color: accentColor }}>
         #{player.number}
       </div>
@@ -261,8 +298,8 @@ function MatchupCard({ role, player, statLine, accentColor, intensity }) {
           {isPitcher ? 'PITCHING' : 'AT BAT'}
         </div>
         <div className="field-matchup-card__name">{player.name}</div>
-        {statLine && (
-          <div className="field-matchup-card__stats">{statLine}</div>
+        {seriesLine && (
+          <div className="field-matchup-card__stats">{seriesLine}</div>
         )}
       </div>
     </div>
@@ -287,11 +324,9 @@ export default function ShowdownPage() {
   const currentPlay = plays[position] ?? {}
   const intensity   = playIntensity(currentPlay)
 
-  // ── Stats ─────────────────────────────────────────────────────────────────
   const seriesStats = useMemo(() => computeSeriesStats(plays, position), [plays, position])
   const gameScores  = useMemo(() => computeRunningScore(plays, position), [plays, position])
 
-  // ── Extra-inning zones ────────────────────────────────────────────────────
   const extraZones = useMemo(() => {
     const zones = []
     let zoneStart = null
@@ -304,7 +339,6 @@ export default function ShowdownPage() {
     return zones
   }, [plays])
 
-  // ── Scrubber highlights ───────────────────────────────────────────────────
   const highlights = useMemo(() => plays.reduce((acc, p, idx) => {
     if      (p.isSeriesEnd)                   acc.push({ idx, intensity: 'win', label: 'Series clincher' })
     else if (p.note?.includes('WALKOFF'))     acc.push({ idx, intensity: 'big', label: p.note })
@@ -313,7 +347,6 @@ export default function ShowdownPage() {
     return acc
   }, []), [plays])
 
-  // ── Seek + keyboard ───────────────────────────────────────────────────────
   const handleSeek = useCallback((idxOrFn) => {
     setPosition(prev => {
       const next = typeof idxOrFn === 'function' ? idxOrFn(prev) : idxOrFn
@@ -335,6 +368,12 @@ export default function ShowdownPage() {
 
   const pitcherStatLine = pitcher ? getSeriesStatLine(pitcher.pid, 'pitcher', seriesStats) : null
   const batterStatLine  = batter  ? getSeriesStatLine(batter.pid,  'batter',  seriesStats) : null
+
+  const pitcherAccent = pitcher?.team ? TEAM_ACCENT[pitcher.team] : TEAM_ACCENT.NYY
+  const batterAccent  = batter?.team  ? TEAM_ACCENT[batter.team]  : TEAM_ACCENT.BOS
+
+  const pitcherIntensity = intensity === 'win' ? 'win' : intensity === 'k' ? 'k' : 'normal'
+  const batterIntensity  = intensity === 'win' ? 'win' : ['hr','big'].includes(intensity) ? intensity : 'normal'
 
   return (
     <AppShell>
@@ -365,35 +404,60 @@ export default function ShowdownPage() {
           gameScores={gameScores}
         />
 
-        {/* ── Matchup strip — pitcher + batter above field ───────────── */}
+        {/* ── Mobile matchup strip — hidden on desktop ───────────────── */}
         <div className="showdown-page__matchup">
           <MatchupCard
             role="pitcher"
             player={pitcher}
-            statLine={pitcherStatLine}
-            accentColor={pitcher?.team ? TEAM_ACCENT[pitcher.team] : TEAM_ACCENT.NYY}
-            intensity={intensity === 'win' ? 'win' : intensity === 'k' ? 'k' : 'normal'}
+            seriesLine={pitcherStatLine}
+            accentColor={pitcherAccent}
+            intensity={pitcherIntensity}
           />
           <MatchupCard
             role="batter"
             player={batter}
-            statLine={batterStatLine}
-            accentColor={batter?.team ? TEAM_ACCENT[batter.team] : TEAM_ACCENT.BOS}
-            intensity={
-              intensity === 'win' ? 'win'
-              : ['hr','big'].includes(intensity) ? intensity
-              : 'normal'
-            }
+            seriesLine={batterStatLine}
+            accentColor={batterAccent}
+            intensity={batterIntensity}
           />
         </div>
 
-        {/* ── Field ─────────────────────────────────────────────────── */}
-        <FieldView
-          play={currentPlay}
-          plays={plays}
-          position={position}
-          seriesStats={seriesStats}
-        />
+        {/* ── Main layout: pitcher | field | batter ─────────────────── */}
+        <div className="showdown-page__field-layout">
+
+          {/* Pitcher panel — left, desktop only */}
+          <div className="showdown-page__side-col">
+            <FieldPlayerPanel
+              role="pitcher"
+              player={pitcher}
+              seriesLine={pitcherStatLine}
+              accentColor={pitcherAccent}
+              intensity={pitcherIntensity}
+            />
+          </div>
+
+          {/* Field */}
+          <div className="showdown-page__field-col">
+            <FieldView
+              play={currentPlay}
+              plays={plays}
+              position={position}
+              seriesStats={seriesStats}
+            />
+          </div>
+
+          {/* Batter panel — right, desktop only */}
+          <div className="showdown-page__side-col">
+            <FieldPlayerPanel
+              role="batter"
+              player={batter}
+              seriesLine={batterStatLine}
+              accentColor={batterAccent}
+              intensity={batterIntensity}
+            />
+          </div>
+
+        </div>
 
         <div className="showdown-page__attribution">
           Play-by-play data: <a href="https://www.retrosheet.org" target="_blank" rel="noopener noreferrer">Retrosheet</a>
