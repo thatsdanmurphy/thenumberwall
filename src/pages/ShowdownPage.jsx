@@ -6,10 +6,21 @@ import AppHeader        from '../components/AppHeader.jsx'
 import AppFooter        from '../components/AppFooter.jsx'
 import ShowdownScrubber from '../components/ShowdownScrubber.jsx'
 import FieldView        from '../components/FieldView.jsx'
-import alcs2004         from '../data/showdowns/alcs2004.json'
+import alcs2004  from '../data/showdowns/alcs2004.json'
+import wallData  from '../data/wallData.json'
 import './ShowdownPage.css'
 
 const SHOWDOWNS = { 'alcs-2004': alcs2004 }
+
+// ── Fun-fact lookup — keyed by lowercase player name ─────────────────────────
+const WALL_FACTS = Object.fromEntries(
+  wallData
+    .filter(e => e['Fun Fact'])
+    .map(e => [e.Name.toLowerCase(), e['Fun Fact']])
+)
+function getPlayerFact(name) {
+  return WALL_FACTS[name?.toLowerCase()] ?? null
+}
 
 const TEAM_ACCENT = { BOS: 'rgba(245,95,105,0.92)', NYY: 'rgba(160,200,255,0.92)' }
 
@@ -311,20 +322,22 @@ function SelectedTileContent({ tile, seriesStats }) {
   const accentColor = TEAM_ACCENT[tile.team] ?? TEAM_ACCENT.NYY
   const statLine    = getSeriesStatLine(tile.pid, 'batter', seriesStats)
     ?? getSeriesStatLine(tile.pid, 'pitcher', seriesStats)
+  const funFact     = getPlayerFact(tile.name)
 
   return (
-    <>
+    <div className="field-selected__content">
       <div className="field-selected__num" style={{ color: accentColor }}>
         #{tile.number}
       </div>
-      <div className="field-selected__body">
-        <div className="field-selected__name">{tile.name}</div>
-        <div className="field-selected__pos">{tile.pos}</div>
-        {statLine && (
-          <div className="field-selected__stats">{statLine}</div>
-        )}
-      </div>
-    </>
+      <div className="field-selected__name">{tile.name}</div>
+      <div className="field-selected__pos">{tile.pos}</div>
+      {statLine && (
+        <div className="field-selected__stats">{statLine}</div>
+      )}
+      {funFact && (
+        <div className="field-selected__fact">{funFact}</div>
+      )}
+    </div>
   )
 }
 
