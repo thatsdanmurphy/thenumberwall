@@ -297,8 +297,14 @@ export default function FieldView({ play, plays, position, selectedTile, onTileS
       <div className="fv-field-container">
         <svg viewBox="0 45 560 425" className="fv-svg">
           <defs>
+            {/* Clips the outfield fence path for the infield circle */}
             <clipPath id="fv-fair-clip">
               <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" />
+            </clipPath>
+            {/* Clips ALL static field elements to the viewBox (y ≥ 45)
+                so the dark background rect never bleeds above the SVG box */}
+            <clipPath id="fv-view-clip">
+              <rect x="0" y="45" width="560" height="425" />
             </clipPath>
             <radialGradient id="fv-bg-grad" cx="50%" cy="70%" r="65%">
               <stop offset="0%" stopColor="#0E1018" />
@@ -306,35 +312,38 @@ export default function FieldView({ play, plays, position, selectedTile, onTileS
             </radialGradient>
           </defs>
 
-          <rect width="560" height="470" fill="url(#fv-bg-grad)" />
-          <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" fill="#0C0F18" />
-          <circle cx="280" cy="316" r="112" fill="#0E1120" clipPath="url(#fv-fair-clip)" />
-          <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z" fill="#0A0D19" />
+          {/* Static field — clipped to viewBox so nothing bleeds into caption */}
+          <g clipPath="url(#fv-view-clip)">
+            <rect width="560" height="470" fill="url(#fv-bg-grad)" />
+            <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" fill="#0C0F18" />
+            <circle cx="280" cy="316" r="112" fill="#0E1120" clipPath="url(#fv-fair-clip)" />
+            <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z" fill="#0A0D19" />
 
-          {[[[280,416],[375,316]],[[375,316],[280,220]],[[280,220],[185,316]],[[185,316],[280,416]]].map(([[x1,y1],[x2,y2]],i) => (
-            <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#1A1D2E" strokeWidth={10} />
-          ))}
+            {[[[280,416],[375,316]],[[375,316],[280,220]],[[280,220],[185,316]],[[185,316],[280,416]]].map(([[x1,y1],[x2,y2]],i) => (
+              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#1A1D2E" strokeWidth={10} />
+            ))}
 
-          <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z"
-            fill="none" stroke="rgba(160,185,235,0.14)" strokeWidth={1} />
-          <line x1="280" y1="416" x2="38"  y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
-          <line x1="280" y1="416" x2="522" y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
-          <path d="M 40 356 Q 280 22 520 356"
-            fill="none" stroke="rgba(160,185,235,0.22)" strokeWidth={2} strokeDasharray="5 4" />
+            <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z"
+              fill="none" stroke="rgba(160,185,235,0.14)" strokeWidth={1} />
+            <line x1="280" y1="416" x2="38"  y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
+            <line x1="280" y1="416" x2="522" y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
+            <path d="M 40 356 Q 280 22 520 356"
+              fill="none" stroke="rgba(160,185,235,0.22)" strokeWidth={2} strokeDasharray="5 4" />
 
-          {[['LF',115,250],['CF',280,165],['RF',447,250]].map(([l,x,y]) => (
-            <text key={l} x={x} y={y} textAnchor="middle" fill="rgba(160,185,235,0.07)"
-              fontSize={9} letterSpacing={2} fontFamily="var(--font-scoreboard)">{l}</text>
-          ))}
+            {[['LF',115,250],['CF',280,165],['RF',447,250]].map(([l,x,y]) => (
+              <text key={l} x={x} y={y} textAnchor="middle" fill="rgba(160,185,235,0.07)"
+                fontSize={9} letterSpacing={2} fontFamily="var(--font-scoreboard)">{l}</text>
+            ))}
 
-          <circle cx="280" cy="330" r="9" fill="#13162A" stroke="rgba(160,185,235,0.12)" strokeWidth={0.6} />
+            <circle cx="280" cy="330" r="9" fill="#13162A" stroke="rgba(160,185,235,0.12)" strokeWidth={0.6} />
 
-          {Object.entries(BASE_XY).map(([base, [bx,by]]) => (
-            <rect key={base} x={bx-5} y={by-5} width={10} height={10}
-              fill="rgba(210,225,255,0.55)" transform={`rotate(45,${bx},${by})`} rx={1} />
-          ))}
-          <polygon points="280,420 286,414 286,408 274,408 274,414"
-            fill="rgba(210,225,255,0.60)" />
+            {Object.entries(BASE_XY).map(([base, [bx,by]]) => (
+              <rect key={base} x={bx-5} y={by-5} width={10} height={10}
+                fill="rgba(210,225,255,0.55)" transform={`rotate(45,${bx},${by})`} rx={1} />
+            ))}
+            <polygon points="280,420 286,414 286,408 274,408 274,414"
+              fill="rgba(210,225,255,0.60)" />
+          </g>
 
           {Object.entries(bases).map(([base, runner]) => (
             <RunnerTile key={base} base={base} runner={runner} />

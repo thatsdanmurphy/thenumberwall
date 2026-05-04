@@ -362,47 +362,41 @@
   border-top:  1px solid var(--border-faint);
 }
 
-/* ── Desktop selected-tile panel — below side col, connected style ────────── */
+/* ── Desktop selected-tile panel — separate card below active player ─────── */
 
 .field-selected-panel {
   display:        flex;
   align-items:    flex-start;
   gap:            var(--space-2);
-  margin-top:     -1px;               /* overlap border with side col above */
-  padding:        var(--space-2) var(--space-2);
-  background:     var(--surface-1);
-  border:         1px solid rgba(255,255,255,0.18);
-  border-top:     none;               /* connected: no top border, flows from panel */
-  border-radius:  0 0 var(--radius-md) var(--radius-md);
+  margin-top:     var(--space-2);      /* visible gap from active player panel */
+  padding:        var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  background:     var(--color-surface);
+  border:         1px solid var(--color-border);
+  border-radius:  var(--radius-md);
   position:       relative;
 }
 
-/* thin white accent line on left edge */
-.field-selected-panel::before {
-  content:    '';
-  position:   absolute;
-  left:       0;
-  top:        8px;
-  bottom:     8px;
-  width:      2px;
-  background: rgba(255,255,255,0.28);
-  border-radius: 1px;
-}
-
 .field-selected-panel__close {
-  position:   absolute;
-  top:        var(--space-1);
-  right:      var(--space-1);
-  background: none;
-  border:     none;
-  color:      var(--color-muted);
-  cursor:     pointer;
-  font-size:  0.65rem;
-  padding:    2px 4px;
-  line-height: 1;
-  transition: color var(--motion-hover);
+  position:    absolute;
+  top:         var(--space-1);
+  right:       var(--space-1);
+  width:       24px;
+  height:      24px;
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  background:  var(--surface-2);
+  border:      none;
+  border-radius: 50%;
+  color:       var(--color-muted);
+  cursor:      pointer;
+  font-size:   0.6rem;
+  transition:  background var(--motion-hover), color var(--motion-hover);
 }
-.field-selected-panel__close:hover { color: var(--color-paper); }
+.field-selected-panel__close:hover {
+  background: var(--surface-4);
+  color:      var(--color-paper);
+}
 
 /* ── Shared selected-tile inner content ───────────────────────────────────── */
 
@@ -419,12 +413,12 @@
   flex-direction: column;
   gap:            2px;
   min-width:      0;
+  padding-right:  var(--space-3);    /* room for close button */
 }
 
 .field-selected__name {
-  font-family: var(--font-program);
+  font-family: var(--font-banner);
   font-size:   var(--text-small);
-  font-weight: 600;
   color:       var(--color-paper);
   line-height: 1.2;
 }
@@ -448,21 +442,23 @@
   text-overflow: ellipsis;
 }
 
-/* ── Mobile bottom sheet — hidden on desktop ──────────────────────────────── */
-
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
+/* ── Mobile bottom sheet — uses PlayerPanel design-system style ───────────── */
 
 .showdown-page__tile-sheet {
-  display:       block;
-  position:      fixed;
-  bottom:        0;
-  left:          0;
-  right:         0;
-  z-index:       100;
-  animation:     slideUp 0.22s ease-out 1;
+  display:    block;
+  position:   fixed;
+  bottom:     0;
+  left:       0;
+  right:      0;
+  z-index:    200;
+  /* off-screen by default, slide up on mount */
+  transform:  translateY(0);
+  animation:  fv-sheet-up 300ms cubic-bezier(0.32, 0.72, 0, 1) 1;
+}
+
+@keyframes fv-sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }
 
 @media (min-width: 768px) {
@@ -470,44 +466,65 @@
 }
 
 .showdown-page__tile-sheet-inner {
-  display:        flex;
-  align-items:    flex-start;
-  gap:            var(--space-2);
-  padding:        var(--space-3) var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
-  background:     var(--surface-raised, #1a1e2e);
-  border-top:     2px solid rgba(255,255,255,0.14);
-  border-radius:  14px 14px 0 0;
-  position:       relative;
-  box-shadow:     0 -8px 40px rgba(0,0,0,0.55);
+  background:    var(--color-surface);
+  border:        1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding:       var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  position:      relative;
+  display:       flex;
+  align-items:   flex-start;
+  gap:           var(--space-3);
 }
 
-/* handle pill */
+/* drag handle — matches PlayerPanel */
 .showdown-page__tile-sheet-inner::before {
   content:       '';
+  display:       block;
   position:      absolute;
-  top:           8px;
+  top:           10px;
   left:          50%;
   transform:     translateX(-50%);
   width:         36px;
-  height:        3px;
-  background:    rgba(255,255,255,0.22);
+  height:        4px;
+  background:    var(--surface-4);
   border-radius: 2px;
 }
 
 .showdown-page__tile-sheet-close {
-  position:   absolute;
-  top:        var(--space-2);
-  right:      var(--space-2);
-  background: none;
-  border:     none;
-  color:      var(--color-muted);
-  cursor:     pointer;
-  font-size:  0.75rem;
-  padding:    4px 6px;
-  line-height: 1;
-  transition: color var(--motion-hover);
+  position:    absolute;
+  top:         var(--space-3);
+  right:       var(--space-3);
+  width:       28px;
+  height:      28px;
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background:  var(--surface-2);
+  border:      none;
+  color:       var(--color-muted);
+  cursor:      pointer;
+  font-size:   0.7rem;
+  transition:  background var(--motion-hover), color var(--motion-hover);
 }
-.showdown-page__tile-sheet-close:hover { color: var(--color-paper); }
+.showdown-page__tile-sheet-close:hover {
+  background: var(--surface-4);
+  color:      var(--color-paper);
+}
+
+/* Larger num + name inside the sheet */
+.showdown-page__tile-sheet .field-selected__num {
+  font-size: 2rem;
+}
+
+.showdown-page__tile-sheet .field-selected__name {
+  font-size: var(--text-h2, 1.15rem);
+}
+
+.showdown-page__tile-sheet .field-selected__body {
+  padding-right: var(--space-5);   /* room for larger close button */
+}
 
 /* ── Attribution ──────────────────────────────────────────────────────────── */
 
