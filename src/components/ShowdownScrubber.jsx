@@ -1,5 +1,5 @@
-import { useEffect, useRef, useCallback, useMemo } from 'react'
-import { Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useRef, useCallback, useMemo } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import './ShowdownScrubber.css'
 
 const SOX_FILL    = 'rgba(210,50,60,0.88)'
@@ -7,7 +7,6 @@ const NYY_FILL    = 'rgba(20,50,105,0.88)'
 const ORANGE_FILL = 'rgba(232,124,42,0.88)'
 const FUTURE      = 'rgba(255,255,255,0.06)'
 
-// Short result labels shown in the position display
 const RESULT_SHORT = {
   K:'K', W:'BB', IW:'IBB', HP:'HBP',
   S:'1B', D:'2B', T:'3B', HR:'HR',
@@ -18,7 +17,7 @@ const RESULT_SHORT = {
 
 export default function ShowdownScrubber({
   plays, games, gameStarts, position,
-  onSeek, playing, onPlayPause, speed, onSpeedChange,
+  onSeek,
   extraZones = [], highlights = [],
 }) {
   const trackRef = useRef(null)
@@ -26,7 +25,7 @@ export default function ShowdownScrubber({
   const total    = plays.length
   const pct      = total > 1 ? (position / (total - 1)) * 100 : 0
 
-  // ── Game segments with winner colors ─────────────────────────────────────
+  // ── Game segments ─────────────────────────────────────────────────────────
   const segments = useMemo(() => {
     const entries = Object.entries(gameStarts)
       .map(([g, idx]) => [Number(g), idx])
@@ -39,35 +38,17 @@ export default function ShowdownScrubber({
       const startPct = (startIdx / (total - 1)) * 100
       const endPct   = (Math.min(endIdx, total) / (total - 1)) * 100
       const played   = position >= startIdx
-      // For the last game endIdx === total, so >= total is never true.
-      // Treat the last game as complete when the scrubber reaches the final play.
-      const complete = endIdx >= total
-        ? position >= total - 1
-        : position >= endIdx
-      const active   = played && !complete      // game currently in progress
+      const complete = endIdx >= total ? position >= total - 1 : position >= endIdx
+      const active   = played && !complete
       return { gNum, startIdx, endIdx, startPct, endPct, winner, played, complete, active }
     })
   }, [gameStarts, games, total, position])
 
-  // ── Extra-inning zone positions ───────────────────────────────────────────
+  // ── Extra-inning zones ────────────────────────────────────────────────────
   const extraRects = useMemo(() => extraZones.map(({ start, end }) => ({
     startPct: (start / (total - 1)) * 100,
     endPct:   (Math.min(end + 1, total - 1) / (total - 1)) * 100,
   })), [extraZones, total])
-
-  // ── Auto-advance ──────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!playing) return
-    const ms = Math.round(600 / speed)
-    const id = setInterval(() => {
-      onSeek(prev => {
-        const next = (typeof prev === 'number' ? prev : position) + 1
-        if (next >= total) { onPlayPause(false); return prev }
-        return next
-      })
-    }, ms)
-    return () => clearInterval(id)
-  }, [playing, speed, total])  // eslint-disable-line
 
   // ── Track interaction ─────────────────────────────────────────────────────
   const posFromEvent = useCallback((e) => {
@@ -102,16 +83,8 @@ export default function ShowdownScrubber({
   return (
     <div className="showdown-scrubber">
 
-      {/* ── Top controls: play + prev/label/next ─────────────────────── */}
+      {/* ── Controls: prev / label / next ────────────────────────────── */}
       <div className="showdown-scrubber__controls">
-
-        <button
-          className="showdown-scrubber__playpause"
-          onClick={() => onPlayPause(!playing)}
-          aria-label={playing ? 'Pause' : 'Play'}
-        >
-          {playing ? <Pause size={18} /> : <Play size={18} />}
-        </button>
 
         <button
           className="showdown-scrubber__step"
@@ -167,10 +140,8 @@ export default function ShowdownScrubber({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       >
-        {/* Inner layer — clips segments + overlays to rounded track shape */}
         <div className="showdown-scrubber__track-inner">
 
-          {/* Game segments — orange while in progress, team color when complete */}
           {segments.map((seg, i) => {
             const GAP   = 0.5
             const start = seg.startPct + (i === 0 ? 0 : GAP / 2)
@@ -196,13 +167,11 @@ export default function ShowdownScrubber({
             )
           })}
 
-          {/* Brightness overlay: whitens the played portion slightly */}
           <div
             className="showdown-scrubber__fill-highlight"
             style={{ width: `${pct}%` }}
           />
 
-          {/* Extra-inning crosshatch overlays */}
           {extraRects.map((r, i) => (
             <div
               key={i}
@@ -213,7 +182,7 @@ export default function ShowdownScrubber({
 
         </div>
 
-        {/* Highlight moments — glow dots, clickable, sit above the track */}
+        {/* Highlight moment dots */}
         {highlights.map(h => {
           const hPct = (h.idx / (total - 1)) * 100
           return (
@@ -228,24 +197,11 @@ export default function ShowdownScrubber({
           )
         })}
 
-        {/* Thumb — sibling to inner, never clipped, sits on top */}
+        {/* Thumb */}
         <div
           className="showdown-scrubber__thumb"
           style={{ left: `${pct}%` }}
         />
-      </div>
-
-      {/* ── Speed buttons — below track ───────────────────────────────── */}
-      <div className="showdown-scrubber__speeds">
-        {[1, 2, 4].map(s => (
-          <button
-            key={s}
-            className={`showdown-scrubber__speed${speed === s ? ' showdown-scrubber__speed--active' : ''}`}
-            onClick={() => onSpeedChange(s)}
-          >
-            {s}×
-          </button>
-        ))}
       </div>
 
     </div>

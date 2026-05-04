@@ -274,8 +274,6 @@ export default function ShowdownPage() {
   const { plays, gameStarts, games, teams } = data
 
   const [position, setPosition] = useState(0)
-  const [playing,  setPlaying]  = useState(false)
-  const [speed,    setSpeed]    = useState(1)
 
   useEffect(() => {
     document.title = `${data.title} — Showdowns | The Number Wall`
@@ -336,15 +334,6 @@ export default function ShowdownPage() {
   const batterStats  = batter  ? getStats(batter.pid,  currentPlay.game) : null
   const pitcherStats = pitcher ? getStats(pitcher.pid, currentPlay.game) : null
 
-  // Persist note for 4 plays so the panel height doesn't bounce
-  const visibleNote = useMemo(() => {
-    if (currentPlay.note) return currentPlay.note
-    for (let i = position - 1; i >= Math.max(0, position - 4); i--) {
-      if (plays[i]?.game !== currentPlay.game) break
-      if (plays[i]?.note) return plays[i].note
-    }
-    return null
-  }, [plays, position, currentPlay])
 
   return (
     <AppShell>
@@ -363,10 +352,6 @@ export default function ShowdownPage() {
           gameStarts={gameStarts}
           position={position}
           onSeek={handleSeek}
-          playing={playing}
-          onPlayPause={setPlaying}
-          speed={speed}
-          onSpeedChange={setSpeed}
           extraZones={extraZones}
           highlights={highlights}
         />
@@ -393,19 +378,13 @@ export default function ShowdownPage() {
             />
           </div>
 
-          {/* Field — always visible */}
+          {/* Field */}
           <div className="showdown-page__field-col">
             <FieldView
               play={currentPlay}
               plays={plays}
               position={position}
             />
-            {/* Mobile player note */}
-            {visibleNote && (
-              <div className="showdown-page__mobile-note">
-                G{currentPlay.game} · {visibleNote}
-              </div>
-            )}
           </div>
 
           {/* Batter — right on desktop, hidden on mobile */}
