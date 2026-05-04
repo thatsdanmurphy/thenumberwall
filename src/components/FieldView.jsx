@@ -1,7 +1,5 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import './FieldView.css'
-
-const fmtIP = outs => `${Math.floor(outs / 3)}.${outs % 3}`
 
 // ── Field geometry ────────────────────────────────────────────────────────────
 const POS_XY = {
@@ -22,7 +20,6 @@ const BASE_XY = {
   '3B': [185, 315],
 }
 
-// ── Prototype lineups ─────────────────────────────────────────────────────────
 const NYY_FIELD = {
   C:    { number: '20', name: 'Posada',    pid: 'posaj001' },
   '1B': { number: '3',  name: 'Clark',     pid: 'clart002' },
@@ -45,7 +42,7 @@ const BOS_FIELD = {
   RF:   { number: '7',  name: 'Nixon',    pid: 'nixot001' },
 }
 
-// ── Team heat color ramps ─────────────────────────────────────────────────────
+// ── Heat ramps ────────────────────────────────────────────────────────────────
 const RAMP = {
   BOS: [
     { fill:'rgba(255,255,255,0.06)', stroke:'rgba(255,255,255,0.10)', text:'rgba(255,255,255,0.18)', filter:'none' },
@@ -72,7 +69,6 @@ function heatLevel(heatVal, isActive, intensity) {
   return 0
 }
 
-// ── Player heat ───────────────────────────────────────────────────────────────
 function computePlayerHeat(plays, upToIdx) {
   const heat = {}
   for (let i = 0; i <= upToIdx; i++) {
@@ -93,17 +89,16 @@ function computePlayerHeat(plays, upToIdx) {
     }
     if (pid && !['SB','CS','BK','WP','PB','DI','NP'].includes(p.result)) {
       if (!heat[pid]) heat[pid] = 0
-      if      (p.result === 'K')                   heat[pid] = Math.min(1, heat[pid] + 0.22)
-      else if (p.result === 'HR')                  heat[pid] = Math.max(0, heat[pid] - 0.22)
-      else if (['D','T'].includes(p.result))       heat[pid] = Math.max(0, heat[pid] - 0.12)
-      else if (p.result === 'S')                   heat[pid] = Math.max(0, heat[pid] - 0.06)
-      else if (['W','IW'].includes(p.result))      heat[pid] = Math.max(0, heat[pid] - 0.05)
+      if      (p.result === 'K')              heat[pid] = Math.min(1, heat[pid] + 0.22)
+      else if (p.result === 'HR')             heat[pid] = Math.max(0, heat[pid] - 0.22)
+      else if (['D','T'].includes(p.result))  heat[pid] = Math.max(0, heat[pid] - 0.12)
+      else if (p.result === 'S')             heat[pid] = Math.max(0, heat[pid] - 0.06)
+      else if (['W','IW'].includes(p.result)) heat[pid] = Math.max(0, heat[pid] - 0.05)
     }
   }
   return heat
 }
 
-// ── Base state ────────────────────────────────────────────────────────────────
 function computeBaseState(plays, upToIdx) {
   let bases = { '1B': null, '2B': null, '3B': null }
   let outs = 0
@@ -113,30 +108,20 @@ function computeBaseState(plays, upToIdx) {
     const p = plays[i]; if (!p || !p.batter) continue
     const hk = `${p.game}-${p.inning}-${p.half}`
     if (hk !== lastHalf) { bases = { '1B': null, '2B': null, '3B': null }; outs = 0; lastHalf = hk }
-
     const b = { pid: p.batter.pid, number: p.batter.number, name: p.batter.name, team: p.batter.team }
 
     switch (p.result) {
-      case 'K': case 'OUT':
-        outs++; break
-      case 'DP':
-        outs += 2
-        bases = { '1B': null, '2B': bases['3B'] ?? null, '3B': null }; break
-      case 'SF': case 'SH':
-        outs++
-        bases = { '1B': bases['2B'] ?? bases['1B'] ?? null, '2B': bases['3B'] ? bases['2B'] : null, '3B': null }; break
+      case 'K': case 'OUT': outs++; break
+      case 'DP': outs += 2; bases = { '1B': null, '2B': bases['3B'] ?? null, '3B': null }; break
+      case 'SF': case 'SH': outs++; bases = { '1B': bases['2B'] ?? bases['1B'] ?? null, '2B': bases['3B'] ? bases['2B'] : null, '3B': null }; break
       case 'W': case 'HP': case 'IW':
         if (bases['1B'] && bases['2B']) bases['3B'] = bases['2B']
         if (bases['1B']) bases['2B'] = bases['1B']
         bases['1B'] = b; break
-      case 'S':
-        bases = { '1B': b, '2B': bases['1B'], '3B': null }; break
-      case 'D':
-        bases = { '1B': null, '2B': b, '3B': bases['1B'] ?? bases['2B'] ?? null }; break
-      case 'T':
-        bases = { '1B': null, '2B': null, '3B': b }; break
-      case 'HR':
-        bases = { '1B': null, '2B': null, '3B': null }; break
+      case 'S': bases = { '1B': b, '2B': bases['1B'], '3B': null }; break
+      case 'D': bases = { '1B': null, '2B': b, '3B': bases['1B'] ?? bases['2B'] ?? null }; break
+      case 'T': bases = { '1B': null, '2B': null, '3B': b }; break
+      case 'HR': bases = { '1B': null, '2B': null, '3B': null }; break
       case 'FC': case 'E':
         bases = { '1B': b, '2B': bases['1B'], '3B': bases['2B'] }
         if (p.result === 'FC') outs++; break
@@ -155,7 +140,6 @@ function computeBaseState(plays, upToIdx) {
   return bases
 }
 
-// ── Ball target ───────────────────────────────────────────────────────────────
 function getBallTargets(play) {
   const { result, fielders } = play
   if (!play.pitcher) return []
@@ -177,28 +161,6 @@ function playIntensity(play) {
   return 'normal'
 }
 
-// ── Format series stats for tile popup ───────────────────────────────────────
-function fmtPopupStats(seriesStats, pid, pos) {
-  if (!seriesStats) return null
-  if (pos === 'P') {
-    const s = seriesStats.pit?.[pid]
-    if (!s) return null
-    const parts = [`${fmtIP(s.outs)} IP`, `${s.kp} K`]
-    if (s.hr_a) parts.push(`${s.hr_a} HR allowed`)
-    else if (s.hp_a) parts.push(`${s.hp_a} H`)
-    return 'Series: ' + parts.join(' · ')
-  }
-  const s = seriesStats.bat?.[pid]
-  if (!s || s.ab === 0) return null
-  const avg = (s.h / s.ab).toFixed(3).replace('0.', '.')
-  const parts = [`${avg} (${s.h}/${s.ab})`]
-  if (s.hr) parts.push(`${s.hr} HR`)
-  if (s.d)  parts.push(`${s.d} 2B`)
-  if (s.t)  parts.push(`${s.t} 3B`)
-  if ((s.bb || 0) + (s.hp || 0) > 0) parts.push(`${(s.bb || 0) + (s.hp || 0)} BB`)
-  return 'Series: ' + parts.join(' · ')
-}
-
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 22, onClick, isSelected }) {
@@ -213,34 +175,17 @@ function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 22
       transform={`translate(${x},${y})`}
       onClick={onClick}
     >
-      {lvl >= 2 && (
-        <circle r={r + 9} fill={style.fill} opacity={0.16} />
-      )}
-      <circle
-        r={r}
-        fill={style.fill}
-        stroke={style.stroke}
-        strokeWidth={lvl >= 3 ? 1.8 : 0.9}
-        style={{ filter: style.filter }}
-      />
-      <text
-        textAnchor="middle" dominantBaseline="central"
-        className="fv-tile__num"
-        fill={style.text}
-        fontSize={String(number).length > 2 ? 9 : 12}
-        fontWeight="700"
-      >
+      {lvl >= 2 && <circle r={r + 9} fill={style.fill} opacity={0.16} />}
+      <circle r={r} fill={style.fill} stroke={style.stroke}
+        strokeWidth={lvl >= 3 ? 1.8 : 0.9} style={{ filter: style.filter }} />
+      <text textAnchor="middle" dominantBaseline="central"
+        className="fv-tile__num" fill={style.text}
+        fontSize={String(number).length > 2 ? 9 : 12} fontWeight="700">
         #{number}
       </text>
-      {/* Selected ring — renders on top of everything */}
       {isSelected && (
-        <circle
-          r={r + 6}
-          fill="none"
-          stroke="rgba(255,255,255,0.88)"
-          strokeWidth={2}
-          style={{ filter: 'drop-shadow(0 0 7px rgba(255,255,255,0.75))' }}
-        />
+        <circle r={r + 6} fill="none" stroke="rgba(255,255,255,0.88)" strokeWidth={2}
+          style={{ filter: 'drop-shadow(0 0 7px rgba(255,255,255,0.75))' }} />
       )}
     </g>
   )
@@ -250,16 +195,13 @@ function RunnerTile({ base, runner }) {
   if (!runner) return null
   const [x, y] = BASE_XY[base]
   const style  = RAMP[runner.team][3]
-
   return (
     <g className="fv-runner" transform={`translate(${x},${y})`}>
       <circle r={13} fill={style.fill} stroke={style.stroke} strokeWidth={1.2}
-        style={{ filter: style.filter }}
-      />
+        style={{ filter: style.filter }} />
       <text textAnchor="middle" dominantBaseline="central"
         className="fv-tile__num" fill={style.text}
-        fontSize={String(runner.number).length > 2 ? 8 : 10} fontWeight="700"
-      >
+        fontSize={String(runner.number).length > 2 ? 8 : 10} fontWeight="700">
         #{runner.number}
       </text>
     </g>
@@ -276,14 +218,12 @@ function FieldBall({ x, y, visible, color, size = 5 }) {
   )
 }
 
-// ── Main FieldView ────────────────────────────────────────────────────────────
-export default function FieldView({ play, plays, position, seriesStats }) {
+// ── Main FieldView — selectedTile and onTileSelect are lifted to ShowdownPage ─
+
+export default function FieldView({ play, plays, position, selectedTile, onTileSelect }) {
 
   const heatMap = useMemo(() => computePlayerHeat(plays, position), [plays, position])
   const bases   = useMemo(() => computeBaseState(plays, position),  [plays, position])
-
-  const [selectedTile, setSelectedTile] = useState(null)
-  useEffect(() => { setSelectedTile(null) }, [position])
 
   const [ball1, setBall1] = useState({ x: 280, y: 330, vis: false })
   const [ball2, setBall2] = useState({ x: 280, y: 330, vis: false })
@@ -295,7 +235,6 @@ export default function FieldView({ play, plays, position, seriesStats }) {
 
     setBall1({ x: 280, y: 330, vis: true })
     setBall2(b => ({ ...b, vis: false }))
-
     const t1 = setTimeout(() => setBall1({ x: targets[0][0], y: targets[0][1], vis: true }), 60)
 
     if (targets.length > 1) {
@@ -315,33 +254,25 @@ export default function FieldView({ play, plays, position, seriesStats }) {
   const fieldingTeam = battingTeam === 'BOS' ? 'NYY' : 'BOS'
   const lineup       = fieldingTeam === 'NYY' ? NYY_FIELD : BOS_FIELD
   const intensity    = playIntensity(play)
-
   const activePositionSet = new Set(play.fielders?.map(f => f.pos) ?? [])
 
-  const hrColor  = battingTeam === 'BOS' ? '#FF4D5E' : '#7AAEFF'
+  const hrColor   = battingTeam === 'BOS' ? '#FF4D5E' : '#7AAEFF'
   const ballColor = intensity === 'hr'  ? hrColor
-    : intensity === 'big'  ? hrColor    // team color, not gold
-    : intensity === 'win'  ? '#FFD84A'  // gold only for the series clincher
+    : intensity === 'big'  ? hrColor
+    : intensity === 'win'  ? '#FFD84A'
     : intensity === 'k'    ? '#AACCFF'
     : '#FFFFFF'
-
   const isHR = play.result === 'HR'
 
   function makeTileClick(player, pos) {
-    return () => setSelectedTile(
-      selectedTile?.pid === player.pid ? null
-      : { pid: player.pid, number: player.number, name: player.name, pos, team: player.team ?? fieldingTeam }
-    )
+    const tile = { pid: player.pid, number: player.number, name: player.name, pos, team: player.team ?? fieldingTeam }
+    return () => onTileSelect?.(selectedTile?.pid === player.pid ? null : tile)
   }
-
-  const popupStats = selectedTile
-    ? fmtPopupStats(seriesStats, selectedTile.pid, selectedTile.pos)
-    : null
 
   return (
     <div className="fv-wrap">
 
-      {/* ── Caption — fixed min-height so field never jumps ─────────── */}
+      {/* ── Caption ─────────────────────────────────────────────────── */}
       <div className="fv-caption">
         <span className="fv-caption__batter">
           #{play.batter?.number} {play.batter?.name}
@@ -362,26 +293,8 @@ export default function FieldView({ play, plays, position, seriesStats }) {
         )}
       </div>
 
-      {/* ── Tile popup — below caption, above field ─────────────────── */}
-      {selectedTile && (
-        <div className="fv-tile-popup">
-          <span className="fv-tile-popup__num">#{selectedTile.number}</span>
-          <div className="fv-tile-popup__body">
-            <div className="fv-tile-popup__namerow">
-              <span className="fv-tile-popup__name">{selectedTile.name}</span>
-              <span className="fv-tile-popup__pos">{selectedTile.pos}</span>
-            </div>
-            {popupStats && (
-              <span className="fv-tile-popup__stats">{popupStats}</span>
-            )}
-          </div>
-          <button className="fv-tile-popup__close" onClick={() => setSelectedTile(null)}>✕</button>
-        </div>
-      )}
-
-      {/* ── Field container ───────────────────────────────────────────── */}
+      {/* ── Field ───────────────────────────────────────────────────── */}
       <div className="fv-field-container">
-
         <svg viewBox="0 45 560 425" className="fv-svg">
           <defs>
             <clipPath id="fv-fair-clip">
@@ -404,7 +317,7 @@ export default function FieldView({ play, plays, position, seriesStats }) {
 
           <path d="M 280 416 L 375 316 L 280 220 L 185 316 Z"
             fill="none" stroke="rgba(160,185,235,0.14)" strokeWidth={1} />
-          <line x1="280" y1="416" x2="38" y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
+          <line x1="280" y1="416" x2="38"  y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
           <line x1="280" y1="416" x2="522" y2="354" stroke="rgba(160,185,235,0.16)" strokeWidth={1} />
           <path d="M 40 356 Q 280 22 520 356"
             fill="none" stroke="rgba(160,185,235,0.22)" strokeWidth={2} strokeDasharray="5 4" />
@@ -427,50 +340,35 @@ export default function FieldView({ play, plays, position, seriesStats }) {
             <RunnerTile key={base} base={base} runner={runner} />
           ))}
 
-          {/* Pitcher */}
           {play.pitcher && (
             <PosTile
               x={POS_XY.P[0]} y={POS_XY.P[1]}
-              number={play.pitcher.number}
-              team={fieldingTeam}
-              pid={play.pitcher.pid}
-              heatVal={heatMap[play.pitcher.pid] ?? 0}
-              isActive={true}
-              intensity={intensity}
+              number={play.pitcher.number} team={fieldingTeam} pid={play.pitcher.pid}
+              heatVal={heatMap[play.pitcher.pid] ?? 0} isActive={true} intensity={intensity}
               isSelected={selectedTile?.pid === play.pitcher.pid}
               onClick={makeTileClick(play.pitcher, 'P')}
             />
           )}
 
-          {/* Other fielders */}
           {Object.entries(lineup).map(([pos, player]) => {
             const [px, py] = POS_XY[pos]
             return (
               <PosTile key={pos}
                 x={px} y={py}
-                number={player.number}
-                team={fieldingTeam}
-                pid={player.pid}
+                number={player.number} team={fieldingTeam} pid={player.pid}
                 heatVal={heatMap[player.pid] ?? 0}
-                isActive={activePositionSet.has(pos)}
-                intensity={intensity}
+                isActive={activePositionSet.has(pos)} intensity={intensity}
                 isSelected={selectedTile?.pid === player.pid}
                 onClick={makeTileClick(player, pos)}
               />
             )
           })}
 
-          {/* Batter */}
           {play.batter && (
             <PosTile
               x={280} y={418}
-              number={play.batter.number}
-              team={battingTeam}
-              pid={play.batter.pid}
-              heatVal={heatMap[play.batter.pid] ?? 0}
-              isActive={true}
-              intensity={intensity}
-              r={24}
+              number={play.batter.number} team={battingTeam} pid={play.batter.pid}
+              heatVal={heatMap[play.batter.pid] ?? 0} isActive={true} intensity={intensity} r={24}
               isSelected={selectedTile?.pid === play.batter.pid}
               onClick={makeTileClick(play.batter, play.batter.pos ?? 'DH')}
             />
@@ -482,11 +380,9 @@ export default function FieldView({ play, plays, position, seriesStats }) {
           {ball1.vis && isHR && (
             <g key={`hr-ripple-${position}`}>
               {[0,1,2,3].map(i => (
-                <circle key={i}
-                  cx={ball1.x} cy={ball1.y} r={15}
+                <circle key={i} cx={ball1.x} cy={ball1.y} r={15}
                   fill="none" stroke={hrColor} strokeWidth={2}
-                  className={`fv-ripple fv-ripple--${i}`}
-                />
+                  className={`fv-ripple fv-ripple--${i}`} />
               ))}
             </g>
           )}
@@ -494,18 +390,15 @@ export default function FieldView({ play, plays, position, seriesStats }) {
           {intensity === 'win' && (
             <g key={`win-ripple-${position}`}>
               {[0,1,2,3].map(i => (
-                <circle key={i}
-                  cx={280} cy={416} r={22}
+                <circle key={i} cx={280} cy={416} r={22}
                   fill="none" stroke="rgba(255,210,70,0.68)" strokeWidth={2.5}
-                  className={`fv-ripple-win fv-ripple-win--${i}`}
-                />
+                  className={`fv-ripple-win fv-ripple-win--${i}`} />
               ))}
             </g>
           )}
-
         </svg>
-
       </div>
+
     </div>
   )
 }

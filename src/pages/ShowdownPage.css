@@ -362,6 +362,153 @@
   border-top:  1px solid var(--border-faint);
 }
 
+/* ── Desktop selected-tile panel — below side col, connected style ────────── */
+
+.field-selected-panel {
+  display:        flex;
+  align-items:    flex-start;
+  gap:            var(--space-2);
+  margin-top:     -1px;               /* overlap border with side col above */
+  padding:        var(--space-2) var(--space-2);
+  background:     var(--surface-1);
+  border:         1px solid rgba(255,255,255,0.18);
+  border-top:     none;               /* connected: no top border, flows from panel */
+  border-radius:  0 0 var(--radius-md) var(--radius-md);
+  position:       relative;
+}
+
+/* thin white accent line on left edge */
+.field-selected-panel::before {
+  content:    '';
+  position:   absolute;
+  left:       0;
+  top:        8px;
+  bottom:     8px;
+  width:      2px;
+  background: rgba(255,255,255,0.28);
+  border-radius: 1px;
+}
+
+.field-selected-panel__close {
+  position:   absolute;
+  top:        var(--space-1);
+  right:      var(--space-1);
+  background: none;
+  border:     none;
+  color:      var(--color-muted);
+  cursor:     pointer;
+  font-size:  0.65rem;
+  padding:    2px 4px;
+  line-height: 1;
+  transition: color var(--motion-hover);
+}
+.field-selected-panel__close:hover { color: var(--color-paper); }
+
+/* ── Shared selected-tile inner content ───────────────────────────────────── */
+
+.field-selected__num {
+  font-family:    var(--font-banner);
+  font-size:      1.5rem;
+  line-height:    1;
+  letter-spacing: 0.02em;
+  flex-shrink:    0;
+}
+
+.field-selected__body {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      0;
+}
+
+.field-selected__name {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  font-weight: 600;
+  color:       var(--color-paper);
+  line-height: 1.2;
+}
+
+.field-selected__pos {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.10em;
+  color:          var(--color-muted);
+  text-transform: uppercase;
+}
+
+.field-selected__stats {
+  font-family:   var(--font-program);
+  font-size:     var(--text-caption);
+  color:         var(--ink-dim);
+  line-height:   1.3;
+  margin-top:    2px;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Mobile bottom sheet — hidden on desktop ──────────────────────────────── */
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.showdown-page__tile-sheet {
+  display:       block;
+  position:      fixed;
+  bottom:        0;
+  left:          0;
+  right:         0;
+  z-index:       100;
+  animation:     slideUp 0.22s ease-out 1;
+}
+
+@media (min-width: 768px) {
+  .showdown-page__tile-sheet { display: none; }
+}
+
+.showdown-page__tile-sheet-inner {
+  display:        flex;
+  align-items:    flex-start;
+  gap:            var(--space-2);
+  padding:        var(--space-3) var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+  background:     var(--surface-raised, #1a1e2e);
+  border-top:     2px solid rgba(255,255,255,0.14);
+  border-radius:  14px 14px 0 0;
+  position:       relative;
+  box-shadow:     0 -8px 40px rgba(0,0,0,0.55);
+}
+
+/* handle pill */
+.showdown-page__tile-sheet-inner::before {
+  content:       '';
+  position:      absolute;
+  top:           8px;
+  left:          50%;
+  transform:     translateX(-50%);
+  width:         36px;
+  height:        3px;
+  background:    rgba(255,255,255,0.22);
+  border-radius: 2px;
+}
+
+.showdown-page__tile-sheet-close {
+  position:   absolute;
+  top:        var(--space-2);
+  right:      var(--space-2);
+  background: none;
+  border:     none;
+  color:      var(--color-muted);
+  cursor:     pointer;
+  font-size:  0.75rem;
+  padding:    4px 6px;
+  line-height: 1;
+  transition: color var(--motion-hover);
+}
+.showdown-page__tile-sheet-close:hover { color: var(--color-paper); }
+
 /* ── Attribution ──────────────────────────────────────────────────────────── */
 
 .showdown-page__attribution {

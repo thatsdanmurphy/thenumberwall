@@ -199,7 +199,7 @@
   border:         none;
   border-radius:  50%;
   pointer-events: none;
-  z-index:        2;
+  z-index:        5;
   box-shadow:
     0 2px 8px rgba(0,0,0,0.65),
     0 0 0 1.5px rgba(255,255,255,0.22),

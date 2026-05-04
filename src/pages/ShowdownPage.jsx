@@ -306,6 +306,28 @@ function MatchupCard({ role, player, seriesLine, accentColor, intensity }) {
   )
 }
 
+// ── SelectedTileContent — shared inner content for selected fielder ────────────
+function SelectedTileContent({ tile, seriesStats }) {
+  const accentColor = TEAM_ACCENT[tile.team] ?? TEAM_ACCENT.NYY
+  const statLine    = getSeriesStatLine(tile.pid, 'batter', seriesStats)
+    ?? getSeriesStatLine(tile.pid, 'pitcher', seriesStats)
+
+  return (
+    <>
+      <div className="field-selected__num" style={{ color: accentColor }}>
+        #{tile.number}
+      </div>
+      <div className="field-selected__body">
+        <div className="field-selected__name">{tile.name}</div>
+        <div className="field-selected__pos">{tile.pos}</div>
+        {statLine && (
+          <div className="field-selected__stats">{statLine}</div>
+        )}
+      </div>
+    </>
+  )
+}
+
 // ── ShowdownPage ──────────────────────────────────────────────────────────────
 export default function ShowdownPage() {
   const navigate       = useNavigate()
@@ -314,7 +336,11 @@ export default function ShowdownPage() {
   const data = SHOWDOWNS[showdownId] ?? SHOWDOWNS['alcs-2004']
   const { plays, gameStarts, games } = data
 
-  const [position, setPosition] = useState(0)
+  const [position,     setPosition]     = useState(0)
+  const [selectedTile, setSelectedTile] = useState(null)
+
+  // Clear selected tile when play advances
+  useEffect(() => { setSelectedTile(null) }, [position])
 
   useEffect(() => {
     document.title = `${data.title} — Showdowns | The Number Wall`
@@ -358,6 +384,7 @@ export default function ShowdownPage() {
     function onKey(e) {
       if (e.key === 'ArrowRight') { e.preventDefault(); handleSeek(p => p + 1) }
       if (e.key === 'ArrowLeft')  { e.preventDefault(); handleSeek(p => p - 1) }
+      if (e.key === 'Escape')     setSelectedTile(null)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -374,6 +401,10 @@ export default function ShowdownPage() {
 
   const pitcherIntensity = intensity === 'win' ? 'win' : intensity === 'k' ? 'k' : 'normal'
   const batterIntensity  = intensity === 'win' ? 'win' : ['hr','big'].includes(intensity) ? intensity : 'normal'
+
+  // Which side does the selected tile go on? Fielding team → pitcher col (left)
+  const fieldingTeam = pitcher?.team ?? 'NYY'
+  const selectedSide = selectedTile?.team === fieldingTeam ? 'pitcher' : 'batter'
 
   return (
     <AppShell>
@@ -434,6 +465,20 @@ export default function ShowdownPage() {
               accentColor={pitcherAccent}
               intensity={pitcherIntensity}
             />
+            {/* Selected fielder card — desktop, pitcher side */}
+            {selectedTile && selectedSide === 'pitcher' && (
+              <div
+                className="field-selected-panel"
+                style={{ '--card-accent': TEAM_ACCENT[selectedTile.team] ?? TEAM_ACCENT.NYY }}
+              >
+                <button
+                  className="field-selected-panel__close"
+                  onClick={() => setSelectedTile(null)}
+                  aria-label="Close"
+                >✕</button>
+                <SelectedTileContent tile={selectedTile} seriesStats={seriesStats} />
+              </div>
+            )}
           </div>
 
           {/* Field */}
@@ -442,7 +487,8 @@ export default function ShowdownPage() {
               play={currentPlay}
               plays={plays}
               position={position}
-              seriesStats={seriesStats}
+              selectedTile={selectedTile}
+              onTileSelect={setSelectedTile}
             />
           </div>
 
@@ -455,6 +501,20 @@ export default function ShowdownPage() {
               accentColor={batterAccent}
               intensity={batterIntensity}
             />
+            {/* Selected fielder card — desktop, batter side */}
+            {selectedTile && selectedSide === 'batter' && (
+              <div
+                className="field-selected-panel"
+                style={{ '--card-accent': TEAM_ACCENT[selectedTile.team] ?? TEAM_ACCENT.BOS }}
+              >
+                <button
+                  className="field-selected-panel__close"
+                  onClick={() => setSelectedTile(null)}
+                  aria-label="Close"
+                >✕</button>
+                <SelectedTileContent tile={selectedTile} seriesStats={seriesStats} />
+              </div>
+            )}
           </div>
 
         </div>
@@ -466,6 +526,24 @@ export default function ShowdownPage() {
       </main>
 
       <AppFooter />
+
+      {/* ── Mobile: bottom sheet for selected tile ─────────────────────── */}
+      {selectedTile && (
+        <div
+          className="showdown-page__tile-sheet"
+          style={{ '--card-accent': TEAM_ACCENT[selectedTile.team] ?? TEAM_ACCENT.NYY }}
+        >
+          <div className="showdown-page__tile-sheet-inner">
+            <button
+              className="showdown-page__tile-sheet-close"
+              onClick={() => setSelectedTile(null)}
+              aria-label="Close"
+            >✕</button>
+            <SelectedTileContent tile={selectedTile} seriesStats={seriesStats} />
+          </div>
+        </div>
+      )}
+
     </AppShell>
   )
 }
