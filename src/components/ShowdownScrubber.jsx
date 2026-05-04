@@ -19,7 +19,7 @@ const RESULT_SHORT = {
 export default function ShowdownScrubber({
   plays, games, gameStarts, position,
   onSeek, playing, onPlayPause, speed, onSpeedChange,
-  extraZones = [],
+  extraZones = [], highlights = [],
 }) {
   const trackRef = useRef(null)
   const dragging = useRef(false)
@@ -212,6 +212,21 @@ export default function ShowdownScrubber({
           ))}
 
         </div>
+
+        {/* Highlight moments — glow dots, clickable, sit above the track */}
+        {highlights.map(h => {
+          const hPct = (h.idx / (total - 1)) * 100
+          return (
+            <button
+              key={h.idx}
+              className={`showdown-scrubber__highlight showdown-scrubber__highlight--${h.intensity}`}
+              style={{ left: `${hPct}%` }}
+              onClick={(e) => { e.stopPropagation(); onSeek(h.idx) }}
+              title={h.label}
+              aria-label={h.label}
+            />
+          )
+        })}
 
         {/* Thumb — sibling to inner, never clipped, sits on top */}
         <div

@@ -236,3 +236,40 @@
   border-color: var(--border-medium);
   background:   var(--surface-1);
 }
+
+/* ── Highlight moment dots ─────────────────────────────────────────────────── */
+
+.showdown-scrubber__highlight {
+  position:      absolute;
+  top:           50%;
+  transform:     translate(-50%, -50%);
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  border:        none;
+  padding:       0;
+  cursor:        pointer;
+  z-index:       3;
+  transition:    transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.showdown-scrubber__highlight:hover {
+  transform: translate(-50%, -50%) scale(1.7);
+}
+
+.showdown-scrubber__highlight--hr {
+  background: rgba(232,124,42,0.92);
+  box-shadow: 0 0 6px rgba(232,124,42,0.70);
+}
+
+.showdown-scrubber__highlight--big {
+  background: rgba(255,210,70,0.95);
+  box-shadow: 0 0 7px rgba(255,185,30,0.75);
+}
+
+.showdown-scrubber__highlight--win {
+  width:      10px;
+  height:     10px;
+  background: rgba(255,215,70,1.0);
+  box-shadow: 0 0 10px rgba(255,185,30,0.95), 0 0 20px rgba(255,185,30,0.45);
+}

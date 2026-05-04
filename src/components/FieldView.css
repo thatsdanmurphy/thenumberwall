@@ -43,10 +43,35 @@
 }
 
 @keyframes fv-tile-pop {
-  0%   { r: 17; }
-  40%  { r: 22; }
-  100% { r: 17; }
+  0%   { r: 20; }
+  40%  { r: 27; }
+  100% { r: 20; }
 }
+
+/* ── HR ripple — 3 rings expanding from landing spot ───────────────────────── */
+
+@keyframes fv-ripple-out {
+  0%   { r: 10; stroke-opacity: 0.75; }
+  100% { r: 85; stroke-opacity: 0;   }
+}
+
+.fv-ripple             { animation: fv-ripple-out 0.95s ease-out 1 forwards; }
+.fv-ripple--0          { animation-delay: 0.00s; }
+.fv-ripple--1          { animation-delay: 0.18s; }
+.fv-ripple--2          { animation-delay: 0.36s; }
+
+/* ── Win ripple — 4 rings expanding from home plate ────────────────────────── */
+
+@keyframes fv-ripple-win-out {
+  0%   { r: 22;  stroke-opacity: 0.72; }
+  100% { r: 310; stroke-opacity: 0;   }
+}
+
+.fv-ripple-win         { animation: fv-ripple-win-out 1.8s ease-out 1 forwards; }
+.fv-ripple-win--0      { animation-delay: 0.00s; }
+.fv-ripple-win--1      { animation-delay: 0.24s; }
+.fv-ripple-win--2      { animation-delay: 0.48s; }
+.fv-ripple-win--3      { animation-delay: 0.72s; }
 
 /* ── Runner tiles ────────────────────────────────────────────────────────── */
 

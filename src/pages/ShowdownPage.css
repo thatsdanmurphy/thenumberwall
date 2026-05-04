@@ -1,6 +1,7 @@
-/* ShowdownPage — play-by-play series showdown
-   Desktop: [BOS col: panel + wall] | [NYY col: panel + wall]
-   Mobile:  scrubber → combined table → batter panel */
+/* ShowdownPage — baseball field showdown
+   Layout: scrubber → scoreboard → [pitcher | field | batter]
+   Desktop: 3-col side panels flank the field
+   Mobile:  field full width, panels hidden */
 
 .showdown-page {
   flex: 1;
@@ -10,54 +11,13 @@
   min-width: 0;
 }
 
-/* ── Page heading ─────────────────────────────────────────────────────────── */
+/* ── Heading ──────────────────────────────────────────────────────────────── */
 
 .showdown-page__heading {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap:            var(--space-1);
   padding-bottom: var(--space-2);
-}
-
-.showdown-page__title-row {
-  display:         flex;
-  align-items:     center;
-  justify-content: space-between;
-  gap:             var(--space-3);
-}
-
-/* ── View toggle: WALL / FIELD ────────────────────────────────────────────── */
-
-.showdown-page__view-toggle {
-  display:       flex;
-  gap:           2px;
-  background:    var(--surface-1);
-  border:        1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  padding:       2px;
-  flex-shrink:   0;
-}
-
-.showdown-page__view-btn {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.12em;
-  color:          var(--color-muted);
-  background:     none;
-  border:         none;
-  border-radius:  3px;
-  padding:        5px 12px;
-  cursor:         pointer;
-  transition:     color var(--motion-hover), background var(--motion-hover);
-}
-
-.showdown-page__view-btn:hover {
-  color: var(--color-paper);
-}
-
-.showdown-page__view-btn--active {
-  background: var(--surface-raised);
-  color:      var(--color-paper);
 }
 
 .showdown-page__title {
@@ -77,262 +37,241 @@
   line-height: 1.4;
 }
 
-/* ── Team label headers (desktop only) ────────────────────────────────────── */
+/* ── Scoreboard — old-school Fenway strip ─────────────────────────────────── */
 
-.showdown-page__team-headers { display: none; }
-
-@media (min-width: 768px) {
-  .showdown-page__team-headers {
-    display:         flex;
-    justify-content: space-between;
-    align-items:     flex-end;
-  }
-}
-
-.showdown-page__team-label {
-  font-family:    var(--font-banner);
-  font-size:      0.875rem;
-  letter-spacing: 0.04em;
-  line-height:    1;
-}
-.showdown-page__team-label--sox { color: rgba(245,95,105,0.92); }
-.showdown-page__team-label--nyy { color: rgba(160,200,255,0.92); text-align: right; }
-
-/* ── Body ─────────────────────────────────────────────────────────────────── */
-
-.showdown-page__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
-@media (min-width: 768px) {
-  .showdown-page__body {
-    flex-direction: row;
-    align-items:    stretch;
-  }
-}
-
-/* ── Team columns ─────────────────────────────────────────────────────────── */
-
-.showdown-team-col {
-  display: none;
-  flex-direction: column;
-  gap: var(--space-2);
-  flex: 1;
-  min-width: 0;
-}
-
-@media (min-width: 768px) {
-  .showdown-team-col { display: flex; }
-}
-
-/* ── Play card ────────────────────────────────────────────────────────────── */
-/* Fixed min-height so the walls never jump when note appears/disappears */
-
-.showdown-play-card {
-  display:       flex;
-  align-items:   flex-start;
-  gap:           var(--space-2);
-  padding:       var(--space-2) var(--space-3);
-  background:    var(--surface-1);
-  border:        1px solid var(--border-faint);
-  border-radius: var(--radius-md);
-  min-height:    120px;   /* tall enough to absorb note line without shifting grid */
-  position:      relative;
-  transition:    border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.showdown-play-card--empty {
-  min-height:     100px;
-  opacity:        0;
-  pointer-events: none;
-}
-
-.showdown-play-card--selected {
-  border-color: rgba(255,255,255,0.20);
-  background:   var(--surface-raised);
-}
-
-/* Expanded version for full series stats */
-.showdown-play-card--expanded {
-  min-height: 120px;
-}
-
-.showdown-play-card__close {
-  position:        absolute;
-  top:             var(--space-2);
-  right:           var(--space-2);
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  width:           22px;
-  height:          22px;
-  background:      none;
-  border:          1px solid var(--border-soft);
-  border-radius:   50%;
-  color:           var(--color-muted);
-  cursor:          pointer;
-  transition:      color var(--motion-hover), border-color var(--motion-hover);
-}
-.showdown-play-card__close:hover { color: var(--color-paper); border-color: var(--border-medium); }
-
-.showdown-play-card__num {
-  font-family:    var(--font-banner);
-  font-size:      1.5rem;
-  line-height:    1;
-  letter-spacing: 0.02em;
-  flex-shrink:    0;
-  min-width:      3rem;
-  padding-top:    2px;
-}
-
-.showdown-play-card__info {
+.field-scoreboard {
   display:        flex;
-  flex-direction: column;
-  gap:            3px;
-  min-width:      0;
-  flex:           1;
-}
-
-.showdown-play-card__name {
-  font-family:    var(--font-program);
-  font-size:      var(--text-small);
-  font-weight:    600;
-  color:          var(--color-paper);
-  letter-spacing: 0.01em;
-  white-space:    nowrap;
-  overflow:       hidden;
-  text-overflow:  ellipsis;
-}
-
-.showdown-play-card__role {
+  align-items:    center;
+  gap:            var(--space-2);
+  padding:        var(--space-2) var(--space-3);
+  background:     #060810;
+  border:         1px solid rgba(160,185,235,0.10);
+  border-radius:  var(--radius-sm);
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.08em;
-  color:          var(--color-muted);
-  text-transform: uppercase;
-}
-
-.showdown-play-card__stats {
-  font-family: var(--font-program);
-  font-size:   var(--text-caption);
-  color:       var(--ink-dim);
-  line-height: 1.3;
-}
-
-.showdown-play-card__result {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  font-weight:    700;
   letter-spacing: 0.10em;
-  color:          var(--color-heat);
-  text-transform: uppercase;
 }
 
-.showdown-play-card__note {
-  font-family:    var(--font-program);
-  font-size:      var(--text-caption);
-  color:          var(--color-paper);
-  font-weight:    500;
-  line-height:    1.4;
-  padding-top:    var(--space-1);
-  border-top:     1px solid var(--border-faint);
-  margin-top:     var(--space-1);
+.field-scoreboard__game {
+  font-size:   var(--text-small);
+  font-weight: 700;
+  color:       var(--color-paper);
 }
 
-/* Series moments list (selected player) */
-.showdown-play-card__moments {
-  list-style:     none;
-  margin:         var(--space-1) 0 0;
-  padding:        0;
-  display:        flex;
-  flex-direction: column;
-  gap:            4px;
-  border-top:     1px solid var(--border-faint);
-  padding-top:    var(--space-1);
+.field-scoreboard__inning {
+  display:     flex;
+  align-items: center;
+  gap:         2px;
+  font-size:   var(--text-small);
+  font-weight: 700;
+  color:       var(--color-paper);
 }
 
-.showdown-play-card__moments li {
+.field-scoreboard__half {
+  font-size:   0.55rem;
+  color:       var(--color-muted);
+  line-height: 1;
+}
+
+.field-scoreboard__outs-wrap {
+  display:     flex;
+  align-items: center;
+  gap:         5px;
+}
+
+.field-scoreboard__out {
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  border:        1px solid rgba(160,185,235,0.22);
+  background:    transparent;
+  transition:    background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field-scoreboard__out--on {
+  background:   rgba(232,124,42,0.88);
+  border-color: rgba(232,124,42,0.55);
+  box-shadow:   0 0 6px rgba(232,124,42,0.55);
+}
+
+.field-scoreboard__divider {
+  width:       1px;
+  height:      16px;
+  background:  rgba(160,185,235,0.12);
+  margin:      0 var(--space-1);
+  flex-shrink: 0;
+}
+
+.field-scoreboard__series {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-1);
+}
+
+.field-scoreboard__team {
+  font-size:      var(--text-micro);
+  letter-spacing: 0.14em;
+  font-weight:    700;
+}
+
+.field-scoreboard__team--bos { color: rgba(245,95,105,0.85); }
+.field-scoreboard__team--nyy { color: rgba(160,200,255,0.85); }
+
+.field-scoreboard__wins {
+  font-size:   var(--text-small);
+  font-weight: 700;
+  color:       var(--color-paper);
+  min-width:   10px;
+  text-align:  center;
+}
+
+.field-scoreboard__dash {
+  font-size: var(--text-caption);
+  color:     var(--ink-dim);
+}
+
+.field-scoreboard__venue {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.48rem;
+  letter-spacing: 0.14em;
+  color:          var(--ink-dim);
+  margin-left:    auto;
+  display:        none;
+}
+
+@media (min-width: 480px) {
+  .field-scoreboard__venue { display: block; }
+}
+
+/* ── Main field layout — 3 cols on desktop ───────────────────────────────── */
+
+.showdown-page__field-layout {
+  display:     flex;
+  gap:         var(--space-3);
+  min-width:   0;
+  align-items: flex-start;
+}
+
+.showdown-page__field-col {
+  flex:      1;
+  min-width: 0;
+}
+
+.showdown-page__side-col {
+  display:     none; /* mobile: hidden */
+  width:       168px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .showdown-page__side-col { display: block; }
+}
+
+/* Mobile note — shows below the field when panels are hidden */
+.showdown-page__mobile-note {
+  display:     block;
   font-family: var(--font-program);
   font-size:   var(--text-caption);
   color:       var(--color-paper);
   font-weight: 500;
+  font-style:  italic;
   line-height: 1.4;
-}
-
-/* ── Play card moment animations ──────────────────────────────────────────── */
-
-/* K — pitcher card pulses */
-@keyframes cardPulse {
-  0%, 100% { box-shadow: none; border-color: var(--border-faint); }
-  50%       { box-shadow: 0 0 0 2px rgba(255,255,255,0.18), 0 0 18px rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.22); }
-}
-
-/* HR — batter card flashes once */
-@keyframes cardFlash {
-  0%   { box-shadow: none; }
-  15%  { box-shadow: 0 0 0 2px var(--border-medium), 0 0 30px rgba(255,80,80,0.55); border-color: rgba(255,120,120,0.60); }
-  50%  { box-shadow: 0 0 0 2px var(--border-soft), 0 0 14px rgba(255,80,80,0.25); }
-  100% { box-shadow: none; border-color: var(--border-faint); }
-}
-
-/* Big moment / walkoff — double flash */
-@keyframes cardBig {
-  0%   { box-shadow: none; }
-  10%  { box-shadow: 0 0 0 3px rgba(255,210,80,0.80), 0 0 40px rgba(255,180,40,0.70); border-color: rgba(255,210,80,0.70); }
-  28%  { box-shadow: 0 0 0 1px rgba(255,210,80,0.30), 0 0 16px rgba(255,180,40,0.25); }
-  42%  { box-shadow: 0 0 0 3px rgba(255,210,80,0.70), 0 0 36px rgba(255,180,40,0.60); border-color: rgba(255,210,80,0.60); }
-  65%  { box-shadow: 0 0 0 1px rgba(255,210,80,0.25), 0 0 12px rgba(255,180,40,0.20); }
-  100% { box-shadow: none; border-color: var(--border-faint); }
-}
-
-/* Win — gold championship glow (not team-colored) */
-@keyframes cardWin {
-  0%   { box-shadow: none; border-color: var(--border-faint); }
-  8%   { box-shadow: 0 0 0 4px rgba(255,210,70,0.88), 0 0 60px rgba(255,185,30,0.80); border-color: rgba(255,220,100,0.90); }
-  22%  { box-shadow: 0 0 0 2px rgba(255,210,70,0.44), 0 0 28px rgba(255,185,30,0.38); }
-  36%  { box-shadow: 0 0 0 4px rgba(255,210,70,0.80), 0 0 55px rgba(255,185,30,0.72); border-color: rgba(255,215,90,0.80); }
-  52%  { box-shadow: 0 0 0 2px rgba(255,210,70,0.38), 0 0 22px rgba(255,185,30,0.32); }
-  68%  { box-shadow: 0 0 0 3px rgba(255,210,70,0.65), 0 0 38px rgba(255,185,30,0.55); }
-  84%  { box-shadow: 0 0 0 1px rgba(255,210,70,0.28), 0 0 16px rgba(255,185,30,0.22); }
-  100% { box-shadow: 0 0 0 1px rgba(255,210,70,0.18), 0 0 10px rgba(255,185,30,0.14); border-color: rgba(255,215,90,0.22); }
-}
-
-.showdown-play-card--k   { animation: cardPulse 1.8s ease-in-out 2; }
-.showdown-play-card--hr  { animation: cardFlash 0.9s ease-out 1; }
-.showdown-play-card--big { animation: cardBig   1.4s ease-out 1; }
-.showdown-play-card--win { animation: cardWin   2.2s ease-out 1 forwards; }
-
-/* ── Individual walls ─────────────────────────────────────────────────────── */
-
-.showdown-wall {
-  flex: 1;
-  min-width: 0;
-}
-
-.showdown-wall .wall-grid {
-  grid-template-columns: repeat(7, 1fr) !important;
-}
-
-/* ── Mobile column ────────────────────────────────────────────────────────── */
-
-.showdown-page__mobile-col {
-  display:        flex;
-  flex-direction: column;
-  min-width:      0;
-  width:          100%;
+  padding:     var(--space-2) 0 0;
+  border-top:  1px solid var(--border-faint);
+  margin-top:  var(--space-2);
 }
 
 @media (min-width: 768px) {
-  .showdown-page__mobile-col { display: none; }
+  .showdown-page__mobile-note { display: none; }
 }
 
-/* Combined wall — let WallGrid.css drive it (8 col mobile, natural gaps) */
-.showdown-page__combined-wall {
-  width: 100%;
+/* ── Player panel ────────────────────────────────────────────────────────── */
+
+.field-player-panel {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  padding:        var(--space-3) var(--space-2);
+  background:     var(--surface-1);
+  border:         1px solid var(--border-faint);
+  border-radius:  var(--radius-md);
+  min-height:     172px;
+  transition:     border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.field-player-panel--empty {
+  opacity:        0;
+  pointer-events: none;
+}
+
+/* Win — sustained gold glow */
+.field-player-panel--win {
+  border-color: rgba(255,210,70,0.22);
+  box-shadow:   0 0 0 1px rgba(255,210,70,0.12), 0 0 18px rgba(255,185,30,0.14);
+}
+
+/* HR / big moment — single flash */
+.field-player-panel--big {
+  animation: panelFlash 1.0s ease-out 1;
+}
+
+/* K — pitcher pulses */
+.field-player-panel--k {
+  animation: panelPulse 1.6s ease-in-out 2;
+}
+
+@keyframes panelFlash {
+  0%   { box-shadow: none; border-color: var(--border-faint); }
+  14%  { box-shadow: 0 0 0 2px rgba(255,210,70,0.65), 0 0 32px rgba(255,180,40,0.55); border-color: rgba(255,210,70,0.55); }
+  100% { box-shadow: none; border-color: var(--border-faint); }
+}
+
+@keyframes panelPulse {
+  0%, 100% { box-shadow: none; border-color: var(--border-faint); }
+  50%       { box-shadow: 0 0 0 1px rgba(160,200,255,0.25), 0 0 14px rgba(120,160,230,0.18); border-color: rgba(160,200,255,0.30); }
+}
+
+.field-player-panel__role {
+  font-family:    var(--font-scoreboard);
+  font-size:      0.46rem;
+  letter-spacing: 0.18em;
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+  padding-bottom: var(--space-1);
+  border-bottom:  1px solid var(--border-faint);
+  margin-bottom:  var(--space-1);
+}
+
+.field-player-panel__num {
+  font-family:    var(--font-banner);
+  font-size:      2.2rem;
+  line-height:    1;
+  letter-spacing: 0.02em;
+}
+
+.field-player-panel__name {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  font-weight: 600;
+  color:       var(--color-paper);
+  line-height: 1.3;
+}
+
+.field-player-panel__pos {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.10em;
+  color:          var(--color-muted);
+  text-transform: uppercase;
+}
+
+.field-player-panel__stats {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  line-height: 1.3;
+  margin-top:  var(--space-2);
+  padding-top: var(--space-2);
+  border-top:  1px solid var(--border-faint);
 }
 
 /* ── Attribution ──────────────────────────────────────────────────────────── */

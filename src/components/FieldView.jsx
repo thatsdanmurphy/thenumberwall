@@ -4,7 +4,7 @@ import './FieldView.css'
 // ── Field geometry ────────────────────────────────────────────────────────────
 const POS_XY = {
   P:    [280, 330],
-  C:    [280, 418],
+  C:    [280, 452], // catcher: BEHIND the plate
   '1B': [398, 302],
   '2B': [338, 232],
   SS:   [224, 238],
@@ -186,7 +186,7 @@ function playIntensity(play) {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 17 }) {
+function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 20 }) {
   if (!number) return null
   const lvl   = heatLevel(heatVal, isActive, intensity)
   const style = RAMP[team][lvl]
@@ -195,7 +195,7 @@ function PosTile({ x, y, number, team, pid, heatVal, isActive, intensity, r = 17
   return (
     <g className={`fv-tile${pulse ? ' fv-tile--pulse' : ''}`} transform={`translate(${x},${y})`}>
       {lvl >= 2 && (
-        <circle r={r + 7} fill={style.fill} opacity={0.18} />
+        <circle r={r + 8} fill={style.fill} opacity={0.18} />
       )}
       <circle
         r={r}
@@ -304,7 +304,7 @@ export default function FieldView({ play, plays, position }) {
 
   return (
     <div className="fv-wrap">
-      <svg viewBox="0 0 560 470" className="fv-svg">
+      <svg viewBox="0 45 560 435" className="fv-svg">
         <defs>
           <clipPath id="fv-fair-clip">
             <path d="M 280 416 L 40 356 Q 280 22 520 356 Z" />
@@ -398,17 +398,17 @@ export default function FieldView({ play, plays, position }) {
           )
         })}
 
-        {/* ── Batter at plate ───────────────────────────────────────────── */}
+        {/* ── Batter at plate — in front of catcher ─────────────────── */}
         {play.batter && (
           <PosTile
-            x={280} y={445}
+            x={280} y={418}
             number={play.batter.number}
             team={battingTeam}
             pid={play.batter.pid}
             heatVal={heatMap[play.batter.pid] ?? 0}
             isActive={true}
             intensity={intensity}
-            r={18}
+            r={22}
           />
         )}
 
@@ -416,14 +416,37 @@ export default function FieldView({ play, plays, position }) {
         <FieldBall x={ball1.x} y={ball1.y} visible={ball1.vis} color={ballColor} size={isHR ? 6 : 5} />
         <FieldBall x={ball2.x} y={ball2.y} visible={ball2.vis} color={ballColor} size={4} />
 
-        {/* ── HR arc ───────────────────────────────────────────────────── */}
+        {/* ── HR arc + ripple explosion ─────────────────────────────────── */}
         {ball1.vis && isHR && (
           <>
             <path d={`M 280 330 Q 340 120 ${ball1.x} ${ball1.y}`}
               fill="none" stroke="rgba(255,221,68,0.30)" strokeWidth={1.5} strokeDasharray="4 3" />
-            <circle cx={ball1.x} cy={ball1.y} r={22}
-              fill="rgba(255,221,68,0.08)" stroke="none" />
+            <circle cx={ball1.x} cy={ball1.y} r={24}
+              fill="rgba(255,221,68,0.10)" stroke="none" />
+            {/* Ripple rings at landing spot */}
+            <g key={`hr-ripple-${position}`}>
+              {[0,1,2].map(i => (
+                <circle key={i}
+                  cx={ball1.x} cy={ball1.y} r={10}
+                  fill="none" stroke="rgba(255,221,68,0.72)" strokeWidth={1.8}
+                  className={`fv-ripple fv-ripple--${i}`}
+                />
+              ))}
+            </g>
           </>
+        )}
+
+        {/* ── Win — championship ripple from home plate ─────────────────── */}
+        {intensity === 'win' && (
+          <g key={`win-ripple-${position}`}>
+            {[0,1,2,3].map(i => (
+              <circle key={i}
+                cx={280} cy={416} r={22}
+                fill="none" stroke="rgba(255,210,70,0.68)" strokeWidth={2.5}
+                className={`fv-ripple-win fv-ripple-win--${i}`}
+              />
+            ))}
+          </g>
         )}
 
       </svg>
