@@ -21,25 +21,25 @@ const BASE_XY = {
 }
 
 const NYY_FIELD = {
-  C:    { number: '20', name: 'Posada',    pid: 'posaj001' },
-  '1B': { number: '3',  name: 'Clark',     pid: 'clart002' },
-  '2B': { number: '12', name: 'Cairo',     pid: 'cairm001' },
-  SS:   { number: '2',  name: 'Jeter',     pid: 'jeted001' },
-  '3B': { number: '13', name: 'A-Rod',     pid: 'rodra001' },
-  LF:   { number: '55', name: 'Matsui',    pid: 'matsh001' },
-  CF:   { number: '51', name: 'Williams',  pid: 'willb002' },
-  RF:   { number: '11', name: 'Sheffield', pid: 'shefg001' },
+  C:    { number: '20', name: 'Jorge Posada',   pid: 'posaj001' },
+  '1B': { number: '3',  name: 'Tony Clark',     pid: 'clart002' },
+  '2B': { number: '12', name: 'Miguel Cairo',   pid: 'cairm001' },
+  SS:   { number: '2',  name: 'Derek Jeter',    pid: 'jeted001' },
+  '3B': { number: '13', name: 'Alex Rodriguez', pid: 'rodra001' },
+  LF:   { number: '55', name: 'Hideki Matsui',  pid: 'matsh001' },
+  CF:   { number: '51', name: 'Bernie Williams', pid: 'willb002' },
+  RF:   { number: '11', name: 'Gary Sheffield', pid: 'shefg001' },
 }
 
 const BOS_FIELD = {
-  C:    { number: '33', name: 'Varitek',  pid: 'varij001' },
-  '1B': { number: '15', name: 'Millar',   pid: 'millk005' },
-  '2B': { number: '12', name: 'Bellhorn', pid: 'bellm002' },
-  SS:   { number: '44', name: 'Cabrera',  pid: 'cabro001' },
-  '3B': { number: '11', name: 'Mueller',  pid: 'muelb001' },
-  LF:   { number: '24', name: 'Ramirez',  pid: 'ramim002' },
-  CF:   { number: '18', name: 'Damon',    pid: 'damoj001' },
-  RF:   { number: '7',  name: 'Nixon',    pid: 'nixot001' },
+  C:    { number: '33', name: 'Jason Varitek',    pid: 'varij001' },
+  '1B': { number: '15', name: 'Kevin Millar',     pid: 'millk005' },
+  '2B': { number: '12', name: 'Mark Bellhorn',    pid: 'bellm002' },
+  SS:   { number: '44', name: 'Orlando Cabrera',  pid: 'cabro001' },
+  '3B': { number: '11', name: 'Bill Mueller',     pid: 'muelb001' },
+  LF:   { number: '24', name: 'Manny Ramirez',    pid: 'ramim002' },
+  CF:   { number: '18', name: 'Johnny Damon',     pid: 'damoj001' },
+  RF:   { number: '7',  name: 'Trot Nixon',       pid: 'nixot001' },
 }
 
 // ── Heat ramps ────────────────────────────────────────────────────────────────
