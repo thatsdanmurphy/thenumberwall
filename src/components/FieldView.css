@@ -13,15 +13,23 @@
   margin:         0 auto;
 }
 
+/* ── Field container — wraps SVG + popup overlay ─────────────────────────── */
+
+.fv-field-container {
+  position: relative;
+  width:    100%;
+}
+
 /* ── SVG canvas ───────────────────────────────────────────────────────────── */
 
 .fv-svg {
   width:         100%;
   height:        auto;
   display:       block;
+  max-height:    clamp(260px, 54vh, 460px);
   border:        1px solid var(--border-faint);
   border-radius: var(--radius-md);
-  overflow:      visible; /* lets ripples and glows escape the box */
+  overflow:      visible;
 }
 
 /* ── Position tiles ──────────────────────────────────────────────────────── */
@@ -91,7 +99,7 @@
   transition:     transform 0.38s cubic-bezier(0.22, 0.68, 0, 1.15);
 }
 
-/* ── Caption — above the field ───────────────────────────────────────────── */
+/* ── Caption — above the field, reserved height so SVG never jumps ───────── */
 
 .fv-caption {
   display:         flex;
@@ -99,8 +107,10 @@
   justify-content: center;
   gap:             var(--space-2);
   flex-wrap:       wrap;
-  padding:         var(--space-1) 0 var(--space-2);
+  min-height:      68px;       /* enough for 2 lines: batter/pitcher + note */
+  padding:         var(--space-1) 0;
   text-align:      center;
+  align-content:   center;
 }
 
 .fv-caption__batter {
@@ -143,18 +153,27 @@
   text-align:     center;
 }
 
-/* ── Tile popup — tap on mobile to reveal player name ───────────────────── */
+/* ── Tile popup — overlays the bottom of the field ──────────────────────── */
 
 .fv-tile-popup {
+  position:        absolute;
+  bottom:          8px;
+  left:            50%;
+  transform:       translateX(-50%);
+  width:           calc(100% - 24px);
+  max-width:       460px;
   display:         flex;
   align-items:     center;
   gap:             var(--space-2);
   padding:         var(--space-2) var(--space-3);
-  background:      var(--surface-1);
+  background:      rgba(6, 8, 18, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border:          1px solid var(--border-soft);
   border-radius:   var(--radius-sm);
   font-family:     var(--font-program);
   font-size:       var(--text-small);
+  z-index:         10;
 }
 
 .fv-tile-popup__num {
@@ -162,12 +181,23 @@
   font-size:      1.1rem;
   color:          var(--color-heat);
   letter-spacing: 0.02em;
+  flex-shrink:    0;
+}
+
+.fv-tile-popup__body {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  flex:           1;
+  min-width:      0;
 }
 
 .fv-tile-popup__name {
   font-weight: 600;
   color:       var(--color-paper);
-  flex:        1;
+  white-space: nowrap;
+  overflow:    hidden;
+  text-overflow: ellipsis;
 }
 
 .fv-tile-popup__pos {
@@ -176,6 +206,16 @@
   letter-spacing: 0.10em;
   color:          var(--color-muted);
   text-transform: uppercase;
+}
+
+.fv-tile-popup__stats {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow:    hidden;
+  text-overflow: ellipsis;
 }
 
 .fv-tile-popup__close {

@@ -1,7 +1,6 @@
 /* ShowdownPage — baseball field showdown
-   Layout: scrubber → scoreboard → [pitcher | field | batter]
-   Desktop: 3-col side panels flank the field
-   Mobile:  field full width, panels hidden */
+   Layout: scrubber → scoreboard → matchup strip → field
+   Single-column on all breakpoints; matchup strip shows pitcher + batter always */
 
 .showdown-page {
   flex: 1;
@@ -101,7 +100,6 @@
   flex-shrink: 0;
 }
 
-/* Live game score */
 .field-scoreboard__live {
   display:     flex;
   align-items: center;
@@ -109,11 +107,11 @@
 }
 
 .field-scoreboard__score {
-  font-size:   1.0rem;
-  font-weight: 700;
-  color:       var(--color-paper);
-  min-width:   14px;
-  text-align:  center;
+  font-size:      1.0rem;
+  font-weight:    700;
+  color:          var(--color-paper);
+  min-width:      14px;
+  text-align:     center;
   letter-spacing: 0;
 }
 
@@ -165,136 +163,101 @@
   .field-scoreboard__venue { display: block; }
 }
 
-/* ── Main field layout — 3 cols on desktop ───────────────────────────────── */
+/* ── Matchup strip — pitcher + batter side by side above the field ────────── */
 
-.showdown-page__field-layout {
-  display:     flex;
-  gap:         var(--space-3);
-  min-width:   0;
-  align-items: flex-start;
+.showdown-page__matchup {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   var(--space-2);
 }
 
-.showdown-page__field-col {
-  flex:      1;
-  min-width: 0;
-}
-
-.showdown-page__side-col {
-  display:     none; /* mobile: hidden */
-  width:       168px;
-  flex-shrink: 0;
-}
-
-@media (min-width: 768px) {
-  .showdown-page__side-col { display: block; }
-}
-
-/* Mobile note — shows below the field when panels are hidden */
-.showdown-page__mobile-note {
-  display:     block;
-  font-family: var(--font-program);
-  font-size:   var(--text-caption);
-  color:       var(--color-paper);
-  font-weight: 500;
-  font-style:  italic;
-  line-height: 1.4;
-  padding:     var(--space-2) 0 0;
-  border-top:  1px solid var(--border-faint);
-  margin-top:  var(--space-2);
-}
-
-@media (min-width: 768px) {
-  .showdown-page__mobile-note { display: none; }
-}
-
-/* ── Player panel ────────────────────────────────────────────────────────── */
-
-.field-player-panel {
+.field-matchup-card {
   display:        flex;
-  flex-direction: column;
-  gap:            var(--space-1);
-  padding:        var(--space-3) var(--space-2);
+  align-items:    center;
+  gap:            var(--space-2);
+  padding:        var(--space-2) var(--space-3);
   background:     var(--surface-1);
   border:         1px solid var(--border-faint);
-  border-radius:  var(--radius-md);
-  min-height:     172px;
+  border-radius:  var(--radius-sm);
+  min-height:     60px;
+  overflow:       hidden;
   transition:     border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.field-player-panel--empty {
+.field-matchup-card--empty {
   opacity:        0;
   pointer-events: none;
 }
 
-/* Win — sustained gold glow */
-.field-player-panel--win {
+/* Win — sustained gold */
+.field-matchup-card--win {
   border-color: rgba(255,210,70,0.22);
-  box-shadow:   0 0 0 1px rgba(255,210,70,0.12), 0 0 18px rgba(255,185,30,0.14);
+  box-shadow:   0 0 0 1px rgba(255,210,70,0.12), 0 0 14px rgba(255,185,30,0.14);
 }
 
-/* HR / big moment — single flash */
-.field-player-panel--big {
-  animation: panelFlash 1.0s ease-out 1;
+/* HR / big — flash */
+.field-matchup-card--big {
+  animation: cardFlash 1.0s ease-out 1;
 }
 
-/* K — pitcher pulses */
-.field-player-panel--k {
-  animation: panelPulse 1.6s ease-in-out 2;
+/* K — pitcher pulse */
+.field-matchup-card--k {
+  animation: cardPulse 1.6s ease-in-out 2;
 }
 
-@keyframes panelFlash {
+@keyframes cardFlash {
   0%   { box-shadow: none; border-color: var(--border-faint); }
-  14%  { box-shadow: 0 0 0 2px rgba(255,210,70,0.65), 0 0 32px rgba(255,180,40,0.55); border-color: rgba(255,210,70,0.55); }
+  14%  { box-shadow: 0 0 0 2px rgba(255,210,70,0.65), 0 0 24px rgba(255,180,40,0.45); border-color: rgba(255,210,70,0.55); }
   100% { box-shadow: none; border-color: var(--border-faint); }
 }
 
-@keyframes panelPulse {
+@keyframes cardPulse {
   0%, 100% { box-shadow: none; border-color: var(--border-faint); }
-  50%       { box-shadow: 0 0 0 1px rgba(160,200,255,0.25), 0 0 14px rgba(120,160,230,0.18); border-color: rgba(160,200,255,0.30); }
+  50%       { box-shadow: 0 0 0 1px rgba(160,200,255,0.25), 0 0 10px rgba(120,160,230,0.18); border-color: rgba(160,200,255,0.30); }
 }
 
-.field-player-panel__role {
+.field-matchup-card__num {
+  font-family:    var(--font-banner);
+  font-size:      1.7rem;
+  line-height:    1;
+  letter-spacing: 0.02em;
+  flex-shrink:    0;
+}
+
+.field-matchup-card__body {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      0;
+}
+
+.field-matchup-card__role {
   font-family:    var(--font-scoreboard);
-  font-size:      0.46rem;
+  font-size:      0.42rem;
   letter-spacing: 0.18em;
   color:          var(--ink-dim);
   text-transform: uppercase;
-  padding-bottom: var(--space-1);
-  border-bottom:  1px solid var(--border-faint);
-  margin-bottom:  var(--space-1);
 }
 
-.field-player-panel__num {
-  font-family:    var(--font-banner);
-  font-size:      2.2rem;
-  line-height:    1;
-  letter-spacing: 0.02em;
+.field-matchup-card__name {
+  font-family:   var(--font-program);
+  font-size:     var(--text-small);
+  font-weight:   600;
+  color:         var(--color-paper);
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  line-height:   1.2;
 }
 
-.field-player-panel__name {
-  font-family: var(--font-program);
-  font-size:   var(--text-small);
-  font-weight: 600;
-  color:       var(--color-paper);
-  line-height: 1.3;
-}
-
-.field-player-panel__pos {
-  font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
-  letter-spacing: 0.10em;
-  color:          var(--color-muted);
-  text-transform: uppercase;
-}
-
-.field-player-panel__stats {
-  font-family: var(--font-program);
-  font-size:   var(--text-caption);
-  color:       var(--ink-dim);
-  line-height: 1.3;
-  margin-top:  var(--space-2);
-  padding-top: var(--space-2);
-  border-top:  1px solid var(--border-faint);
+.field-matchup-card__stats {
+  font-family:   var(--font-program);
+  font-size:     var(--text-caption);
+  color:         var(--ink-dim);
+  line-height:   1.3;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── Attribution ──────────────────────────────────────────────────────────── */

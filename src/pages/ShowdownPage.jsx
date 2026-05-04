@@ -24,44 +24,72 @@ function playIntensity(play) {
   return 'normal'
 }
 
-// ── Game stats (for player panels) ───────────────────────────────────────────
+// ── Stat sets ─────────────────────────────────────────────────────────────────
 const HIT_RESULTS = new Set(['S','D','T','HR'])
 const AB_RESULTS  = new Set(['S','D','T','HR','OUT','DP','SF','SH','K','FC','E'])
 const OUT_RESULTS = new Set(['OUT','SF','SH','K','FC'])
 
-function computeGameStats(plays, upToIdx) {
-  const stats = {}
-  for (let i = 0; i <= upToIdx; i++) {
-    const p = plays[i]
-    if (!p) break
-    const bk = `${p.batter.pid}:${p.game}`
-    if (!stats[bk]) stats[bk] = { ab:0, h:0, hr:0, k:0, bb:0, hp:0, outs:0, kp:0, hp_a:0, bb_a:0 }
-    const bs = stats[bk]
-    if (AB_RESULTS.has(p.result))            bs.ab++
-    if (HIT_RESULTS.has(p.result))           bs.h++
-    if (p.result === 'HR')                   bs.hr++
-    if (p.result === 'K')                    bs.k++
-    if (p.result === 'W' || p.result === 'IW') bs.bb++
-    if (p.result === 'HP')                   bs.hp++
+const fmtIP = outs => `${Math.floor(outs / 3)}.${outs % 3}`
 
-    if (p.pitcher?.pid && !['SB','CS','BK','WP','PB','DI','NP'].includes(p.result)) {
-      const pk = `${p.pitcher.pid}:${p.game}`
-      if (!stats[pk]) stats[pk] = { ab:0, h:0, hr:0, k:0, bb:0, hp:0, outs:0, kp:0, hp_a:0, bb_a:0 }
-      const ps = stats[pk]
-      if (OUT_RESULTS.has(p.result)) { ps.outs++; if (p.result === 'DP') ps.outs++ }
-      if (p.result === 'K')            ps.kp++
-      if (HIT_RESULTS.has(p.result))   ps.hp_a++
-      if (p.result === 'W' || p.result === 'IW') ps.bb_a++
+// ── Series stats (across all games) ──────────────────────────────────────────
+function computeSeriesStats(plays, upToIdx) {
+  const bat = {} // pid → { ab, h, hr, k, bb, hp, d, t }
+  const pit = {} // pid → { outs, kp, hp_a, bb_a, hr_a }
+
+  for (let i = 0; i <= upToIdx; i++) {
+    const p = plays[i]; if (!p) break
+
+    const bid = p.batter?.pid
+    if (bid) {
+      if (!bat[bid]) bat[bid] = { ab:0, h:0, hr:0, k:0, bb:0, hp:0, d:0, t:0 }
+      const s = bat[bid]
+      if (AB_RESULTS.has(p.result))              s.ab++
+      if (HIT_RESULTS.has(p.result))             s.h++
+      if (p.result === 'HR')                     s.hr++
+      if (p.result === 'K')                      s.k++
+      if (p.result === 'W' || p.result === 'IW') s.bb++
+      if (p.result === 'HP')                     s.hp++
+      if (p.result === 'D')                      s.d++
+      if (p.result === 'T')                      s.t++
+    }
+
+    const ppid = p.pitcher?.pid
+    if (ppid && !['SB','CS','BK','WP','PB','DI','NP'].includes(p.result)) {
+      if (!pit[ppid]) pit[ppid] = { outs:0, kp:0, hp_a:0, bb_a:0, hr_a:0 }
+      const s = pit[ppid]
+      if (OUT_RESULTS.has(p.result))             { s.outs++; if (p.result === 'DP') s.outs++ }
+      if (p.result === 'K')                      s.kp++
+      if (HIT_RESULTS.has(p.result))             s.hp_a++
+      if (p.result === 'W' || p.result === 'IW') s.bb_a++
+      if (p.result === 'HR')                     s.hr_a++
     }
   }
-  return stats
+  return { bat, pit }
 }
 
-function fmtIP(outs) { return `${Math.floor(outs / 3)}.${outs % 3}` }
+function getSeriesStatLine(pid, role, seriesStats) {
+  if (!pid || !seriesStats) return null
+  if (role === 'pitcher') {
+    const s = seriesStats.pit[pid]
+    if (!s) return null
+    const parts = [`${fmtIP(s.outs)} IP`, `${s.kp} K`]
+    if (s.hr_a)  parts.push(`${s.hr_a} HR`)
+    else if (s.hp_a) parts.push(`${s.hp_a} H`)
+    return parts.join(' · ')
+  }
+  const s = seriesStats.bat[pid]
+  if (!s || s.ab === 0) return null
+  const avg = (s.h / s.ab).toFixed(3).replace('0.', '.')
+  const parts = [`${avg}  ${s.h}-${s.ab}`]
+  if (s.hr) parts.push(`${s.hr} HR`)
+  if (s.d)  parts.push(`${s.d} 2B`)
+  if (s.t)  parts.push(`${s.t} 3B`)
+  return parts.join(' · ')
+}
 
-// ── Live running score (approximate from play results) ────────────────────
+// ── Live running score ────────────────────────────────────────────────────────
 function computeRunningScore(plays, upToIdx) {
-  const scores = {} // { game: { BOS: n, NYY: n } }
+  const scores = {}
   let bases     = { '1B': null, '2B': null, '3B': null }
   let outs      = 0
   let lastHalf  = null
@@ -138,17 +166,15 @@ function computeRunningScore(plays, upToIdx) {
   return scores
 }
 
-// ── Outs in current half-inning ────────────────────────────────────────────
+// ── Outs in current half-inning ───────────────────────────────────────────────
 function computeCurrentOuts(plays, upToIdx) {
   if (!plays[upToIdx]) return 0
   const p  = plays[upToIdx]
   const hk = `${p.game}-${p.inning}-${p.half}`
-  // Walk back to start of half-inning
   let start = upToIdx
   while (start > 0 && `${plays[start-1].game}-${plays[start-1].inning}-${plays[start-1].half}` === hk) {
     start--
   }
-  // Count outs BEFORE current play (state going INTO this at-bat)
   let outs = 0
   for (let i = start; i < upToIdx; i++) {
     const pp = plays[i]; if (!pp) break
@@ -166,15 +192,12 @@ function FieldScoreboard({ play, plays, position, games, gameScores }) {
   const game    = games[gameNum - 1]
   const inning  = play.inning ?? 1
   const isTop   = play.half === 'top'
-  // Series record: games completed before this one
   const bosWins = games.filter((g, i) => i < gameNum - 1 && g.winner === 'BOS').length
   const nyyWins = games.filter((g, i) => i < gameNum - 1 && g.winner === 'NYY').length
-  // Live game score
   const liveScore = gameScores?.[gameNum] ?? { BOS: 0, NYY: 0 }
 
   return (
     <div className="field-scoreboard">
-
       <div className="field-scoreboard__game">G{gameNum}</div>
 
       <div className="field-scoreboard__inning">
@@ -190,7 +213,6 @@ function FieldScoreboard({ play, plays, position, games, gameScores }) {
 
       <div className="field-scoreboard__divider" />
 
-      {/* Live game score */}
       <div className="field-scoreboard__live">
         <span className="field-scoreboard__team field-scoreboard__team--nyy">NYY</span>
         <span className="field-scoreboard__score">{liveScore.NYY}</span>
@@ -201,7 +223,6 @@ function FieldScoreboard({ play, plays, position, games, gameScores }) {
 
       <div className="field-scoreboard__divider" />
 
-      {/* Series record */}
       <div className="field-scoreboard__series">
         <span className="field-scoreboard__series-label">SERIES</span>
         <span className="field-scoreboard__team field-scoreboard__team--nyy">{nyyWins}</span>
@@ -212,55 +233,38 @@ function FieldScoreboard({ play, plays, position, games, gameScores }) {
       {game?.venue && (
         <div className="field-scoreboard__venue">{game.venue.toUpperCase()}</div>
       )}
-
     </div>
   )
 }
 
-// ── FieldPlayerPanel ──────────────────────────────────────────────────────────
-function FieldPlayerPanel({ role, player, stats, accentColor, intensity }) {
+// ── MatchupCard — compact pitcher/batter strip ────────────────────────────────
+function MatchupCard({ role, player, statLine, accentColor, intensity }) {
   if (!player?.name) {
-    return <div className="field-player-panel field-player-panel--empty" />
+    return <div className="field-matchup-card field-matchup-card--empty" />
   }
 
-  const isBatter  = role === 'batter'
   const isPitcher = role === 'pitcher'
 
-  let statLine = null
-  if (stats) {
-    if (isBatter) {
-      const parts = [`${stats.h}-${stats.ab}`]
-      if (stats.hr) parts.push(`${stats.hr} HR`)
-      if (stats.k)  parts.push(`${stats.k} K`)
-      if (stats.bb + stats.hp > 0) parts.push(`${stats.bb + stats.hp} BB`)
-      statLine = parts.join(' · ')
-    } else {
-      const parts = [`${fmtIP(stats.outs)} IP`, `${stats.kp} K`]
-      if (stats.hp_a) parts.push(`${stats.hp_a} H`)
-      if (stats.bb_a) parts.push(`${stats.bb_a} BB`)
-      statLine = parts.join(' · ')
-    }
-  }
-
   const glowClass =
-    intensity === 'win'                          ? ' field-player-panel--win'
-    : (intensity === 'big' || intensity === 'hr') && isBatter ? ' field-player-panel--big'
-    : intensity === 'k' && isPitcher             ? ' field-player-panel--k'
+    intensity === 'win'                               ? ' field-matchup-card--win'
+    : (intensity === 'big' || intensity === 'hr') && !isPitcher ? ' field-matchup-card--big'
+    : intensity === 'k' && isPitcher                  ? ' field-matchup-card--k'
     : ''
 
   return (
-    <div className={`field-player-panel${glowClass}`}>
-      <div className="field-player-panel__role">
-        {isBatter ? 'AT BAT' : 'PITCHING'}
-      </div>
-      <div className="field-player-panel__num" style={{ color: accentColor }}>
+    <div className={`field-matchup-card${glowClass}`}>
+      <div className="field-matchup-card__num" style={{ color: accentColor }}>
         #{player.number}
       </div>
-      <div className="field-player-panel__name">{player.name}</div>
-      <div className="field-player-panel__pos">{player.pos}</div>
-      {statLine && (
-        <div className="field-player-panel__stats">{statLine}</div>
-      )}
+      <div className="field-matchup-card__body">
+        <div className="field-matchup-card__role">
+          {isPitcher ? 'PITCHING' : 'AT BAT'}
+        </div>
+        <div className="field-matchup-card__name">{player.name}</div>
+        {statLine && (
+          <div className="field-matchup-card__stats">{statLine}</div>
+        )}
+      </div>
     </div>
   )
 }
@@ -271,7 +275,7 @@ export default function ShowdownPage() {
   const { showdownId } = useParams()
 
   const data = SHOWDOWNS[showdownId] ?? SHOWDOWNS['alcs-2004']
-  const { plays, gameStarts, games, teams } = data
+  const { plays, gameStarts, games } = data
 
   const [position, setPosition] = useState(0)
 
@@ -283,12 +287,11 @@ export default function ShowdownPage() {
   const currentPlay = plays[position] ?? {}
   const intensity   = playIntensity(currentPlay)
 
-  // ── Game stats for player panels ─────────────────────────────────────────
-  const gameStats   = useMemo(() => computeGameStats(plays, position),    [plays, position])
-  const gameScores  = useMemo(() => computeRunningScore(plays, position),  [plays, position])
-  function getStats(pid, gameNum) { return gameStats[`${pid}:${gameNum}`] ?? null }
+  // ── Stats ─────────────────────────────────────────────────────────────────
+  const seriesStats = useMemo(() => computeSeriesStats(plays, position), [plays, position])
+  const gameScores  = useMemo(() => computeRunningScore(plays, position), [plays, position])
 
-  // ── Extra-inning zones for scrubber ──────────────────────────────────────
+  // ── Extra-inning zones ────────────────────────────────────────────────────
   const extraZones = useMemo(() => {
     const zones = []
     let zoneStart = null
@@ -301,12 +304,12 @@ export default function ShowdownPage() {
     return zones
   }, [plays])
 
-  // ── Scrubber highlight moments ────────────────────────────────────────────
+  // ── Scrubber highlights ───────────────────────────────────────────────────
   const highlights = useMemo(() => plays.reduce((acc, p, idx) => {
-    if      (p.isSeriesEnd)                          acc.push({ idx, intensity: 'win', label: 'Series clincher' })
-    else if (p.note?.includes('WALKOFF'))            acc.push({ idx, intensity: 'big', label: p.note })
-    else if (p.note?.includes('GRAND SLAM'))         acc.push({ idx, intensity: 'big', label: p.note })
-    else if (p.result === 'HR')                      acc.push({ idx, intensity: 'hr',  label: `${p.batter?.name} HR` })
+    if      (p.isSeriesEnd)                   acc.push({ idx, intensity: 'win', label: 'Series clincher' })
+    else if (p.note?.includes('WALKOFF'))     acc.push({ idx, intensity: 'big', label: p.note })
+    else if (p.note?.includes('GRAND SLAM'))  acc.push({ idx, intensity: 'big', label: p.note })
+    else if (p.result === 'HR')               acc.push({ idx, intensity: 'hr',  label: `${p.batter?.name} HR` })
     return acc
   }, []), [plays])
 
@@ -327,13 +330,11 @@ export default function ShowdownPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [handleSeek])
 
-  // ── Active players ────────────────────────────────────────────────────────
   const batter  = currentPlay.batter  ?? null
   const pitcher = currentPlay.pitcher ?? null
 
-  const batterStats  = batter  ? getStats(batter.pid,  currentPlay.game) : null
-  const pitcherStats = pitcher ? getStats(pitcher.pid, currentPlay.game) : null
-
+  const pitcherStatLine = pitcher ? getSeriesStatLine(pitcher.pid, 'pitcher', seriesStats) : null
+  const batterStatLine  = batter  ? getSeriesStatLine(batter.pid,  'batter',  seriesStats) : null
 
   return (
     <AppShell>
@@ -364,45 +365,35 @@ export default function ShowdownPage() {
           gameScores={gameScores}
         />
 
-        {/* ── Main layout — pitcher | field | batter ─────────────────── */}
-        <div className="showdown-page__field-layout">
-
-          {/* Pitcher — left on desktop, hidden on mobile */}
-          <div className="showdown-page__side-col showdown-page__side-col--pitcher">
-            <FieldPlayerPanel
-              role="pitcher"
-              player={pitcher}
-              stats={pitcherStats}
-              accentColor={pitcher?.team ? TEAM_ACCENT[pitcher.team] : TEAM_ACCENT.NYY}
-              intensity={intensity === 'win' ? 'win' : intensity === 'k' ? 'k' : 'normal'}
-            />
-          </div>
-
-          {/* Field */}
-          <div className="showdown-page__field-col">
-            <FieldView
-              play={currentPlay}
-              plays={plays}
-              position={position}
-            />
-          </div>
-
-          {/* Batter — right on desktop, hidden on mobile */}
-          <div className="showdown-page__side-col showdown-page__side-col--batter">
-            <FieldPlayerPanel
-              role="batter"
-              player={batter}
-              stats={batterStats}
-              accentColor={batter?.team ? TEAM_ACCENT[batter.team] : TEAM_ACCENT.BOS}
-              intensity={
-                intensity === 'win' ? 'win'
-                : ['hr','big'].includes(intensity) ? intensity
-                : 'normal'
-              }
-            />
-          </div>
-
+        {/* ── Matchup strip — pitcher + batter above field ───────────── */}
+        <div className="showdown-page__matchup">
+          <MatchupCard
+            role="pitcher"
+            player={pitcher}
+            statLine={pitcherStatLine}
+            accentColor={pitcher?.team ? TEAM_ACCENT[pitcher.team] : TEAM_ACCENT.NYY}
+            intensity={intensity === 'win' ? 'win' : intensity === 'k' ? 'k' : 'normal'}
+          />
+          <MatchupCard
+            role="batter"
+            player={batter}
+            statLine={batterStatLine}
+            accentColor={batter?.team ? TEAM_ACCENT[batter.team] : TEAM_ACCENT.BOS}
+            intensity={
+              intensity === 'win' ? 'win'
+              : ['hr','big'].includes(intensity) ? intensity
+              : 'normal'
+            }
+          />
         </div>
+
+        {/* ── Field ─────────────────────────────────────────────────── */}
+        <FieldView
+          play={currentPlay}
+          plays={plays}
+          position={position}
+          seriesStats={seriesStats}
+        />
 
         <div className="showdown-page__attribution">
           Play-by-play data: <a href="https://www.retrosheet.org" target="_blank" rel="noopener noreferrer">Retrosheet</a>

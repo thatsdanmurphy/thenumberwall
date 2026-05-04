@@ -11,9 +11,10 @@
 /* ── Controls row ─────────────────────────────────────────────────────────── */
 
 .showdown-scrubber__controls {
-  display:     flex;
-  align-items: center;
-  gap:         var(--space-2);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;   /* keeps both arrows near center, never lost */
+  gap:             var(--space-2);
 }
 
 /* Play/pause — 48px minimum touch target */
@@ -43,15 +44,15 @@
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           32px;
-  height:          32px;
+  width:           40px;
+  height:          40px;
   background:      none;
-  border:          1px solid var(--border-soft);
+  border:          1px solid var(--border-medium);
   border-radius:   var(--radius-sm);
-  color:           var(--color-muted);
+  color:           var(--color-paper);
   cursor:          pointer;
   flex-shrink:     0;
-  transition:      color var(--motion-hover), border-color var(--motion-hover);
+  transition:      color var(--motion-hover), border-color var(--motion-hover), background var(--motion-hover);
 }
 
 .showdown-scrubber__step:hover:not(:disabled) {
@@ -64,12 +65,13 @@
   cursor:  default;
 }
 
-/* Position label */
+/* Position label — fixed width so arrows stay centered together */
 .showdown-scrubber__pos-label {
-  display:     flex;
-  align-items: center;
-  gap:         6px;
-  flex:        1;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             6px;
+  min-width:       150px;
 }
 
 .showdown-scrubber__game {
