@@ -6,12 +6,13 @@
  * Re-run compile_wall_data.py to regenerate, then re-export to JSON.
  *
  * Datasets:
- *   wallData       — 171 entries, numbers 0, 00, 1–99 (global wall)
- *   bostonLegends  — 82 entries (Boston legend wall)
- *   bostonCurrent  — 133 entries (Boston current season rosters)
- *   bcLegends      — 24 entries (Boston College retired jerseys)
- *   nyLegends      — New York metro legends (scaffolded, data TBD)
- *   nyCurrent      — New York metro current rosters (scaffolded, data TBD)
+ *   wallData       — global wall (208 active legends, numbers 0, 00, 1–99)
+ *   bostonLegends  — Boston legend wall (83 entries)
+ *   bostonCurrent  — Boston current season rosters (133 entries)
+ *   bcLegends      — Boston College retired jerseys (24 entries)
+ *   nyLegends      — New York metro legends (145 entries, live)
+ *   nyCurrent      — New York metro current rosters (378 entries, live)
+ *   reelWallData   — fictional film legends: Space Jam, Mighty Ducks, Little Giants (55 entries)
  */
 
 import { TIER_WEIGHT } from './tiers.js'

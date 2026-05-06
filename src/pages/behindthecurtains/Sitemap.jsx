@@ -44,8 +44,8 @@ const GROUPS = [
     title: 'Cities',
     lede: 'Place-scoped walls.',
     roots: [
-      { path: '/boston',  name: 'Boston',  desc: 'Seed city. Full legend set, curated.', status: 'LIVE' },
-      { path: '/newyork', name: 'New York', desc: 'Data not yet vetted.',                 status: 'DISABLED' },
+      { path: '/boston',  name: 'Boston',   desc: 'Seed city. Full legend + current rosters, curated.', status: 'LIVE' },
+      { path: '/newyork', name: 'New York',  desc: '145 legends, 378 current roster entries. Live.', status: 'LIVE' },
     ],
   },
   {
@@ -102,6 +102,29 @@ const GROUPS = [
     ],
   },
   {
+    id: 'specials',
+    title: 'Specials',
+    lede: 'Themed experiences built on the same grid.',
+    roots: [
+      {
+        path: '/reel', name: 'Reel Wall · index',
+        desc: 'Defaults to Space Jam. Selects a film, repaints the wall.',
+        status: 'LIVE',
+        children: [
+          { path: '/reel/:filmSlug', name: 'Reel Wall', desc: 'One film\'s roster on the 0–99 grid. Hero tiles glow; rival tiles run jet black.', status: 'LIVE', example: '/reel/space-jam' },
+        ],
+      },
+      {
+        path: '/showdown', name: 'Showdown · index',
+        desc: 'Defaults to ALCS 2004. Play-by-play scrubber with live stats.',
+        status: 'LIVE',
+        children: [
+          { path: '/showdown/:showdownId', name: 'Showdown', desc: 'One historic game. Scrub through every at-bat. Stats build. Numbers on the field.', status: 'LIVE', example: '/showdown/alcs-2004' },
+        ],
+      },
+    ],
+  },
+  {
     id: 'narrative',
     title: 'Narrative',
     lede: 'The product\'s story, in its own voice.',
@@ -112,21 +135,22 @@ const GROUPS = [
   {
     id: 'behind',
     title: 'Behind the Curtains',
-    lede: 'Public but unlisted. How the product is made.',
+    lede: 'Public but unlisted. The why, the who, and how the product is made.',
     roots: [
       {
         path: '/behindthecurtains', name: 'Hub',
         desc: 'Landing. One card per internal section.',
         status: 'LIVE',
         children: [
+          { path: '/behindthecurtains/foundation',  name: 'Foundation',   desc: 'Mission, principles, and the 5 personas.',  status: 'LIVE' },
           { path: '/behindthecurtains/design',      name: 'Design System', desc: 'Tokens, tiles, primitives, icons.',        status: 'LIVE' },
-          { path: '/behindthecurtains/sitemap',     name: 'Sitemap',      desc: 'This page.',                                 status: 'LIVE' },
-          { path: '/behindthecurtains/flows',       name: 'Flows',        desc: 'The journeys that matter.',                  status: 'LIVE' },
-          { path: '/behindthecurtains/engineering', name: 'Engineering',  desc: 'Stack, structure, conventions.',             status: 'LIVE' },
-          { path: '/behindthecurtains/workflow',    name: 'Workflow',     desc: 'Process, rhythm, trade-offs, how work ships.', status: 'LIVE' },
-          { path: '/behindthecurtains/marketing',   name: 'Marketing',    desc: 'Kit, audiences, voice.',                     status: 'DRAFT' },
-          { path: '/behindthecurtains/research',    name: 'Research',     desc: 'Testing, findings, insights.',               status: 'DRAFT' },
-          { path: '/behindthecurtains/analytics',   name: 'Analytics',    desc: 'Traffic, behaviour, Vercel.',                status: 'DRAFT' },
+          { path: '/behindthecurtains/sitemap',     name: 'Sitemap',      desc: 'This page.',                                status: 'LIVE' },
+          { path: '/behindthecurtains/flows',       name: 'Flows',        desc: 'The 8 journeys that matter.',               status: 'LIVE' },
+          { path: '/behindthecurtains/engineering', name: 'Engineering',  desc: 'Stack, structure, conventions, data.',      status: 'LIVE' },
+          { path: '/behindthecurtains/workflow',    name: 'Workflow',     desc: 'Process, rhythm, trade-offs, failures.',    status: 'LIVE' },
+          { path: '/behindthecurtains/marketing',   name: 'Marketing',    desc: 'Kit, audiences, voice.',                    status: 'DRAFT' },
+          { path: '/behindthecurtains/research',    name: 'Research',     desc: 'Testing, findings, insights.',              status: 'DRAFT' },
+          { path: '/behindthecurtains/analytics',   name: 'Analytics',    desc: 'Traffic, behaviour, Vercel.',               status: 'DRAFT' },
         ],
       },
     ],

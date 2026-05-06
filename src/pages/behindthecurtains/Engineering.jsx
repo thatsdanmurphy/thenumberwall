@@ -12,15 +12,18 @@
 
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Layers, Database, Palette, GitBranch, Rocket, BookOpen } from 'lucide-react'
-import { wallData, bostonLegends, bostonCurrent } from '../../data/index.js'
+import { wallData, bostonLegends, bostonCurrent, nyLegends, nyCurrent, reelData } from '../../data/index.js'
 import './engineering.css'
 
 // ── Live stats ────────────────────────────────────────────────────────────────
 
 const LIVE_STATS = [
-  { label: 'Global legends',  value: wallData.filter(e => e.tier !== 'UNWRITTEN').length },
-  { label: 'Boston legends',  value: bostonLegends.length },
-  { label: 'Boston current',  value: bostonCurrent.length },
+  { label: 'Global legends',     value: wallData.filter(e => e.tier !== 'UNWRITTEN').length },
+  { label: 'Boston legends',     value: bostonLegends.filter(e => e.tier !== 'UNWRITTEN').length },
+  { label: 'Boston current',     value: bostonCurrent.length },
+  { label: 'New York legends',   value: nyLegends.filter(e => e.tier !== 'UNWRITTEN').length },
+  { label: 'New York current',   value: nyCurrent.length },
+  { label: 'Reel legends',       value: reelData.filter(e => e.tier !== 'UNWRITTEN').length },
 ]
 
 // ── Stack ─────────────────────────────────────────────────────────────────────
