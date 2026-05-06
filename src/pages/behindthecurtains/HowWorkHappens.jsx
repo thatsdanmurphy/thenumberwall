@@ -105,6 +105,14 @@ const FAILURES = [
     title: 'Token drift before the design system',
     desc: 'Before global.css had a formal token scale, every component invented its own rgba values. Three months in, nothing matched. The consolidation into 62 tokens took a full day and touched every file. Now the rule is: no raw values, period.',
   },
+  {
+    title: 'The Reddit spike that didn\'t stick',
+    desc: '1,000 visits from a Reddit post. 20 the next day. The product had no return hook — no reason for someone who came, browsed, and left to ever come back. The lesson: fix the loop before the next push. Traffic without retention is just a flat line with one spike in it.',
+  },
+  {
+    title: 'The data pipeline gap',
+    desc: 'compile_wall_data.py was targeting WornNumbers.jsx — a component that had already been replaced. The pipeline was silently compiling data into the void. wallData.json is the live source; it was being maintained manually without realising the script was broken. Now the gap is documented and the CSV-to-JSON process is explicit. The fix is on the backlog; the workaround is honest.',
+  },
 ]
 
 // ── How problems get fixed ──────────────────────────────────────────────────
@@ -129,6 +137,11 @@ const QA_METHODS = [
     icon: RefreshCw,
     title: 'Respond fast, fix faster',
     desc: 'When something breaks, fix it in the same session. Don\'t file a ticket for yourself. The backlog for a solo founder is "things I haven\'t noticed yet."',
+  },
+  {
+    icon: BookOpen,
+    title: 'Two-source verification before any entry goes live',
+    desc: 'Every new legend runs through a structured intake check before the JSON is touched: jersey number verified from two independent sources, honors cross-referenced against the honors table, every year and record claim confirmed by web search. Confident-sounding entries get checked hardest — those are the ones that have been wrong before.',
   },
 ]
 

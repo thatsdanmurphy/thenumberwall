@@ -1,0 +1,366 @@
+/* Foundation — /behindthecurtains/foundation
+   North star, principles, and audience. The why and the who.
+   Token-only. Prefix: fdn-. */
+
+.fdn-page {
+  max-width: var(--grid-max-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--grid-margin) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Banner ──────────────────────────────────────────────────────────────── */
+
+.fdn-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.fdn-banner__eyebrow {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.fdn-banner__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-h1);
+  letter-spacing: 0.01em;
+  color: var(--color-paper);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.fdn-banner__lede {
+  font-family: var(--font-program);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+  max-width: 64ch;
+  margin: 0;
+}
+
+/* ── Section scaffold ────────────────────────────────────────────────────── */
+
+.fdn-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fdn-section__title {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+  margin: 0;
+}
+
+.fdn-section__lede {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  max-width: 66ch;
+  margin: 0;
+}
+
+/* ── North Star ──────────────────────────────────────────────────────────── */
+
+.fdn-north-star {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface-1);
+  border: 1px solid var(--color-heat);
+  border-left-width: 3px;
+  border-radius: var(--radius-md);
+}
+
+.fdn-north-star__label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+}
+
+.fdn-north-star__body {
+  font-family: var(--font-program);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+/* ── Mission insight ─────────────────────────────────────────────────────── */
+
+.fdn-insight {
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+}
+
+.fdn-insight__body {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.fdn-insight__body em {
+  color: var(--color-paper);
+  font-style: italic;
+}
+
+/* ── Principles ──────────────────────────────────────────────────────────── */
+
+.fdn-principles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fdn-principle {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+  align-items: flex-start;
+}
+
+.fdn-principle:hover {
+  border-color: var(--border-soft);
+}
+
+.fdn-principle__n {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-heat);
+  flex-shrink: 0;
+  min-width: 2.5ch;
+  margin-top: 2px;
+}
+
+.fdn-principle__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.fdn-principle__name {
+  font-family: var(--font-banner);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.fdn-principle__desc {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ── Core pair ────────────────────────────────────────────────────────────── */
+
+.fdn-core-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+@media (max-width: 600px) {
+  .fdn-core-pair { grid-template-columns: 1fr; }
+}
+
+.fdn-core-card {
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--color-heat);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fdn-core-card--kidult {
+  border-color: var(--border-soft);
+}
+
+.fdn-core-card__name {
+  font-family: var(--font-banner);
+  font-size: var(--text-h3);
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.fdn-core-card__desc {
+  font-family: var(--font-program);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ── Persona cards ───────────────────────────────────────────────────────── */
+
+.fdn-personas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.fdn-persona {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+.fdn-persona__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.fdn-persona__name {
+  font-family: var(--font-banner);
+  font-size: var(--text-h3);
+  letter-spacing: 0.02em;
+  color: var(--color-paper);
+  margin: 0;
+}
+
+.fdn-persona__trigger {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  color: var(--color-heat);
+  font-style: italic;
+}
+
+.fdn-persona__need {
+  font-family: var(--font-program);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+  margin: 0;
+  max-width: 66ch;
+}
+
+.fdn-persona__moment {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+}
+
+.fdn-persona__moment-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-heat);
+}
+
+.fdn-persona__moment-body {
+  font-family: var(--font-handwritten);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-paper);
+}
+
+.fdn-persona__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-faint);
+}
+
+.fdn-persona__flows {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.fdn-persona__flows-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.fdn-persona__chip {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+  color: var(--color-paper);
+  background: var(--surface-2);
+  text-decoration: none;
+  transition: border-color 100ms ease, color 100ms ease;
+}
+
+.fdn-persona__chip:hover {
+  border-color: var(--color-heat);
+  color: var(--color-heat);
+}
+
+.fdn-persona__design {
+  font-family: var(--font-program);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.fdn-persona__design strong {
+  color: var(--color-paper);
+  font-weight: 600;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+.fdn-footer {
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+}
+
+.fdn-footer__line {
+  font-family: var(--font-handwritten);
+  font-size: 1rem;
+  color: var(--color-muted);
+  margin: 0;
+}

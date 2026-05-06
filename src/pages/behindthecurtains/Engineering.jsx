@@ -26,22 +26,23 @@ const LIVE_STATS = [
 // ── Stack ─────────────────────────────────────────────────────────────────────
 
 const STACK = [
-  { name: 'React 19',          why: 'UI library. Components compose into pages; state stays local until it can\'t.' },
-  { name: 'Vite 5',            why: 'Build tool. Sub-second hot reload in dev, tree-shaken bundle in prod.' },
-  { name: 'React Router 6',    why: 'Client-side routing. Every URL is a real page — no hash fragments.' },
-  { name: 'Supabase',          why: 'Backend. Postgres database, auth, and row-level security. No custom server.' },
-  { name: 'Vercel',            why: 'Hosting and deploys. Push to main, it\'s live in under a minute.' },
-  { name: 'Lucide React',      why: 'Icons. One consistent set, tree-shakeable, no icon font bloat.' },
-  { name: 'React Simple Maps', why: 'USA map for the team walls hub. SVG, no heavy geo libraries.' },
+  { name: 'React 19',            why: 'UI library. Components compose into pages; state stays local until it can\'t.' },
+  { name: 'Vite 5',              why: 'Build tool. Sub-second hot reload in dev, tree-shaken bundle in prod.' },
+  { name: 'React Router 6',      why: 'Client-side routing. Every URL is a real page — no hash fragments.' },
+  { name: 'Supabase',            why: 'Backend. Postgres database, auth, and row-level security. No custom server.' },
+  { name: 'Vercel',              why: 'Hosting and deploys. Push to main, it\'s live in under a minute.' },
+  { name: 'Vercel Analytics',    why: 'Page views and custom events (reel_view, showdown scrub depth, vote cast). No cookies, no consent banner.' },
+  { name: 'Lucide React',        why: 'Icons. One consistent set, tree-shakeable, no icon font bloat.' },
+  { name: 'React Simple Maps',   why: 'USA map for the team walls hub. SVG, no heavy geo libraries.' },
 ]
 
 // ── Repo shape ────────────────────────────────────────────────────────────────
 
 const FOLDERS = [
-  { name: 'src/pages/',       count: 26, desc: 'One file per route. WallPage, BostonPage, TeamWallPage, TimelinePage, etc.' },
-  { name: 'src/components/',  count: 42, desc: 'Shared building blocks. WallGrid, WallTile, PlayerPanel, IdentityTiles, LegendTimeline.' },
+  { name: 'src/pages/',       count: 28, desc: 'One file per route. WallPage, BostonPage, TeamWallPage, TimelinePage, ReelWallPage, ShowdownPage, etc.' },
+  { name: 'src/components/',  count: 57, desc: 'Shared building blocks. WallGrid, WallTile, PlayerPanel, IdentityTiles, LegendTimeline, ShowdownScrubber, FieldView, VoteButtons.' },
   { name: 'src/data/',        count: 17, desc: 'Static JSON walls + JS indexes. The content layer. No fetch, no loading spinner.' },
-  { name: 'src/lib/',         count: 8,  desc: 'Supabase clients, vote store, profanity filter, identity. The plumbing.' },
+  { name: 'src/lib/',         count: 12, desc: 'Supabase clients, vote stores (wall + player), profanity filter, identity. The plumbing.' },
   { name: 'src/styles/',      count: 1,  desc: 'global.css — 62 design tokens. Every color, font, space, and radius in one file.' },
 ]
 
@@ -149,16 +150,26 @@ export default function Engineering() {
           core content. The architecture is the strategy: <em>curated is instant,
           crowdsourced is live, and neither waits for the other</em>.
         </p>
+        <p className="eng-section__lede">
+          Intake has a formal verification layer. Before any new entry reaches the
+          static JSON, it runs through a two-source check: jersey number confirmed
+          independently from player identity, honors cross-referenced against the
+          honors table, and every year or record claim verified by web search.
+          The class of errors this catches — wrong jersey numbers, fabricated
+          league-wide retirement claims, stale record claims — are exactly the
+          ones that look right until you check. The rule is: confident-sounding
+          claims get checked hardest.
+        </p>
       </section>
 
       {/* ── Stack ───────────────────────────────────────────────── */}
       <section className="eng-section">
         <h2 className="eng-section__title"><Layers size={18} /> The Stack</h2>
         <p className="eng-section__lede">
-          Eight dependencies in production. That's it. Every library earns its
-          place by solving a problem no other library in the list already
-          solves. The goal isn't minimalism for its own sake — it's knowing
-          exactly what's in the box and why.
+          Nine dependencies in production. Every library earns its place by
+          solving a problem no other library in the list already solves. The
+          goal isn't minimalism for its own sake — it's knowing exactly what's
+          in the box and why.
         </p>
         <div className="eng-stack">
           {STACK.map(s => (

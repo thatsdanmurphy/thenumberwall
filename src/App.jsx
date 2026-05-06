@@ -20,6 +20,7 @@ import NotFoundPage   from './pages/NotFoundPage.jsx'
 import BehindTheCurtainsLayout from './pages/behindthecurtains/BehindTheCurtainsLayout.jsx'
 import BehindTheCurtainsHome   from './pages/behindthecurtains/Home.jsx'
 import BehindTheCurtainsStub   from './pages/behindthecurtains/Stub.jsx'
+import Foundation              from './pages/behindthecurtains/Foundation.jsx'
 import Sitemap                 from './pages/behindthecurtains/Sitemap.jsx'
 import Flows                   from './pages/behindthecurtains/Flows.jsx'
 import Engineering             from './pages/behindthecurtains/Engineering.jsx'
@@ -54,6 +55,7 @@ export default function App() {
         {/* Behind The Curtains — internal hub. Bookmark /behindthecurtains. */}
         <Route path="/behindthecurtains" element={<BehindTheCurtainsLayout />}>
           <Route index element={<BehindTheCurtainsHome />} />
+          <Route path="foundation" element={<Foundation />} />
           <Route path="design" element={<DesignSystem />} />
           <Route path="sitemap" element={<Sitemap />} />
           <Route path="flows" element={<Flows />} />

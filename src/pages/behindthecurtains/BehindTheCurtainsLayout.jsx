@@ -14,6 +14,7 @@ import { NavLink, Outlet, Link } from 'react-router-dom'
 import './behindthecurtains.css'
 
 const SECTIONS = [
+  { to: '/behindthecurtains/foundation',  label: 'Foundation', note: 'Mission, principles, audience' },
   { to: '/behindthecurtains/design',      label: 'Design',     note: 'Tokens, tiles, primitives, icons' },
   { to: '/behindthecurtains/sitemap',     label: 'Sitemap',    note: 'Every route, every page' },
   { to: '/behindthecurtains/flows',       label: 'Flows',      note: 'Key user journeys' },

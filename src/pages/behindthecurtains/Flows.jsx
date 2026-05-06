@@ -359,6 +359,61 @@ function ThumbDeepLink() {
   return <ThumbWall highlights={[12]} />
 }
 
+function ThumbScrubber() {
+  // A play-by-play scrubber: score strip at top, filled progress bar with
+  // a handle showing current play position, tick marks for innings, and a
+  // highlighted play card at the bottom with the active at-bat.
+  return (
+    <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
+      {/* score bar */}
+      <rect x={4} y={4} width={66} height={10} rx={2} className="fl-thumb__panel" />
+      <rect x={8} y={7} width={16} height={4} rx={1} className="fl-thumb__accent" />
+      <rect x={50} y={7} width={16} height={4} rx={1} className="fl-thumb__line" />
+      {/* track */}
+      <rect x={4} y={28} width={66} height={3} rx={1.5} className="fl-thumb__line" />
+      <rect x={4} y={28} width={46} height={3} rx={1.5} className="fl-thumb__accent" />
+      {/* handle */}
+      <circle cx={50} cy={29.5} r={6} className="fl-thumb__panel" />
+      <circle cx={50} cy={29.5} r={3.5} className="fl-thumb__accent" />
+      {/* inning ticks */}
+      {[10, 20, 30, 40, 56, 66].map((x, i) => (
+        <rect key={i} x={x} y={35} width={1.5} height={4} rx={0.5} className="fl-thumb__line" />
+      ))}
+      {/* active play card */}
+      <rect x={4} y={46} width={66} height={22} rx={2} className="fl-thumb__card fl-thumb__card--picked" />
+      <rect x={8} y={50} width={18} height={2.5} rx={1} className="fl-thumb__accent" />
+      <rect x={8} y={56} width={54} height={2} rx={1} className="fl-thumb__line" />
+      <rect x={8} y={61} width={38} height={2} rx={1} className="fl-thumb__line" />
+    </svg>
+  )
+}
+
+function ThumbField() {
+  // A baseball diamond: outfield oval, infield diamond, four bases, a runner
+  // at second, and a small outs indicator at the top. Evokes the FieldView
+  // component that updates live as the showdown scrubber advances.
+  return (
+    <svg viewBox="0 0 74 74" className="fl-thumb__svg" aria-hidden="true">
+      {/* outfield oval */}
+      <ellipse cx={37} cy={40} rx={28} ry={24} className="fl-thumb__map" />
+      {/* infield diamond */}
+      <polygon points="37,20 57,40 37,60 17,40" className="fl-thumb__card" />
+      {/* bases: home, 1B, 2B, 3B */}
+      <rect x={34} y={57} width={6} height={6} rx={1} className="fl-thumb__tile" />
+      <rect x={54} y={37} width={6} height={6} rx={1} className="fl-thumb__tile" />
+      <rect x={34} y={17} width={6} height={6} rx={1} className="fl-thumb__accent" />
+      <rect x={14} y={37} width={6} height={6} rx={1} className="fl-thumb__tile" />
+      {/* runner on 2B */}
+      <circle cx={37} cy={40} r={4} className="fl-thumb__dot-pulse" />
+      {/* outs indicator */}
+      <rect x={25} y={5} width={24} height={9} rx={2} className="fl-thumb__panel" />
+      <circle cx={31} cy={9.5} r={2.5} className="fl-thumb__dot-pulse" />
+      <circle cx={37} cy={9.5} r={2.5} className="fl-thumb__line" />
+      <circle cx={43} cy={9.5} r={2.5} className="fl-thumb__line" />
+    </svg>
+  )
+}
+
 const THUMBS = {
   wall:            ThumbWall,
   wallHeat:        ThumbWallHeat,
@@ -378,6 +433,8 @@ const THUMBS = {
   built:           ThumbBuilt,
   share:           ThumbShare,
   deepLink:        ThumbDeepLink,
+  scrubber:        ThumbScrubber,
+  field:           ThumbField,
 }
 
 // ── Flow catalogue ──────────────────────────────────────────────────────────
@@ -391,6 +448,7 @@ const FLOWS = [
     name: 'The Tile Tap',
     intent: 'The core product interaction. Everything else extends this.',
     status: 'SHIPPED',
+    personas: ['The Kid', 'The Kidult'],
     entry: { path: '/', label: 'Start on the wall' },
     steps: [
       { thumb: 'wall',     action: 'Land on the wall', state: '00–99 grid. Heat tells you where to look.' },
@@ -402,25 +460,27 @@ const FLOWS = [
     weight: 'The first tap. Under a second from grid to name. If this ever feels slow, the product is broken.',
   },
   {
-    id: 'debate',
-    name: 'The Debate',
-    intent: 'Take a stance on a contested number. See the crowd.',
+    id: 'vote',
+    name: 'The Vote',
+    intent: 'Cast your vote on who owns a number. See how the wall voted.',
     status: 'SHIPPED',
+    personas: ['The Fan', 'The Kidult'],
     entry: { path: '/', label: 'Start on the wall' },
     steps: [
-      { thumb: 'wallFiltered', action: 'Filter a sport',    state: 'Wall shrinks. Contested tiles start pulsing.' },
-      { thumb: 'wallTap',    action: 'Tap a contested tile', state: 'Panel opens with a "who really owns this?" prompt.' },
-      { thumb: 'panel',      action: 'Pick a legend',        state: 'Chip taps. A split bar fades in.' },
-      { thumb: 'scoreboard', action: 'See the verdict',      state: 'Wall agrees / differs. Top legend stays amber.',
-        note: 'Pick is permanent. No reset, no re-vote. Protects the scoreboard.' },
+      { thumb: 'wallFiltered', action: 'Filter a sport',     state: 'Wall shrinks. Contested tiles pulse — multiple strong claims on one number.' },
+      { thumb: 'wallTap',      action: 'Tap a contested tile', state: 'Panel opens. Player cards are voteable. Up/down vote buttons visible.' },
+      { thumb: 'panel',        action: 'Vote',                state: 'Tap your pick. Vote registered. Tally updates.' },
+      { thumb: 'scoreboard',   action: 'See the tally',       state: 'Wall agrees / wall differs. The crowd has a leaning. You\'re part of it.',
+        note: 'Voting is positive — you\'re backing a legend, not arguing against one. The product\'s opinion emerges from the aggregate.' },
     ],
-    weight: 'The "wall agrees / wall differs" moment. The product having an opinion is what makes it a product, not a tool.',
+    weight: 'The "wall agrees / wall differs" moment. Voting on all walls means the product has an opinion on every number, not just the famous ones.',
   },
   {
     id: 'timeline-drill',
     name: 'The Timeline Drill',
     intent: 'Go from a number to a career. Glow-scored, game by game.',
     status: 'PARTIAL',
+    personas: ['The Kidult', 'The Fan'],
     entry: { path: '/timeline/brady_tom', label: 'Open Brady\'s timeline' },
     steps: [
       { thumb: 'wallTap',  action: 'Tap #12',           state: 'Panel opens. Brady card shows a timeline CTA.' },
@@ -436,6 +496,7 @@ const FLOWS = [
     name: 'The Alumni Lookup',
     intent: 'Find your school, see your team\'s lineage, add to it.',
     status: 'SHIPPED',
+    personas: ['The Alumni', 'The Coach'],
     entry: { path: '/walls', label: 'Start at the team walls hub' },
     steps: [
       { thumb: 'map',       action: 'Land on /walls',         state: 'USA map. Boston pulses as the seed.' },
@@ -451,6 +512,7 @@ const FLOWS = [
     name: 'The Identity Claim',
     intent: 'Claim a number. Make a wall of your own.',
     status: 'SHIPPED',
+    personas: ['The Fan', 'The Coach', 'The Alumni'],
     entry: { path: '/my-wall', label: 'Start at My Walls' },
     steps: [
       { thumb: 'hub',   action: 'Open /my-wall', state: 'Three lanes: built, on, follow. Login gate only here.' },
@@ -466,6 +528,7 @@ const FLOWS = [
     name: 'The Share',
     intent: 'Send one number. Recipient lands on it.',
     status: 'SHIPPED',
+    personas: ['The Kid', 'The Coach'],
     entry: { path: '/number/12', label: 'See a deep-link in action' },
     steps: [
       { thumb: 'panel',    action: 'Open a number panel',  state: 'Share button sits in the panel header.' },
@@ -474,6 +537,38 @@ const FLOWS = [
         note: 'Deep-link is the unit of spread — not the homepage. One number, one argument.' },
     ],
     weight: 'Every shared link is a small bet on the product. Which numbers get shared is probably a better signal than raw traffic.',
+  },
+  {
+    id: 'showdown',
+    name: 'The Showdown',
+    intent: 'Relive a historic game, play by play. Stats build as you scrub.',
+    status: 'PARTIAL',
+    personas: ['The Kidult', 'The Fan'],
+    entry: { path: '/showdown/alcs-2004', label: 'Open ALCS 2004' },
+    steps: [
+      { thumb: 'townStack', action: 'Pick a showdown',    state: 'One game live: ALCS 2004. The format that proves the concept.' },
+      { thumb: 'scrubber',  action: 'Scrub through plays', state: 'Each tick is a plate appearance. Batter, pitcher, result — all keyed to the jersey number.' },
+      { thumb: 'field',     action: 'Watch the field',    state: 'Diamond updates with base runners, outs, and running score. The number is on the field.',
+        note: 'The jersey number is the thread. Every at-bat traces back to a number — and a legend who wore it.' },
+      { thumb: 'timelineMoment', action: 'Hit a defining moment', state: 'Grand slam, walkoff, series clincher — intensity spike. The play, the number, the legend, all one.' },
+    ],
+    weight: 'One game proves the format. The library is the bet — every showdown added is a reason to come back for a specific piece of history.',
+  },
+  {
+    id: 'reel',
+    name: 'The Reel Wall',
+    intent: 'The same 0–99 grid, built for fictional legends. Space Jam, Mighty Ducks, Little Giants.',
+    status: 'SHIPPED',
+    personas: ['The Kid', 'The Kidult'],
+    entry: { path: '/reel/space-jam', label: 'Open Space Jam wall' },
+    steps: [
+      { thumb: 'townStack', action: 'Pick a film',        state: 'Three films live. Each gets its own team color. Space Jam = Tune Squad blue.' },
+      { thumb: 'teamWall',  action: 'See the reel wall',  state: 'Hero tiles glow in team color. Rival tiles run jet black — same grid, fictional universe.' },
+      { thumb: 'wallTap',   action: 'Tap a hero number',  state: 'MJ\'s 23. Bombay\'s 66. O\'Shea\'s gear. Each one is a real entry with a fun fact.' },
+      { thumb: 'panel',     action: 'Switch films',       state: 'Film selector at the top repaints the entire wall. One tap, new palette, new cast.',
+        note: 'Hero vs. rival is the design system speaking. Jet-black rival tiles aren\'t a hack — they\'re the same tier logic applied to fiction.' },
+    ],
+    weight: 'The reel wall proves the format travels. The product is the grid — put anything into it and it makes sense.',
   },
 ]
 
@@ -523,6 +618,20 @@ function FlowCard({ flow }) {
           </span>
         </div>
         <p className="fl-flow__intent">{flow.intent}</p>
+        {flow.personas && (
+          <div className="fl-flow__personas">
+            <span className="fl-flow__personas-label">FOR</span>
+            {flow.personas.map(p => (
+              <Link
+                key={p}
+                to={`/behindthecurtains/foundation#${p.toLowerCase().replace(/\s+/g, '-')}`}
+                className="fl-flow__persona-chip"
+              >
+                {p}
+              </Link>
+            ))}
+          </div>
+        )}
       </header>
 
       <div className="fl-flow__canvas">

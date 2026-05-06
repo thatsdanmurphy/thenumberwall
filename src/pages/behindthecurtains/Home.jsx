@@ -11,6 +11,7 @@ import { SECTIONS } from './BehindTheCurtainsLayout.jsx'
 
 // Only /design is live in v1. The rest are sketches — on purpose.
 const LIVE = new Set([
+  '/behindthecurtains/foundation',
   '/behindthecurtains/design',
   '/behindthecurtains/sitemap',
   '/behindthecurtains/flows',

@@ -189,6 +189,43 @@
   max-width: 64ch;
 }
 
+/* Persona chips — "FOR The Kid · The Kidult" — link to /foundation */
+
+.fl-flow__personas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.fl-flow__personas-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.fl-flow__persona-chip {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+  color: var(--color-paper);
+  background: var(--surface-2);
+  text-decoration: none;
+  transition: border-color 100ms ease, color 100ms ease;
+}
+
+.fl-flow__persona-chip:hover {
+  border-color: var(--color-heat);
+  color: var(--color-heat);
+}
+
 /* ── Canvas + Track ────────────────────────────────────────────────────── */
 
 .fl-flow__canvas {
