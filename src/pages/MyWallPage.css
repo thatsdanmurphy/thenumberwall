@@ -1157,9 +1157,8 @@
 .my-walls-hub {
   display: flex;
   flex-direction: column;
+  gap:    var(--space-4);
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
 }
 
 /* ─── Welcome placemat (first visit) ──────────────────────────────────── */
@@ -1804,7 +1803,7 @@
 
 /* Structural rules from .tnw-overlay. Only z-index + bg override kept. */
 .nw-modal__overlay {
-  z-index: 100;
+  z-index: 300;
   background: rgba(0, 0, 0, 0.75);
 }
 
@@ -1999,7 +1998,7 @@
 
 /* Structural rules from .tnw-overlay. Only z-index + bg override kept. */
 .my-wall-modal__overlay {
-  z-index: 90;
+  z-index: 300;
   background: rgba(0, 0, 0, 0.70);
 }
 
@@ -2035,3 +2034,410 @@
   gap: var(--space-2);
   justify-content: flex-end;
 }
+
+/* ─── Picks empty state (new copy) ────────────────────────────────────── */
+
+.hub-picks-empty {
+  padding: var(--space-2) 0 var(--space-3);
+}
+
+.hub-picks-empty__headline {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-h2);
+  color:          var(--color-paper);
+  margin:         0 0 var(--space-2);
+}
+
+.hub-picks-empty__body {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  margin:      0;
+  line-height: 1.55;
+}
+
+.hub-picks-empty__body strong {
+  color:       var(--color-paper);
+  font-weight: 600;
+}
+
+/* ─── Walls I Follow — empty state ───────────────────────────────────── */
+
+.hub-follow-empty {
+  padding: var(--space-4) 0 var(--space-2);
+}
+
+.hub-follow-empty__text {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-label);
+  letter-spacing: 0.06em;
+  color:          var(--ink-mid);
+  margin:         0 0 6px;
+}
+
+.hub-follow-empty__sub {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  margin:      0;
+  line-height: 1.45;
+}
+
+/* Dim section label for Discover */
+.hub-section-label--dim {
+  color:   var(--ink-dim);
+  font-size: 0.75rem;
+}
+
+/* ─── Walls I Follow — city cards matching home screen ────────────────── */
+
+.hub-city-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+/* Card can be a div (followed, with unfollow X) or a button (discover) */
+.hub-city-card {
+  display:       flex;
+  align-items:   center;
+  gap:           0;
+  background:    var(--surface-1);
+  border:        1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  overflow:      hidden;
+  transition:    background var(--motion-hover), border-color var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The main clickable body inside a followed card */
+.hub-city-card__body {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-3);
+  padding:     var(--space-3) var(--space-4);
+  text-align:  left;
+  cursor:      pointer;
+  flex:        1;
+  background:  none;
+  border:      none;
+  font-family: inherit;
+  min-width:   0;
+}
+
+.hub-city-card__body:hover,
+.hub-city-card--dim:hover {
+  background:   rgba(232, 124, 42, 0.07);
+}
+
+/* Direct button variant (Discover section — not yet followed) */
+.hub-city-card--dim {
+  padding:    var(--space-3) var(--space-4);
+  cursor:     pointer;
+  font-family: inherit;
+  opacity:    0.65;
+  transition: opacity var(--motion-hover), background var(--motion-hover), border-color var(--motion-hover);
+  width:      100%;
+  text-align: left;
+}
+
+.hub-city-card--dim:hover {
+  opacity:      1;
+  border-color: rgba(232, 124, 42, 0.22);
+}
+
+/* Unfollow X button */
+.hub-city-card__unfollow {
+  flex-shrink: 0;
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  width:       38px;
+  height:      100%;
+  min-height:  44px;
+  background:  none;
+  border:      none;
+  border-left: 1px solid var(--border-faint);
+  color:       var(--ink-dim);
+  cursor:      pointer;
+  transition:  color var(--motion-hover), background var(--motion-hover);
+}
+
+.hub-city-card__unfollow:hover {
+  color:       var(--color-paper);
+  background:  rgba(255, 255, 255, 0.05);
+}
+
+.hub-city-card__content {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+  min-width:      0;
+}
+
+.hub-city-card__name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-label);
+  letter-spacing: 0.14em;
+  color:          var(--color-paper);
+}
+
+.hub-city-card__teams {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+}
+
+.hub-city-card__arrow {
+  color:       rgba(232, 124, 42, 0.55);
+  flex-shrink: 0;
+  transition:  transform var(--motion-hover), color var(--motion-hover);
+}
+
+.hub-city-card__body:hover .hub-city-card__arrow,
+.hub-city-card--dim:hover .hub-city-card__arrow {
+  transform: translateX(3px);
+  color:     var(--color-heat);
+}
+
+/* Loading dots animation */
+.hub-loading--walls {
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  gap:         8px;
+  padding:     var(--space-5) 0;
+}
+
+.hub-loading__text {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+}
+
+@keyframes hub-dot-pulse {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+  40%           { opacity: 1;   transform: scale(1); }
+}
+
+.hub-loading__dot {
+  display:       inline-block;
+  width:         5px;
+  height:        5px;
+  border-radius: 50%;
+  background:    var(--color-personal);
+  animation:     hub-dot-pulse 1.4s ease-in-out infinite;
+}
+.hub-loading__dot:nth-child(2) { animation-delay: 0.2s; }
+.hub-loading__dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ─── Built Walls header ───────────────────────────────────────────────── */
+
+.hub-built-header {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+}
+
+.hub-built-sub {
+  font-family:   var(--font-program);
+  font-size:     var(--text-caption);
+  color:         var(--ink-dim);
+  margin:        0 0 var(--space-3);
+  line-height:   1.45;
+}
+
+/* ─── Legacy Walls I Follow (kept for reference, no longer used) ───────── */
+
+.hub-follow-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            0;
+  border-radius:  var(--radius-sm);
+  overflow:       hidden;
+  background:     var(--surface-1);
+}
+
+.hub-follow-row {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+  padding:     0 var(--space-2);
+  min-height:  52px;
+  border:      none;
+  background:  transparent;
+  cursor:      pointer;
+  text-align:  left;
+  transition:  background var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hub-follow-row + .hub-follow-row {
+  border-top: 1px solid var(--border-faint);
+}
+
+.hub-follow-row:hover {
+  background: var(--surface-raised);
+}
+
+.hub-follow-row__icon {
+  color:       var(--ink-dim);
+  flex-shrink: 0;
+}
+
+.hub-follow-row__info {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  flex:           1;
+  min-width:      0;
+}
+
+.hub-follow-row__name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-caption);
+  letter-spacing: 0.06em;
+  color:          var(--color-paper);
+}
+
+.hub-follow-row__sub {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.06em;
+  color:          var(--ink-dim);
+}
+
+.hub-follow-row__arrow {
+  color:       var(--ink-dim);
+  flex-shrink: 0;
+  opacity:     0.5;
+  transition:  opacity var(--motion-hover);
+}
+
+.hub-follow-row:hover .hub-follow-row__arrow {
+  opacity: 1;
+}
+
+/* ─── My Wall — page heading ─────────────────────────────────────────────── */
+
+.hub-my-wall__heading {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  padding-top:    var(--space-6);
+  margin-bottom:  0;
+}
+
+.hub-my-wall__title {
+  font-family: var(--font-banner);
+  font-size:   2rem;
+  color:       var(--color-paper);
+  margin:      0;
+  line-height: 1.05;
+}
+
+.hub-my-wall__sublabel {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+  margin:      0;
+}
+
+/* ─── My Wall — grid + panel, mirrors WallPage body layout ─────────────── */
+
+/* Container: column on mobile, row on tablet+ */
+.hub-my-wall {
+  display:        flex;
+  flex-direction: column;
+  position:       relative;
+}
+
+/* Tile grid */
+.hub-my-wall__grid {
+  display:               grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap:                   var(--space-1);
+}
+
+/* tiles must not overflow at narrow widths */
+.hub-my-wall__grid .wall-tile { min-width: 0; }
+
+/* Hub backdrop: mobile-only. Default to hidden so it never darkens desktop. */
+.hub-my-wall__backdrop { display: none; }
+
+@media (min-width: 768px) {
+  .hub-my-wall__grid {
+    grid-template-columns: repeat(10, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hub-my-wall__grid { grid-template-columns: repeat(12, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .hub-my-wall__backdrop {
+    display:    block;
+    z-index:    190;
+    background: rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* ─── Hub body: golden ratio layout (grid+sections left, panel right) ────── */
+
+.hub-body {
+  display:        flex;
+  flex-direction: column;
+  position:       relative;
+}
+
+.hub-body__left {
+  display:        flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .hub-body {
+    flex-direction: row;
+    align-items:    flex-start;
+    gap:            var(--space-4);
+  }
+
+  .hub-body__left {
+    flex: 0 0 61.8%;
+  }
+
+  /* Panel: flex:1, sticky alongside the left column */
+  .hub-body .player-panel {
+    flex:      1;
+    max-width: var(--panel-max-width);
+  }
+}
+
+/* Mobile: panel slides up as a bottom sheet when number selected */
+@media (max-width: 767px) {
+  .hub-body .player-panel {
+    position:       fixed;
+    bottom:         0;
+    left:           0;
+    right:          0;
+    z-index:        200;
+    background:     var(--color-surface);
+    border-radius:  16px 16px 0 0;
+    border:         1px solid var(--color-border);
+    border-bottom:  none;
+    max-height:     80dvh;
+    max-height:     80vh;
+    display:        flex;
+    flex-direction: column;
+    transform:      translateY(100%);
+    transition:     transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .hub-body .player-panel:not(.player-panel--idle) {
+    transform: translateY(0);
+  }
+}
+

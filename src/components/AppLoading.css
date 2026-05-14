@@ -1,0 +1,44 @@
+/* AppLoading — spinning basketball + copy.
+   Reused wherever a data fetch needs a waiting state. */
+
+.app-loading {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-3);
+  padding:         var(--space-7) 0;
+}
+
+/* ── Basketball ─────────────────────────────────────────────────────────── */
+
+.app-loading__ball {
+  width:  36px;
+  height: 36px;
+  color:  var(--ink-low);
+  /* Single animation, single transform property — no pivot drift */
+  animation: ball-spin 1.4s linear infinite;
+  /* SVG transform-origin needs to be set in both CSS and via the element */
+  transform-origin: 50% 50%;
+  display: block;
+}
+
+@keyframes ball-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Label ──────────────────────────────────────────────────────────────── */
+
+.app-loading__text {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  animation:      text-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes text-pulse {
+  0%, 100% { opacity: 0.40; }
+  50%       { opacity: 0.75; }
+}

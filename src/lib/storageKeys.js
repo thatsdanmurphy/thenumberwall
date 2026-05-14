@@ -28,6 +28,12 @@ export const VOTES = 'tnw_votes'                     // { optionId: true } map
 export const HUB_WELCOMED   = 'tnw_hub_welcomed'     // first-visit placemat dismissed
 export const FIRST_VISITED  = 'nw_visited'           // legends wall first-visit modal
 
+// ── My Wall Picks ────────────────────────────────────────────────────────────
+export const MY_PICKS = 'tnw_my_picks'  // array of { name, number, team, sport, film, addedAt }
+
+// ── Followed Walls ───────────────────────────────────────────────────────────
+export const FOLLOWED_WALLS = 'tnw_followed_walls'  // array of path strings e.g. ['/boston']
+
 // ── Player Picks (dynamic keys) ─────────────────────────────────────────────
 // These use template functions because the key includes the number.
 export const pickKey   = (number) => `nw_pick_${number}`

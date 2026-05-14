@@ -45,7 +45,7 @@ export default function App() {
         <Route path="/timeline/:playerId" element={<TimelinePage />} />
         <Route path="/timeline"  element={<TimelinePage />} />
         <Route path="/reel/:filmSlug" element={<ReelWallPage />} />
-        <Route path="/reel"           element={<ReelWallPage />} />
+        <Route path="/reel"           element={<Navigate to="/reel/mighty-ducks" replace />} />
         <Route path="/showdown/:showdownId" element={<ShowdownPage />} />
         <Route path="/showdown"            element={<ShowdownPage />} />
 

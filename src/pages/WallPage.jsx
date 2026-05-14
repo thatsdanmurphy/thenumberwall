@@ -109,46 +109,68 @@ export default function WallPage() {
               </Link>
             </div>
 
-            {/* Reel Legends */}
+            {/* Screen Legends — six film walls */}
             <div className="wall-page__cities">
               <p className="wall-page__cities-label">
                 REEL LEGENDS
                 <span className="wall-page__section-beta">BETA</span>
               </p>
-              <p className="wall-page__cities-sublabel">Numbers worn on film. The athletes who never were — and always will be.</p>
-              <Link to="/reel/space-jam" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'space-jam' })}>
+              <p className="wall-page__cities-sublabel">The teams that never were. Six walls, one for each crew that made the cut.</p>
+              <Link to="/reel/major-league" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'major-league' })}>
                 <div className="wall-page__city-card-content">
-                  <span className="wall-page__city-name">Space Jam</span>
-                  <span className="wall-page__city-teams">Tune Squad · Monstars · 1996</span>
+                  <span className="wall-page__city-name">Major League</span>
+                  <span className="wall-page__city-teams">Cleveland Indians · Baseball · 1989</span>
                 </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <Link to="/reel/mighty-ducks" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'mighty-ducks' })}>
                 <div className="wall-page__city-card-content">
                   <span className="wall-page__city-name">The Mighty Ducks</span>
-                  <span className="wall-page__city-teams">District 5 · Team USA · Hawks · Iceland · 1992–1996</span>
+                  <span className="wall-page__city-teams">District 5 Ducks · Hockey · D1 · D2 · D3</span>
                 </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
               <Link to="/reel/little-giants" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'little-giants' })}>
                 <div className="wall-page__city-card-content">
                   <span className="wall-page__city-name">Little Giants</span>
-                  <span className="wall-page__city-teams">Urbania Little Giants · Cowboys · 1994</span>
+                  <span className="wall-page__city-teams">Urbania Little Giants · Football · 1994</span>
+                </div>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+              <Link to="/reel/space-jam" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'space-jam' })}>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">Space Jam</span>
+                  <span className="wall-page__city-teams">Tune Squad · Basketball · 1996</span>
+                </div>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+              <Link to="/reel/the-replacements" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'the-replacements' })}>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">The Replacements</span>
+                  <span className="wall-page__city-teams">Washington Sentinels · Football · 2000</span>
+                </div>
+                <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
+              </Link>
+              <Link to="/reel/hardball" className="wall-page__city-card" onClick={() => track('reel_open', { film: 'hardball' })}>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-name">Hardball</span>
+                  <span className="wall-page__city-teams">Kekambas · Baseball · 2001</span>
                 </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
             </div>
 
-            {/* Team Walls — Disabled until ready
-            <div className="wall-page__team-walls">
+            {/* Team Walls — single entry point to the full team wall directory */}
+            <div className="wall-page__cities">
               <p className="wall-page__cities-label">TEAM WALLS</p>
+              <p className="wall-page__cities-sublabel">The pipeline to the pros. High school, college, any era.</p>
               <Link to="/walls" className="wall-page__city-card" onClick={() => track('team_walls_open')}>
-                <span className="wall-page__city-name">See where the legends come from.</span>
-                <span className="wall-page__city-teams">Find your team — high school, college, any era</span>
+                <div className="wall-page__city-card-content">
+                  <span className="wall-page__city-teams">Find your team · Add your legends · See who made it</span>
+                </div>
                 <ChevronRight size={16} className="wall-page__city-arrow" aria-hidden="true" />
               </Link>
             </div>
-            */}
           </div>
 
           <PlayerPanel

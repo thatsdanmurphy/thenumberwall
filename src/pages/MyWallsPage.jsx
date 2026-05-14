@@ -12,7 +12,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import AppShell   from '../components/AppShell.jsx'
 import AppHeader  from '../components/AppHeader.jsx'
 import AppFooter  from '../components/AppFooter.jsx'
-import MyWallsHub from '../components/MyWallsHub.jsx'
+import MyWallsHub   from '../components/MyWallsHub.jsx'
+import AppLoading  from '../components/AppLoading.jsx'
 import { listMyWalls, createWall, isSlugAvailable } from '../lib/myWallStore.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
@@ -275,7 +276,7 @@ export default function MyWallsPage() {
       <AppShell>
         <AppHeader back={{ label: 'Main Wall', onClick: () => navigate('/') }} title="MY WALLS" tagline="Track your numbers." />
         <main className="my-wall-page">
-          <p className="my-wall-page__loading">Loading...</p>
+          <AppLoading text="FINDING YOUR WALLS" />
         </main>
       </AppShell>
     )

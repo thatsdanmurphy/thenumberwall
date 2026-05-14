@@ -142,12 +142,163 @@
   gap:            var(--space-1);
 }
 
+/* Row wrapper so the number and YOURS tag sit on the same baseline */
+.player-panel__number-row {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+}
+
 .player-panel__number {
   font-family:    var(--font-banner);
   font-size:      2.5rem;
   line-height:    1;
   letter-spacing: 0.02em;
   white-space:    nowrap;
+}
+
+/* "YOURS" row — no container. Just a labeled separator within the panel. */
+.player-panel__yours-banner {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             var(--space-3);
+  padding:         var(--space-2) 0;
+  margin-top:      var(--space-3);
+  margin-bottom:   var(--space-2);
+  border-top:      1px solid rgba(60, 130, 255, 0.14);
+}
+
+.player-panel__yours-banner__eyebrow {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--color-personal);
+  line-height:    1;
+}
+
+/* Matches btn-micro pattern — scoreboard pill, personal blue tint */
+.player-panel__yours-banner__release {
+  flex-shrink:    0;
+  background:     none;
+  border:         1px solid var(--border-medium);
+  border-radius:  var(--radius-sm);
+  color:          var(--ink-mid);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.14em;
+  padding:        4px 10px;
+  cursor:         pointer;
+  transition:     background var(--motion-hover), border-color var(--motion-hover), color var(--motion-hover);
+  white-space:    nowrap;
+}
+
+.player-panel__yours-banner__release:hover {
+  background:     rgba(60, 130, 255, 0.08);
+  border-color:   rgba(60, 130, 255, 0.40);
+  color:          var(--color-personal);
+}
+
+/* Claim CTA — shown in My Wall when number is unclaimed.
+   Matches btn-ghost shape but personal-blue tinted — same border style as yours-banner, not dashed. */
+.player-panel__claim-btn {
+  display:        block;
+  width:          100%;
+  background:     rgba(60, 130, 255, 0.04);
+  border:         1px solid rgba(60, 130, 255, 0.22);
+  border-radius:  var(--radius-md);
+  color:          rgba(60, 130, 255, 0.65);
+  font-family:    var(--font-program);
+  font-weight:    500;
+  font-size:      0.8125rem;
+  letter-spacing: 0.02em;
+  text-align:     center;
+  padding:        10px 14px;
+  cursor:         pointer;
+  margin-top:     var(--space-3);
+  margin-bottom:  var(--space-3);
+  transition:     color var(--motion-hover), border-color var(--motion-hover), background var(--motion-hover);
+}
+
+.player-panel__claim-btn:hover {
+  color:          var(--color-personal);
+  border-color:   rgba(60, 130, 255, 0.45);
+  background:     rgba(60, 130, 255, 0.08);
+}
+
+/* ─── My Wall suggestion list ────────────────────────────────────────────── */
+
+.player-panel__suggestion-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  margin:         var(--space-3) 0 var(--space-2);
+}
+
+.player-panel__suggestions {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  margin-bottom:  var(--space-3);
+}
+
+.player-panel__suggestion-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--space-2);
+  padding:       8px 12px;
+  background:    rgba(0, 0, 0, 0.22);
+  border:        1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+}
+
+.player-panel__suggestion-info {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      0;
+}
+
+.player-panel__suggestion-name {
+  font-family:    var(--font-program);
+  font-size:      0.8125rem;
+  font-weight:    600;
+  color:          var(--color-paper);
+  white-space:    nowrap;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+}
+
+.player-panel__suggestion-team {
+  font-family: var(--font-program);
+  font-size:   var(--text-caption);
+  color:       var(--ink-dim);
+}
+
+.player-panel__suggestion-add {
+  flex-shrink:    0;
+  display:        flex;
+  align-items:    center;
+  gap:            4px;
+  background:     none;
+  border:         1px solid var(--border-medium);
+  border-radius:  var(--radius-sm);
+  color:          var(--ink-mid);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.08em;
+  padding:        4px 10px;
+  cursor:         pointer;
+  transition:     color var(--motion-hover), border-color var(--motion-hover), background var(--motion-hover);
+  white-space:    nowrap;
+}
+
+.player-panel__suggestion-add:hover {
+  color:        var(--color-personal);
+  border-color: rgba(60, 130, 255, 0.45);
+  background:   rgba(60, 130, 255, 0.08);
 }
 
 @media (min-width: 1024px) {
@@ -256,6 +407,29 @@
   flex-direction: column;
   align-items:    center;
   gap:            var(--space-2);
+}
+
+/* My Wall variant: no breathing room above suggestions list, left-aligned */
+.player-panel__unwritten--addable {
+  padding:     var(--space-2) 0 0;
+  text-align:  left;
+  align-items: stretch;
+}
+
+/* Strip PlayerSearch outer card when embedded in the unwritten slot —
+   it already sits inside the panel, no nested border/bg/padding needed. */
+.player-panel__unwritten--addable .player-search {
+  background:    transparent;
+  border:        none;
+  padding:       var(--space-3) 0 0;
+  border-radius: 0;
+  gap:           var(--space-2);
+}
+
+/* Suppress top border on the suggestions list when it's the first thing shown */
+.player-panel__unwritten--addable .placed-panel__who-else {
+  border-top:    none;
+  padding-top:   0;
 }
 
 .player-panel__unwritten-line {
@@ -497,13 +671,30 @@
   letter-spacing: 0.14em;
 }
 
-/* Film badge — reel legends only. Warm amber-sepia, cinematic feel. */
+/* Film badge — reel legends only. Warm amber-sepia, cinematic feel.
+   font-size inherits from .player-card__badge (var(--text-micro)) */
 .player-card__badge--film {
   background:     rgba(120, 80, 20, 0.18);
   border:         1px solid rgba(180, 130, 40, 0.30);
   color:          rgba(210, 165, 70, 0.90);
-  font-size:      0.44rem;
   letter-spacing: 0.10em;
+}
+
+/* Tappable film badge — used on Screen Legends wall to activate the film lens.
+   Inherits all --film base styles above, adds interactivity affordance. */
+button.player-card__badge--film-tap {
+  cursor:     pointer;
+  transition: background var(--motion-hover), border-color var(--motion-hover), color var(--motion-hover);
+  /* Underline cue so it reads as a link without adding a persistent underline */
+  text-decoration-line:  underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+button.player-card__badge--film-tap:hover {
+  background:   rgba(180, 120, 28, 0.30);
+  border-color: rgba(220, 168, 50, 0.55);
+  color:        rgba(248, 200, 90, 1);
 }
 
 /* ── Fun fact — full width, flush left with name ────────────────────────── */
@@ -615,4 +806,45 @@
   background: rgba(232, 124, 42, 0.18);
   color: #fff;
   border-color: rgba(232, 124, 42, 0.6);
+}
+
+/* ── Add to my wall — pipeline row style ───────────────────────────────────── */
+
+.player-card__picks-row {
+  display:          flex;
+  align-items:      center;
+  justify-content:  space-between;
+  width:            100%;
+  margin-top:       var(--space-2);
+  padding:          0 var(--space-2);
+  min-height:       44px;
+  background:       var(--surface-1);
+  border:           none;
+  border-radius:    var(--radius-sm);
+  cursor:           pointer;
+  color:            var(--ink-dim);
+  transition:       background var(--motion-hover), color var(--motion-hover);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.player-card__picks-row:hover {
+  background: var(--surface-raised);
+  color:      var(--color-paper);
+}
+
+.player-card__picks-row__label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+/* Added state — personal blue */
+.player-card__picks-row--added {
+  color: var(--color-personal);
+}
+
+.player-card__picks-row--added:hover {
+  color:      rgba(220, 100, 100, 0.85);
+  background: var(--surface-raised);
 }

@@ -26,6 +26,7 @@ import { getSportMatchedLegends } from '../data/index.js'
 import { getTeamHeatStyle, getTeamTileTextColor, TEAM_PALETTES } from '../data/teamColors.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { trackEvent } from '../lib/analytics.js'
+import AppLoading from '../components/AppLoading.jsx'
 import './WallPage.css'        // shared layout: wall-page__body, wall-page__grid-col
 import './TeamWallPage.css'    // team-wall-specific: coach tile, sport picker, add form
 
@@ -586,7 +587,7 @@ export default function TeamWallPage() {
     return (
       <AppShell>
         <AppHeader title="TEAM WALL" back={{ label: 'Team Walls', onClick: () => navigate('/walls') }} />
-        <main className="tw-page"><p className="tw-loading">Loading…</p></main>
+        <main className="tw-page"><AppLoading text="SUITING UP" /></main>
         <AppFooter />
       </AppShell>
     )

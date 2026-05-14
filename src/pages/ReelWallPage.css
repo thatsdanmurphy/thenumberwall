@@ -1,6 +1,6 @@
-/* ReelWallPage — Reel Legends film wall
-   One film per route (/reel/space-jam, /reel/mighty-ducks, /reel/little-giants).
-   No tabs. Mirrors BostonPage layout. All tokens. */
+/* ReelWallPage — Screen Legends unified wall
+   All films on one wall. Film lens/washover triggered from player card or film tile.
+   All tokens. No raw rgba/px outside of film-specific color configs in the JSX. */
 
 .reel-page {
   flex: 1;
@@ -15,20 +15,16 @@
   display:        flex;
   flex-direction: column;
   gap:            var(--space-1);
-  padding-bottom: var(--space-3);
-  /* no border — clean handoff to the wall */
+  padding-top:    var(--space-6);
+  padding-bottom: var(--space-2);
 }
 
 .reel-page__team {
   font-family: var(--font-banner);
-  font-size:   2rem;
+  font-size:   clamp(1.4rem, 4vw, 1.9rem);
   color:       var(--color-paper);
   margin:      0;
   line-height: 1.05;
-}
-
-.reel-page__team--long {
-  font-size: 1.5rem;   /* Urbania Little Giants and future long names */
 }
 
 .reel-page__sub {
@@ -38,7 +34,9 @@
   color:          var(--ink-dim);
 }
 
-/* ── Coach tile — prefixContent, lives inside the wall grid ─────────────── */
+
+
+/* ── Coach tile ──────────────────────────────────────────────────────────── */
 
 .reel-coach-tile {
   grid-column:     span 3;
@@ -48,7 +46,7 @@
   padding:         0 var(--space-2);
   background:      var(--surface-1);
   border:          1px solid var(--border-soft);
-  border-radius:   4px;
+  border-radius:   var(--radius-sm);
   cursor:          pointer;
   transition:      background var(--motion-hover), border-color var(--motion-hover);
 }
@@ -60,7 +58,7 @@
 
 .reel-coach-tile--active {
   background:   var(--surface-raised);
-  border-color: rgba(255,255,255,0.35);
+  border-color: var(--border-strong);
   box-shadow:   0 0 12px rgba(255,255,255,0.08);
 }
 
@@ -79,9 +77,7 @@
 }
 
 /* ── Coach panel content ─────────────────────────────────────────────────── */
-/* Uses player-panel__header and player-panel__cards — no custom panel chrome needed */
 
-/* "RIVAL BENCH" section divider inside the coach panel */
 .reel-page__coach-section {
   font-family:    var(--font-scoreboard);
   font-size:      var(--text-micro);
@@ -91,12 +87,11 @@
   margin-top:     var(--space-1);
 }
 
-/* Rival coach cards — recessive name */
 .reel-coach-card--rival .player-card__name {
   color: var(--color-muted);
 }
 
-/* ── Body: grid + panel side-by-side ─────────────────────────────────────── */
+/* ── Body: grid col + panel ──────────────────────────────────────────────── */
 
 .reel-page__body {
   flex: 1;
@@ -107,7 +102,10 @@
 .reel-page__grid-col {
   display:        flex;
   flex-direction: column;
+  border-radius:  var(--radius-lg);
+  transition:     background 0.4s ease;
 }
+
 
 @media (min-width: 768px) {
   .reel-page__body {
@@ -126,68 +124,66 @@
   }
 }
 
-/* ── Other films section (below the grid) ────────────────────────────────── */
+/* ── Film selector ───────────────────────────────────────────────────────── */
 
-.reel-page__other-films {
-  margin-top:     var(--space-5);
-  display:        flex;
+.reel-page__film-selector {
+  margin-top: var(--space-5);
+  display:    flex;
   flex-direction: column;
-  gap:            var(--space-2);
+  gap:        var(--space-3);
 }
 
-.reel-page__other-label {
-  font-family:    var(--font-banner);
-  font-size:      0.875rem;
+.reel-page__film-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap:                   var(--space-2);
+}
+
+/* ── Film tile (replaces old reel-page__film-card links) ─────────────────── */
+
+.reel-film-tile {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+  padding:        var(--space-2) var(--space-3);
+  background:     var(--surface-1);
+  border:         1px solid var(--border-soft);
+  border-radius:  var(--radius-md);
+  cursor:         pointer;
+  text-align:     left;
+  transition:     background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.reel-film-tile:hover {
+  background:   var(--surface-raised);
+  border-color: var(--border-medium);
+}
+
+/* Active film tile — lit with that film's palette via CSS vars */
+.reel-film-tile--active {
+  background:   var(--surface-raised);
+  border-color: var(--film-border, var(--border-strong));
+  box-shadow:   0 0 12px color-mix(in srgb, var(--film-border, transparent) 25%, transparent);
+}
+
+.reel-film-tile__name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-caption);
   letter-spacing: 0.06em;
   color:          var(--color-paper);
+  line-height:    1.3;
+  transition:     color var(--motion-hover);
 }
 
-.reel-page__film-card {
-  display:         flex;
-  align-items:     center;
-  gap:             var(--space-3);
-  padding:         var(--space-3) var(--space-4);
-  background:      var(--surface-1);
-  border:          1px solid var(--border-soft);
-  border-radius:   var(--radius-md);
-  text-decoration: none;
-  transition:      background var(--motion-hover), border-color var(--motion-hover);
+.reel-film-tile--active .reel-film-tile__name {
+  color: var(--film-text, var(--color-paper));
 }
 
-.reel-page__film-card:hover {
-  background:   rgba(232,124,42,0.07);
-  border-color: rgba(232,124,42,0.22);
-}
-
-.reel-page__film-card-content {
-  flex:           1;
-  display:        flex;
-  flex-direction: column;
-  gap:            4px;
-}
-
-.reel-page__film-name {
+.reel-film-tile__year {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-label);
-  letter-spacing: 0.14em;
-  color:          var(--color-paper);
-}
-
-.reel-page__film-sub {
-  font-family: var(--font-program);
-  font-size:   var(--text-caption);
-  color:       var(--ink-dim);
-}
-
-.reel-page__film-arrow {
-  color:      rgba(232,124,42,0.55);
-  flex-shrink: 0;
-  transition: transform var(--motion-hover), color var(--motion-hover);
-}
-
-.reel-page__film-card:hover .reel-page__film-arrow {
-  transform: translateX(3px);
-  color:     var(--color-heat);
+  font-size:      var(--text-micro);
+  letter-spacing: 0.08em;
+  color:          var(--ink-dim);
 }
 
 /* ── Mobile backdrop ─────────────────────────────────────────────────────── */

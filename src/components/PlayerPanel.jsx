@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
-import { Award, Check, ExternalLink, X, ArrowRight, Plus } from 'lucide-react'
+import { Award, Check, ExternalLink, X, ArrowRight, Plus, Minus } from 'lucide-react'
 import { getSportIcon } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { fetchWallScores, fetchMyVotes, castPlayerVote } from '../lib/playerVoteStore.js'
+import { hasPick, addPick, removePick } from '../lib/myPicks.js'
+import { IDENTITY_NUMBER } from '../lib/storageKeys.js'
 import VoteButtons from './VoteButtons.jsx'
 import SubmitLegend from './SubmitLegend.jsx'
 import PipelinePath from './PipelinePath.jsx'
 import StartWallDialog from './StartWallDialog.jsx'
+import PlayerSearch from './PlayerSearch.jsx'
+import { filmGroup, filmBadgeLabel } from '../utils/filmUtils.js'
 import './PlayerPanel.css'
 
 // Players with a full-career Legend Timeline. Name-matched (case-insensitive).
@@ -48,9 +52,12 @@ function shareNumber(number) {
 // ─── PlayerCard ──────────────────────────────────────────────────────────────
 // Exported so the Design System page can render the real card (reuse discipline —
 // the DS must mirror the build, not a parallel sketch).
-export function PlayerCard({ entry, isTop = false, voteData = null }) {
+// filmBadgeLabel and filmGroup are imported from utils/filmUtils.js
+
+export function PlayerCard({ entry, isTop = false, voteData = null, onFilmLens = null, lensEligibleFilms = null }) {
   const navigate       = useNavigate()
   const [startWallData, setStartWallData] = useState(null)
+  const [onMyWall, setOnMyWall] = useState(() => hasPick(entry.name))
   const SportIcon      = getSportIcon(entry.sport) || Award
   const showStat       = Boolean(entry.stat) && (entry.tier === 'LEGEND' || entry.tier === 'SACRED')
   const teamBadgeStyle = {}
@@ -77,6 +84,18 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
   function handleWallCreated({ schoolSlug, sport }) {
     setStartWallData(null)
     navigate(`/walls/${schoolSlug}/${sport}`)
+  }
+
+  function handleTogglePick(e) {
+    e.stopPropagation()
+    if (onMyWall) {
+      removePick(entry.name)
+      setOnMyWall(false)
+    } else {
+      addPick(entry)
+      setOnMyWall(true)
+      try { track('pick_add', { name: entry.name, number: entry.number }) } catch {}
+    }
   }
 
   return (
@@ -107,11 +126,27 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
             {entry.role && (
               <span className="player-card__badge player-card__badge--dim">{entry.role}</span>
             )}
-            {/* Film badge only when it distinguishes within a multi-film franchise (D2, D3).
-                For Space Jam and Little Giants there's one film — badge adds no info. */}
-            {entry.film && (entry.film.startsWith('D2') || entry.film.startsWith('D3')) && (
-              <span className="player-card__badge player-card__badge--film">{entry.film}</span>
-            )}
+            {/* Film badge — shown on all reel entries when a film lens callback is available.
+                Tappable: clicking activates the film lens/washover on the Screen Legends wall.
+                Falls back to a plain label for D2/D3 entries when no lens callback is wired. */}
+            {entry.film && (() => {
+              const filmId   = filmGroup(entry.film)
+              const eligible = lensEligibleFilms ? lensEligibleFilms.has(filmId) : false
+              const label    = filmBadgeLabel(entry.film)
+              if (eligible && onFilmLens) return (
+                <button
+                  className="player-card__badge player-card__badge--film player-card__badge--film-tap"
+                  onClick={(e) => { e.stopPropagation(); onFilmLens(entry.film) }}
+                  aria-label={`Show all ${label} characters`}
+                >
+                  {label}
+                </button>
+              )
+              // Film is set but not lens-eligible (single-entry films) — show as plain tag
+              return label ? (
+                <span className="player-card__badge player-card__badge--film">{label}</span>
+              ) : null
+            })()}
             {entry.actorVoice && entry.actorVoice !== 'unk' && (
               <span className="player-card__badge player-card__badge--dim">
                 {entry.characterType === 'animated' ? `Voice: ${entry.actorVoice}` : entry.actorVoice}
@@ -164,6 +199,18 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
         </a>
       )}
 
+      {/* Add to my wall — pipeline-row style. Plus at the end, spaced from pipeline. */}
+      <button
+        className={`player-card__picks-row${onMyWall ? ' player-card__picks-row--added' : ''}`}
+        onClick={handleTogglePick}
+        aria-label={onMyWall ? `Remove ${entry.name} from my wall` : `Add ${entry.name} to my wall`}
+      >
+        <span className="player-card__picks-row__label">
+          {onMyWall ? 'On my wall' : 'Add to my wall'}
+        </span>
+        {onMyWall ? <Minus size={13} /> : <Plus size={13} />}
+      </button>
+
       {/* Start wall dialog — triggered from pipeline path plus icon */}
       {startWallData && (
         <StartWallDialog
@@ -178,6 +225,54 @@ export function PlayerCard({ entry, isTop = false, voteData = null }) {
         />
       )}
     </div>
+  )
+}
+
+// ─── My Wall add slot — empty state with quick-add suggestions ───────────────
+// Matches the wall-builder's panel: legend rows + PlayerSearch at the bottom.
+function MyWallAddSlot({ number, suggestions, onPickAdded }) {
+  const [added, setAdded] = useState(new Set())
+
+  function handleAdd(entry) {
+    addPick({ ...entry, number })
+    setAdded(prev => new Set([...prev, entry.name]))
+    if (onPickAdded) onPickAdded()
+  }
+
+  const visible = suggestions.filter(e => !added.has(e.name))
+
+  return (
+    <>
+      {visible.length > 0 && (
+        <div className="placed-panel__who-else">
+          <span className="placed-panel__who-else-label">Legends who wore this number</span>
+          <ul className="placed-panel__who-else-list">
+            {visible.map(entry => (
+              <li
+                key={entry.name}
+                className="placed-panel__who-else-item placed-panel__who-else-item--tappable"
+                onClick={() => handleAdd(entry)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => { if (e.key === 'Enter') handleAdd(entry) }}
+              >
+                <span className="placed-panel__who-else-name">{entry.name}</span>
+                <span className="placed-panel__who-else-meta">{entry.sport}</span>
+                <span className="placed-panel__who-else-action">+ Add</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Search — lets user add someone not in the list */}
+      <PlayerSearch
+        number={number}
+        onPlace={handleAdd}
+        onCancel={() => {}}
+        hideHeader={true}
+      />
+    </>
   )
 }
 
@@ -248,7 +343,7 @@ function useSwipeDown(panelRef, onClose) {
 }
 
 // ─── PlayerPanel ─────────────────────────────────────────────────────────────
-export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global', accentColor = null }) {
+export default function PlayerPanel({ selected, onClear, mode = 'default', sportFilter = null, wallId = 'global', accentColor = null, onFilmLens = null, lensEligibleFilms = null, myNumber = undefined, onClaimNumber = null, onPickAdded = null }) {
   const [copied, setCopied] = useState(false)
   const panelRef = useRef(null)
   useSwipeDown(panelRef, onClear)
@@ -359,13 +454,20 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const numberColor = accentColor ?? getTileTextColor(legends, isSacred)
   const numberGlow  = `0 0 28px ${accentColor ?? heat.border}`
 
+  // "This one's yours" — prefer reactive prop (hub passes myNumber state),
+  // fall back to localStorage for standalone use on other walls.
+  const myIdentityNumber = myNumber !== undefined
+    ? myNumber
+    : (typeof window !== 'undefined' ? localStorage.getItem(IDENTITY_NUMBER) || null : null)
+  const isMyNumber = Boolean(myIdentityNumber) && String(number) === String(myIdentityNumber)
+
   const legendCount = legends.length
 
   // Show the trigger when: 2+ legends, not sacred, not already voting, not current-roster mode
   const showVoteTrigger = legendCount >= 2 && !isSacred && !votingActive && mode !== 'current' && wallId !== 'none'
 
   const subtitle = legendCount === 0
-    ? 'UNWRITTEN'
+    ? (wallId === 'my-wall' ? null : 'UNWRITTEN')
     : mode === 'current'
       ? null
       : legendCount === 1
@@ -406,8 +508,10 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
           <>
             <div className="player-panel__header">
               <div className="player-panel__header-left">
-                <div className="player-panel__number" style={{ color: numberColor, textShadow: numberGlow }}>
-                  #{number}
+                <div className="player-panel__number-row">
+                  <div className="player-panel__number" style={{ color: numberColor, textShadow: numberGlow }}>
+                    #{number}
+                  </div>
                 </div>
                 {subtitle && <div className="player-panel__subtitle">{subtitle}</div>}
                 {(() => {
@@ -437,17 +541,52 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
 
             {/* ── Unwritten ────────────────────────────────── */}
             {legendCount === 0 && (
-              <div className="player-panel__unwritten">
-                <div className="player-panel__unwritten-line">No legend has claimed this number yet.</div>
-                <div className="player-panel__unwritten-sub">This could be your story.</div>
-                {showSubmit ? (
-                  <SubmitLegend number={number} wall={wallId} onClose={() => setShowSubmit(false)} />
+              <div className={`player-panel__unwritten${wallId === 'my-wall' ? ' player-panel__unwritten--addable' : ''}`}>
+                {wallId === 'my-wall' ? (
+                  <MyWallAddSlot
+                    number={number}
+                    suggestions={selected?.suggestions ?? []}
+                    onPickAdded={onPickAdded}
+                  />
                 ) : (
-                  <button className="player-panel__unwritten-cta" onClick={() => setShowSubmit(true)}>
-                    Submit a legend →
+                  <>
+                    <div className="player-panel__unwritten-line">No legend has claimed this number yet.</div>
+                    <div className="player-panel__unwritten-sub">This could be your story.</div>
+                    {showSubmit ? (
+                      <SubmitLegend number={number} wall={wallId} onClose={() => setShowSubmit(false)} />
+                    ) : (
+                      <button className="player-panel__unwritten-cta" onClick={() => setShowSubmit(true)}>
+                        Submit a legend →
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* ── YOURS banner — full-width blue when this is identity number ── */}
+            {isMyNumber && (
+              <div className="player-panel__yours-banner">
+                <span className="player-panel__yours-banner__eyebrow">YOUR NUMBER</span>
+                {onClaimNumber && (
+                  <button
+                    className="player-panel__yours-banner__release"
+                    onClick={() => onClaimNumber(number)}
+                  >
+                    Clear
                   </button>
                 )}
               </div>
+            )}
+
+            {/* ── Claim CTA — shown in My Wall when number is unclaimed ── */}
+            {wallId === 'my-wall' && !isMyNumber && onClaimNumber && (
+              <button
+                className="player-panel__claim-btn"
+                onClick={() => onClaimNumber(number)}
+              >
+                Claim #{number} as your number
+              </button>
             )}
 
             {/* ── "WHO OWNS THIS NUMBER?" trigger ─────────── */}
@@ -476,7 +615,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                     onVote:   (dir) => handlePlayerVote(number, entry.name, dir),
                   } : null
                   return (
-                    <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} voteData={cardVoteData} />
+                    <PlayerCard key={`${entry.name}-${i}`} entry={entry} isTop={i === 0} voteData={cardVoteData} onFilmLens={onFilmLens} lensEligibleFilms={lensEligibleFilms} />
                   )
                 })}
                 {/* Add a Legend hidden in showdown/reel walls (wallId==='none') */}

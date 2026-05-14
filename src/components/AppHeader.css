@@ -8,7 +8,7 @@
   top:           0;
   z-index:       200;
   background:    var(--color-night);
-  border-bottom: 1px solid var(--border-faint);
+  box-shadow:    0 2px 20px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.03);
   /* Escape AppShell's horizontal padding so the bar spans full viewport width */
   margin-left:   calc(-1 * var(--grid-margin));
   margin-right:  calc(-1 * var(--grid-margin));

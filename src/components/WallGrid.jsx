@@ -2,8 +2,23 @@ import { useCallback, useRef, useMemo } from 'react'
 import { track } from '@vercel/analytics'
 import { TILE_NUMBERS, globalIndex } from '../data/index.js'
 import associationsData from '../data/associations.json'
+import { IDENTITY_NUMBER } from '../lib/storageKeys.js'
 import WallTile from './WallTile.jsx'
 import './WallGrid.css'
+
+// Personal tile — full blue cell when this is your number.
+// Overrides the entire heat treatment: bg, border, glow, and text color.
+const MINE_STYLE = {
+  background: 'var(--color-personal-tile-bg)',
+  border:     '1px solid var(--color-personal-border)',
+  boxShadow:  '0 0 20px var(--color-personal-glow)',
+}
+const MINE_TEXT = 'var(--color-personal)'
+
+function getMyNumber() {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(IDENTITY_NUMBER) || null
+}
 
 // Build the set of debate numbers scoped to a wall + sport.
 // Only returns numbers that have a curated debate for this specific sport.
@@ -77,6 +92,11 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
 
   const tileNumbers = numbers || TILE_NUMBERS
 
+  // Personal number — read once per render. Blue glow treatment on matching tile.
+  // No reactive state needed: if the user updates their number in the hub and
+  // comes back to the main wall, the next render picks it up.
+  const myNumber = getMyNumber()
+
   return (
     <div
       className="wall-grid"
@@ -100,7 +120,13 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
           : legends.length >= 8 && !hasSacred
 
         // Custom heat: team walls pass tileHeatFn for team-color palettes
-        const { extraClass, extraStyle, ...heatProps } = tileHeatFn ? tileHeatFn(num, entries) : {}
+        const { extraClass: heatExtraClass, extraStyle: heatExtraStyle, ...heatProps } = tileHeatFn ? tileHeatFn(num, entries) : {}
+
+        // Personal number — full blue override (bg + border + glow + text)
+        const isMine = myNumber && String(num) === String(myNumber)
+        const extraClass = [heatExtraClass, isMine ? 'wall-tile--mine' : null].filter(Boolean).join(' ') || undefined
+        const extraStyle = isMine ? { ...heatExtraStyle, ...MINE_STYLE } : heatExtraStyle
+        const mergedHeatProps = isMine ? { ...heatProps, textColor: MINE_TEXT } : heatProps
 
         return (
           <WallTile
@@ -113,7 +139,7 @@ export default function WallGrid({ index = globalIndex, activeNumber = null, onS
             onClick={() => handleTileClick(num)}
             extraClass={extraClass}
             extraStyle={extraStyle}
-            {...heatProps}
+            {...mergedHeatProps}
           />
         )
       })}

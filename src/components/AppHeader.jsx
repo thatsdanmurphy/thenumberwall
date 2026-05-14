@@ -33,9 +33,6 @@ export default function AppHeader({ back = null, badge = null, title = null }) {
           <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
             My Walls
           </button>
-          <button className="app-header__nav-link" onClick={() => navigate('/walls')}>
-            Team Walls
-          </button>
         </nav>
       </div>
 

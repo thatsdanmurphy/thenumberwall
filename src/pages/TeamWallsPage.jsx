@@ -20,6 +20,7 @@ import CreateTeamWall from '../components/CreateTeamWall.jsx'
 import WallsMap from '../components/WallsMap.jsx'
 import { getActiveWallsWithSignals, browseTeamWalls } from '../lib/teamWallStore.js'
 import { trackEvent } from '../lib/analytics.js'
+import AppLoading from '../components/AppLoading.jsx'
 import './TeamWallsPage.css'
 
 // Country code → display name for non-US walls
@@ -136,9 +137,9 @@ export default function TeamWallsPage() {
           {/* Left: map */}
           <div className="twb-map-col">
             <div className="twb-map-hero-text">
-              <h2 className="twb-hero__heading">Did you play with a legend?</h2>
+              <h2 className="twb-hero__heading">Every legend came from somewhere.</h2>
               <p className="twb-hero__sub">
-                Every legend came from somewhere. Find their school — and if you played there too, put those names on the wall.
+                Find their school — and if you played there too, put those names on the wall.
               </p>
             </div>
             <WallsMap
@@ -182,7 +183,7 @@ export default function TeamWallsPage() {
             </div>
 
             {loading ? (
-              <p className="twb-empty">Loading…</p>
+              <AppLoading text="FINDING THE WALLS" />
             ) : groupedWalls.length === 0 ? (
               <div className="twb-empty">
                 {searchResults !== null
@@ -263,7 +264,7 @@ export default function TeamWallsPage() {
         {/* ── Mobile: feed + map toggle ─────────────────── */}
         <div className="twb-mobile">
           <div className="twb-mobile__header">
-            <h2 className="twb-hero__heading twb-hero__heading--sm">Did you play with a legend?</h2>
+            <h2 className="twb-hero__heading twb-hero__heading--sm">Every legend came from somewhere.</h2>
             <button
               className="twb-mobile__toggle"
               onClick={() => setMobileView(v => v === 'list' ? 'map' : 'list')}
@@ -301,7 +302,7 @@ export default function TeamWallsPage() {
               </span>
 
               {loading ? (
-                <p className="twb-empty">Loading…</p>
+                <AppLoading text="FINDING THE WALLS" />
               ) : groupedWalls.length === 0 ? (
                 <div className="twb-empty">
                   {searchResults !== null

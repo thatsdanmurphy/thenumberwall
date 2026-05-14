@@ -10,6 +10,7 @@ import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
 import { track } from '@vercel/analytics'
 import { MY_WALL_TOKEN, MY_WALL_ID, MY_WALL_SLUG } from '../lib/storageKeys.js'
+import AppLoading    from '../components/AppLoading.jsx'
 import '../components/WallGrid.css'
 import './MyWallPage.css'
 
@@ -740,7 +741,7 @@ export default function MyWallPage() {
       <AppShell>
         <AppHeader title="MY WALL" />
         <main className="my-wall-page">
-          <p className="my-wall-page__loading">Loading wall...</p>
+          <AppLoading text="PULLING UP THE WALL" />
         </main>
       </AppShell>
     )

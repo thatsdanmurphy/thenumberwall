@@ -16,6 +16,15 @@
   --color-action:   #FFFFFF;
   --color-border:   rgba(255, 255, 255, 0.08);
 
+  /* Personal identity — "my wall" / "my number" blue treatment */
+  --color-personal:          rgba(100, 160, 255, 0.90);  /* text: bright blue */
+  --color-personal-border:   rgba(60,  130, 255, 0.80);  /* tile/card border */
+  --color-personal-glow:     rgba(50,  100, 240, 0.38);  /* box-shadow halo */
+  --color-personal-bg:       rgba(50,  100, 240, 0.08);  /* fill for added state */
+  --color-personal-tile-bg:  rgba(28,  65,  200, 0.42);  /* full tile fill (main wall) */
+  --color-personal-dim:      rgba(60,  130, 255, 0.22);  /* dormant border */
+  --color-personal-mid:      rgba(60,  130, 255, 0.45);  /* hover border */
+
   /* Team */
   --color-team-sox:      #E8182E;
   --color-team-bruins:   #FFB81C;
@@ -79,6 +88,7 @@
      match — do NOT invent new alpha values. */
   --surface-1:      rgba(255, 255, 255, 0.03);  /* barely-there card bg */
   --surface-2:      rgba(255, 255, 255, 0.05);  /* resting input/button bg */
+  --surface-raised: rgba(255, 255, 255, 0.07);  /* elevated / hovered card */
   --surface-3:      rgba(255, 255, 255, 0.08);  /* hover surface */
   --surface-4:      rgba(255, 255, 255, 0.12);  /* active / pressed */
 

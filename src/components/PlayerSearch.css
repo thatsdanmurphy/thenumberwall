@@ -51,8 +51,10 @@
   transition: border-color var(--motion-hover);
 }
 
-.player-search__input:focus {
+.player-search__input:focus,
+.player-search__input:focus-visible {
   border-color: var(--color-heat);
+  outline: none;
 }
 
 .player-search__input::placeholder {

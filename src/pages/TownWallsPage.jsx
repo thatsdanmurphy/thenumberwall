@@ -19,6 +19,7 @@ import { getSportIcon } from '../data/sports.js'
 import { getOrgTypeLabel } from '../data/orgTypes.js'
 import { TEAM_PALETTES } from '../data/teamColors.js'
 import { trackEvent } from '../lib/analytics.js'
+import AppLoading from '../components/AppLoading.jsx'
 import './TownWallsPage.css'
 
 export default function TownWallsPage() {
@@ -117,7 +118,7 @@ export default function TownWallsPage() {
         </header>
 
         {loading ? (
-          <p className="town-page__loading">Loading…</p>
+          <AppLoading text="LOADING THE TOWN" />
         ) : orgs.length === 0 ? (
           <div className="town-page__empty">
             <p>Nobody's started a wall in this town yet.</p>
