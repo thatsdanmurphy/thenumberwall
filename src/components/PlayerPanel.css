@@ -599,7 +599,22 @@
   display:     flex;
   gap:         var(--space-1);
   align-items: center;
-  flex-wrap:   wrap;
+  flex-wrap:   nowrap;
+  overflow:    hidden;
+}
+
+/* Team / primary badge — shrinks with ellipsis so role badge stays visible */
+.player-card__badge--main {
+  flex-shrink: 1;
+  min-width:   0;
+  overflow:    hidden;
+  text-overflow: ellipsis;
+}
+
+/* Film, retired badges also anchor — don't shrink */
+.player-card__badge--film,
+.player-card__badge--retired {
+  flex-shrink: 0;
 }
 
 .player-card__badge {
@@ -659,6 +674,7 @@
   border:       none;
   color:        var(--ink-dim);
   padding-left: 0;
+  flex-shrink:  0;
 }
 
 /* League-wide retirement badge — sacred blue, sport-specific label
@@ -847,4 +863,15 @@ button.player-card__badge--film-tap:hover {
 .player-card__picks-row--added:hover {
   color:      rgba(220, 100, 100, 0.85);
   background: var(--surface-raised);
+}
+
+/* Trail icon wrapper — matches .pipeline__trail so Plus/Minus sits at the
+   same effective right-edge position as expanded pipeline row icons. */
+.player-card__picks-trail {
+  width:           24px;
+  height:          24px;
+  flex-shrink:     0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
 }

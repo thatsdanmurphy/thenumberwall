@@ -8,6 +8,7 @@ import WallGrid     from '../components/WallGrid.jsx'
 import PlayerPanel  from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import { nyLegends, nyCurrent, buildFilteredIndex } from '../data/index.js'
+import { LEGEND_SPORTS } from '../data/sports.js'
 import './NewYorkPage.css'
 
 // Dynamic season label: "25/26" — flips in July each year
@@ -40,6 +41,12 @@ export default function NewYorkPage() {
     () => buildFilteredIndex(baseData, sportFilter),
     [baseData, sportFilter]
   )
+
+  // Only show sport pills for sports that actually have players in this dataset
+  const availableSports = useMemo(() => {
+    const present = new Set(baseData.map(e => e.sport).filter(Boolean))
+    return LEGEND_SPORTS.filter(s => present.has(s.id))
+  }, [baseData])
 
   function handleTabChange(nextTab) {
     track('tab_change', { tab: nextTab, city: 'newyork' })
@@ -88,7 +95,7 @@ export default function NewYorkPage() {
           ))}
         </div>
 
-        <SportsFilter active={sportFilter} onChange={handleFilterChange} />
+        <SportsFilter active={sportFilter} onChange={handleFilterChange} sports={availableSports} />
 
         {/* ── Grid + panel ─────────────────────────────────── */}
         <div className="newyork-page__body">

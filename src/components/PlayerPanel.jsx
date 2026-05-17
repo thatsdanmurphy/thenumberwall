@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { track } from '@vercel/analytics'
 import { Award, Check, ExternalLink, X, ArrowRight, Plus, Minus } from 'lucide-react'
-import { getSportIcon } from '../data/sports.js'
+import { getSportIcon, normalisePosition } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
 import { getHeatStyle, getTileTextColor } from '../data/index.js'
 import { fetchWallScores, fetchMyVotes, castPlayerVote } from '../lib/playerVoteStore.js'
@@ -121,10 +121,10 @@ export function PlayerCard({ entry, isTop = false, voteData = null, onFilmLens =
 
           <div className="player-card__badges">
             {entry.team && (
-              <span className="player-card__badge" style={teamBadgeStyle}>{entry.team}</span>
+              <span className="player-card__badge player-card__badge--main" style={teamBadgeStyle}>{entry.team}</span>
             )}
             {entry.role && (
-              <span className="player-card__badge player-card__badge--dim">{entry.role}</span>
+              <span className="player-card__badge player-card__badge--dim">{normalisePosition(entry.role)}</span>
             )}
             {/* Film badge — shown on all reel entries when a film lens callback is available.
                 Tappable: clicking activates the film lens/washover on the Screen Legends wall.
@@ -208,7 +208,9 @@ export function PlayerCard({ entry, isTop = false, voteData = null, onFilmLens =
         <span className="player-card__picks-row__label">
           {onMyWall ? 'On my wall' : 'Add to my wall'}
         </span>
-        {onMyWall ? <Minus size={13} /> : <Plus size={13} />}
+        <span className="player-card__picks-trail">
+          {onMyWall ? <Minus size={13} /> : <Plus size={13} />}
+        </span>
       </button>
 
       {/* Start wall dialog — triggered from pipeline path plus icon */}

@@ -9,16 +9,19 @@
  */
 
 import { FaBasketballBall, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaFutbol } from 'react-icons/fa'
+import { PiCricketFill } from 'react-icons/pi'
 
 // Sport icon map — Font Awesome sport icons via react-icons.
 // Keys are lowercase IDs (match team wall sport column).
 // SportsFilter uses capitalised IDs — lookup is case-insensitive via helper.
+// Cricket uses PiCricketFill (Phosphor) — no FA5 cricket icon exists in free tier.
 export const SPORT_ICONS = {
   basketball: FaBasketballBall,
   football:   FaFootballBall,
   baseball:   FaBaseballBall,
   hockey:     FaHockeyPuck,
   soccer:     FaFutbol,
+  cricket:    PiCricketFill,
 }
 
 // Case-insensitive icon lookup (SportsFilter uses "Basketball", team walls use "basketball")
@@ -26,17 +29,15 @@ export function getSportIcon(sportId) {
   return SPORT_ICONS[sportId?.toLowerCase()] || null
 }
 
-// Legends wall — 5 sports for the filter bar
-// NOTE: Cricket is staged in source CSVs but hidden from the live wall
-// until more than a handful of entries exist. Restore by adding
-// { id: 'Cricket', label: 'Cricket' } and the matching SPORT_NAMES +
-// SPORT_EMOJI entries below.
+// Legends wall — 6 sports for the filter bar
+// Cricket activated 2026-05-16 with 14 verified entries.
 export const LEGEND_SPORTS = [
   { id: 'Basketball', label: 'Basketball' },
   { id: 'Football',   label: 'Football' },
   { id: 'Baseball',   label: 'Baseball' },
   { id: 'Hockey',     label: 'Hockey' },
   { id: 'Soccer',     label: 'Soccer' },
+  { id: 'Cricket',    label: 'Cricket' },
 ]
 
 // Team walls — all numbered team sports
@@ -55,7 +56,7 @@ export const TEAM_SPORTS = [
 ]
 
 // Simple string list for PlayerSearch sport selector
-export const SPORT_NAMES = ['Basketball', 'Baseball', 'Hockey', 'Football', 'Soccer']
+export const SPORT_NAMES = ['Basketball', 'Baseball', 'Hockey', 'Football', 'Soccer', 'Cricket']
 
 // Unicode emoji map — used for lightweight contexts (HeroSearch) where
 // react-icons components would be overkill. Keys match capitalised IDs.
@@ -65,6 +66,7 @@ export const SPORT_EMOJI = {
   Baseball:   '\u26BE',
   Hockey:     '\u{1F3D2}',
   Soccer:     '\u26BD',
+  Cricket:    '\u{1F3CF}',
 }
 
 // ── Positions by sport ───────────────────────────────────────────────────

@@ -183,7 +183,9 @@ export default function PipelinePath({
             </span>
           ))}
         </div>
-        <ChevronDown size={16} className="pipeline__chevron" />
+        <div className="pipeline__trail">
+          <ChevronDown size={16} />
+        </div>
       </div>
     )
   }
