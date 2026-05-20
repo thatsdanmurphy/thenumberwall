@@ -1,6 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
-import NotificationBell from './NotificationBell'
 import './AppHeader.css'
 
 /**
@@ -10,20 +9,14 @@ import './AppHeader.css'
  * Back row:  ← back label below the brand — only on sub-pages.
  *
  * Props:
- *   back        { label, onClick } | null  — shows back row beneath brand
- *   badge       string | null              — small badge beneath wordmark
- *   title       string | null              — accepted but ignored; pages own their headings
- *   notifCount  number                     — unread activity count shown on the bell (0 = hidden)
- *   onNotifClick fn | null                 — called when the notification bell is tapped
- *
- * Reuses: NotificationBell (heat dot, pulse animation, token-clean)
+ *   back   { label, onClick } | null  — shows back row beneath brand
+ *   badge  string | null              — small badge beneath wordmark
+ *   title  string | null              — accepted but ignored; pages own their headings
  */
 export default function AppHeader({  // eslint-disable-line no-unused-vars
   back = null,
   badge = null,
   title = null,
-  notifCount = 0,
-  onNotifClick = null,
 }) {
   const navigate = useNavigate()
 
@@ -41,11 +34,6 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
         </div>
 
         <nav className="app-header__nav">
-          <NotificationBell
-            count={notifCount}
-            onClick={onNotifClick ?? (() => navigate('/my-wall'))}
-            label="Activity"
-          />
           <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
             My Walls
           </button>
