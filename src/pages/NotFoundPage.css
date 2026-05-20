@@ -11,7 +11,7 @@
 
 .not-found-page__number {
   font-family:    var(--font-banner);
-  font-size:      6rem;
+  font-size: 6rem;   /* ds:intentional — 404 hero display number */
   line-height:    1;
   letter-spacing: 0.02em;
   color:          var(--ink-dim);
@@ -26,7 +26,7 @@
 
 .not-found-page__body {
   font-family: var(--font-program);
-  font-size:   0.875rem;
+  font-size:   var(--text-body);
   color:       var(--ink-low);
   font-style:  italic;
   margin:      0;

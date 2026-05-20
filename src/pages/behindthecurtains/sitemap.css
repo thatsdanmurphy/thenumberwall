@@ -40,7 +40,7 @@
 
 .sm-banner__lede {
   font-family: var(--font-program);
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.55;
   color: var(--color-muted);
   max-width: 64ch;
@@ -68,7 +68,7 @@
 
 .sm-pulse__num {
   font-family: var(--font-banner);
-  font-size: 1.75rem;
+  font-size: var(--text-display-sm);
   color: var(--color-paper);
   letter-spacing: 0.02em;
 }
@@ -160,7 +160,7 @@
 
 .sm-group__lede {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   color: var(--color-muted);
   line-height: 1.5;
   margin: 0;
@@ -249,7 +249,7 @@
 
 .sm-box__path {
   font-family: var(--font-scoreboard);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   color: var(--color-heat);
   background: var(--surface-1);
   border: 1px solid var(--border-faint);
@@ -297,7 +297,7 @@
 
 .sm-box__name {
   font-family: var(--font-banner);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   letter-spacing: 0.02em;
   color: var(--color-paper);
   line-height: 1.2;
@@ -305,7 +305,7 @@
 
 .sm-box__desc {
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   color: var(--color-muted);
   line-height: 1.4;
 }
@@ -347,7 +347,7 @@
 
 .sm-footer__line {
   font-family: var(--font-handwritten);
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--color-muted);
   margin: 0;
 }

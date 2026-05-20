@@ -10,7 +10,7 @@
 
 .sports-filter__label {
   font-family:    var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color:          var(--ink-dim);
   letter-spacing: 0.02em;
   margin-right:   2px;
@@ -25,7 +25,7 @@
   border:         1px solid var(--border-soft);
   border-radius: var(--radius-sm);
   font-family:    var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   letter-spacing: 0.10em;
   color:          var(--ink-low);
   cursor:         pointer;

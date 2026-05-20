@@ -81,7 +81,7 @@
 
 .whats-next__label {
   font-family: var(--font-banner);
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--color-paper);
@@ -89,7 +89,7 @@
 
 .whats-next__count {
   font-family: var(--font-scoreboard);
-  font-size: 0.6rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.08em;
   color: rgba(232, 124, 42, 0.65);
   white-space: nowrap;
@@ -112,7 +112,7 @@
 
 .whats-next__footnote {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color: var(--ink-dim);
   margin-top: 12px;
 }

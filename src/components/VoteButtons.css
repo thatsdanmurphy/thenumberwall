@@ -10,7 +10,7 @@
 }
 
 .vote-buttons--compact {
-  min-width: 32px;
+  min-width: var(--space-5);
 }
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */

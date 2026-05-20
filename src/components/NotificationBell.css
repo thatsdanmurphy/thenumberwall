@@ -1,0 +1,92 @@
+/* NotificationBell
+   Bell icon button for the app header nav.
+   Heat dot/badge. Pulse animation on new notifications.
+   All values reference design tokens — no raw px/hex. */
+
+/* ── Button shell ───────────────────────────────────────────────────────── */
+
+.notif-bell {
+  position:        relative;
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  padding:         0;
+  background:      transparent;
+  border:          1px solid var(--border-soft);
+  border-radius:   var(--radius-md);
+  color:           var(--color-muted);
+  cursor:          pointer;
+  transition:      color var(--motion-hover), background var(--motion-hover), border-color var(--motion-hover);
+  flex-shrink:     0;
+}
+
+.notif-bell:hover {
+  color:        var(--color-paper);
+  background:   var(--color-surface);
+  border-color: var(--border-medium);
+}
+
+.notif-bell:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 2px;
+  border-radius:  var(--radius-md);
+}
+
+/* ── Icon ───────────────────────────────────────────────────────────────── */
+
+.notif-bell__icon {
+  display:     flex;
+  align-items: center;
+}
+
+/* ── Count badge ────────────────────────────────────────────────────────── */
+
+.notif-bell__badge {
+  position:       absolute;
+  top:            -5px;
+  right:          -5px;
+  min-width:      var(--space-3);
+  height:         var(--space-3);
+  padding:        0 var(--space-1);
+  background:     var(--color-heat);
+  color:          var(--color-night);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-wide);
+  line-height:    var(--space-3);
+  border-radius:  var(--radius-sm);
+  text-align:     center;
+  pointer-events: none;
+  /* Resting glow — matches heat visual language used in the header */
+  box-shadow:     0 0 var(--space-2) rgba(232, 124, 42, 0.50);
+}
+
+/* ── Animate-in: badge scales up when new notifications arrive ──────────── */
+
+@keyframes notif-badge-in {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.notif-bell__badge--in {
+  animation: notif-badge-in var(--motion-heat) ease-out forwards;
+}
+
+/* ── Bell pulse: subtle shake on the wrapper when count increments ──────── */
+
+@keyframes notif-bell-pulse {
+  0%   { transform: rotate(0deg);   }
+  20%  { transform: rotate(-12deg); }
+  40%  { transform: rotate(12deg);  }
+  60%  { transform: rotate(-6deg);  }
+  80%  { transform: rotate(4deg);   }
+  100% { transform: rotate(0deg);   }
+}
+
+.notif-bell--pulse .notif-bell__icon {
+  animation: notif-bell-pulse var(--motion-heat) ease-out;
+}

@@ -287,7 +287,7 @@ button.id-slot--hero.id-slot--filled:hover {
 .id-slot__suggestion-num {
   font-family: var(--font-banner);
   color: var(--color-blaze);
-  font-size: 1rem;
+  font-size: var(--text-base);
   min-width: 2.25em;
 }
 .id-slot__suggestion-name {
@@ -317,5 +317,5 @@ button.id-slot--hero.id-slot--filled:hover {
   .id-slot { padding: var(--space-2) var(--space-1); }
   .id-slot__value,
   .id-slot__input--big { font-size: clamp(1.5rem, 8vw, 2.25rem); }
-  .id-slot__sublabel { font-size: 0.625rem; }
+  .id-slot__sublabel { font-size: var(--text-micro); }
 }

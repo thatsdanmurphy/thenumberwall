@@ -52,14 +52,14 @@
 
 .wall-page__cities-label {
   font-family:    var(--font-banner);
-  font-size:      0.875rem;
+  font-size:      var(--text-body);
   letter-spacing: 0.06em;
   color:          var(--color-paper);
 }
 
 .wall-page__cities-sublabel {
   font-family: var(--font-program);
-  font-size:   var(--text-caption);
+  font-size:   var(--text-small);
   color:       var(--ink-dim);
   margin:      0;
   line-height: 1.45;
@@ -99,7 +99,7 @@
 
 .wall-page__city-teams {
   font-family: var(--font-program);
-  font-size:   var(--text-caption);
+  font-size:   var(--text-small);
   color:       var(--ink-dim);
   line-height: 1.4;
 }
@@ -113,7 +113,7 @@
 
 .wall-page__section-beta {
   font-family:    var(--font-scoreboard);
-  font-size:      0.48rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.14em;
   color:          var(--ink-dim);
   border:         1px solid var(--border-soft);
@@ -124,7 +124,7 @@
 }
 
 .wall-page__city-arrow {
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   color:     rgba(232,124,42,0.55);
   transition: transform var(--motion-hover), color var(--motion-hover);
 }
@@ -142,7 +142,7 @@
 
 .wall-page__city-soon {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.18em;
   color:          var(--ink-dim);
   white-space:    nowrap;

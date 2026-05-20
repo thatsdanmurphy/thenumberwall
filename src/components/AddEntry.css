@@ -46,7 +46,7 @@
 .ae-error {
   font-family: var(--font-program);
   font-size: var(--text-small);
-  color: #ff6b6b;
+  color: var(--color-error);
   background: rgba(255, 107, 107, 0.08);
   border: 1px solid rgba(255, 107, 107, 0.20);
   border-radius: var(--radius-sm);
@@ -107,7 +107,7 @@
 
 .ae-input--number {
   font-family: var(--font-banner);
-  font-size: 1.5rem;
+  font-size: var(--text-display-xs);
   text-align: center;
   padding: var(--space-2);
 }

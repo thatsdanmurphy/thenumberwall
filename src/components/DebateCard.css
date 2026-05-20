@@ -21,7 +21,7 @@
 
 .debate-card__eyebrow {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.2em;
   color:          rgba(232, 124, 42, 0.8);
   display:        block;
@@ -109,7 +109,7 @@
 
 .debate-card__pick-name {
   font-family:    var(--font-banner);
-  font-size:      1rem;
+  font-size:      var(--text-base);
   letter-spacing: 0.01em;
   color:          var(--color-paper);
   line-height:    1.1;
@@ -117,7 +117,7 @@
 
 .debate-card__pick-team {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.14em;
   color:          var(--ink-dim);
 }
@@ -125,7 +125,7 @@
 /* Commit note — "argument reveals after you pick" */
 .debate-card__commit-note {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.14em;
   color:          var(--ink-dim);
   text-align:     center;
@@ -184,14 +184,14 @@
 
 .debate-card__verdict-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.18em;
   color:          var(--ink-dim);
 }
 
 .debate-card__verdict-name {
   font-family:    var(--font-banner);
-  font-size:      1.0625rem;
+  font-size:      var(--text-base);
   letter-spacing: 0.01em;
   color:          var(--color-paper);
 }
@@ -204,7 +204,7 @@
 }
 
 .debate-card__split-bar {
-  height:        8px;
+  height:        var(--space-2);
   border-radius: var(--radius-sm);
   overflow:      hidden;
   display:       flex;
@@ -243,7 +243,7 @@
 /* Position framing — 1-2 sentences articulating the user's stance */
 .debate-card__position {
   font-family: var(--font-program);
-  font-size:   0.8125rem;
+  font-size:   var(--text-body-sm);
   line-height: 1.55;
   color:       var(--ink-mid);
   margin:      0;
@@ -262,7 +262,7 @@
 
 .debate-card__argument-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.2em;
   color:          rgba(232, 124, 42, 0.7);
   display:        block;
@@ -289,7 +289,7 @@
 
 .debate-card__counter-label {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.2em;
   color:          var(--ink-dim);
   display:        block;
@@ -314,14 +314,14 @@
 
 .debate-card__season {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.16em;
   color:          rgba(232, 124, 42, 0.5);
 }
 
 .debate-card__votes {
   font-family:    var(--font-scoreboard);
-  font-size:      0.4375rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.12em;
   color:          var(--ink-dim);
 }

@@ -151,7 +151,7 @@
 
 .player-panel__number {
   font-family:    var(--font-banner);
-  font-size:      2.5rem;
+  font-size:      var(--text-display-lg);
   line-height:    1;
   letter-spacing: 0.02em;
   white-space:    nowrap;
@@ -210,7 +210,7 @@
   color:          rgba(60, 130, 255, 0.65);
   font-family:    var(--font-program);
   font-weight:    500;
-  font-size:      0.8125rem;
+  font-size:      var(--text-body-sm);
   letter-spacing: 0.02em;
   text-align:     center;
   padding:        10px 14px;
@@ -247,7 +247,7 @@
   display:       flex;
   align-items:   center;
   gap:           var(--space-2);
-  padding:       8px 12px;
+  padding:       var(--space-2) 12px;
   background:    rgba(0, 0, 0, 0.22);
   border:        1px solid var(--border-soft);
   border-radius: var(--radius-sm);
@@ -263,7 +263,7 @@
 
 .player-panel__suggestion-name {
   font-family:    var(--font-program);
-  font-size:      0.8125rem;
+  font-size:      var(--text-body-sm);
   font-weight:    600;
   color:          var(--color-paper);
   white-space:    nowrap;
@@ -273,7 +273,7 @@
 
 .player-panel__suggestion-team {
   font-family: var(--font-program);
-  font-size:   var(--text-caption);
+  font-size:   var(--text-small);
   color:       var(--ink-dim);
 }
 
@@ -302,19 +302,19 @@
 }
 
 @media (min-width: 1024px) {
-  .player-panel__number { font-size: 3rem; }
+  .player-panel__number { font-size: var(--text-display-xl); }
 }
 
 /* Modifier for word labels (COACHES) — panel-number class but smaller */
 .player-panel__number--label {
-  font-size:      1.125rem;
+  font-size:      var(--text-h2);
   letter-spacing: 0.12em;
   white-space:    normal;
 }
 
 .player-panel__subtitle {
   font-family:    var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   letter-spacing: 0.18em;
   color:          var(--color-muted);
 }
@@ -324,7 +324,7 @@
   align-self:     flex-start;
   margin-top:     2px;
   font-family:    var(--font-scoreboard);
-  font-size:      0.5rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.14em;
   background:     rgba(200, 220, 255, 0.08);
   border:         1px solid rgba(200, 220, 255, 0.30);
@@ -434,7 +434,7 @@
 
 .player-panel__unwritten-line {
   font-family:    var(--font-banner);
-  font-size:      1rem;
+  font-size:      var(--text-base);
   letter-spacing: 0.04em;
   color:          var(--ink-low);
   text-wrap:      balance;
@@ -443,7 +443,7 @@
 
 .player-panel__unwritten-sub {
   font-family:    var(--font-program);
-  font-size:      0.8125rem;
+  font-size:      var(--text-body-sm);
   letter-spacing: 0;
   color:          var(--ink-dim);
   font-style:     italic;
@@ -511,7 +511,7 @@
 
 .player-panel__vote-trigger-hint {
   font-family:    var(--font-scoreboard);
-  font-size:      0.55rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.12em;
   color:          var(--ink-dim);
 }
@@ -572,7 +572,7 @@
 
 .player-card__name {
   font-family:    var(--font-banner);
-  font-size:      1.0625rem;
+  font-size:      var(--text-base);
   letter-spacing: 0.03em;
   line-height:    1.15;
   color:          var(--color-paper);
@@ -631,7 +631,7 @@
 
 /* Tier badges — color-coded by tier level */
 .player-card__badge--tier {
-  font-size:      0.45rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.14em;
   cursor:         help;
 }
@@ -664,7 +664,7 @@
 }
 
 .player-card__badge--active {
-  color:      #9ED44C;
+  color:      var(--color-timeline-pos);
   background: rgba(158,212,76,0.10);
   border:     1px solid rgba(158,212,76,0.28);
 }
@@ -683,7 +683,7 @@
   background:     rgba(200, 220, 255, 0.08);
   border:         1px solid rgba(200, 220, 255, 0.30);
   color:          rgba(200, 220, 255, 0.85);
-  font-size:      0.45rem;
+  font-size:      var(--text-micro);
   letter-spacing: 0.14em;
 }
 
@@ -717,7 +717,7 @@ button.player-card__badge--film-tap:hover {
 
 .player-card__fact {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   line-height: 1.5;
   color:       var(--color-muted);
   margin-top:  var(--space-2);
@@ -745,7 +745,7 @@ button.player-card__badge--film-tap:hover {
 
 .player-card__stat-value {
   font-family:    var(--font-banner);
-  font-size:      1.3rem;
+  font-size:      var(--text-h1);
   line-height:    1;
   letter-spacing: 0.01em;
   color:          var(--color-paper);
@@ -805,9 +805,9 @@ button.player-card__badge--film-tap:hover {
   align-items: center;
   gap: 6px;
   margin-top: var(--space-2);
-  padding: 8px 12px;
+  padding: var(--space-2) 12px;
   font-family: var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(232, 124, 42, 0.95);
@@ -820,7 +820,7 @@ button.player-card__badge--film-tap:hover {
 
 .player-card__timeline-cta:hover {
   background: rgba(232, 124, 42, 0.18);
-  color: #fff;
+  color: var(--color-paper);
   border-color: rgba(232, 124, 42, 0.6);
 }
 
@@ -832,7 +832,7 @@ button.player-card__badge--film-tap:hover {
   justify-content:  space-between;
   width:            100%;
   margin-top:       var(--space-2);
-  padding:          0 var(--space-2);
+  padding:          0 var(--space-3);
   min-height:       44px;
   background:       var(--surface-1);
   border:           none;

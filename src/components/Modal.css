@@ -10,7 +10,7 @@
 .tnw-modal {
   position:      relative;
   width:         100%;
-  background:    #12161C;
+  background:    var(--color-overlay);
   border:        1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   box-shadow:

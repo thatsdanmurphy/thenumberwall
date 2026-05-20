@@ -54,7 +54,7 @@
 .ctw-error {
   font-family: var(--font-program);
   font-size: var(--text-small);
-  color: #ff6b6b;
+  color: var(--color-error);
   background: rgba(255, 107, 107, 0.08);
   border: 1px solid rgba(255, 107, 107, 0.20);
   border-radius: var(--radius-sm);
@@ -78,7 +78,7 @@
 
 .ctw-label > span {
   font-family: var(--font-scoreboard);
-  font-size: 0.6rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
   color: var(--ink-low);
   text-transform: uppercase;
@@ -126,7 +126,7 @@
 
 .ctw-chip {
   font-family: var(--font-scoreboard);
-  font-size: 0.6rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.12em;
   color: var(--ink-low);
   background: var(--surface-2);
@@ -268,7 +268,7 @@
   align-items: center;
   gap: var(--space-2);
   font-family: var(--font-scoreboard);
-  font-size: 0.58rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.12em;
   color: var(--ink-low);
   text-transform: uppercase;
@@ -315,7 +315,7 @@
 
 .ctw-dedupe__title {
   font-family: var(--font-scoreboard);
-  font-size: 0.6rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
   color: var(--ink-mid);
   text-transform: uppercase;
@@ -344,7 +344,7 @@
 
 .ctw-dedupe__type {
   font-family: var(--font-scoreboard);
-  font-size: 0.56rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.12em;
   color: var(--ink-low);
   text-transform: uppercase;
@@ -360,7 +360,7 @@
 
 .ctw-type-pill {
   font-family: var(--font-scoreboard);
-  font-size: 0.6rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.12em;
   color: var(--ink-low);
   background: var(--surface-2);

@@ -152,7 +152,7 @@
 
 .twb-section-label {
   font-family: var(--font-banner);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   letter-spacing: 0.06em;
   color: var(--color-paper);
 }
@@ -235,7 +235,7 @@
 
 .twb-card__loc {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color: var(--ink-dim);
 }
 

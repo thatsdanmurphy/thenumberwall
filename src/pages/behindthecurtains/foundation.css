@@ -40,7 +40,7 @@
 
 .fdn-banner__lede {
   font-family: var(--font-program);
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.55;
   color: var(--color-muted);
   max-width: 64ch;
@@ -66,7 +66,7 @@
 
 .fdn-section__lede {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.6;
   color: var(--color-muted);
   max-width: 66ch;
@@ -96,7 +96,7 @@
 
 .fdn-north-star__body {
   font-family: var(--font-program);
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-paper);
   margin: 0;
@@ -113,7 +113,7 @@
 
 .fdn-insight__body {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.6;
   color: var(--color-muted);
   margin: 0;
@@ -164,7 +164,7 @@
 
 .fdn-principle__name {
   font-family: var(--font-banner);
-  font-size: 1rem;
+  font-size: var(--text-base);
   letter-spacing: 0.02em;
   color: var(--color-paper);
   margin: 0;
@@ -172,7 +172,7 @@
 
 .fdn-principle__desc {
   font-family: var(--font-program);
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-muted);
   margin: 0;
@@ -214,7 +214,7 @@
 
 .fdn-core-card__desc {
   font-family: var(--font-program);
-  font-size: 0.9rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--color-muted);
   margin: 0;
@@ -256,14 +256,14 @@
 
 .fdn-persona__trigger {
   font-family: var(--font-program);
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   color: var(--color-heat);
   font-style: italic;
 }
 
 .fdn-persona__need {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--color-muted);
   margin: 0;
@@ -290,7 +290,7 @@
 
 .fdn-persona__moment-body {
   font-family: var(--font-handwritten);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-paper);
 }
@@ -323,7 +323,7 @@
   font-size: var(--text-micro);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  padding: 2px 8px;
+  padding: 2px var(--space-2);
   border: 1px solid var(--border-faint);
   border-radius: var(--radius-sm);
   color: var(--color-paper);
@@ -339,7 +339,7 @@
 
 .fdn-persona__design {
   font-family: var(--font-program);
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-muted);
   margin: 0;
@@ -360,7 +360,7 @@
 
 .fdn-footer__line {
   font-family: var(--font-handwritten);
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--color-muted);
   margin: 0;
 }

@@ -1,7 +1,7 @@
 /* ── SubmitLegend — inline form inside PlayerPanel ─────────────────────────── */
 /* Mirrors tw-add styling from TeamWallPage so both forms share the same
    design language: tnw-input, --font-scoreboard labels, --font-program body,
-   --text-small density, #ff6b6b errors.                                      */
+   --text-small density, var(--color-error) errors.                                      */
 
 .submit-legend {
   display:        flex;
@@ -69,7 +69,7 @@
 .submit-legend__error {
   font-family: var(--font-program);
   font-size:   var(--text-small);
-  color:       #ff6b6b;
+  color:       var(--color-error);
 }
 
 .submit-legend__submit {

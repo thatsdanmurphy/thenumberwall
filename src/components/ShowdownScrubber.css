@@ -23,7 +23,7 @@
   align-items:     center;
   justify-content: center;
   width:           48px;
-  height:          48px;
+  height:          var(--space-6);
   background:      var(--surface-1);
   border:          1px solid var(--border-medium);
   border-radius:   50%;
@@ -76,19 +76,19 @@
 
 .showdown-scrubber__game {
   font-family:    var(--font-scoreboard);
-  font-size:      1.05rem;
+  font-size:      1.05rem; /* ds:intentional — scrubber scoreboard label */
   letter-spacing: 0.12em;
   color:          var(--color-paper);
 }
 
 .showdown-scrubber__dot {
   color:     var(--ink-dim);
-  font-size: 0.8rem;
+  font-size: 0.8rem;   /* ds:intentional — scrubber dense label */
 }
 
 .showdown-scrubber__half {
   font-family:    var(--font-scoreboard);
-  font-size:      1.05rem;
+  font-size:      1.05rem; /* ds:intentional — scrubber scoreboard label */
   letter-spacing: 0.08em;
   color:          var(--ink-dim);
 }
@@ -96,7 +96,7 @@
 /* Result label — always brand orange, never team color */
 .showdown-scrubber__result {
   font-family:    var(--font-scoreboard);
-  font-size:      0.85rem;
+  font-size:      0.85rem; /* ds:intentional — scrubber label */
   letter-spacing: 0.10em;
   color:          var(--color-heat);
   font-weight:    700;
@@ -113,7 +113,7 @@
   position:       absolute;
   transform:      translateX(-50%);
   font-family:    var(--font-scoreboard);
-  font-size:      0.72rem;
+  font-size:      0.72rem; /* ds:intentional — scrubber micro label */
   letter-spacing: 0.10em;
   color:          var(--color-muted);
   background:     none;
@@ -134,7 +134,7 @@
 /* Outer: no overflow — lets the thumb protrude above/below */
 .showdown-scrubber__track {
   position:      relative;
-  height:        16px;
+  height:        var(--space-3);
   background:    rgba(255,255,255,0.04);
   border:        1px solid var(--border-soft);
   border-radius: 8px;
@@ -246,7 +246,7 @@
   top:           50%;
   transform:     translate(-50%, -50%);
   width:         8px;
-  height:        8px;
+  height:        var(--space-2);
   border-radius: 50%;
   border:        none;
   padding:       0;

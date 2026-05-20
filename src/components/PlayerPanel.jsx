@@ -541,6 +541,31 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
               </div>
             </div>
 
+            {/* ── Claim CTA — shown at top so it's the first action, above suggestions ── */}
+            {wallId === 'my-wall' && !isMyNumber && onClaimNumber && (
+              <button
+                className="player-panel__claim-btn"
+                onClick={() => onClaimNumber(number)}
+              >
+                Claim #{number} as your number
+              </button>
+            )}
+
+            {/* ── YOURS banner — full-width blue when this is identity number ── */}
+            {isMyNumber && (
+              <div className="player-panel__yours-banner">
+                <span className="player-panel__yours-banner__eyebrow">YOUR NUMBER</span>
+                {onClaimNumber && (
+                  <button
+                    className="player-panel__yours-banner__release"
+                    onClick={() => onClaimNumber(number)}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* ── Unwritten ────────────────────────────────── */}
             {legendCount === 0 && (
               <div className={`player-panel__unwritten${wallId === 'my-wall' ? ' player-panel__unwritten--addable' : ''}`}>
@@ -564,31 +589,6 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                   </>
                 )}
               </div>
-            )}
-
-            {/* ── YOURS banner — full-width blue when this is identity number ── */}
-            {isMyNumber && (
-              <div className="player-panel__yours-banner">
-                <span className="player-panel__yours-banner__eyebrow">YOUR NUMBER</span>
-                {onClaimNumber && (
-                  <button
-                    className="player-panel__yours-banner__release"
-                    onClick={() => onClaimNumber(number)}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* ── Claim CTA — shown in My Wall when number is unclaimed ── */}
-            {wallId === 'my-wall' && !isMyNumber && onClaimNumber && (
-              <button
-                className="player-panel__claim-btn"
-                onClick={() => onClaimNumber(number)}
-              >
-                Claim #{number} as your number
-              </button>
             )}
 
             {/* ── "WHO OWNS THIS NUMBER?" trigger ─────────── */}

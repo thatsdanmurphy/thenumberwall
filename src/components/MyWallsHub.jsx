@@ -18,7 +18,7 @@ import { setIdentityField } from '../lib/identity.js'
 import AppLoading  from './AppLoading.jsx'
 import NewWallModal from './NewWallModal.jsx'
 import PlayerPanel from './PlayerPanel.jsx'
-import SportsFilter from './SportsFilter.jsx'
+import SportsFilter, { SPORTS as LEGEND_SPORTS } from './SportsFilter.jsx'
 import { globalIndex, getHeatStyle, getTileTextColor, SELECTED_TILE } from '../data/index.js'
 
 // ─── All city walls available to follow ──────────────────────────────────────
@@ -75,16 +75,31 @@ const DIM_STYLE = {
   boxShadow:    'none',
 }
 
-// Compute inline tile style for a given number.
-// isMyNumber (claimed identity) → personal blue.
-// isPicked but not claimed → heat orange from global entries (shows picks without overriding the wall's heat).
-// Active → white selection ring.
-// Sport-filtered → shows heat for matching sport.
-// Default → dim.
-function getTileStyle(num, entries, isPicked, isActive, isMyNumber, sportFilter) {
+// Cinema amber — reel picks glow with film-strip warmth, distinct from sports orange
+const REEL_TILE_STYLE = {
+  background:   'rgba(68, 48, 10, 0.55)',
+  border:       '1px solid rgba(210, 155, 45, 0.62)',
+  borderRadius: '4px',
+  boxShadow:    '0 0 14px rgba(210, 155, 45, 0.40), 0 0 28px rgba(160, 100, 20, 0.18)',
+}
+const REEL_TEXT_COLOR = 'rgba(240, 190, 85, 1)'
+
+/**
+ * getTileStyle — compute inline tile style for the hub grid.
+ *
+ * Priority: active > my-number > picked (sport-gated) > dim
+ *
+ * isPickedInSport: pre-computed in render loop.
+ *   • No sport filter active → equals isPicked (all picks show heat)
+ *   • Sport filter active    → true only when user has a pick in that specific sport
+ *   This prevents the global TNW dataset from lighting up tiles the user never added.
+ *
+ * isReelPick: user has a reel/film pick on this number → cinema amber treatment.
+ * pickCount:  number of user picks on this number → drives heat level (not TNW tier).
+ */
+function getTileStyle(isPicked, isActive, isMyNumber, isPickedInSport, isReelPick, pickCount = 1) {
   if (isActive) {
     if (isMyNumber) {
-      // Claimed number + active: personal blue with white ring
       return {
         background:   MINE_BG,
         border:       '1px solid rgba(255,255,255,0.82)',
@@ -92,69 +107,33 @@ function getTileStyle(num, entries, isPicked, isActive, isMyNumber, sportFilter)
         boxShadow:    `0 0 0 2px rgba(255,255,255,0.45), ${MINE_GLOW}`,
       }
     }
-    // Any other active tile: subtle white ring, no color flash
     return {
       ...DIM_STYLE,
       border:    '1px solid rgba(255,255,255,0.55)',
       boxShadow: '0 0 0 1px rgba(255,255,255,0.18)',
     }
   }
-  // Only the claimed number gets personal blue
   if (isMyNumber) {
     return { background: MINE_BG, border: `1px solid ${MINE_BORDER}`, borderRadius: '4px', boxShadow: MINE_GLOW }
   }
-  // Picked (but not claimed) → orange heat from global wall data
-  if (isPicked) {
-    if (entries.length > 0) {
-      const isSacred = entries.some(e => e.tier === 'SACRED')
-      const heat     = getHeatStyle(entries, isSacred)
-      return { background: heat.bg, border: `1px solid ${heat.border}`, borderRadius: '4px', boxShadow: heat.glow }
-    }
-    // Custom player with no global entries — soft orange hint
-    return {
-      background:   'rgba(232, 124, 42, 0.08)',
-      border:       '1px solid rgba(232, 124, 42, 0.25)',
-      borderRadius: '4px',
-      boxShadow:    '0 0 10px rgba(232, 124, 42, 0.12)',
-    }
+  // Show pick heat only when this tile passes the sport gate
+  if (isPicked && isPickedInSport) {
+    if (isReelPick) return REEL_TILE_STYLE
+    // Heat level from user's own pick count — not global TNW entry count
+    const fakeEntries = Array(pickCount).fill({ tier: 'LEGEND' })
+    const heat = getHeatStyle(fakeEntries)
+    return { background: heat.bg, border: `1px solid ${heat.border}`, borderRadius: '4px', boxShadow: heat.glow }
   }
-  // Sport filter active → light up tiles matching that sport
-  if (sportFilter) {
-    const sportId = sportFilter instanceof Set ? [...sportFilter][0] : sportFilter
-    const matching = entries.filter(e => {
-      const s = (e.sport || e.Sport || '').toLowerCase()
-      return s === sportId.toLowerCase()
-    })
-    if (matching.length > 0) {
-      const isSacred = matching.some(e => e.tier === 'SACRED')
-      const heat     = getHeatStyle(matching, isSacred)
-      return { background: heat.bg, border: `1px solid ${heat.border}`, borderRadius: '4px', boxShadow: heat.glow }
-    }
-  }
-  // Default: dim
   return DIM_STYLE
 }
 
-function getTileTextCol(entries, isPicked, isActive, isMyNumber, sportFilter) {
-  if (isActive)    return SELECTED_TILE.text
-  if (isMyNumber)  return MINE_TEXT
-  if (isPicked) {
-    if (entries.length > 0) {
-      const isSacred = entries.some(e => e.tier === 'SACRED')
-      return getTileTextColor(entries, isSacred)
-    }
-    return 'var(--color-heat)'  // custom pick, no global entries
-  }
-  if (sportFilter) {
-    const sportId = sportFilter instanceof Set ? [...sportFilter][0] : sportFilter
-    const matching = entries.filter(e => {
-      const s = (e.sport || e.Sport || '').toLowerCase()
-      return s === sportId.toLowerCase()
-    })
-    if (matching.length > 0) {
-      const isSacred = matching.some(e => e.tier === 'SACRED')
-      return getTileTextColor(matching, isSacred)
-    }
+function getTileTextCol(isPicked, isActive, isMyNumber, isPickedInSport, isReelPick, pickCount = 1) {
+  if (isActive)   return SELECTED_TILE.text
+  if (isMyNumber) return MINE_TEXT
+  if (isPicked && isPickedInSport) {
+    if (isReelPick) return REEL_TEXT_COLOR
+    const fakeEntries = Array(pickCount).fill({ tier: 'LEGEND' })
+    return getTileTextColor(fakeEntries)
   }
   return 'var(--ink-dim)'
 }
@@ -180,8 +159,24 @@ export default function MyWallsHub() {
   // Followed walls — persisted in localStorage
   const [followed, setFollowed] = useState(() => readFollowed())
 
-  const ownerToken    = typeof window !== 'undefined' ? localStorage.getItem(MY_WALL_TOKEN) : null
-  const pickedNumsSet = useMemo(() => new Set(picks.map(p => String(p.number))), [picks])
+  const ownerToken = typeof window !== 'undefined' ? localStorage.getItem(MY_WALL_TOKEN) : null
+
+  // Map number → picks[] for O(1) tile lookup (used in grid render)
+  const picksByNum = useMemo(() => {
+    const map = new Map()
+    for (const p of picks) {
+      const k = String(p.number)
+      if (!map.has(k)) map.set(k, [])
+      map.get(k).push(p)
+    }
+    return map
+  }, [picks])
+
+  // Sports the user actually has picks for — drives SportsFilter visibility
+  const availableSports = useMemo(() => {
+    const sportIds = new Set(picks.map(p => p.sport).filter(Boolean))
+    return LEGEND_SPORTS.filter(s => sportIds.has(s.id))
+  }, [picks])
 
   // Enrich bare picks ({name,number,team,sport,...}) with full globalIndex data
   // so PlayerCard gets stats, fun facts, tier, etc.
@@ -294,11 +289,15 @@ export default function MyWallsHub() {
         <p className="hub-my-wall__sublabel">Claim your number. Add the legends that matter to you.</p>
       </div>
 
-      <SportsFilter
-        active={sportFilter}
-        onChange={setSportFilter}
-        trackEvent="my_walls_sport_filter"
-      />
+      {/* Only show filter when user has picks in multiple sports */}
+      {availableSports.length > 1 && (
+        <SportsFilter
+          active={sportFilter}
+          onChange={setSportFilter}
+          sports={availableSports}
+          trackEvent="my_walls_sport_filter"
+        />
+      )}
 
       {/* ── Two-column body: left = grid + sections, right = sticky panel ── */}
       <div className="hub-body">
@@ -307,22 +306,31 @@ export default function MyWallsHub() {
           {/* Grid */}
           <div className="hub-my-wall__grid wall-grid">
             {ALL_NUMBERS.map(num => {
-              const entries   = globalIndex.get(num) || []
-              const isPicked  = pickedNumsSet.has(num)
-              const isActive  = selected?.number === num
-              const isMyNum   = Boolean(myNumber) && String(myNumber) === String(num)
+              const myPicksForNum = picksByNum.get(String(num)) || []
+              const isPicked      = myPicksForNum.length > 0
+              const isActive      = selected?.number === num
+              const isMyNum       = Boolean(myNumber) && String(myNumber) === String(num)
+              const isReelPick    = myPicksForNum.some(p => Boolean(p.film))
+              const pickCount     = myPicksForNum.length || 1
+
+              // Sport gate: no filter → all picks show; filter active → only matching sport
+              const activeSportId = sportFilter instanceof Set ? [...sportFilter][0] : sportFilter
+              const isPickedInSport = activeSportId
+                ? myPicksForNum.some(p => (p.sport || '').toLowerCase() === activeSportId.toLowerCase())
+                : isPicked
+
               return (
                 <button
                   key={num}
                   className={`wall-tile${isMyNum ? ' wall-tile--mine' : ''}`}
-                  style={getTileStyle(num, entries, isPicked, isActive, isMyNum, sportFilter)}
+                  style={getTileStyle(isPicked, isActive, isMyNum, isPickedInSport, isReelPick, pickCount)}
                   onClick={() => handleTileClick(num)}
                   aria-label={`#${num}${isPicked ? ' — on my wall' : ''}`}
                   aria-pressed={isActive}
                 >
                   <span
                     className="wall-tile__number"
-                    style={{ color: getTileTextCol(entries, isPicked, isActive, isMyNum, sportFilter) }}
+                    style={{ color: getTileTextCol(isPicked, isActive, isMyNum, isPickedInSport, isReelPick, pickCount) }}
                   >
                     {num}
                   </span>

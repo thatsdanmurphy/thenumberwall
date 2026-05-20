@@ -38,7 +38,7 @@
   outline: none;
   color: var(--color-paper);
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   letter-spacing: 0.01em;
   caret-color: var(--color-heat);
 }
@@ -72,7 +72,7 @@
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  background: #12161C;
+  background: var(--color-overlay);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
@@ -114,10 +114,10 @@
 /* Number result pieces */
 .hero-search__result-number {
   font-family: var(--font-scoreboard);
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   font-weight: 700;
   color: var(--color-heat);
-  min-width: 32px;
+  min-width: var(--space-5);
 }
 
 .hero-search__result-legends {
@@ -140,7 +140,7 @@
 
 /* Player result pieces */
 .hero-search__result-sport {
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   flex-shrink: 0;
   width: 20px;
   text-align: center;
@@ -148,7 +148,7 @@
 
 .hero-search__result-name {
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   font-weight: 500;
   color: var(--color-paper);
   flex: 1;
@@ -159,7 +159,7 @@
 
 .hero-search__result-meta {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color: var(--ink-dim);
   white-space: nowrap;
 }

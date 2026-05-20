@@ -331,13 +331,12 @@ function MyWallTile({ number, picks, isMyNumber, isSearching, justPlaced, onClic
   const hasPlayer  = picks.length > 0
   const count      = picks.length
 
-  // Use actual tier from TNW data for heat styling
+  // Heat is pick-COUNT only — 1 pick = ember, 2 = warm, etc.
+  // Don't inherit the player's TNW tier: one SACRED pick shouldn't max out the glow.
   const fakeEntries = hasPlayer
-    ? picks.map(p => ({ tier: p.tier || (p.source === 'tnw' ? 'LEGEND' : 'ACTIVE'), name: p.player_name }))
+    ? picks.map(() => ({ tier: 'LEGEND' }))
     : [{ tier: 'UNWRITTEN' }]
-
-  // Detect if any pick is SACRED — pass that through to getHeatStyle
-  const hasSacred = hasPlayer && picks.some(p => p.tier === 'SACRED')
+  const hasSacred = false
   const heat      = getHeatStyle(fakeEntries, hasSacred)
   const textColor = isSearching
     ? SELECTED_TILE.text
@@ -971,7 +970,7 @@ export default function MyWallPage() {
               <p className="my-wall-modal__text">This permanently deletes the wall and all its picks. This can't be undone.</p>
               <div className="my-wall-modal__actions">
                 <button className="btn-ghost" onClick={() => setShowClearConfirm(false)}>Keep it</button>
-                <button className="btn-primary" style={{ background: '#E8182E', borderColor: '#E8182E' }} onClick={handleDeleteWall}>Delete wall</button>
+                <button className="btn-primary" style={{ background: 'var(--color-team-sox)', borderColor: 'var(--color-team-sox)' }} onClick={handleDeleteWall}>Delete wall</button>
               </div>
             </div>
           </div>

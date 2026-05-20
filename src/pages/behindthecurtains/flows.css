@@ -41,7 +41,7 @@
 
 .fl-banner__lede {
   font-family: var(--font-program);
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.55;
   color: var(--color-muted);
   max-width: 64ch;
@@ -67,7 +67,7 @@
 
 .fl-pulse__num {
   font-family: var(--font-banner);
-  font-size: 1.75rem;
+  font-size: var(--text-display-sm);
   color: var(--color-paper);
   letter-spacing: 0.02em;
 }
@@ -161,7 +161,7 @@
   font-size: var(--text-micro);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  padding: 2px 8px;
+  padding: 2px var(--space-2);
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   white-space: nowrap;
@@ -182,7 +182,7 @@
 
 .fl-flow__intent {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-muted);
   margin: 0;
@@ -212,7 +212,7 @@
   font-size: var(--text-micro);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  padding: 2px 8px;
+  padding: 2px var(--space-2);
   border: 1px solid var(--border-faint);
   border-radius: var(--radius-sm);
   color: var(--color-paper);
@@ -313,7 +313,7 @@
 
 .fl-step__action {
   font-family: var(--font-banner);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   letter-spacing: 0.02em;
   color: var(--color-paper);
   line-height: 1.2;
@@ -321,7 +321,7 @@
 
 .fl-step__state {
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   color: var(--color-muted);
   line-height: 1.45;
 }
@@ -331,7 +331,7 @@
   padding-top: var(--space-1);
   border-top: 1px dashed var(--border-faint);
   font-family: var(--font-handwritten);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   line-height: 1.5;
   color: var(--color-paper);
   opacity: 0.85;
@@ -405,7 +405,7 @@
 
 .fl-flow__weight-line {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-paper);
   margin: 0;
@@ -441,7 +441,7 @@
 
 .fl-footer__line {
   font-family: var(--font-handwritten);
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--color-muted);
   margin: 0;
 }

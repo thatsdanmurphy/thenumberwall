@@ -18,7 +18,7 @@ import { TOWN_COORDS, STATE_CENTROIDS } from '../data/usGeography.js'
 import './WallsMap.css'
 
 const WORLD_TOPO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
-const MAP_HUE = '#e87c2a'
+const MAP_HUE = 'var(--color-heat)'
 
 // Region configs: projection center, scale, and bounding box for filtering dots.
 // North America covers CONUS + Hawaii + Alaska + Canada + Mexico.

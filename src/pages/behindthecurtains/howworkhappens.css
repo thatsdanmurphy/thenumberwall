@@ -40,7 +40,7 @@
 
 .hwh-banner__lede {
   font-family: var(--font-program);
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.55;
   color: var(--color-muted);
   max-width: 64ch;
@@ -78,7 +78,7 @@
 
 .hwh-section__lede {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--color-muted);
   max-width: 64ch;
@@ -124,21 +124,21 @@
 
 .hwh-pipeline__step {
   font-family: var(--font-banner);
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
   letter-spacing: 0.02em;
   color: var(--color-paper);
 }
 
 .hwh-pipeline__desc {
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   line-height: 1.45;
   color: var(--color-muted);
 }
 
 .hwh-pipeline__arrow {
   color: var(--color-muted);
-  margin-top: 32px;
+  margin-top: var(--space-5);
   flex-shrink: 0;
 }
 
@@ -162,7 +162,7 @@
 
 .hwh-pair__title {
   font-family: var(--font-banner);
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
   letter-spacing: 0.02em;
   color: var(--color-heat);
   margin: 0;
@@ -170,7 +170,7 @@
 
 .hwh-pair__desc {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--color-muted);
   margin: 0;
@@ -212,14 +212,14 @@
 
 .hwh-tradeoffs__value {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.45;
   color: var(--color-paper);
 }
 
 .hwh-tradeoffs__sep {
   font-family: var(--font-banner);
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--color-muted);
   text-align: center;
 }
@@ -244,7 +244,7 @@
 
 .hwh-failures__title {
   font-family: var(--font-banner);
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
   letter-spacing: 0.02em;
   color: var(--color-heat);
   margin: 0;
@@ -252,7 +252,7 @@
 
 .hwh-failures__desc {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--color-muted);
   margin: 0;
@@ -289,7 +289,7 @@
 
 .hwh-qa__title {
   font-family: var(--font-banner);
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
   letter-spacing: 0.02em;
   color: var(--color-paper);
   margin: 0;
@@ -297,7 +297,7 @@
 
 .hwh-qa__desc {
   font-family: var(--font-program);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--color-muted);
   margin: 0;
@@ -313,7 +313,7 @@
 
 .hwh-footer__line {
   font-family: var(--font-handwritten);
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--color-muted);
   margin: 0;
 }
@@ -327,7 +327,7 @@
 
 .hwh-back__link {
   font-family: var(--font-banner);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   letter-spacing: 0.02em;
   color: var(--color-muted);
   text-decoration: none;
@@ -352,15 +352,15 @@
   }
 
   .hwh-banner__title {
-    font-size: 1.75rem;
+    font-size: var(--text-display-sm);
   }
 
   .hwh-banner__lede {
-    font-size: 0.9375rem;
+    font-size: var(--text-body);
   }
 
   .hwh-section__title {
-    font-size: 1.25rem;
+    font-size: var(--text-h3);
   }
 
   .hwh-pipeline {
@@ -379,7 +379,7 @@
 
   .hwh-pipeline__arrow {
     transform: rotate(90deg);
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
 
   .hwh-pair {
@@ -408,6 +408,6 @@
   }
 
   .hwh-footer__line {
-    font-size: 0.875rem;
+    font-size: var(--text-body);
   }
 }

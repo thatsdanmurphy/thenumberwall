@@ -286,7 +286,7 @@
 .wall-tile--debating-pulse-3::after {
   content:        '';
   position:       absolute;
-  inset:          -8px;
+  inset:          -var(--space-2);
   border-radius: var(--radius-lg);
   box-shadow:     0 0 18px 6px  rgba(232, 124, 42, 0.50),
                   0 0 40px 14px rgba(232, 124, 42, 0.22),
@@ -345,7 +345,7 @@
 /* The number — bold, legible, scaled to fill the tile */
 .wall-tile__number {
   font-family: var(--font-banner);
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1;
   position: relative;
   z-index: 1;

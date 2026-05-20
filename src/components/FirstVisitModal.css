@@ -14,7 +14,7 @@
   position: relative;
   max-width: 400px;
   width: 100%;
-  background: #12161C;
+  background: var(--color-overlay);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   box-shadow:
@@ -63,7 +63,7 @@
 
 .fv-modal__subtitle {
   font-family: var(--font-program);
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   font-weight: 500;
   color: var(--color-heat);
   margin: 0 0 var(--space-3);
@@ -72,7 +72,7 @@
 
 .fv-modal__body {
   font-family: var(--font-program);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   line-height: 1.55;
   color: var(--ink-mid);
   margin: 0 0 var(--space-4);
@@ -96,7 +96,7 @@
 
 .fv-modal__tile {
   width: 48px;
-  height: 48px;
+  height: var(--space-6);
   border-radius: 5px;
   display: flex;
   align-items: center;

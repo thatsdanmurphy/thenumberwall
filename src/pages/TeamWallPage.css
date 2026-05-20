@@ -27,7 +27,7 @@
   border:          1px dashed var(--border-soft);
   border-radius: var(--radius-sm);
   font-family:     var(--font-scoreboard);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   letter-spacing:  0.10em;
   color:           var(--ink-dim);
   cursor:          pointer;
@@ -207,7 +207,7 @@
 .tw-add__error {
   font-family: var(--font-program);
   font-size: var(--text-small);
-  color: #ff6b6b;
+  color: var(--color-error);
 }
 
 /* Inputs inherit .tnw-input; slightly denser than the default. */
@@ -316,14 +316,14 @@
 
 .tw-page__school {
   font-family: var(--font-banner);
-  font-size:   2rem;
+  font-size:   var(--text-display-md);
   color:       var(--color-paper);
   margin:      0;
   line-height: 1.05;
 }
 
 .tw-page__school--long {
-  font-size: 1.5rem;
+  font-size: var(--text-display-xs);
 }
 
 .tw-page__sport-label {
@@ -337,7 +337,7 @@
 
 .tw-lede {
   font-family: var(--font-program);
-  font-size:   var(--text-caption);
+  font-size:   var(--text-small);
   color:       var(--color-muted);
   margin:      var(--space-1) 0 0;
   line-height: 1.5;
@@ -392,7 +392,7 @@
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color: var(--color-muted);
   cursor: pointer;
   transition: all var(--motion-hover);
@@ -495,7 +495,7 @@
 }
 
 .tw-confirm__danger {
-  color: #ff8a8a;
+  color: var(--color-error);
   border-color: rgba(255, 107, 107, 0.35);
 }
 
@@ -533,7 +533,7 @@
 }
 
 .tw-entry__delete:hover {
-  color: #ff8a8a;
+  color: var(--color-error);
   background: rgba(255, 107, 107, 0.08);
 }
 
@@ -684,7 +684,7 @@
 
 .tw-bridge__title {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-caption);
+  font-size:      var(--text-small);
   letter-spacing: 0.18em;
   color:          var(--ink-low);
   text-transform: uppercase;
@@ -724,7 +724,7 @@
 }
 
 .tw-bridge__link:hover .tw-bridge__name {
-  color: var(--color-heat, #e87c2a);
+  color: var(--color-heat, var(--color-heat));
 }
 
 .tw-bridge__name {
@@ -795,7 +795,7 @@
   font-size: var(--text-h3);
   letter-spacing: 0.06em;
   color: var(--color-paper);
-  min-width: 48px;
+  min-width: var(--space-6);
   text-align: center;
   flex-shrink: 0;
   line-height: 1.2;
@@ -829,13 +829,13 @@
 
 .tw-all-row__detail {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color: var(--ink-dim);
 }
 
 .tw-all-row__pro-badge {
   font-family: var(--font-scoreboard);
-  font-size: 0.5rem;
+  font-size: var(--text-micro);
   letter-spacing: 0.14em;
   color: rgba(255, 255, 255, 0.65);
   background: rgba(255, 255, 255, 0.08);

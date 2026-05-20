@@ -13,8 +13,14 @@
   --color-heat:     #E87C2A;
   --color-blaze:    #F5C135;
   --color-sacred:   #C8DCFF;
-  --color-action:   #FFFFFF;
   --color-border:   rgba(255, 255, 255, 0.08);
+  --color-error:    #ff6b6b;  /* validation errors, destructive warnings */
+  --color-overlay:  #12161C;  /* modal/panel overlay bg — one step above surface */
+
+  /* Timeline glow system — legend career waveform */
+  --color-timeline-low:   #FF4D5E;  /* negative/low-glow moments */
+  --color-timeline-peak:  #FFF0B0;  /* golden peak moments */
+  --color-timeline-pos:   #9ED44C;  /* positive/strong performance */
 
   /* Personal identity — "my wall" / "my number" blue treatment */
   --color-personal:          rgba(100, 160, 255, 0.90);  /* text: bright blue */
@@ -45,10 +51,8 @@
   --space-5: 32px;
   --space-6: 48px;
   --space-7: 64px;
-  --space-8: 96px;
 
   /* Grid */
-  --grid-gutter:    24px;
   --grid-max-width: 1280px;
   --grid-margin:    24px;
 
@@ -59,7 +63,6 @@
 
   /* Motion */
   --motion-hover:  180ms ease-out;
-  --motion-reveal: 250ms ease-in-out;
   --motion-heat:   300ms ease-in-out;
   --motion-color:  200ms ease-out;
 
@@ -72,12 +75,25 @@
   --text-h2:      1.125rem;  /* section heads */
   --text-body:    0.9rem;    /* base body copy, inputs */
   --text-small:   0.75rem;   /* dense body, secondary text */
-  --text-caption: 0.75rem;   /* pills, chips, badges — WCAG min 12px */
   --text-label:   0.6875rem; /* eyebrow / all-caps labels — 11px, AA with tracking */
   --text-micro:   0.625rem;  /* smallest labels, stat tags — 10px floor */
+  --text-body-sm: 0.8125rem; /* 13px — dense UI text, secondary card copy */
+  --text-base:    1rem;      /* 16px — mid-weight UI text, nav items, modal body */
+  --text-h3:      1.25rem;   /* 20px — sub-section heads, timeline era labels */
+
+  /* ── Display scale ───────────────────────────────────────────────
+     For hero text, jersey numbers, page headlines. Nothing below
+     --text-micro (0.625rem / 10px) is permitted — that is the hard
+     accessibility floor. Sub-scale text either comes up to the floor
+     or gets aria-hidden="true" if purely decorative. */
+  --text-display-xs:   1.5rem;   /* 24px — small display labels, search headers */
+  --text-display-sm:   1.75rem;  /* 28px — section heroes, era labels */
+  --text-display-md:   2rem;     /* 32px — number displays, page heroes */
+  --text-display-lg:   2.5rem;   /* 40px — large number displays */
+  --text-display-xl:   3rem;     /* 48px — hero numbers, panel display */
+  --text-display-hero: 4.5rem;   /* 72px — timeline hero jersey number */
 
   /* Letter-spacing scale for scoreboard-style labels */
-  --tracking-normal:  0;
   --tracking-wide:    0.10em;
   --tracking-wider:   0.14em;
   --tracking-widest:  0.18em;

@@ -15,7 +15,7 @@
 
 .about-page__heading {
   font-family:    var(--font-banner);
-  font-size:      2.5rem;
+  font-size:      var(--text-display-lg);
   letter-spacing: 0.04em;
   color:          var(--color-paper);
   line-height:    1;
@@ -46,14 +46,14 @@
 
 .about-page__body {
   font-family: var(--font-program);
-  font-size:   1rem;
+  font-size:   var(--text-base);
   line-height: 1.75;
   color:       var(--ink-mid);
   margin-bottom: var(--space-3);
 }
 
 .about-page__body--dim {
-  font-size: 0.875rem;
+  font-size: var(--text-body);
   color:     var(--ink-low);
 }
 
@@ -102,13 +102,13 @@
 
 .about-page__city-cta-teams {
   font-family: var(--font-program);
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
   color:       var(--ink-dim);
   flex:        1;
 }
 
 .about-page__city-cta-arrow {
-  font-size:  0.875rem;
+  font-size:  var(--text-body);
   color:      rgba(232,124,42,0.55);
   transition: transform var(--motion-hover), color var(--motion-hover);
 }

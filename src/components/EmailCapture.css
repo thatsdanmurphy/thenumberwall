@@ -18,16 +18,16 @@
   flex:      1;
   min-width: 0;
   padding:   0 10px;
-  height:    32px;
+  height:    var(--space-5);
   font-size: var(--text-small);
 }
 
 /* Button inherits .tnw-btn .tnw-btn--secondary; sized to match input row. */
 .email-capture__btn {
-  height:         32px;
+  height:         var(--space-5);
   padding:        0 12px;
   font-family:    var(--font-program);
-  font-size:      var(--text-caption);
+  font-size:      var(--text-small);
   letter-spacing: 0.05em;
   text-transform: none;
 }
@@ -53,7 +53,7 @@
 }
 
 .email-capture--footer .email-capture__input {
-  font-size: var(--text-caption);
+  font-size: var(--text-small);
 }
 
 /* ── Panel variant (post-pick, inside PlayerPanel) ───────────── */
