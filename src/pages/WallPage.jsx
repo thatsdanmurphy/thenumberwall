@@ -54,7 +54,8 @@ export default function WallPage() {
 
   return (
     <AppShell>
-      <AppHeader />
+      {/* liveCount — hardcoded for MVP; replace with useLiveCount() hook in Task #6 */}
+      <AppHeader liveCount={3} />
       <main className="wall-page">
 
         <SportsFilter active={sportFilter} onChange={handleFilterChange} />

@@ -154,6 +154,77 @@
   border-radius:  2px;
 }
 
+/* ── Live strip — tonight's games teaser, below nav ─────────────────────── */
+
+/* When the strip is present, reduce the bottom margin to account for strip height */
+.app-header--has-strip {
+  padding-bottom: 0;
+}
+
+.app-header__live-strip {
+  display:          flex;
+  align-items:      center;
+  gap:              var(--space-2);
+  /* Break out of header padding to run full width */
+  margin-left:      calc(-1 * var(--grid-margin));
+  margin-right:     calc(-1 * var(--grid-margin));
+  margin-top:       var(--space-3);
+  padding:          var(--space-1) var(--grid-margin);
+  background:       rgba(232, 124, 42, 0.07); /* ds:intentional — heat at 7%, no surface token this warm */
+  border-top:       1px solid rgba(232, 124, 42, 0.15); /* ds:intentional — heat border faint */
+  text-decoration:  none;
+  cursor:           pointer;
+  transition:       background var(--motion-hover), border-color var(--motion-hover);
+}
+
+.app-header__live-strip:hover {
+  background:    rgba(232, 124, 42, 0.13); /* ds:intentional — heat hover */
+  border-color:  rgba(232, 124, 42, 0.28); /* ds:intentional — heat border hover */
+}
+
+/* Pulsing red dot — matches LivePage dot */
+.app-header__live-strip-dot {
+  display:       inline-block;
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  animation:     live-strip-pulse 2s ease-in-out infinite;
+  flex-shrink:   0;
+}
+
+@keyframes live-strip-pulse {
+  0%, 100% { opacity: 1;    transform: scale(1);    }
+  50%       { opacity: 0.5; transform: scale(0.80); }
+}
+
+.app-header__live-strip-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--color-error);
+  text-transform: uppercase;
+  flex-shrink:    0;
+}
+
+.app-header__live-strip-count {
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--ink-mid);
+  flex:        1;
+  min-width:   0;
+}
+
+.app-header__live-strip-cta {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-wide);
+  color:          var(--color-heat);
+  flex-shrink:    0;
+  white-space:    nowrap;
+}
+
 /* ── Retained utility classes ────────────────────────────────────────────── */
 
 /* NEW badge — inline next to a nav link */

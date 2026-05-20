@@ -1,0 +1,313 @@
+/* ChaserCard — Record in reach, /live chaser strip */
+
+/* ── Card shell ──────────────────────────────────────────────────────────── */
+
+.chaser-card {
+  position: relative;
+  flex-shrink: 0;
+  width: 220px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  scroll-snap-align: start;
+  transition: border-color var(--motion-hover), background var(--motion-hover);
+}
+
+.chaser-card:hover {
+  border-color: var(--border-medium);
+  background: var(--surface-raised);
+}
+
+/* Tonight variant — heat border + breathing glow animation
+   Three states: Unknown (dim) → First Light (soft ember) → Ascending (bright pulse)
+   The card enters at First Light and breathes through Ascending continuously. */
+.chaser-card--tonight {
+  border-color: var(--color-heat);
+  animation: chaser-tonight-breathe 3.2s ease-in-out infinite;
+}
+
+/* Pause on hover — freeze at ascending peak so it feels solid, not jittery */
+.chaser-card--tonight:hover {
+  animation-play-state: paused;
+  box-shadow:
+    0 0 0 1px var(--color-heat),
+    0 0 32px 10px rgba(232, 124, 42, 0.32), /* ds:intentional — ascending hover peak */
+    0 0 56px 20px rgba(232, 124, 42, 0.10); /* ds:intentional — heat ambient hover */
+}
+
+/* Unknown  → base card (no glow, no animation — not tonight)
+   First Light → soft ember ring, card just woke up
+   Ascending  → full pulse, wider spread, brighter core */
+@keyframes chaser-tonight-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--color-heat),
+      0 0 12px 2px rgba(232, 124, 42, 0.14), /* ds:intentional — first light glow */
+      0 0 24px 6px rgba(232, 124, 42, 0.06); /* ds:intentional — first light ambient */
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--color-heat),
+      0 0 22px 6px rgba(232, 124, 42, 0.28), /* ds:intentional — ascending glow */
+      0 0 44px 16px rgba(232, 124, 42, 0.12); /* ds:intentional — ascending ambient */
+  }
+}
+
+/* ── Tonight pill ────────────────────────────────────────────────────────── */
+
+.chaser-card__tonight-pill {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-blaze);
+  background: rgba(245, 193, 53, 0.12); /* ds:intentional — blaze at 12%, no alpha token */
+  border: 1px solid rgba(245, 193, 53, 0.30); /* ds:intentional */
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  line-height: 1.4;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.chaser-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.chaser-card__number {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+}
+
+.chaser-card__lens {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+}
+
+/* ── Player ──────────────────────────────────────────────────────────────── */
+
+.chaser-card__player {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.chaser-card__player-name {
+  font-family: var(--font-banner);
+  font-size: var(--text-body-sm);
+  color: var(--ink-high);
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+}
+
+.chaser-card__team {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  flex-shrink: 0;
+}
+
+/* ── Stat row ────────────────────────────────────────────────────────────── */
+
+.chaser-card__stat-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  gap: var(--space-2);
+}
+
+.chaser-card__stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chaser-card__stat-value {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-display-xs);
+  font-weight: 700;
+  color: var(--color-heat);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.chaser-card__stat-label {
+  font-family: var(--font-program);
+  font-size: var(--text-micro);
+  color: var(--ink-mid);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.chaser-card__distance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.chaser-card__distance-value {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-body-sm);
+  color: var(--ink-mid);
+  line-height: 1;
+}
+
+.chaser-card__distance-label {
+  font-family: var(--font-program);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+}
+
+/* ── Progress bar (record-approach) ─────────────────────────────────────── */
+
+.chaser-card__bar-wrap {
+  margin-bottom: var(--space-2);
+}
+
+.chaser-card__bar-track {
+  position: relative;
+  height: 7px;
+  background: var(--surface-3);
+  border-radius: 99px;
+  margin-bottom: var(--space-1);
+}
+
+.chaser-card__bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-heat), var(--color-blaze));
+  border-radius: 99px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Dot at progress tip */
+.chaser-card__bar-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: var(--color-blaze);
+  border: 2px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px rgba(245, 193, 53, 0.50); /* ds:intentional — blaze glow */
+  transition: left 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chaser-card__target-label {
+  font-family: var(--font-program);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+  display: block;
+}
+
+/* ── Uncharted bar ───────────────────────────────────────────────────────── */
+
+.chaser-card__uncharted-bar-wrap {
+  margin-bottom: var(--space-2);
+}
+
+.chaser-card__uncharted-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 7px;
+  background: var(--surface-3);
+  border-radius: 99px;
+}
+
+/* Fill fades out toward horizon — no finish line */
+.chaser-card__uncharted-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-heat) 0%, rgba(232, 124, 42, 0.18) 100%); /* ds:intentional — fade to transparent */
+  border-radius: 99px;
+}
+
+.chaser-card__uncharted-dot {
+  position: absolute;
+  left: 65%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: var(--color-heat);
+  border: 2px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px rgba(232, 124, 42, 0.40); /* ds:intentional — heat glow */
+}
+
+.chaser-card__uncharted-horizon {
+  position: absolute;
+  right: var(--space-2);
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-small);
+  color: var(--ink-dim);
+  line-height: 1;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.chaser-card__context {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--ink-mid);
+  font-style: italic;
+  margin: 0 0 var(--space-2);
+  line-height: 1.4;
+}
+
+/* ── Playing indicator ───────────────────────────────────────────────────── */
+
+.chaser-card__playing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-faint);
+}
+
+.chaser-card__playing-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-heat);
+  animation: chaser-playing-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes chaser-playing-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.chaser-card__playing-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}

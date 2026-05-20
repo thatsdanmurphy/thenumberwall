@@ -1,0 +1,153 @@
+/* LivePage — /live
+   ESPN tells you the score. The wall tells you what it means. */
+
+/* ── Page shell ──────────────────────────────────────────────────────────── */
+
+.live-page {
+  min-height: 100vh;
+  background: var(--color-night);
+  padding-bottom: var(--space-7);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.live-page__header {
+  border-bottom: 1px solid var(--border-faint);
+  padding: var(--space-6) 0 var(--space-5);
+}
+
+.live-page__header-inner {
+  max-width: var(--grid-max-width);
+  margin: 0 auto;
+  padding: 0 var(--grid-margin);
+}
+
+.live-page__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Pulsing red dot — "we are live" */
+.live-page__live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-error);
+  animation: live-dot-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes live-dot-pulse {
+  0%, 100% { opacity: 1;    transform: scale(1);    }
+  50%       { opacity: 0.5; transform: scale(0.80); }
+}
+
+.live-page__live-label {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-error);
+  text-transform: uppercase;
+}
+
+.live-page__game-count {
+  font-family: var(--font-program);
+  font-size: var(--text-small);
+  color: var(--ink-mid);
+}
+
+.live-page__title {
+  font-family: var(--font-banner);
+  font-size: var(--text-display-md);
+  color: var(--color-blaze);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0 0 var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .live-page__title {
+    font-size: var(--text-display-lg);
+  }
+}
+
+.live-page__lede {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-mid);
+  margin: 0;
+  max-width: 480px;
+}
+
+/* ── Section wrapper ─────────────────────────────────────────────────────── */
+
+.live-page__section {
+  max-width: var(--grid-max-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--grid-margin) 0;
+}
+
+.live-page__section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.live-page__refresh-time {
+  font-family: var(--font-scoreboard);
+  font-size: var(--text-micro);
+  color: var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Chaser strip ────────────────────────────────────────────────────────── */
+
+.live-page__section--chasers {
+  /* Full-width scroll — break out of max-width on the strip itself */
+}
+
+.live-page__chaser-strip {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--space-2); /* room for scrollbar on some browsers */
+  /* Hide scrollbar visually but keep it functional */
+  scrollbar-width: none;
+}
+
+.live-page__chaser-strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Game list ───────────────────────────────────────────────────────────── */
+
+.live-page__section--games {
+  padding-top: var(--space-6);
+}
+
+.live-page__game-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.live-page__empty {
+  padding: var(--space-6) 0;
+  text-align: center;
+}
+
+.live-page__empty-text {
+  font-family: var(--font-program);
+  font-size: var(--text-body);
+  color: var(--ink-dim);
+  margin: 0;
+}

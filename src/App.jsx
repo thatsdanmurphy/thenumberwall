@@ -13,6 +13,7 @@ import TeamWallPage   from './pages/TeamWallPage.jsx'
 import TownWallsPage  from './pages/TownWallsPage.jsx'
 import ReelWallPage   from './pages/ReelWallPage.jsx'
 import ShowdownPage   from './pages/ShowdownPage.jsx'
+import LivePage       from './pages/LivePage.jsx'
 import DesignSystem   from './pages/DesignSystem.jsx'
 import NotFoundPage   from './pages/NotFoundPage.jsx'
 
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/reel"           element={<Navigate to="/reel/mighty-ducks" replace />} />
         <Route path="/showdown/:showdownId" element={<ShowdownPage />} />
         <Route path="/showdown"            element={<ShowdownPage />} />
+        <Route path="/live"                element={<LivePage />} />
 
         {/* Legacy redirect — /design now lives under /behindthecurtains/design */}
         <Route path="/design" element={<Navigate to="/behindthecurtains/design" replace />} />
