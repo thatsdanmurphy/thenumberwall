@@ -510,12 +510,12 @@ function AddWallModal({ open, onClose, onSelectCity, onSelectPrompt }) {
 
 // ─── Reusable row list from NewWallModal ──────────────────────────────────────
 // Extracted so we can embed it inside AddWallModal without duplication.
-import { Trophy, Flame, Shield, Diamond, Zap, ClipboardList, Users, Swords, Map } from 'lucide-react'
+import { Trophy, Flame, Shield, Diamond, Zap, ClipboardList, Users, Swords, Map as MapIcon } from 'lucide-react'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
 
 const ICON_MAP = {
   trophy: Trophy, flame: Flame, shield: Shield, diamond: Diamond,
-  zap: Zap, 'clipboard-list': ClipboardList, users: Users, swords: Swords, map: Map,
+  zap: Zap, 'clipboard-list': ClipboardList, users: Users, swords: Swords, map: MapIcon,
 }
 
 function NewWallModalRows({ onSelect }) {
