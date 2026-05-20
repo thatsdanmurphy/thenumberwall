@@ -97,7 +97,7 @@ const REEL_TEXT_COLOR = 'rgba(240, 190, 85, 1)'
  * isReelPick: user has a reel/film pick on this number → cinema amber treatment.
  * pickCount:  number of user picks on this number → drives heat level (not TNW tier).
  */
-function getTileStyle(isPicked, isActive, isMyNumber, isPickedInSport, isReelPick, pickCount = 1) {
+function getTileStyle(isPicked, isActive, isMyNumber, isPickedInSport, isReelPick, pickCount = 1, globalEntries = []) {
   if (isActive) {
     if (isMyNumber) {
       return {
@@ -124,16 +124,34 @@ function getTileStyle(isPicked, isActive, isMyNumber, isPickedInSport, isReelPic
     const heat = getHeatStyle(fakeEntries)
     return { background: heat.bg, border: `1px solid ${heat.border}`, borderRadius: '4px', boxShadow: heat.glow }
   }
+  // Ghost mode — global TNW heat at 17% opacity. Shows the wall's universe
+  // without competing with tiles the user has personally claimed.
+  if (globalEntries.length > 0) {
+    const isSacred = globalEntries.some(e => e.tier === 'SACRED')
+    const heat     = getHeatStyle(globalEntries, isSacred)
+    return {
+      background:   heat.bg,
+      border:       `1px solid ${heat.border}`,
+      borderRadius: '4px',
+      boxShadow:    'none',
+      opacity:      0.17,
+    }
+  }
   return DIM_STYLE
 }
 
-function getTileTextCol(isPicked, isActive, isMyNumber, isPickedInSport, isReelPick, pickCount = 1) {
+function getTileTextCol(isPicked, isActive, isMyNumber, isPickedInSport, isReelPick, pickCount = 1, globalEntries = []) {
   if (isActive)   return SELECTED_TILE.text
   if (isMyNumber) return MINE_TEXT
   if (isPicked && isPickedInSport) {
     if (isReelPick) return REEL_TEXT_COLOR
     const fakeEntries = Array(pickCount).fill({ tier: 'LEGEND' })
     return getTileTextColor(fakeEntries)
+  }
+  // Ghost — tile opacity handles the fade; return full heat color so it reads at 17%
+  if (globalEntries.length > 0) {
+    const isSacred = globalEntries.some(e => e.tier === 'SACRED')
+    return getTileTextColor(globalEntries, isSacred)
   }
   return 'var(--ink-dim)'
 }
@@ -319,18 +337,23 @@ export default function MyWallsHub() {
                 ? myPicksForNum.some(p => (p.sport || '').toLowerCase() === activeSportId.toLowerCase())
                 : isPicked
 
+              // Ghost — global TNW entries for this number (used when tile has no personal picks)
+              const globalEntries = (!isPicked && !isMyNum && !isActive)
+                ? (globalIndex.get(num) || []).filter(e => e.tier !== 'UNWRITTEN')
+                : []
+
               return (
                 <button
                   key={num}
                   className={`wall-tile${isMyNum ? ' wall-tile--mine' : ''}`}
-                  style={getTileStyle(isPicked, isActive, isMyNum, isPickedInSport, isReelPick, pickCount)}
+                  style={getTileStyle(isPicked, isActive, isMyNum, isPickedInSport, isReelPick, pickCount, globalEntries)}
                   onClick={() => handleTileClick(num)}
                   aria-label={`#${num}${isPicked ? ' — on my wall' : ''}`}
                   aria-pressed={isActive}
                 >
                   <span
                     className="wall-tile__number"
-                    style={{ color: getTileTextCol(isPicked, isActive, isMyNum, isPickedInSport, isReelPick, pickCount) }}
+                    style={{ color: getTileTextCol(isPicked, isActive, isMyNum, isPickedInSport, isReelPick, pickCount, globalEntries) }}
                   >
                     {num}
                   </span>
