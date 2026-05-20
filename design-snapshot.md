@@ -1,5 +1,5 @@
 # TNW Design System Snapshot
-Generated: 2026-05-19 19:12 UTC — run `npm run ds:snapshot` to refresh
+Generated: 2026-05-20 14:11 UTC — run `npm run ds:snapshot` to refresh
 
 > Read this before writing any component or style. If this file is
 > from a previous session, regenerate before building.
