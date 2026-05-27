@@ -277,11 +277,39 @@ export const SELECTED_TILE = {
   text:   '#FFFFFF',
 }
 
+// ─── Inferno intensity modulation ──────────────────────────────────────────
+// Within level 5 (6+ legends), modulate the glow by exact count so #10 (11 legends)
+// burns visibly hotter than #4 (7 legends). Count 6 = base, count 11+ saturates.
+// Scales both blur radius and alpha of each glow layer.
+
+function scaleGlow(glowString, blurFactor, alphaFactor) {
+  return glowString.replace(
+    /(\d+(?:\.\d+)?)px rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/g,
+    (_, blur, r, g, b, a) => {
+      const newBlur  = Math.round(parseFloat(blur) * blurFactor)
+      const newAlpha = Math.min(parseFloat(a) * alphaFactor, 1)
+      return `${newBlur}px rgba(${r},${g},${b},${newAlpha.toFixed(3)})`
+    }
+  )
+}
+
+function modulateInferno(baseInferno, count) {
+  if (count <= 6) return baseInferno
+  // t ramps 0 → 1 between count 6 and count 11; saturates above 11.
+  const t = Math.min((count - 6) / 5, 1)
+  // +30% blur, +25% alpha at saturation — visible but not overpowering.
+  return {
+    ...baseInferno,
+    glow: scaleGlow(baseInferno.glow, 1 + t * 0.30, 1 + t * 0.25),
+  }
+}
+
 export function getHeatStyle(entries, isSacred = false) {
   if (isSacred) return SACRED_TILE
   const legends = entries.filter(e => e.tier !== 'UNWRITTEN')
   if (legends.length > 0 && legends.every(e => e.tier === 'RIVAL')) return RIVAL_TILE
   const level = getHeatLevelByCount(entries)
+  if (level === 5) return modulateInferno(HEAT_TILES[5], legends.length)
   return HEAT_TILES[level]
 }
 
@@ -327,7 +355,9 @@ const BC_SACRED_TILE = {
 
 export function getHeatStyleBC(entries, isSacred = false) {
   if (isSacred) return BC_SACRED_TILE
+  const legends = (entries || []).filter(e => e.tier !== 'UNWRITTEN')
   const level = getHeatLevelByCount(entries)
+  if (level === 5) return modulateInferno(BC_HEAT_TILES[5], legends.length)
   return BC_HEAT_TILES[level]
 }
 
