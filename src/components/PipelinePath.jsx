@@ -94,9 +94,14 @@ function slugify(name) {
 // Shorten school names for the collapsed route view
 function shortName(name) {
   if (!name) return ''
+  // Strip parenthetical annotations first — "Filathlitikos (youth club)" → "Filathlitikos",
+  // "University of Oklahoma (never attended)" → "University of Oklahoma". Without this,
+  // the length-truncation fallback below grabs the last word and produces orphans like
+  // "club)" or "(USP)" in the route display.
+  let s = name.replace(/\s*\([^)]*\)\s*/g, ' ').trim()
   // "University of Michigan" → "Michigan"
   // "Junipero Serra High School" → "Serra HS"
-  let s = name
+  s = s
     .replace(/^(University|Univ\.?) of /i, '')
     .replace(/^The /i, '')
     .replace(/ University$/i, '')

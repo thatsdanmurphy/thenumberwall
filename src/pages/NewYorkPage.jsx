@@ -9,6 +9,7 @@ import PlayerPanel  from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import { nyLegends, nyCurrent, buildFilteredIndex } from '../data/index.js'
 import { LEGEND_SPORTS } from '../data/sports.js'
+import { getIdentity, setIdentityField } from '../lib/identity.js'
 import './NewYorkPage.css'
 
 // Dynamic season label: "25/26" — flips in July each year
@@ -34,6 +35,19 @@ export default function NewYorkPage() {
   useEffect(() => { document.title = 'The New York Wall | The Number Wall' }, [])
   const [selected,     setSelected]     = useState(null)
   const [sportFilter,  setSportFilter]  = useState(null)
+  const [myNumber,     setMyNumber]     = useState(() => getIdentity().number ?? null)
+
+  // Claim/clear identity number — toggle by passing the same value to clear.
+  function handleClaimNumber(num) {
+    const val = String(num)
+    if (myNumber === val) {
+      setIdentityField('number', null)
+      setMyNumber(null)
+    } else {
+      setIdentityField('number', val)
+      setMyNumber(val)
+    }
+  }
 
   const baseData = tab === 'legends' ? nyLegends : nyCurrent
 
@@ -115,6 +129,8 @@ export default function NewYorkPage() {
             mode={tab === 'current' ? 'current' : 'default'}
             sportFilter={sportFilter}
             wallId={tab === 'current' ? 'none' : 'newyork'}
+            myNumber={myNumber}
+            onClaimNumber={handleClaimNumber}
           />
 
         </div>

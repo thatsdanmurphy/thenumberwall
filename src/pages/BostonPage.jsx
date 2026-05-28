@@ -9,6 +9,7 @@ import PlayerPanel  from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import { bostonLegends, bostonCurrent, buildFilteredIndex } from '../data/index.js'
 import { LEGEND_SPORTS } from '../data/sports.js'
+import { getIdentity, setIdentityField } from '../lib/identity.js'
 import './BostonPage.css'
 
 // Dynamic season label: "25/26" — flips in July each year
@@ -35,6 +36,19 @@ export default function BostonPage() {
   useEffect(() => { document.title = 'The Boston Wall | The Number Wall' }, [])
   const [selected,     setSelected]     = useState(null)
   const [sportFilter,  setSportFilter]  = useState(null)
+  const [myNumber,     setMyNumber]     = useState(() => getIdentity().number ?? null)
+
+  // Claim/clear identity number — toggle by passing the same value to clear.
+  function handleClaimNumber(num) {
+    const val = String(num)
+    if (myNumber === val) {
+      setIdentityField('number', null)
+      setMyNumber(null)
+    } else {
+      setIdentityField('number', val)
+      setMyNumber(val)
+    }
+  }
 
   // Pick the right dataset for the active tab
   const baseData = tab === 'legends' ? bostonLegends : bostonCurrent
@@ -120,6 +134,8 @@ export default function BostonPage() {
             mode={tab === 'current' ? 'current' : 'default'}
             sportFilter={sportFilter}
             wallId={tab === 'current' ? 'none' : 'boston'}
+            myNumber={myNumber}
+            onClaimNumber={handleClaimNumber}
           />
 
         </div>

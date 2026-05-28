@@ -23,13 +23,16 @@
   --color-timeline-pos:   #9ED44C;  /* positive/strong performance */
 
   /* Personal identity — "my wall" / "my number" blue treatment */
-  --color-personal:          rgba(100, 160, 255, 0.90);  /* text: bright blue */
-  --color-personal-border:   rgba(60,  130, 255, 0.80);  /* tile/card border */
-  --color-personal-glow:     rgba(50,  100, 240, 0.38);  /* box-shadow halo */
-  --color-personal-bg:       rgba(50,  100, 240, 0.08);  /* fill for added state */
-  --color-personal-tile-bg:  rgba(28,  65,  200, 0.42);  /* full tile fill (main wall) */
-  --color-personal-dim:      rgba(60,  130, 255, 0.22);  /* dormant border */
-  --color-personal-mid:      rgba(60,  130, 255, 0.45);  /* hover border */
+  --color-personal:               rgba(100, 160, 255, 0.90);  /* text: bright blue */
+  --color-personal-border:        rgba(60,  130, 255, 0.80);  /* tile/card border */
+  --color-personal-glow:          rgba(50,  100, 240, 0.38);  /* single-layer halo (legacy) */
+  --color-personal-glow-inner:    rgba(100, 160, 255, 0.85);  /* multi-layer inner — competes with inferno */
+  --color-personal-glow-mid:      rgba(60,  130, 255, 0.50);  /* multi-layer mid */
+  --color-personal-glow-outer:    rgba(40,  90,  220, 0.25);  /* multi-layer outer corona */
+  --color-personal-bg:            rgba(50,  100, 240, 0.08);  /* fill for added state */
+  --color-personal-tile-bg:       rgba(28,  65,  200, 0.42);  /* full tile fill (main wall) */
+  --color-personal-dim:           rgba(60,  130, 255, 0.22);  /* dormant border */
+  --color-personal-mid:           rgba(60,  130, 255, 0.45);  /* hover border */
 
   /* Team */
   --color-team-sox:      #E8182E;
