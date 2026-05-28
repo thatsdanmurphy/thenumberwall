@@ -8,10 +8,12 @@ import './WallGrid.css'
 
 // Personal tile — full blue cell when this is your number.
 // Overrides the entire heat treatment: bg, border, glow, and text color.
+// Multi-layer glow matches inferno's visual weight so blue holds its own
+// when adjacent tiles are burning at level 5.
 const MINE_STYLE = {
   background: 'var(--color-personal-tile-bg)',
   border:     '1px solid var(--color-personal-border)',
-  boxShadow:  '0 0 20px var(--color-personal-glow)',
+  boxShadow:  '0 0 20px var(--color-personal-glow-inner), 0 0 38px var(--color-personal-glow-mid), 0 0 58px var(--color-personal-glow-outer)',
 }
 const MINE_TEXT = 'var(--color-personal)'
 

@@ -10,12 +10,14 @@ import PlayerPanel from '../components/PlayerPanel.jsx'
 import SportsFilter from '../components/SportsFilter.jsx'
 import FirstVisitModal  from '../components/FirstVisitModal.jsx'
 import { wallData, buildFilteredIndex, globalIndex } from '../data/index.js'
+import { getIdentity, setIdentityField } from '../lib/identity.js'
 import './WallPage.css'
 
 export default function WallPage() {
   const { num } = useParams()  // from /number/:num route
   const [selected,     setSelected]     = useState(null)  // { number, entries } | null
   const [sportFilter,  setSportFilter]  = useState(null)  // Set of sport IDs | null = all
+  const [myNumber,     setMyNumber]     = useState(() => getIdentity().number ?? null)
 
   useEffect(() => { document.title = 'The Number Wall' }, [])
 
@@ -42,6 +44,18 @@ export default function WallPage() {
     setSportFilter(next)
     // Clear selection when filter changes — selected number may not be visible
     setSelected(null)
+  }
+
+  // Claim/clear identity number. Toggling — pass the current value to clear it.
+  function handleClaimNumber(num) {
+    const val = String(num)
+    if (myNumber === val) {
+      setIdentityField('number', null)
+      setMyNumber(null)
+    } else {
+      setIdentityField('number', val)
+      setMyNumber(val)
+    }
   }
 
 
@@ -178,6 +192,8 @@ export default function WallPage() {
             onClear={handleClear}
             sportFilter={sportFilter}
             wallId="global"
+            myNumber={myNumber}
+            onClaimNumber={handleClaimNumber}
           />
         </div>
       </main>
