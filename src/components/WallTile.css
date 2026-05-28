@@ -54,6 +54,14 @@
   opacity: 0.80;
 }
 
+/* "My number" wins over unwritten — no striping, full opacity, blue burns clean.
+   Applies whether or not legends exist at this number. */
+.wall-tile--mine.wall-tile--unwritten,
+.wall-tile--mine {
+  background-image: none !important;
+  opacity: 1;
+}
+
 /* Active — white ring + elevated z. Background/border/glow handled inline.
    Smooth ring appearance via box-shadow transition above. */
 .wall-tile--active {
