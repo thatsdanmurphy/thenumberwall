@@ -62,9 +62,10 @@ function CollabDots({ contributors }) {
 const ALL_NUMBERS = ['0', '00', ...Array.from({ length: 99 }, (_, i) => String(i + 1))]
 
 // Personal blue overrides — matches WallGrid MINE_STYLE
+// Multi-layer glow so the blue holds its own against adjacent inferno tiles.
 const MINE_BG     = 'var(--color-personal-tile-bg)'
 const MINE_BORDER = 'var(--color-personal-border)'
-const MINE_GLOW   = '0 0 20px var(--color-personal-glow)'
+const MINE_GLOW   = '0 0 20px var(--color-personal-glow-inner), 0 0 38px var(--color-personal-glow-mid), 0 0 58px var(--color-personal-glow-outer)'
 const MINE_TEXT   = 'var(--color-personal)'
 
 // DIM style — unowned tiles default state (clean dark, not full heat)
