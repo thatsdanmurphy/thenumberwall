@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import './EmailCapture.css'
 
 const KIT_FORM_ID  = import.meta.env.VITE_KIT_FORM_ID  || '9221625'

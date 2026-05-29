@@ -7,7 +7,9 @@ import './AppHeader.css'
  *
  * Brand row: wordmark + "Legends live here." left, nav right — on every page.
  * Back row:  ← back label below the brand — only on sub-pages.
- * Live strip: thin heat bar below nav — only when liveCount > 0, hidden on /live itself.
+ *
+ * When liveCount > 0 and not on /live, the nav shows a "Live" text link
+ * beside "My Walls" — lightweight, no banner.
  *
  * Props:
  *   back      { label, onClick } | null  — shows back row beneath brand
@@ -23,10 +25,10 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
 }) {
   const navigate  = useNavigate()
   const location  = useLocation()
-  const showLiveStrip = liveCount > 0 && location.pathname !== '/live'
+  const showLive  = liveCount > 0 && location.pathname !== '/live'
 
   return (
-    <header className={`app-header${back ? ' app-header--sub' : ''}${showLiveStrip ? ' app-header--has-strip' : ''}`}>
+    <header className={`app-header${back ? ' app-header--sub' : ''}`}>
 
       {/* ── Brand row — always present ───────────────────────────────────── */}
       <div className="app-header__brand-row">
@@ -39,6 +41,12 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
         </div>
 
         <nav className="app-header__nav">
+          {showLive && (
+            <Link to="/live" className="app-header__nav-link app-header__nav-link--live">
+              <span className="app-header__live-dot" aria-hidden="true" />
+              Live
+            </Link>
+          )}
           <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
             My Walls
           </button>
@@ -56,18 +64,6 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
             <ArrowLeft size={12} strokeWidth={2.5} /> {back.label}
           </button>
         </div>
-      )}
-
-      {/* ── Live strip — tonight's games, site-wide teaser ──────────────── */}
-      {showLiveStrip && (
-        <Link to="/live" className="app-header__live-strip" aria-label={`${liveCount} wall-weight games live tonight`}>
-          <span className="app-header__live-strip-dot" aria-hidden="true" />
-          <span className="app-header__live-strip-label">LIVE</span>
-          <span className="app-header__live-strip-count">
-            {liveCount} game{liveCount !== 1 ? 's' : ''} on the wall tonight
-          </span>
-          <span className="app-header__live-strip-cta">Tonight on the Wall →</span>
-        </Link>
       )}
 
     </header>

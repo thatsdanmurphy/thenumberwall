@@ -1,51 +1,147 @@
-/* LiveGameCard — One historically significant game on the /live feed */
+/* LiveGameCard — tile-first game card for the /live feed */
 
 /* ── Card shell ──────────────────────────────────────────────────────────── */
 
 .live-game-card {
-  background: var(--surface-2);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-xl);
-  padding: var(--space-4);
-  transition: border-color var(--motion-hover);
+  background:     var(--surface-2);
+  border:         1px solid var(--border-soft);
+  border-radius:  var(--radius-xl);
+  padding:        var(--space-4);
+  transition:     border-color var(--motion-hover);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
 }
 
 .live-game-card:hover {
   border-color: var(--border-medium);
 }
 
-/* ── Scoreboard ──────────────────────────────────────────────────────────── */
+/* ── Tile row ────────────────────────────────────────────────────────────── */
 
-.lgc-scoreboard {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
+.lgc-tiles {
+  display:   flex;
+  gap:       var(--space-3);
+  flex-wrap: wrap;
 }
 
-.lgc-scoreboard__sport {
-  display: flex;
+.lgc-tile-wrap {
+  display:     flex;
   align-items: center;
-  gap: var(--space-2);
+  gap:         var(--space-2);
 }
 
-.lgc-sport-badge {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  font-weight: 700;
-  letter-spacing: var(--tracking-widest);
-  color: var(--ink-dim);
-  text-transform: uppercase;
+/* The tile cell — same aesthetic as the main wall grid */
+.lgc-tile {
+  position:        relative;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           56px;
+  height:          56px;
+  border-radius:   var(--radius-sm);
+  flex-shrink:     0;
+}
+
+/* Legend tile — player is on the wall. Heat glow, wall-authentic. */
+.lgc-tile--legend {
+  background: rgba(232, 124, 42, 0.26); /* ds:intentional — heat tile bg */
+  border:     1px solid rgba(232, 124, 42, 0.70); /* ds:intentional — heat tile border */
+  box-shadow:
+    0 0 16px rgba(232, 124, 42, 0.40), /* ds:intentional — legend glow */
+    0 0 32px rgba(232, 124, 42, 0.16), /* ds:intentional — legend ambient */
+    inset 0 0 8px rgba(232, 124, 42, 0.08); /* ds:intentional — legend inner warmth */
+}
+
+/* Watch tile — nominated for the wall. Sacred blue — "could this be them?" */
+.lgc-tile--watch {
+  background: rgba(200, 220, 255, 0.14); /* ds:intentional — sacred tile bg */
+  border:     1px solid rgba(200, 220, 255, 0.45); /* ds:intentional — sacred tile border */
+  box-shadow:
+    0 0 14px rgba(200, 220, 255, 0.18), /* ds:intentional — sacred glow */
+    0 0 28px rgba(200, 220, 255, 0.07); /* ds:intentional — sacred ambient */
+}
+
+.lgc-tile__num {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  line-height:    1;
+}
+
+.lgc-tile--legend .lgc-tile__num {
+  color:       var(--color-heat);
+  text-shadow: 0 0 10px rgba(232, 124, 42, 0.70); /* ds:intentional — legend number glow */
+}
+.lgc-tile--watch  .lgc-tile__num {
+  color:       var(--color-sacred);
+  text-shadow: 0 0 10px rgba(200, 220, 255, 0.55); /* ds:intentional — watch number glow */
+}
+
+/* ★ Wall star — top-right corner of legend tile */
+.lgc-tile__star {
+  position:    absolute;
+  top:         2px;
+  right:       4px;
+  font-size:   0.5rem; /* ds:intentional — decorative micro star, no text token this small */
+  color:       var(--color-blaze);
+  line-height: 1;
+}
+
+/* Player name + tonight stat beside the tile */
+.lgc-tile__meta {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.lgc-tile__name {
+  font-family: var(--font-banner);
+  font-size:   var(--text-small);
+  color:       var(--ink-high);
+  line-height: 1.2;
+}
+
+.lgc-tile__stat {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Headline ────────────────────────────────────────────────────────────── */
+
+.lgc-headline {
+  font-family:  var(--font-program);
+  font-size:    var(--text-body);
+  color:        var(--color-heat);
+  font-style:   italic;
+  margin:       0;
+  line-height:  1.4;
+  border-left:  2px solid var(--color-heat);
+  padding-left: var(--space-2);
+}
+
+/* ── Compressed game footer ──────────────────────────────────────────────── */
+
+.lgc-footer {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-1);
+  flex-wrap:   wrap;
 }
 
 /* Pulsing live dot */
-.lgc-live-indicator {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
+.lgc-footer__dot {
+  display:       inline-block;
+  width:         6px;
+  height:        6px;
   border-radius: 50%;
-  background: var(--color-error);
-  animation: lgc-live-pulse 2s ease-in-out infinite;
+  background:    var(--color-error);
+  animation:     lgc-live-pulse 2s ease-in-out infinite;
+  flex-shrink:   0;
+  margin-right:  2px;
 }
 
 @keyframes lgc-live-pulse {
@@ -53,265 +149,70 @@
   50%       { opacity: 0.35; }
 }
 
-.lgc-scoreboard__teams {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.lgc-footer__sport {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
 }
 
-.lgc-team {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-}
-
-.lgc-team--home {
-  flex-direction: row-reverse;
-}
-
-.lgc-team__abbr {
-  font-family: var(--font-banner);
-  font-size: var(--text-body-sm);
-  color: var(--ink-high);
-  letter-spacing: 0.02em;
-}
-
-.lgc-team__score {
+.lgc-footer__sep {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-display-xs);
-  font-weight: 700;
-  color: var(--ink-high);
-  line-height: 1;
+  font-size:   var(--text-micro);
+  color:       var(--border-medium);
 }
 
-.lgc-scoreboard__divider {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  flex: 1;
-}
-
-.lgc-period {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
-  color: var(--ink-mid);
+.lgc-footer__score {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-mid);
   letter-spacing: var(--tracking-wide);
 }
 
-.lgc-clock {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
-}
-
-/* ── Headline ────────────────────────────────────────────────────────────── */
-
-.lgc-headline {
-  font-family: var(--font-program);
-  font-size: var(--text-body);
-  color: var(--color-heat);
-  font-style: italic;
-  margin: 0 0 var(--space-3);
-  line-height: 1.4;
-  border-left: 2px solid var(--color-heat);
-  padding-left: var(--space-2);
-}
-
-/* ── Player blocks ───────────────────────────────────────────────────────── */
-
-.lgc-player {
-  background: var(--surface-1);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-}
-
-.lgc-player--solo {
-  /* full width */
-}
-
-.lgc-player-pair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-}
-
-.lgc-player--half {
-  /* fills the grid cell */
-}
-
-/* ── Player core ─────────────────────────────────────────────────────────── */
-
-.lgc-player__core {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.lgc-player__identity {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-.lgc-player__number {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
-  letter-spacing: var(--tracking-wide);
-  flex-shrink: 0;
-}
-
-.lgc-player__name-team {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-  min-width: 0;
-}
-
-.lgc-player__name {
-  font-family: var(--font-banner);
-  font-size: var(--text-body-sm);
-  color: var(--ink-high);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.lgc-player__team {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
+.lgc-footer__period {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-mid);
   letter-spacing: var(--tracking-wide);
 }
 
-.lgc-player__on-wall {
-  font-size: var(--text-small);
-  color: var(--color-blaze);
-  flex-shrink: 0;
-  title: 'On The Number Wall';
-}
-
-.lgc-player__tonight-stat {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-small);
-  color: var(--ink-mid);
+.lgc-footer__clock {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
   letter-spacing: var(--tracking-wide);
-}
-
-/* Chaser hint — compact inline version */
-.lgc-player__chaser-hint {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  flex-wrap: wrap;
-  margin-top: var(--space-1);
-}
-
-.lgc-player__chaser-stat {
-  font-family: var(--font-program);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
-}
-
-.lgc-player__chaser-current {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--color-heat);
-  font-weight: 700;
-}
-
-.lgc-player__chaser-sep {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
-}
-
-.lgc-player__chaser-target {
-  font-family: var(--font-program);
-  font-size: var(--text-micro);
-  color: var(--ink-mid);
 }
 
 /* ── Wall Watch row ──────────────────────────────────────────────────────── */
 
 .lgc-wall-watch {
-  margin-top: var(--space-3);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--border-faint);
-}
-
-.lgc-wall-watch__label {
-  margin-bottom: var(--space-1);
+  padding-top:    var(--space-2);
+  border-top:     1px solid var(--border-faint);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
 }
 
 .lgc-wall-watch__tag {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  font-weight: 700;
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
   letter-spacing: var(--tracking-widest);
-  color: var(--color-sacred);
+  color:          var(--color-sacred);
   text-transform: uppercase;
 }
 
 .lgc-wall-watch__body {
-  display: flex;
-  align-items: center;
+  display:         flex;
+  align-items:     center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap:             var(--space-2);
 }
 
 .lgc-wall-watch__tally {
   font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: var(--ink-mid);
-}
-
-/* ── Pill layout (3+ players) ────────────────────────────────────────────── */
-
-.lgc-player-pills {
-  display: flex;
-  gap: var(--space-2);
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: var(--space-1);
-}
-
-.lgc-player-pills::-webkit-scrollbar {
-  display: none;
-}
-
-.lgc-pill {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  background: var(--surface-1);
-  border: 1px solid var(--border-faint);
-  border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-3);
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.lgc-pill__number {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
-  letter-spacing: var(--tracking-wide);
-}
-
-.lgc-pill__name {
-  font-family: var(--font-banner);
-  font-size: var(--text-small);
-  color: var(--ink-high);
-}
-
-.lgc-pill__stat {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-mid);
-  letter-spacing: var(--tracking-wide);
+  font-size:   var(--text-small);
+  color:       var(--ink-mid);
 }

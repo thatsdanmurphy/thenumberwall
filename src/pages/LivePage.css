@@ -1,153 +1,699 @@
-/* LivePage — /live
-   ESPN tells you the score. The wall tells you what it means. */
+/* LivePage — /live  (split view, v2)
+   Page placemat → 3-col tile grid (left) + detail panel (right).
+   Detail: player mat / chase section / games ahead / wall watch.  */
 
-/* ── Page shell ──────────────────────────────────────────────────────────── */
+/* ── Page placemat ───────────────────────────────────────────────────────── */
 
-.live-page {
-  min-height: 100vh;
-  background: var(--color-night);
-  padding-bottom: var(--space-7);
-}
-
-/* ── Header ──────────────────────────────────────────────────────────────── */
-
-.live-page__header {
+.live-placemat {
+  padding:       var(--space-5) 0 var(--space-4);
   border-bottom: 1px solid var(--border-faint);
-  padding: var(--space-6) 0 var(--space-5);
+  margin-bottom: var(--space-5);
 }
 
-.live-page__header-inner {
-  max-width: var(--grid-max-width);
-  margin: 0 auto;
-  padding: 0 var(--grid-margin);
-}
-
-.live-page__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-/* Pulsing red dot — "we are live" */
-.live-page__live-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-error);
-  animation: live-dot-pulse 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
-
-@keyframes live-dot-pulse {
-  0%, 100% { opacity: 1;    transform: scale(1);    }
-  50%       { opacity: 0.5; transform: scale(0.80); }
-}
-
-.live-page__live-label {
-  font-family: var(--font-scoreboard);
-  font-size: var(--text-label);
-  font-weight: 700;
-  letter-spacing: var(--tracking-widest);
-  color: var(--color-error);
+.live-placemat__title {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-sm);
+  color:          var(--color-blaze);
+  letter-spacing: -0.02em;
+  line-height:    1;
+  margin:         0 0 var(--space-2);
   text-transform: uppercase;
 }
 
-.live-page__game-count {
-  font-family: var(--font-program);
-  font-size: var(--text-small);
-  color: var(--ink-mid);
-}
-
-.live-page__title {
-  font-family: var(--font-banner);
-  font-size: var(--text-display-md);
-  color: var(--color-blaze);
-  letter-spacing: -0.02em;
-  line-height: 1;
-  margin: 0 0 var(--space-2);
-}
-
 @media (min-width: 768px) {
-  .live-page__title {
-    font-size: var(--text-display-lg);
-  }
+  .live-placemat__title { font-size: var(--text-display-md); }
 }
 
-.live-page__lede {
-  font-family: var(--font-program);
-  font-size: var(--text-body);
-  color: var(--ink-mid);
-  margin: 0;
-  max-width: 480px;
-}
-
-/* ── Section wrapper ─────────────────────────────────────────────────────── */
-
-.live-page__section {
-  max-width: var(--grid-max-width);
-  margin: 0 auto;
-  padding: var(--space-5) var(--grid-margin) 0;
-}
-
-.live-page__section-label {
-  display: flex;
+.live-placemat__meta {
+  display:     flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-3);
+  gap:         var(--space-2);
 }
 
-.live-page__refresh-time {
+.live-placemat__live-dot {
+  display:       inline-block;
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  flex-shrink:   0;
+  animation:     placemat-pulse 2s ease-in-out infinite;
+}
+
+@keyframes placemat-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.live-placemat__count {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-mid);
+}
+
+.live-placemat__sep {
   font-family: var(--font-scoreboard);
-  font-size: var(--text-micro);
-  color: var(--ink-dim);
+  font-size:   var(--text-small);
+  color:       var(--border-medium);
+}
+
+.live-placemat__date {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
   letter-spacing: var(--tracking-wide);
 }
 
-/* ── Chaser strip ────────────────────────────────────────────────────────── */
+/* ── Split container ─────────────────────────────────────────────────────── */
 
-.live-page__section--chasers {
-  /* Full-width scroll — break out of max-width on the strip itself */
-}
-
-.live-page__chaser-strip {
-  display: flex;
-  gap: var(--space-3);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: var(--space-2); /* room for scrollbar on some browsers */
-  /* Hide scrollbar visually but keep it functional */
-  scrollbar-width: none;
-}
-
-.live-page__chaser-strip::-webkit-scrollbar {
-  display: none;
-}
-
-/* ── Game list ───────────────────────────────────────────────────────────── */
-
-.live-page__section--games {
-  padding-top: var(--space-6);
-}
-
-.live-page__game-list {
-  display: flex;
+.live-split {
+  display:        flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap:            var(--space-5);
+  padding-bottom: var(--space-7);
+  align-items:    flex-start;
+}
+
+@media (min-width: 768px) {
+  .live-split {
+    flex-direction: row;
+    gap:            var(--space-6);
+  }
+}
+
+/* ── Left column: stacked weekly grids ──────────────────────────────────── */
+
+.live-split__col {
+  flex-shrink: 0;
+  width:       100%; /* mobile: full width */
+}
+
+@media (min-width: 768px) {
+  .live-split__col {
+    /* 4 tiles × 52px + 3 gaps × 5px = 223px */
+    width:    223px; /* ds:intentional — wall tile size × 4 + gaps */
+    position: sticky;
+    top:      calc(var(--space-4) + var(--space-7)); /* space-7 ≈ AppHeader height */
+    align-self: flex-start;
+  }
+}
+
+/* Stacked week container */
+.live-weeks {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+}
+
+/* Single week block: label + 4×3 grid */
+.live-week__label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+  margin-bottom:  var(--space-2);
+}
+
+.live-week__grid {
+  display:               grid;
+  grid-template-columns: repeat(4, 52px); /* ds:intentional — 4 tiles × 52px = wall tile size */
+  gap:                   5px;             /* ds:intentional — matches main wall gap */
+}
+
+/* Past weeks: non-active tiles dim out */
+.live-week--past .ls-tile-btn:not(.ls-tile-btn--active) {
+  opacity: 0.40;          /* ds:intentional — past week dim */
+  filter:  saturate(0.5); /* ds:intentional — past week desaturate */
+}
+
+/* Empty cell — dashed placeholder, same footprint as tile */
+.ls-tile-empty {
+  width:         52px; /* ds:intentional — wall tile size */
+  height:        52px; /* ds:intentional — wall tile size */
+  border-radius: var(--radius-sm);
+  border:        1px dashed var(--border-faint);
+}
+
+/* ── Tile button — main wall aesthetic ──────────────────────────────────── */
+
+.ls-tile-btn {
+  position:        relative;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           52px;
+  height:          52px;
+  border-radius:   var(--radius-sm);
+  border:          1px solid transparent;
+  background:      none;
+  cursor:          pointer;
+  /* Typography matches wall-tile__number exactly */
+  font-family:     var(--font-banner);
+  font-size:       var(--text-h1);
+  letter-spacing:  -0.01em;
+  line-height:     1;
+  color:           var(--ink-dim);
+  transition:      border-color var(--motion-hover),
+                   box-shadow   var(--motion-hover),
+                   background   var(--motion-hover),
+                   color        var(--motion-hover);
+}
+
+/* Legend — heat orange */
+.ls-tile-btn--legend {
+  background:   rgba(232, 124, 42, 0.20); /* ds:intentional — legend tile bg */
+  border-color: rgba(232, 124, 42, 0.55); /* ds:intentional — legend tile border */
+  color:        var(--color-heat);
+  box-shadow:
+    0 0 12px rgba(232, 124, 42, 0.28), /* ds:intentional — legend glow */
+    0 0 24px rgba(232, 124, 42, 0.10); /* ds:intentional — legend ambient */
+  text-shadow:  0 0 10px rgba(232, 124, 42, 0.60); /* ds:intentional — number glow */
+}
+
+/* Chaser — blaze gold */
+.ls-tile-btn--chaser {
+  background:   rgba(245, 193, 53, 0.16); /* ds:intentional — chaser tile bg */
+  border-color: rgba(245, 193, 53, 0.50); /* ds:intentional — chaser tile border */
+  color:        var(--color-blaze);
+  box-shadow:   0 0 10px rgba(245, 193, 53, 0.22); /* ds:intentional — chaser glow */
+  text-shadow:  0 0 10px rgba(245, 193, 53, 0.55); /* ds:intentional — chaser number glow */
+}
+
+/* Watch — sacred blue */
+.ls-tile-btn--watch {
+  background:   rgba(200, 220, 255, 0.10); /* ds:intentional — watch tile bg */
+  border-color: rgba(200, 220, 255, 0.35); /* ds:intentional — watch tile border */
+  color:        var(--color-sacred);
+  box-shadow:   0 0 10px rgba(200, 220, 255, 0.14); /* ds:intentional — watch glow */
+  text-shadow:  0 0 10px rgba(200, 220, 255, 0.45); /* ds:intentional — watch number glow */
+}
+
+/* Active — selected tile */
+.ls-tile-btn--legend.ls-tile-btn--active {
+  background:   rgba(232, 124, 42, 0.32); /* ds:intentional — active legend bg */
+  border-color: var(--color-heat);
+  box-shadow:
+    0 0 20px rgba(232, 124, 42, 0.55), /* ds:intentional — active legend glow */
+    0 0 40px rgba(232, 124, 42, 0.18); /* ds:intentional — active ambient */
+}
+
+.ls-tile-btn--chaser.ls-tile-btn--active {
+  background:   rgba(245, 193, 53, 0.26); /* ds:intentional — active chaser bg */
+  border-color: var(--color-blaze);
+  box-shadow:   0 0 18px rgba(245, 193, 53, 0.50); /* ds:intentional — active chaser glow */
+}
+
+.ls-tile-btn--watch.ls-tile-btn--active {
+  background:   rgba(200, 220, 255, 0.20); /* ds:intentional — active watch bg */
+  border-color: var(--color-sacred);
+  box-shadow:   0 0 16px rgba(200, 220, 255, 0.35); /* ds:intentional — active watch glow */
+}
+
+/* Hover — resting tiles only */
+.ls-tile-btn--legend:hover:not(.ls-tile-btn--active) {
+  background:   rgba(232, 124, 42, 0.26); /* ds:intentional */
+  border-color: rgba(232, 124, 42, 0.70); /* ds:intentional */
+}
+
+.ls-tile-btn--chaser:hover:not(.ls-tile-btn--active) {
+  background:   rgba(245, 193, 53, 0.22); /* ds:intentional */
+  border-color: rgba(245, 193, 53, 0.65); /* ds:intentional */
+}
+
+.ls-tile-btn--watch:hover:not(.ls-tile-btn--active) {
+  background:   rgba(200, 220, 255, 0.16); /* ds:intentional */
+  border-color: rgba(200, 220, 255, 0.50); /* ds:intentional */
+}
+
+.ls-tile-btn:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 3px;
+}
+
+/* Live dot — top-right corner of tile */
+.ls-tile-btn__dot {
+  position:      absolute;
+  top:           3px;
+  right:         3px;
+  width:         5px;
+  height:        5px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  animation:     tile-dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes tile-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+/* ── Right: detail panel ─────────────────────────────────────────────────── */
+
+.live-split__detail {
+  flex:      1;
+  min-width: 0;
+}
+
+.ls-detail {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+}
+
+/* ── 1. Player mat ───────────────────────────────────────────────────────── */
+
+.ls-player-mat {
+  display:       flex;
+  align-items:   flex-start;
+  gap:           var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+/* Big number — display scale, font-banner to match wall */
+.ls-player-mat__num {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-lg);
+  letter-spacing: -0.03em;
+  line-height:    1;
+  flex-shrink:    0;
+  transition:     color var(--motion-color);
+}
+
+@media (min-width: 768px) {
+  .ls-player-mat__num { font-size: var(--text-display-xl); }
+}
+
+.ls-player-mat__num--legend {
+  color:       var(--color-heat);
+  text-shadow: 0 0 30px rgba(232, 124, 42, 0.45); /* ds:intentional — legend mat glow */
+}
+
+.ls-player-mat__num--chaser {
+  color:       var(--color-blaze);
+  text-shadow: 0 0 30px rgba(245, 193, 53, 0.40); /* ds:intentional — chaser mat glow */
+}
+
+.ls-player-mat__num--watch {
+  color:       var(--color-sacred);
+  text-shadow: 0 0 30px rgba(200, 220, 255, 0.30); /* ds:intentional — watch mat glow */
+}
+
+.ls-player-mat__info {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  flex:           1;
+  min-width:      0;
+  padding-top:    var(--space-1); /* optical align with number baseline */
+}
+
+.ls-player-mat__name {
+  font-family:   var(--font-banner);
+  font-size:     var(--text-h1);
+  color:         var(--ink-high);
+  margin:        0;
+  line-height:   1.1;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .ls-player-mat__name { font-size: var(--text-display-xs); }
+}
+
+.ls-player-mat__squad {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+/* Tonight stat — right-aligned */
+.ls-player-mat__tonight-col {
+  flex-shrink: 0;
+  text-align:  right;
+  padding-top: var(--space-1);
+}
+
+.ls-player-mat__tonight {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  color:          var(--ink-high);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+}
+
+/* ── Game line — compressed score + status ───────────────────────────────── */
+
+.ls-game-line {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-1);
+  flex-wrap:   wrap;
+  margin-top:  2px; /* ds:intentional — sub-space-1 optical gap */
+}
+
+.ls-game-line__dot {
+  display:       inline-block;
+  width:         5px;
+  height:        5px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  flex-shrink:   0;
+  animation:     placemat-pulse 2s ease-in-out infinite;
+}
+
+.ls-game-line__sport {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.ls-game-line__sep    { font-family: var(--font-scoreboard); font-size: var(--text-micro); color: var(--border-medium); }
+.ls-game-line__score  { font-family: var(--font-scoreboard); font-size: var(--text-micro); color: var(--ink-mid);  letter-spacing: var(--tracking-wide); }
+.ls-game-line__period { font-family: var(--font-scoreboard); font-size: var(--text-micro); color: var(--ink-mid);  letter-spacing: var(--tracking-wide); }
+.ls-game-line__clock  { font-family: var(--font-scoreboard); font-size: var(--text-micro); color: var(--ink-dim);  letter-spacing: var(--tracking-wide); }
+
+/* ── 2. Chase section ────────────────────────────────────────────────────── */
+
+.ls-chase-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
+}
+
+.ls-chase-section__header {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+}
+
+.ls-chase-section__stat-name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  letter-spacing: var(--tracking-wide);
+  color:          var(--ink-high);
+  text-transform: uppercase;
+}
+
+/* Editorial headline */
+.ls-detail__headline {
+  font-family:  var(--font-program);
+  font-size:    var(--text-body);
+  color:        var(--color-heat);
+  font-style:   italic;
+  margin:       0;
+  line-height:  1.5;
+  border-left:  2px solid var(--color-heat);
+  padding-left: var(--space-3);
+  max-width:    600px;
+}
+
+/* ── Lens tags — CAREER / SEASON / ALL TIME ──────────────────────────────── */
+
+.ls-lens {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        2px 8px; /* ds:intentional — sub-scale vertical, space-2 horizontal */
+  border-radius:  var(--radius-sm);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: 0.10em; /* ds:intentional — between tracking-wide and tracking-wider */
+  text-transform: uppercase;
+  line-height:    1.6;
+  white-space:    nowrap;
+}
+
+.ls-lens--career {
+  background:   rgba(232, 124, 42, 0.16); /* ds:intentional — career lens bg */
+  border:       1px solid rgba(232, 124, 42, 0.42); /* ds:intentional — career lens border */
+  color:        var(--color-heat);
+}
+
+.ls-lens--season {
+  background:   rgba(200, 220, 255, 0.10); /* ds:intentional — season lens bg */
+  border:       1px solid rgba(200, 220, 255, 0.35); /* ds:intentional — season lens border */
+  color:        var(--color-sacred);
+}
+
+.ls-lens--all-time {
+  background:   rgba(245, 193, 53, 0.14); /* ds:intentional — all-time lens bg */
+  border:       1px solid rgba(245, 193, 53, 0.40); /* ds:intentional — all-time lens border */
+  color:        var(--color-blaze);
+}
+
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+
+.ls-chaser { display: flex; flex-direction: column; gap: var(--space-2); max-width: 520px; }
+
+.ls-chaser__track {
+  position:      relative;
+  height:        6px;
+  background:    var(--surface-3);
+  border-radius: 99px;
+}
+
+.ls-chaser__track--uncharted { overflow: visible; }
+
+.ls-chaser__fill {
+  position:      absolute;
+  top: 0; left: 0;
+  height:        100%;
+  background:    linear-gradient(90deg, var(--color-heat), var(--color-blaze));
+  border-radius: 99px;
+  transition:    width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ls-chaser__dot {
+  position:      absolute;
+  top:           50%;
+  transform:     translate(-50%, -50%);
+  width:         12px;
+  height:        12px;
+  background:    var(--color-blaze);
+  border:        2px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow:    0 0 8px rgba(245, 193, 53, 0.60); /* ds:intentional — bar dot glow */
+  transition:    left 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ls-chaser__fade-fill {
+  position:      absolute;
+  top: 0; left: 0;
+  width:         68%;
+  height:        100%;
+  background:    linear-gradient(90deg, var(--color-heat) 0%, rgba(232, 124, 42, 0.06) 100%); /* ds:intentional — fade to transparent */
+  border-radius: 99px;
+}
+
+.ls-chaser__fade-dot {
+  position:      absolute;
+  left:          68%;
+  top:           50%;
+  transform:     translate(-50%, -50%);
+  width:         12px;
+  height:        12px;
+  background:    var(--color-heat);
+  border:        2px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow:    0 0 8px rgba(232, 124, 42, 0.45); /* ds:intentional — fade dot glow */
+}
+
+.ls-chaser__horizon {
+  position:    absolute;
+  right:       0;
+  top:         50%;
+  transform:   translateY(-50%);
+  font-family: var(--font-scoreboard);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  line-height: 1;
+}
+
+.ls-chaser__footer {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-3);
+  flex-wrap:   wrap;
+}
+
+.ls-chaser__current {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  color:          var(--color-heat);
+  letter-spacing: var(--tracking-wide);
+}
+
+.ls-chaser__to-go {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+}
+
+/* ── 3. Games ahead ──────────────────────────────────────────────────────── */
+
+.ls-games-ahead {
+  border-top:     1px solid var(--border-faint);
+  padding-top:    var(--space-4);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
+  max-width:      520px;
+}
+
+.ls-games-ahead__header {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+  flex-wrap:   wrap;
+}
+
+.ls-games-ahead__title {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.ls-games-ahead__context {
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--ink-dim);
+  font-style:  italic;
+}
+
+.ls-games-ahead__list {
+  display:        flex;
+  flex-direction: column;
+}
+
+/* ── Game ahead rows ─────────────────────────────────────────────────────── */
+
+.lga-row {
+  display:       grid;
+  grid-template-columns: 56px 80px 1fr;
+  align-items:   center;
+  gap:           var(--space-3);
+  padding:       var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+}
+
+.lga-row:last-child { border-bottom: none; }
+
+/* Projected — record could fall around this game */
+.lga-row--projected {
+  background:    rgba(232, 124, 42, 0.06); /* ds:intentional — projected game row bg */
+  border-bottom: none;
+  margin-top:    4px; /* ds:intentional — visual separation from preceding rows */
+}
+
+.lga-row--projected + .lga-row--projected {
+  margin-top: 2px; /* ds:intentional — consecutive projected rows tighter */
+}
+
+.lga-row__date {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+}
+
+.lga-row__matchup {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}
+
+.lga-row--projected .lga-row__date,
+.lga-row--projected .lga-row__matchup { color: var(--ink-high); }
+
+.lga-row__right {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+  justify-content: flex-end;
+  flex-wrap:   wrap;
+}
+
+.lga-row__remaining {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+}
+
+.lga-row__note {
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--color-heat);
+  font-style:  italic;
+  white-space: nowrap;
+}
+
+/* ── 4. Wall Watch ───────────────────────────────────────────────────────── */
+
+.ls-detail__wall-watch {
+  padding-top:    var(--space-4);
+  border-top:     1px solid var(--border-faint);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+.ls-detail__wall-watch-tag {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--color-sacred);
+  text-transform: uppercase;
+}
+
+.ls-detail__wall-watch-body {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             var(--space-3);
+}
+
+.ls-detail__wall-watch-tally {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-mid);
 }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */
 
-.live-page__empty {
-  padding: var(--space-6) 0;
-  text-align: center;
+.ls-empty {
+  padding:         var(--space-7) var(--space-4);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
 }
 
-.live-page__empty-text {
+.ls-empty__text {
   font-family: var(--font-program);
-  font-size: var(--text-body);
-  color: var(--ink-dim);
-  margin: 0;
+  font-size:   var(--text-body);
+  color:       var(--ink-dim);
+  font-style:  italic;
+  margin:      0;
+  text-align:  center;
 }

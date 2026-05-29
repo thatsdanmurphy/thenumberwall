@@ -8,7 +8,7 @@ import { TILE_NUMBERS, getHeatStyle, getTileTextColor, SELECTED_TILE, wallData, 
 import { createWall, loadWall, placeEntry, removeEntry, clearAllEntries, deleteWall, updateWall, isSlugAvailable } from '../lib/myWallStore.js'
 import { checkProfanity } from '../lib/profanityFilter.js'
 import { getActivePrompts } from '../data/seasonalPrompts.js'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import { MY_WALL_TOKEN, MY_WALL_ID, MY_WALL_SLUG } from '../lib/storageKeys.js'
 import AppLoading    from '../components/AppLoading.jsx'
 import '../components/WallGrid.css'

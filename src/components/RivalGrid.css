@@ -1,0 +1,52 @@
+/* RivalGrid — 9×11 number grid for the /series rival view
+   Reuses WallTile. Only layout + empty-cell styles live here.
+   Team colors are injected via WallTile's heatStyle override.    */
+
+/* ── Grid container ──────────────────────────────────────────────────────── */
+
+.rival-grid {
+  display:               grid;
+  grid-template-columns: repeat(9, 52px); /* ds:intentional — 9 cols × 52px = 468px + 8×5px gap = 508px total */
+  gap:                   5px;             /* ds:intentional — matches main wall gap */
+  width:                 fit-content;
+}
+
+/* ── Empty cell — unclaimed number ──────────────────────────────────────── */
+
+.rival-grid__empty {
+  width:            52px; /* ds:intentional — wall tile size */
+  height:           52px; /* ds:intentional — wall tile size */
+  border-radius:    var(--radius-sm);
+  border:           1px solid var(--border-faint);
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, 0.018) 4px, /* ds:intentional — subtle diagonal texture, matches wall-tile--unwritten */
+      rgba(255, 255, 255, 0.018) 5px
+    );
+  opacity:          0.45; /* ds:intentional — dim, matching wall-tile--unwritten */
+}
+
+/* ── Tile modifier classes ───────────────────────────────────────────────── */
+
+/* Overlap — slight scale-up to signal importance. Glow/color via heatStyle. */
+.rival-tile--overlap {
+  z-index: 2;
+}
+
+/* Overlap pulse — breathes to draw the eye to shared numbers */
+.rival-tile--overlap:not(.wall-tile--active) {
+  animation: rival-overlap-breathe 3s ease-in-out infinite;
+}
+
+@keyframes rival-overlap-breathe {
+  0%, 100% { filter: brightness(1.00); }
+  50%       { filter: brightness(1.22); }
+}
+
+/* Pause animation on hover — let user examine the tile cleanly */
+.rival-tile--overlap:hover {
+  animation-play-state: paused;
+}

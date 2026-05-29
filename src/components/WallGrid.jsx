@@ -1,5 +1,5 @@
 import { useCallback, useRef, useMemo } from 'react'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import { TILE_NUMBERS, globalIndex } from '../data/index.js'
 import associationsData from '../data/associations.json'
 import { IDENTITY_NUMBER } from '../lib/storageKeys.js'

@@ -1,4 +1,4 @@
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import { getSportIcon, LEGEND_SPORTS } from '../data/sports.js'
 import './SportsFilter.css'
 

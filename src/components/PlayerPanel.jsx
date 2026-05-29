@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import { Award, Check, ExternalLink, X, ArrowRight, Plus, Minus } from 'lucide-react'
 import { getSportIcon, normalisePosition } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'

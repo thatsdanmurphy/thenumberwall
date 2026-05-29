@@ -7,3 +7,5 @@ preview.html
 preview-latest.html
 data/__pycache__/
 vite.config.js.timestamp-*
+.vercel
+.env*.local
