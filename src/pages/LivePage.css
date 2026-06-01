@@ -472,11 +472,11 @@
 /* ── Hook — primary "why this player is here" lede ─────────────────────── */
 
 .ls-detail__hook {
-  font-family:    var(--font-banner);
-  font-size:      var(--text-display-xs);
-  color:          var(--ink-high);
-  letter-spacing: -0.01em;
-  line-height:    1.2;
+  font-family:    var(--font-program);
+  font-size:      var(--text-body);
+  color:          var(--ink-mid);
+  font-style:     italic;
+  line-height:    1.55;
   margin:         0;
 }
 

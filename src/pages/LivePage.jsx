@@ -504,7 +504,11 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
           <div className="ls-cstat__row ls-cstat__row--holder">
             <Trophy size={15} className="ls-cstat__row-icon" aria-hidden="true" />
             <div className="ls-cstat__row-body">
-              <span className="ls-cstat__row-eye">Record to beat</span>
+              <span className="ls-cstat__row-eye">
+                {chaser.targetLabel?.toLowerCase().includes('club')
+                  ? 'Last inductee'
+                  : 'Record to beat'}
+              </span>
               <span className="ls-cstat__row-name">{chaser.holder} — {fmt(chaser.target)} {chaser.stat}</span>
               {chaser.holderTeam && (
                 <span className="ls-cstat__row-meta">
