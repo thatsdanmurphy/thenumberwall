@@ -161,20 +161,24 @@
   align-items:     center;
   gap:             var(--space-1);
   text-decoration: none;
-  color:           var(--color-error);
-  font-weight:     500;
 }
 
-.app-header__nav-link--live:hover {
-  color: var(--color-paper);
+/* Active — on the /live page: bold white + underline */
+.app-header__nav-link--active {
+  color:                  var(--color-paper) !important;
+  font-weight:            700;
+  text-decoration:        underline;
+  text-underline-offset:  3px;
+  text-decoration-thickness: 1.5px; /* ds:intentional — matches nav visual weight */
 }
 
+/* Pulsing dot — shown when live games are on but not currently on /live */
 .app-header__live-dot {
   display:       inline-block;
   width:         5px;
   height:        5px;
   border-radius: 50%;
-  background:    var(--color-error);
+  background:    var(--color-heat);  /* heat orange, not error red */
   animation:     live-nav-pulse 2s ease-in-out infinite;
   flex-shrink:   0;
 }

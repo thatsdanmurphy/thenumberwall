@@ -1,5 +1,5 @@
 # TNW Design System Snapshot
-Generated: 2026-05-28 11:37 UTC — run `npm run ds:snapshot` to refresh
+Generated: 2026-06-01 15:25 UTC — run `npm run ds:snapshot` to refresh
 
 > Read this before writing any component or style. If this file is
 > from a previous session, regenerate before building.
@@ -120,6 +120,7 @@ These exist in global.css. Reach for them before writing component-local CSS.
 .page-back
 .tnw-backdrop
 .tnw-btn  .tnw-btn--ghost  .tnw-btn--primary  .tnw-btn--secondary
+.tnw-close-btn
 .tnw-eyebrow
 .tnw-input
 .tnw-modal-title
@@ -128,7 +129,7 @@ These exist in global.css. Reach for them before writing component-local CSS.
 
 ---
 
-## Components (35)
+## Components (36)
 
 Import from src/components/ — don't recreate what already exists.
 
@@ -157,6 +158,7 @@ Import from src/components/ — don't recreate what already exists.
 - **PlayerPanel** — `src/components/PlayerPanel.jsx`
 - **PlayerSearch** — `src/components/PlayerSearch.jsx`
 - **PositionPicker** — `src/components/PositionPicker.jsx`
+- **RivalGrid** — `src/components/RivalGrid.jsx`
 - **ScrollToTop** — `src/components/ScrollToTop.jsx`
 - **ShowdownScrubber** — `src/components/ShowdownScrubber.jsx`
 - **SportsFilter** — `src/components/SportsFilter.jsx`
@@ -170,7 +172,7 @@ Import from src/components/ — don't recreate what already exists.
 
 ---
 
-## Pages (23)
+## Pages (24)
 
 - **AboutPage** — `src/pages/AboutPage.jsx`
 - **BostonPage** — `src/pages/BostonPage.jsx`
@@ -181,6 +183,7 @@ Import from src/components/ — don't recreate what already exists.
 - **NewYorkPage** — `src/pages/NewYorkPage.jsx`
 - **NotFoundPage** — `src/pages/NotFoundPage.jsx`
 - **ReelWallPage** — `src/pages/ReelWallPage.jsx`
+- **SeriesPage** — `src/pages/SeriesPage.jsx`
 - **ShowdownPage** — `src/pages/ShowdownPage.jsx`
 - **TeamWallPage** — `src/pages/TeamWallPage.jsx`
 - **TeamWallsPage** — `src/pages/TeamWallsPage.jsx`

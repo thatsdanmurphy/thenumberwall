@@ -23,9 +23,11 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
   title = null,
   liveCount = 0,
 }) {
-  const navigate  = useNavigate()
-  const location  = useLocation()
-  const showLive  = liveCount > 0 && location.pathname !== '/live'
+  const navigate   = useNavigate()
+  const location   = useLocation()
+  const isOnLive   = location.pathname === '/live'
+  const isOnMyWall = location.pathname.startsWith('/my-wall')
+  const hasLive    = liveCount > 0
 
   return (
     <header className={`app-header${back ? ' app-header--sub' : ''}`}>
@@ -41,13 +43,19 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
         </div>
 
         <nav className="app-header__nav">
-          {showLive && (
-            <Link to="/live" className="app-header__nav-link app-header__nav-link--live">
-              <span className="app-header__live-dot" aria-hidden="true" />
-              Live
-            </Link>
-          )}
-          <button className="app-header__nav-link" onClick={() => navigate('/my-wall')}>
+          <Link
+            to="/live"
+            className={`app-header__nav-link app-header__nav-link--live${isOnLive ? ' app-header__nav-link--active' : ''}`}
+            aria-current={isOnLive ? 'page' : undefined}
+          >
+            <span className="app-header__live-dot" aria-hidden="true" />
+            Live
+          </Link>
+          <button
+            className={`app-header__nav-link${isOnMyWall ? ' app-header__nav-link--active' : ''}`}
+            onClick={() => navigate('/my-wall')}
+            aria-current={isOnMyWall ? 'page' : undefined}
+          >
             My Walls
           </button>
         </nav>

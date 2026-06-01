@@ -16,10 +16,13 @@
  *       Replace with useWeeklyNumbers() hook in Task #6.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { X, Trophy, Flame, TrendingUp } from 'lucide-react'
 import AppShell              from '../components/AppShell.jsx'
 import AppHeader             from '../components/AppHeader.jsx'
+import AppLoading            from '../components/AppLoading.jsx'
 import VoteButtons           from '../components/VoteButtons.jsx'
+import { supabase }          from '../lib/supabase.js'
 import './LivePage.css'
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -34,96 +37,71 @@ const WEEKS = [
     weekOf: 'May 19',
     isCurrentWeek: true,
     entries: [
+      // Ovechkin: broke Gretzky's record in 2024-25, not currently playing — returns next season
       {
-        id: 'ovi',
-        number: 8,
-        player: 'Alex Ovechkin',
+        id: 'eichel',
+        number: 9,
+        player: 'Jack Eichel',
         sport: 'nhl',
-        team: 'WSH',
-        isOnWall: true,
-        stat: '1G, 0A tonight',
-        headline: 'Ovechkin 16 goals away from the all-time record.',
+        team: 'VGK',
+        isOnWall: false,
+        chaseWeight: 1,
+        stat: '1G, 1A tonight',
+        headline: 'Eichel is willing Vegas to another Cup.',
         game: {
-          homeTeam: 'NYR', awayTeam: 'WSH',
-          homeScore: 2,    awayScore: 1,
-          period: '2nd',  clock: '8:42', status: 'live',
+          homeTeam: 'CAR', awayTeam: 'VGK',
+          homeScore: 1,    awayScore: 2,
+          period: '2nd',  clock: '11:22', status: 'live',
+          gameDate: 'Tonight', gameTime: '8:00 PM ET',
         },
         chaser: {
-          lens: 'CAREER',
-          stat: 'Goals',
-          current: 878,
-          target: 894,
-          targetLabel: 'Gretzky All-Time',
-          lowerIsBetter: false,
-        },
-        wallWatchVotes: null,
-        gamesAheadContext: 'At his 2025–26 pace of 0.8 goals per game',
-        gamesAhead: [
-          { id: 'g1', date: 'May 23', matchup: 'vs PIT', remaining: 14, projected: false, note: null },
-          { id: 'g2', date: 'May 25', matchup: '@TOR',   remaining: 12, projected: false, note: null },
-          { id: 'g3', date: 'May 28', matchup: 'vs MTL', remaining: 10, projected: false, note: null },
-          { id: 'g4', date: 'Jun 4',  matchup: 'vs DET', remaining:  4, projected: false, note: null },
-          { id: 'g5', date: 'Jun 7',  matchup: 'vs NYR', remaining:  2, projected: true,  note: 'Record night?' },
-          { id: 'g6', date: 'Jun 10', matchup: '@PHI',   remaining:  0, projected: true,  note: 'Record falls here' },
-        ],
-      },
-      {
-        id: 'lebron',
-        number: 23,
-        player: 'LeBron James',
-        sport: 'nba',
-        team: 'LAL',
-        isOnWall: true,
-        stat: '22 PTS tonight',
-        headline: 'LeBron uncharted — 40,842 points and no ceiling in sight.',
-        game: {
-          homeTeam: 'LAL', awayTeam: 'GSW',
-          homeScore: 67,   awayScore: 71,
-          period: '3rd',  clock: '4:11', status: 'live',
-        },
-        chaser: {
-          lens: 'CAREER',
+          lens: 'SERIES',
           stat: 'Points',
-          current: 40842,
+          current: 7,
           target: null,
           targetLabel: null,
+          holder: null, holderTeam: null, holderYear: null, remaining: null,
           lowerIsBetter: false,
         },
         wallWatchVotes: null,
-        gamesAheadContext: 'At 27 points per game this season',
+        gamesAheadContext: 'Stanley Cup Final — VGK leads 2–1',
         gamesAhead: [
-          { id: 'g1', date: 'May 23', matchup: 'vs CLE', remaining: null, projected: false, note: '~158 pts from 41,000' },
-          { id: 'g2', date: 'May 25', matchup: '@MEM',   remaining: null, projected: false, note: '~131 pts from 41,000' },
-          { id: 'g3', date: 'Jun 1',  matchup: 'vs DEN', remaining: null, projected: true,  note: '41,000 career points — milestone night' },
+          { id: 'g1', date: 'Tonight', matchup: '@CAR', note: 'Game 4' },
+          { id: 'g2', date: 'Jun 2',   matchup: 'vs CAR', note: 'Game 5' },
+          { id: 'g3', date: 'Jun 5',   matchup: '@CAR', note: 'Game 6' },
         ],
       },
       {
-        id: 'curry',
-        number: 30,
-        player: 'Steph Curry',
+        id: 'wembanyama',
+        number: 1,
+        player: 'Victor Wembanyama',
         sport: 'nba',
-        team: 'GSW',
-        isOnWall: true,
-        stat: '18 PTS, 6 3PM tonight',
-        headline: 'Curry rewrote the three-point record — every game adds to an unreachable lead.',
+        team: 'SAS',
+        isOnWall: false,
+        chaseWeight: 1,
+        stat: '28 PTS, 11 REB, 4 BLK tonight',
+        headline: 'Wembanyama in the Finals. Nobody this young has ever looked like this.',
         game: {
-          homeTeam: 'LAL', awayTeam: 'GSW',
-          homeScore: 67,   awayScore: 71,
-          period: '3rd',  clock: '4:11', status: 'live',
+          homeTeam: 'NYK', awayTeam: 'SAS',
+          homeScore: 54,   awayScore: 58,
+          period: '3rd',  clock: '5:40', status: 'live',
+          gameDate: 'Tonight', gameTime: '8:30 PM ET',
         },
         chaser: {
-          lens: 'CAREER',
-          stat: '3-Pointers',
-          current: 3747,
+          lens: 'SERIES',
+          stat: 'Points',
+          current: 91,
           target: null,
           targetLabel: null,
+          holder: null, holderTeam: null, holderYear: null, remaining: null,
           lowerIsBetter: false,
         },
         wallWatchVotes: null,
-        gamesAheadContext: 'Extending his own unbreakable record',
+        gamesAheadContext: 'NBA Finals — SAS leads 2–1',
         gamesAhead: [
-          { id: 'g1', date: 'May 23', matchup: 'vs LAL', remaining: null, projected: false, note: 'Every make is history' },
-          { id: 'g2', date: 'May 25', matchup: '@LAL',   remaining: null, projected: true,  note: '3,800 threes — in reach this month' },
+          { id: 'g1', date: 'Tonight', matchup: '@NYK', note: 'Game 4' },
+          { id: 'g2', date: 'Jun 1',   matchup: 'vs NYK', note: 'Game 5' },
+          { id: 'g3', date: 'Jun 5',   matchup: '@NYK', note: 'Game 6' },
         ],
       },
       {
@@ -133,12 +111,14 @@ const WEEKS = [
         sport: 'mlb',
         team: 'TEX',
         isOnWall: false,
+        chaseWeight: 3,
         stat: '6 IP, 0 ER, 9 K tonight',
         headline: "deGrom ERA watch — 0.56 this season, chasing Dutch Leonard's 1.01 all-time record.",
         game: {
           homeTeam: 'TEX', awayTeam: 'HOU',
           homeScore: 2,    awayScore: 3,
           period: 'Bot 6', clock: null, status: 'live',
+          gameDate: 'Tonight', gameTime: '7:05 PM ET',
         },
         chaser: {
           lens: 'SEASON',
@@ -146,21 +126,99 @@ const WEEKS = [
           current: 0.56,
           target: 1.01,
           targetLabel: 'Single-Season Record',
+          holder: 'Dutch Leonard',
+          holderTeam: 'BOS',
+          holderYear: '1914',
+          remaining: null,
           lowerIsBetter: true,
         },
-        wallWatchVotes: { netScore: 47, myVote: null },
-        gamesAheadContext: 'Next scheduled starts — ERA must hold',
+        wallWatchVotes: null,
+        gamesAheadContext: 'ERA must hold — 3 starts to lock it',
         gamesAhead: [
-          { id: 'g1', date: 'May 24', matchup: '@HOU',   remaining: null, projected: false, note: '6 IP, 0 ER → ERA drops to 0.47' },
-          { id: 'g2', date: 'Jun 1',  matchup: 'vs LAD', remaining: null, projected: false, note: 'Toughest test — Dodger lineup' },
-          { id: 'g3', date: 'Jun 8',  matchup: 'vs COL', remaining: null, projected: true,  note: 'Best shot at locking the record' },
+          { id: 'g1', date: 'May 24', matchup: '@HOU',   note: 'Must stay under 1.01' },
+          { id: 'g2', date: 'Jun 1',  matchup: 'vs LAD', note: 'Toughest test'         },
+          { id: 'g3', date: 'Jun 8',  matchup: 'vs COL', note: null                    },
         ],
       },
-      // 8 empty slots — week has room to grow
-      null, null, null, null,
-      null, null, null, null,
+      {
+        id: 'aho',
+        number: 20,
+        player: 'Sebastian Aho',
+        sport: 'nhl',
+        team: 'CAR',
+        isOnWall: false,
+        chaseWeight: 1,
+        stat: '1G, 2A tonight',
+        headline: 'Aho is carrying Carolina — leads the Cup Final with 8 points through 3 games.',
+        game: {
+          homeTeam: 'CAR', awayTeam: 'VGK',
+          homeScore: 2,    awayScore: 1,
+          period: '2nd',  clock: '11:22', status: 'live',
+          gameDate: 'Tonight', gameTime: '8:00 PM ET',
+        },
+        chaser: {
+          lens: 'SERIES',
+          stat: 'Points',
+          current: 9,
+          target: null,
+          targetLabel: null,
+          holder: null, holderTeam: null, holderYear: null, remaining: null,
+          lowerIsBetter: false,
+        },
+        wallWatchVotes: null,
+        gamesAheadContext: 'Stanley Cup Final — CAR leads 2–1',
+        gamesAhead: [
+          { id: 'g1', date: 'Tonight', matchup: 'vs VGK', note: 'Game 4' },
+          { id: 'g2', date: 'Jun 2',   matchup: '@VGK',   note: 'Game 5' },
+          { id: 'g3', date: 'Jun 5',   matchup: 'vs VGK', note: 'Game 6' },
+        ],
+      },
+      {
+        id: 'brunson',
+        number: 11,
+        player: 'Jalen Brunson',
+        sport: 'nba',
+        team: 'NYK',
+        isOnWall: false,
+        chaseWeight: 1,
+        stat: '31 PTS tonight',
+        headline: "Brunson is the Finals. 31 a night, every night — NYC hasn't seen this since Ewing.",
+        game: {
+          homeTeam: 'NYK', awayTeam: 'SAS',
+          homeScore: 58,   awayScore: 54,
+          period: '3rd',  clock: '5:40', status: 'live',
+          gameDate: 'Tonight', gameTime: '8:30 PM ET',
+        },
+        chaser: {
+          lens: 'SERIES',
+          stat: 'Points',
+          current: 94,
+          target: null,
+          targetLabel: null,
+          holder: null, holderTeam: null, holderYear: null, remaining: null,
+          lowerIsBetter: false,
+        },
+        wallWatchVotes: null,
+        gamesAheadContext: 'NBA Finals — SAS leads 2–1',
+        gamesAhead: [
+          { id: 'g1', date: 'Tonight', matchup: 'vs SAS', note: 'Game 4 — MSG' },
+          { id: 'g2', date: 'Jun 1',   matchup: 'vs SAS', note: 'Game 5'       },
+          { id: 'g3', date: 'Jun 5',   matchup: '@SAS',   note: 'Game 6'       },
+        ],
+      },
+      // 18 empty slots — 6×4 = 24 total, tiles match main wall size
+      null, null, null, null, null, null,
+      null, null, null, null, null, null,
+      null, null, null, null, null, null,
     ],
   },
+]
+
+// ── ARCHIVE_PLACEHOLDER — past weeks removed per design direction ─────────────
+// Past weeks were cut. The left column shows only the current week.
+// Historical entries will surface via a future /archive or search route.
+
+const _WEEKS_ARCHIVE = [
   {
     id: 'week-may-12',
     weekOf: 'May 12',
@@ -179,6 +237,7 @@ const WEEKS = [
           homeTeam: 'KC', awayTeam: 'LV',
           homeScore: 28,  awayScore: 14,
           period: 'Final', clock: null, status: 'final',
+          gameDate: 'May 12', gameTime: null,
         },
         chaser: {
           lens: 'CAREER',
@@ -205,6 +264,7 @@ const WEEKS = [
           homeTeam: 'NYY', awayTeam: 'TEX',
           homeScore: 8,    awayScore: 3,
           period: 'Final', clock: null, status: 'final',
+          gameDate: 'May 12', gameTime: null,
         },
         chaser: {
           lens: 'SEASON',
@@ -224,6 +284,7 @@ const WEEKS = [
     ],
   },
 ]
+// ── end archive ───────────────────────────────────────────────────────────────
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -247,10 +308,11 @@ function chaseDistance(chaser) {
   return Math.abs(chaser.target - chaser.current)
 }
 
+// chaseWeight → tile heat intensity, all in the orange heat family
+// Matches the main wall aesthetic — no multi-color system, just heat levels.
 function tileVariant(entry) {
-  if (entry.isOnWall) return 'legend'
-  if (entry.chaser)   return 'chaser'
-  return 'watch'
+  const w = entry.chaseWeight ?? 1
+  return `w${Math.max(1, Math.min(3, w))}`
 }
 
 function todayLabel() {
@@ -270,24 +332,21 @@ function buildEntryMap(weeks) {
 
 // ── TileBtn — grid cell selector ─────────────────────────────────────────────
 
-function TileBtn({ entry, active, isPast, onClick }) {
+function TileBtn({ entry, active, onClick }) {
   const variant = tileVariant(entry)
-  const isLive  = entry.game?.status === 'live'
 
   return (
     <button
       className={[
         'ls-tile-btn',
         `ls-tile-btn--${variant}`,
-        active  ? 'ls-tile-btn--active' : '',
-        isPast  ? 'ls-tile-btn--past'   : '',
+        active ? 'ls-tile-btn--active' : '',
       ].filter(Boolean).join(' ')}
       onClick={onClick}
       aria-pressed={active}
       aria-label={`${entry.player}, number ${entry.number}`}
     >
       {entry.number}
-      {isLive && <span className="ls-tile-btn__dot" aria-hidden="true" />}
     </button>
   )
 }
@@ -301,28 +360,19 @@ function TileEmpty() {
 // ── WeekBlock — labeled 4×3 grid ─────────────────────────────────────────────
 
 function WeekBlock({ week, selectedId, onSelect }) {
-  const isPastWeek = !week.isCurrentWeek
-
   return (
-    <div className={`live-week${isPastWeek ? ' live-week--past' : ''}`}>
-      <div className="live-week__label">
-        {week.isCurrentWeek ? 'This week' : `Week of ${week.weekOf}`}
-      </div>
+    <div className="live-week">
       <div className="live-week__grid" role="list">
         {week.entries.map((entry, i) =>
           entry ? (
-            <div key={entry.id} role="listitem">
-              <TileBtn
-                entry={entry}
-                active={entry.id === selectedId}
-                isPast={isPastWeek}
-                onClick={() => onSelect(entry.id)}
-              />
-            </div>
+            <TileBtn
+              key={entry.id}
+              entry={entry}
+              active={entry.id === selectedId}
+              onClick={() => onSelect(entry.id)}
+            />
           ) : (
-            <div key={`empty-${week.id}-${i}`} role="listitem">
-              <TileEmpty />
-            </div>
+            <TileEmpty key={`empty-${week.id}-${i}`} />
           )
         )}
       </div>
@@ -339,63 +389,187 @@ function LensTag({ lens }) {
 
 // ── GameLine — compressed score + period + clock ─────────────────────────────
 
-function GameLine({ game, sport }) {
+// Shorten "8:00 PM ET" → "8PM ET", "10:30 PM ET" → "10:30PM ET"
+function shortTime(t) {
+  if (!t) return null
+  return t.replace(':00 ', '').replace(' ', '').replace('PM', 'PM ')
+}
+
+function GameLine({ game }) {
   if (!game) return null
-  const { homeTeam, awayTeam, homeScore, awayScore, period, clock, status } = game
+  const { homeTeam, awayTeam, homeScore, awayScore, period, status, gameDate, gameTime } = game
   const isLive = status === 'live'
+  const time   = shortTime(gameTime)
   return (
     <div className="ls-game-line">
       {isLive && <span className="ls-game-line__dot" aria-hidden="true" />}
-      <span className="ls-game-line__sport">{SPORT_LABEL[sport] ?? sport.toUpperCase()}</span>
+      {gameDate && <span className="ls-game-line__date">{gameDate}</span>}
+      {time && <><span className="ls-game-line__sep">·</span><span className="ls-game-line__time">{time}</span></>}
       <span className="ls-game-line__sep">·</span>
       <span className="ls-game-line__score">{awayTeam} {awayScore}–{homeScore} {homeTeam}</span>
       <span className="ls-game-line__sep">·</span>
       <span className="ls-game-line__period">{period}</span>
-      {clock && (
-        <>
-          <span className="ls-game-line__sep">·</span>
-          <span className="ls-game-line__clock">{clock}</span>
-        </>
-      )}
     </div>
   )
 }
 
-// ── ChaserBar — progress track ────────────────────────────────────────────────
+// ── Lens → color system ───────────────────────────────────────────────────────
+// Matches the ls-lens--* pill colors. One source of truth for live page heat.
 
-function ChaserBar({ chaser }) {
-  const pct         = chasePct(chaser)
-  const dist        = chaseDistance(chaser)
-  const isUncharted = !chaser.target
+// Lens → color family (drives tag pills, ChaserStat colors, row bar tint)
+// Must stay in sync with tileVariant() and ls-lens--* CSS classes.
+const LENS_COLOR = {
+  'CAREER':   'heat',    // orange — all-time permanent records
+  'ALL TIME': 'heat',    // orange — same
+  'SEASON':   'sacred',  // blue   — single-season, time-bounded
+  'SERIES':   'blaze',   // gold   — live playoff heat
+  'GAME':     'blaze',   // gold   — post-game record report
+}
+
+function lensColor(lens) {
+  return LENS_COLOR[lens?.toUpperCase()] ?? 'heat'
+}
+
+// ── ChaseLine — mini SVG comparison: chaser's dot vs record ──────────────────
+// Shows the closing stretch, not a 0-100% bar.
+// Window anchored around the gap so it's spatially meaningful.
+
+function ChaseLine({ current, target, lowerIsBetter, color }) {
+  const dist   = Math.abs(target - current)
+  // Show a window of roughly 3× the gap so both points are clearly positioned
+  const buf    = Math.max(Math.round(dist * 1.5), 1)
+  const lo     = lowerIsBetter ? target - buf : current - buf
+  const hi     = lowerIsBetter ? current + buf : target + buf
+  const range  = hi - lo
+
+  const nowPct    = ((current - lo) / range) * 100
+  const goalPct   = ((target  - lo) / range) * 100
+  const leftPct   = lowerIsBetter ? goalPct : nowPct
+  const rightPct  = lowerIsBetter ? nowPct  : goalPct
+
+  // SVG dimensions (unitless — viewBox scales)
+  const W = 300, H = 52, cy = 22, r = 5
+
+  const colorVars = {
+    heat:   { stroke: 'rgba(232,124,42,0.9)', dim: 'rgba(232,124,42,0.25)', track: 'rgba(255,255,255,0.08)' },
+    blaze:  { stroke: 'rgba(245,193,53,0.9)', dim: 'rgba(245,193,53,0.25)', track: 'rgba(255,255,255,0.08)' },
+    sacred: { stroke: 'rgba(200,220,255,0.9)', dim: 'rgba(200,220,255,0.20)', track: 'rgba(255,255,255,0.08)' },
+  }
+  const c = colorVars[color] ?? colorVars.heat
+
+  const x  = pct => pct / 100 * W
+  const xN = x(nowPct), xG = x(goalPct)
 
   return (
-    <div className="ls-chaser">
-      <div className={`ls-chaser__track${isUncharted ? ' ls-chaser__track--uncharted' : ''}`}>
-        {isUncharted ? (
-          <>
-            <div className="ls-chaser__fade-fill" />
-            <div className="ls-chaser__fade-dot" />
-            <span className="ls-chaser__horizon">∞</span>
-          </>
-        ) : (
-          <>
-            <div className="ls-chaser__fill" style={{ width: `${pct}%` }} />
-            <div className="ls-chaser__dot"  style={{ left:  `${pct}%` }} />
-          </>
-        )}
-      </div>
+    <div className="ls-chase-line" aria-hidden="true">
+      <svg viewBox={`0 0 ${W} ${H}`} className="ls-chase-line__svg">
+        {/* Track */}
+        <line x1="0" y1={cy} x2={W} y2={cy} stroke={c.track} strokeWidth="1.5"/>
+        {/* Progress fill from left edge to chaser position */}
+        <line x1="0" y1={cy} x2={xN} y2={cy} stroke={c.dim} strokeWidth="2" strokeLinecap="round"/>
+        {/* Gap — dotted from chaser to record */}
+        <line x1={xN} y1={cy} x2={xG} y2={cy} stroke={c.stroke} strokeWidth="1.5" strokeDasharray="3 4" opacity="0.5"/>
+        {/* Chaser dot */}
+        <circle cx={xN} cy={cy} r={r} fill={c.stroke}/>
+        {/* Record ring */}
+        <circle cx={xG} cy={cy} r={r} fill="none" stroke={c.stroke} strokeWidth="1.5" opacity="0.6"/>
+        {/* Labels */}
+        <text x={xN} y={H - 2} textAnchor="middle" className="ls-chase-line__label">{fmt(current)}</text>
+        <text x={xG} y={H - 2} textAnchor="middle" className="ls-chase-line__label ls-chase-line__label--goal">{fmt(target)}</text>
+      </svg>
+    </div>
+  )
+}
 
-      <div className="ls-chaser__footer">
-        <span className="ls-chaser__current">{fmt(chaser.current)} {chaser.stat}</span>
-        {dist != null && chaser.targetLabel && (
-          <span className="ls-chaser__to-go">
-            {fmt(dist)} {chaser.lowerIsBetter ? 'below' : 'away from'} {chaser.targetLabel}
-          </span>
-        )}
-        {isUncharted && (
-          <span className="ls-chaser__to-go">Uncharted — no ceiling</span>
-        )}
-      </div>
+// ── ChaserStat — option 14: two stacked rows, progress bar in chaser row ──────
+
+function ChaserStat({ chaser, chaserName, chaserTeam }) {
+  const dist      = chaseDistance(chaser)
+  const hasTarget = Boolean(chaser.target)
+  const color     = lensColor(chaser.lens)
+  const pct       = hasTarget ? Math.round(chasePct(chaser) ?? 0) : null
+
+  const heroNum = hasTarget
+    ? (chaser.remaining != null ? chaser.remaining : fmt(dist))
+    : fmt(chaser.current)
+
+  return (
+    <div className={`ls-cstat ls-cstat--${color}`}>
+
+      {/* Two-row design for chasers */}
+      {hasTarget && (
+        <div className="ls-cstat__rows">
+
+          {/* Record holder — neutral, trophy icon */}
+          <div className="ls-cstat__row ls-cstat__row--holder">
+            <Trophy size={15} className="ls-cstat__row-icon" aria-hidden="true" />
+            <div className="ls-cstat__row-body">
+              <span className="ls-cstat__row-eye">Record to beat</span>
+              <span className="ls-cstat__row-name">{chaser.holder} — {fmt(chaser.target)} {chaser.stat}</span>
+              {chaser.holderTeam && (
+                <span className="ls-cstat__row-meta">
+                  {[chaser.holderTeam, chaser.holderYear].filter(Boolean).join(' · ')}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Chaser — heat, flame icon, WhatsNext-style bg bar */}
+          <div className="ls-cstat__row ls-cstat__row--live" aria-label={`Chasing — ${pct}% of record`}>
+            {pct != null && (
+              <div className="ls-cstat__row-bar" style={{ width: `${pct}%` }} aria-hidden="true" />
+            )}
+            <Flame size={15} className="ls-cstat__row-icon ls-cstat__row-icon--live" aria-hidden="true" />
+            <div className="ls-cstat__row-body">
+              <span className="ls-cstat__row-eye ls-cstat__row-eye--live">
+                {chaser.lowerIsBetter
+                  ? `Holding below the record · ${fmt(chaser.current)} ${chaser.stat}`
+                  : `Chasing · ${heroNum} ${chaser.stat.toLowerCase()} to go`
+                }
+              </span>
+              <span className="ls-cstat__row-name ls-cstat__row-name--live">
+                {chaserName} — {fmt(chaser.current)} {chaser.stat}{chaser.lowerIsBetter ? ' this season' : ''}
+              </span>
+              <span className="ls-cstat__row-meta">{chaserTeam} · Active</span>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* Uncharted state — live row first (they own the record now), past record below */}
+      {!hasTarget && (
+        <div className="ls-cstat__rows">
+
+          {/* Their current total — they ARE the record holder now */}
+          <div className="ls-cstat__row ls-cstat__row--live">
+            <TrendingUp size={15} className="ls-cstat__row-icon ls-cstat__row-icon--live" aria-hidden="true" />
+            <div className="ls-cstat__row-body">
+              <span className="ls-cstat__row-eye ls-cstat__row-eye--live">Record holder · No ceiling</span>
+              <span className="ls-cstat__row-name ls-cstat__row-name--live">
+                {chaserName} — {fmt(chaser.current)} {chaser.stat}
+              </span>
+              <span className="ls-cstat__row-meta">{chaserTeam} · Still climbing</span>
+            </div>
+          </div>
+
+          {/* Previous record they broke */}
+          {chaser.prevHolder && (
+            <div className="ls-cstat__row ls-cstat__row--holder">
+              <Trophy size={15} className="ls-cstat__row-icon" aria-hidden="true" />
+              <div className="ls-cstat__row-body">
+                <span className="ls-cstat__row-eye">Record they broke</span>
+                <span className="ls-cstat__row-name">{chaser.prevHolder} — {fmt(chaser.prevRecord)} {chaser.stat}</span>
+                <span className="ls-cstat__row-meta">
+                  {chaser.prevHolderTeam} · broken in {chaser.prevBreakYear}
+                </span>
+              </div>
+            </div>
+          )}
+
+        </div>
+      )}
+
     </div>
   )
 }
@@ -404,17 +578,10 @@ function ChaserBar({ chaser }) {
 
 function GamesAheadRow({ game }) {
   return (
-    <div className={`lga-row${game.projected ? ' lga-row--projected' : ''}`}>
+    <div className="lga-row">
       <span className="lga-row__date">{game.date}</span>
       <span className="lga-row__matchup">{game.matchup}</span>
-      <div className="lga-row__right">
-        {game.remaining != null && game.remaining > 0 && (
-          <span className="lga-row__remaining">{game.remaining} to go</span>
-        )}
-        {game.note && (
-          <span className="lga-row__note">{game.note}</span>
-        )}
-      </div>
+      {game.note && <span className="lga-row__note">{game.note}</span>}
     </div>
   )
 }
@@ -424,19 +591,24 @@ function GamesAheadRow({ game }) {
 function EmptyState() {
   return (
     <div className="ls-empty">
-      <p className="ls-empty__text">Select a number to see what's at stake tonight.</p>
+      <div className="ls-empty__heat-bar" aria-hidden="true" />
+      <p className="ls-empty__hook">History is live.</p>
+      <p className="ls-empty__text">
+        Records within reach. Games on right now. Pick a number to see what's at stake tonight.
+      </p>
     </div>
   )
 }
 
 // ── DetailPanel — right panel ─────────────────────────────────────────────────
 
-function DetailPanel({ entry, onVote }) {
-  if (!entry) return <EmptyState />
+// DetailPanel renders content only — card wrapper lives in LivePage for mobile sheet control.
+function DetailPanel({ entry, onVote, onClear }) {
+  if (!entry) return null
 
   const {
     number, player, sport, team, isOnWall,
-    stat, headline, game, chaser, wallWatchVotes,
+    stat, game, chaser,
     gamesAhead, gamesAheadContext,
   } = entry
 
@@ -445,35 +617,37 @@ function DetailPanel({ entry, onVote }) {
   return (
     <div className={`ls-detail ls-detail--${variant}`}>
 
-      {/* ── 1. Player mat: number + identity + game + tonight ────────────── */}
+      {/* ── 1. Player mat: number alone on top, details below ───────────── */}
       <div className="ls-player-mat">
-        <span className={`ls-player-mat__num ls-player-mat__num--${variant}`}>
-          {number}
-        </span>
+        <div className="ls-player-mat__top-row">
+          <span className={`ls-player-mat__num ls-player-mat__num--${variant}`}>
+            {number}
+          </span>
+          <button className="tnw-close-btn ls-player-mat__close" onClick={onClear} aria-label="Clear selection">
+            <X size={14} />
+          </button>
+        </div>
         <div className="ls-player-mat__info">
           <h2 className="ls-player-mat__name">{player}</h2>
-          <span className="ls-player-mat__squad">
-            {SPORT_LABEL[sport] ?? sport.toUpperCase()} · {team}
-          </span>
-          <GameLine game={game} sport={sport} />
-        </div>
-        <div className="ls-player-mat__tonight-col">
-          <span className="ls-player-mat__tonight">{stat}</span>
+          <div className="ls-player-mat__sub">
+            <span className="ls-player-mat__squad">
+              {SPORT_LABEL[sport] ?? sport.toUpperCase()} · {team}
+            </span>
+            {stat && <span className="ls-player-mat__tonight">{stat}</span>}
+          </div>
+          <GameLine game={game} />
         </div>
       </div>
 
-      {/* ── 2. Chase section: lens + headline + bar ──────────────────────── */}
-      {chaser ? (
+      {/* ── 2. Chase section: lens tag + stat ───────────────────────────── */}
+      {chaser && (
         <section className="ls-chase-section" aria-label="Record chase">
           <div className="ls-chase-section__header">
             <LensTag lens={chaser.lens} />
             <span className="ls-chase-section__stat-name">{chaser.stat}</span>
           </div>
-          <p className="ls-detail__headline">{headline}</p>
-          <ChaserBar chaser={chaser} />
+          <ChaserStat chaser={chaser} chaserName={player} chaserTeam={team} />
         </section>
-      ) : (
-        <p className="ls-detail__headline">{headline}</p>
       )}
 
       {/* ── 3. Games ahead ───────────────────────────────────────────────── */}
@@ -491,43 +665,202 @@ function DetailPanel({ entry, onVote }) {
         </section>
       )}
 
-      {/* ── 4. Wall Watch ────────────────────────────────────────────────── */}
-      {!isOnWall && wallWatchVotes && (
-        <div className="ls-detail__wall-watch">
-          <span className="ls-detail__wall-watch-tag">WALL WATCH</span>
-          <div className="ls-detail__wall-watch-body">
-            <span className="ls-detail__wall-watch-tally">
-              {wallWatchVotes.netScore > 0 ? '+' : ''}{wallWatchVotes.netScore} say they belong
-            </span>
-            <VoteButtons
-              netScore={wallWatchVotes.netScore}
-              myVote={wallWatchVotes.myVote}
-              onVote={(dir) => onVote(entry.id, dir)}
-              playerName={player}
-              number={number}
-              compact
-            />
-          </div>
-        </div>
-      )}
+      {/* Wall Watch removed — didn't fit the live context */}
 
     </div>
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+// ── Supabase data layer ───────────────────────────────────────────────────────
+// Transforms a flat live_entries row into the shape LivePage components expect.
+
+function rowToEntry(row) {
+  return {
+    id:           row.id,
+    number:       row.number,
+    player:       row.player,
+    sport:        row.sport,
+    team:         row.team,
+    isOnWall:     row.is_on_wall ?? false,
+    chaseWeight:  row.chase_weight ?? 1,
+    stat:         row.tonight_stat,
+    game: (row.game_status || row.home_team) ? {
+      homeTeam:  row.home_team,
+      awayTeam:  row.away_team,
+      homeScore: row.home_score ?? 0,
+      awayScore: row.away_score ?? 0,
+      period:    row.period,
+      status:    row.game_status ?? 'upcoming',
+      gameDate:  row.game_date,
+      gameTime:  row.game_time,
+    } : null,
+    chaser: row.stat_name ? {
+      lens:           row.lens,
+      stat:           row.stat_name,
+      current:        row.current_stat,
+      target:         row.target ?? null,
+      targetLabel:    row.target_label ?? null,
+      holder:         row.holder ?? null,
+      holderTeam:     row.holder_team ?? null,
+      holderYear:     row.holder_year ?? null,
+      remaining:      row.remaining ?? null,
+      lowerIsBetter:  row.lower_is_better ?? false,
+      prevHolder:     row.prev_holder ?? null,
+      prevHolderTeam: row.prev_holder_team ?? null,
+      prevRecord:     row.prev_record ?? null,
+      prevBreakYear:  row.prev_break_year ?? null,
+      leaderboard:    row.leaderboard ?? null,
+    } : null,
+    wallWatchVotes:    null,
+    gamesAheadContext: row.games_ahead_context ?? null,
+    gamesAhead:        row.games_ahead ?? [],
+  }
+}
+
+// Groups sorted rows into the WEEKS array shape the component renders.
+function rowsToWeeks(rows) {
+  const grouped = {}
+  for (const row of rows) {
+    const key = row.week_of
+    if (!grouped[key]) grouped[key] = []
+    grouped[key].push(rowToEntry(row))
+  }
+
+  const dates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a))
+  return dates.map((date, i) => {
+    const entries = grouped[date]
+    const padded  = [...entries, ...Array(Math.max(0, 24 - entries.length)).fill(null)]
+    return {
+      id:            `week-${date}`,
+      weekOf:        new Date(date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      isCurrentWeek: i === 0,
+      entries:       padded.slice(0, 24),
+    }
+  })
+}
+
+// Fetches live_entries + subscribes to Realtime updates.
+function useLiveEntries() {
+  const [weeks,   setWeeks]   = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Initial fetch
+    supabase
+      .from('live_entries')
+      .select('*')
+      .eq('active', true)
+      .order('week_of', { ascending: false })
+      .then(({ data, error }) => {
+        if (error) console.error('live_entries fetch:', error)
+        setWeeks(data?.length ? rowsToWeeks(data) : [])
+        setLoading(false)
+      })
+
+    // Realtime — stat updates push immediately to every open tab
+    const channel = supabase
+      .channel('live_entries_updates')
+      .on('postgres_changes', {
+        event:  'UPDATE',
+        schema: 'public',
+        table:  'live_entries',
+        filter: 'active=eq.true',
+      }, (payload) => {
+        const updated = rowToEntry(payload.new)
+        setWeeks(prev => prev.map(week => ({
+          ...week,
+          entries: week.entries.map(e => e?.id === updated.id ? updated : e),
+        })))
+      })
+      .subscribe()
+
+    return () => supabase.removeChannel(channel)
+  }, [])
+
+  return { weeks, loading }
+}
+
+// ── useSwipeDown — mirrors PlayerPanel exactly ────────────────────────────────
+// Tracks vertical touch drag on the panel. Swipe down > 80px → close.
+
+function useSwipeDown(panelRef, onClose) {
+  const startY   = useRef(0)
+  const currentY = useRef(0)
+  const dragging = useRef(false)
+
+  const onTouchStart = useCallback((e) => {
+    const el = panelRef.current
+    if (!el || el.scrollTop > 5) return
+    startY.current = e.touches[0].clientY
+    currentY.current = startY.current
+    dragging.current = true
+    el.style.transition = 'none'
+  }, [panelRef])
+
+  const onTouchMove = useCallback((e) => {
+    if (!dragging.current) return
+    currentY.current = e.touches[0].clientY
+    const dy = currentY.current - startY.current
+    if (dy > 0) {
+      const dampened = Math.min(dy * 0.6, 200)
+      panelRef.current.style.transform = `translateY(${dampened}px)`
+    }
+  }, [panelRef])
+
+  const onTouchEnd = useCallback(() => {
+    if (!dragging.current) return
+    dragging.current = false
+    const dy = currentY.current - startY.current
+    const el = panelRef.current
+    if (!el) return
+    el.style.transition = ''
+    if (dy > 80) {
+      el.style.transform = 'translateY(100%)'
+      setTimeout(onClose, 200)
+    } else {
+      el.style.transform = ''
+    }
+  }, [panelRef, onClose])
+
+  useEffect(() => {
+    const el = panelRef.current
+    if (!el) return
+    if (window.matchMedia('(min-width: 768px)').matches) return
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove',  onTouchMove,  { passive: true })
+    el.addEventListener('touchend',   onTouchEnd,   { passive: true })
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove',  onTouchMove)
+      el.removeEventListener('touchend',   onTouchEnd)
+    }
+  })
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function LivePage() {
-  // Votes are the only mutable part — keep a separate map so WEEKS stays pure
-  const [votes, setVotes]         = useState({})
-  const [selectedId, setSelectedId] = useState(
-    WEEKS[0]?.entries.find(Boolean)?.id ?? null
-  )
+  const { weeks, loading }          = useLiveEntries()
+  const [votes, setVotes]           = useState({})
+  const [selectedId, setSelectedId] = useState(null)
+  const detailRef       = useRef(null)
+  const hasAutoSelected = useRef(false)   // prevents re-select after user clears
+  const handleClear     = useCallback(() => setSelectedId(null), [])
+
+  // Auto-select first entry on initial load only — not after user clears
+  useEffect(() => {
+    if (!hasAutoSelected.current && weeks.length > 0) {
+      const first = weeks[0]?.entries.find(Boolean)
+      if (first) {
+        setSelectedId(first.id)
+        hasAutoSelected.current = true
+      }
+    }
+  }, [weeks])
 
   // Flatten all entries for lookup + live count
-  const entryMap = useMemo(() => buildEntryMap(WEEKS), [])
+  const entryMap = useMemo(() => buildEntryMap(weeks), [weeks])
 
-  // Merge stored votes into entry for the detail panel
   const selectedEntry = useMemo(() => {
     const base = entryMap.get(selectedId)
     if (!base) return null
@@ -536,9 +869,10 @@ export default function LivePage() {
     return { ...base, wallWatchVotes: { ...base.wallWatchVotes, ...savedVotes } }
   }, [selectedId, votes, entryMap])
 
-  const liveCount = useMemo(() =>
-    [...entryMap.values()].filter(e => e.game?.status === 'live').length,
-  [entryMap])
+  // All tracked entries = "in play" — not just those with live game status
+  const liveCount = useMemo(() => entryMap.size, [entryMap])
+
+  useSwipeDown(detailRef, handleClear)
 
   function handleVote(entryId, dir) {
     setVotes(prev => {
@@ -561,7 +895,7 @@ export default function LivePage() {
 
       {/* ── Page placemat ────────────────────────────────────────────────── */}
       <div className="live-placemat">
-        <h1 className="live-placemat__title">Tonight on the wall</h1>
+        <h1 className="live-placemat__title">This week on the wall</h1>
         <div className="live-placemat__meta">
           <span className="live-placemat__live-dot" aria-hidden="true" />
           <span className="live-placemat__count">
@@ -578,7 +912,8 @@ export default function LivePage() {
         {/* Left: stacked weekly grids */}
         <aside className="live-split__col" aria-label="Numbers by week">
           <div className="live-weeks">
-            {WEEKS.map(week => (
+            {loading && <AppLoading text="TRACKING HISTORY" />}
+            {weeks.map(week => (
               <WeekBlock
                 key={week.id}
                 week={week}
@@ -589,12 +924,30 @@ export default function LivePage() {
           </div>
         </aside>
 
-        {/* Right: detail */}
+        {/* Right: detail — card always in DOM so mobile slide animation works */}
         <main className="live-split__detail" aria-label="Number detail">
-          <DetailPanel entry={selectedEntry} onVote={handleVote} />
+          <div
+            ref={detailRef}
+            className={`ls-detail-card${!selectedEntry ? ' ls-detail-card--idle' : ''}`}
+          >
+            <div className="ls-detail-card__handle" aria-hidden="true" />
+            {selectedEntry
+              ? <DetailPanel entry={selectedEntry} onVote={handleVote} onClear={handleClear} />
+              : <EmptyState />
+            }
+          </div>
         </main>
 
       </div>
+
+      {/* Mobile backdrop — dims grid when sheet is open */}
+      {selectedEntry && (
+        <div
+          className="tnw-backdrop live-page__backdrop"
+          onClick={handleClear}
+          aria-hidden="true"
+        />
+      )}
     </AppShell>
   )
 }
