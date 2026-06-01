@@ -245,6 +245,96 @@
   outline-offset: 3px;
 }
 
+/* Count badge — shown on tiles with multiple entries sharing a number */
+.ls-tile-btn__count {
+  position:      absolute;
+  top:           3px;
+  right:         3px;
+  font-family:   var(--font-scoreboard);
+  font-size:     9px; /* ds:intentional — tiny badge, no token this small */
+  font-weight:   700;
+  line-height:   1;
+  color:         var(--color-night);
+  background:    var(--color-blaze);
+  border-radius: 3px; /* ds:intentional — mini badge radius */
+  padding:       1px 3px; /* ds:intentional — sub-space micro padding */
+}
+
+/* ── Multi-entry accordion panel ─────────────────────────────────────────── */
+
+.ls-multi__subtitle {
+  font-family: var(--font-scoreboard);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  margin:      0;
+  letter-spacing: var(--tracking-wide);
+}
+
+.ls-multi__list {
+  display:        flex;
+  flex-direction: column;
+  gap:            0;
+  border-top:     1px solid var(--border-faint);
+}
+
+.ls-multi__entry {
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.ls-multi__entry:last-child { border-bottom: none; }
+
+.ls-multi__header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  width:           100%;
+  padding:         var(--space-4) 0;
+  background:      none;
+  border:          none;
+  cursor:          pointer;
+  text-align:      left;
+  gap:             var(--space-3);
+  transition:      background var(--motion-hover);
+}
+
+.ls-multi__header:hover { background: var(--surface-2); }
+
+.ls-multi__header-left {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  min-width:      0;
+}
+
+.ls-multi__name {
+  font-family: var(--font-banner);
+  font-size:   var(--text-display-xs);
+  color:       var(--ink-high);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.ls-multi__meta {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+}
+
+.ls-multi__chevron {
+  font-family: var(--font-scoreboard);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  flex-shrink: 0;
+}
+
+.ls-multi__body {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+  padding-bottom: var(--space-5);
+}
+
 /* Dot removed — color/glow now carries the live signal */
 
 /* ── Right: detail panel — takes the wide 61.8% share ───────────────────── */

@@ -344,9 +344,16 @@ function TileBtn({ entry, active, onClick }) {
       ].filter(Boolean).join(' ')}
       onClick={onClick}
       aria-pressed={active}
-      aria-label={`${entry.player}, number ${entry.number}`}
+      aria-label={entry.isMulti
+        ? `${entry.number} — ${entry.multiEntries.length} players`
+        : `${entry.player}, number ${entry.number}`}
     >
       {entry.number}
+      {entry.isMulti && (
+        <span className="ls-tile-btn__count" aria-hidden="true">
+          {entry.multiEntries.length}
+        </span>
+      )}
     </button>
   )
 }
@@ -640,9 +647,98 @@ function EmptyState() {
 
 // ── DetailPanel — right panel ─────────────────────────────────────────────────
 
+// ── MultiDetailPanel — accordion for entries sharing a jersey number ──────────
+
+function MultiDetailPanel({ entry, onClear }) {
+  const { multiEntries, number } = entry
+  const [openId, setOpenId] = useState(multiEntries[0]?.id ?? null)
+
+  const toggle = (id) => setOpenId(prev => prev === id ? null : id)
+
+  return (
+    <div className={`ls-detail ls-detail--w1`}>
+      <div className="ls-player-mat">
+        <div className="ls-player-mat__top-row">
+          <span className="ls-player-mat__num ls-player-mat__num--w1">
+            {number}
+          </span>
+          <button className="tnw-close-btn" onClick={onClear} aria-label="Close">
+            <X size={14} />
+          </button>
+        </div>
+        <p className="ls-multi__subtitle">{multiEntries.length} players wearing #{number} this week</p>
+      </div>
+
+      <div className="ls-multi__list">
+        {multiEntries.map(e => {
+          const isOpen = openId === e.id
+          const opponent = e.game
+            ? (e.game.homeTeam === e.team ? e.game.awayTeam : e.game.homeTeam)
+            : null
+          return (
+            <div key={e.id} className={`ls-multi__entry${isOpen ? ' ls-multi__entry--open' : ''}`}>
+              <button
+                className="ls-multi__header"
+                onClick={() => toggle(e.id)}
+                aria-expanded={isOpen}
+              >
+                <div className="ls-multi__header-left">
+                  <span className="ls-multi__name">{e.player}</span>
+                  <span className="ls-multi__meta">
+                    {SPORT_LABEL[e.sport] ?? e.sport.toUpperCase()} · {e.team}
+                    {e.stat ? ` · ${e.stat}` : ''}
+                  </span>
+                </div>
+                <span className="ls-multi__chevron" aria-hidden="true">
+                  {isOpen ? '↑' : '↓'}
+                </span>
+              </button>
+
+              {isOpen && (
+                <div className="ls-multi__body">
+                  {e.gamesAheadContext && (
+                    <p className="ls-detail__hook">{e.gamesAheadContext}</p>
+                  )}
+                  {e.chaser && (
+                    <section className="ls-chase-section">
+                      <div className="ls-chase-section__header">
+                        <LensTag lens={e.chaser.lens} />
+                        <span className="ls-chase-section__stat-name">{e.chaser.stat}</span>
+                      </div>
+                      <ChaserStat
+                        chaser={e.chaser}
+                        chaserName={e.player}
+                        chaserTeam={e.team}
+                        chaserOpponent={opponent}
+                      />
+                    </section>
+                  )}
+                  {e.gamesAhead?.length > 0 && (
+                    <section className="ls-games-ahead">
+                      <div className="ls-games-ahead__header">
+                        <span className="ls-games-ahead__title">Games Ahead</span>
+                      </div>
+                      <div className="ls-games-ahead__list">
+                        {e.gamesAhead.map(g => <GamesAheadRow key={g.id} game={g} />)}
+                      </div>
+                    </section>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // DetailPanel renders content only — card wrapper lives in LivePage for mobile sheet control.
 function DetailPanel({ entry, onVote, onClear }) {
   if (!entry) return null
+
+  // Route compound tiles to the multi-entry accordion
+  if (entry.isMulti) return <MultiDetailPanel entry={entry} onClear={onClear} />
 
   const {
     number, player, sport, team, isOnWall,
@@ -763,6 +859,7 @@ function rowToEntry(row) {
 }
 
 // Groups sorted rows into the WEEKS array shape the component renders.
+// Entries sharing the same jersey number are merged into a compound tile.
 function rowsToWeeks(rows) {
   const grouped = {}
   for (const row of rows) {
@@ -773,8 +870,33 @@ function rowsToWeeks(rows) {
 
   const dates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a))
   return dates.map((date, i) => {
-    const entries = grouped[date]
-    const padded  = [...entries, ...Array(Math.max(0, 24 - entries.length)).fill(null)]
+    const rawEntries = grouped[date]
+
+    // Merge entries that share the same jersey number into compound tiles
+    const byNumber = new Map()
+    for (const entry of rawEntries) {
+      const num = String(entry.number)
+      if (!byNumber.has(num)) byNumber.set(num, [])
+      byNumber.get(num).push(entry)
+    }
+
+    const mergedEntries = []
+    for (const group of byNumber.values()) {
+      if (group.length === 1) {
+        mergedEntries.push(group[0])
+      } else {
+        // Use highest chaseWeight entry as the "primary" for tile styling
+        const primary = group.reduce((a, b) => (b.chaseWeight > a.chaseWeight ? b : a))
+        mergedEntries.push({
+          ...primary,
+          id:           group.map(e => e.id).join('|'),
+          isMulti:      true,
+          multiEntries: group,
+        })
+      }
+    }
+
+    const padded = [...mergedEntries, ...Array(Math.max(0, 24 - mergedEntries.length)).fill(null)]
     return {
       id:            `week-${date}`,
       weekOf:        new Date(date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
