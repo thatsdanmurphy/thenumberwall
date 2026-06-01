@@ -533,13 +533,14 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
                   ? chaser.current < chaser.target
                     ? `Holding below the record · ${fmt(chaser.current)} ${chaser.stat}`
                     : `Not yet in record territory · ${fmt(chaser.current)} ${chaser.stat}`
-                  : chaser.targetLabel
-                    ? `Chasing the ${chaser.targetLabel} · ${heroNum} ${chaser.stat.toLowerCase()} to go`
-                    : `Chasing · ${heroNum} ${chaser.stat.toLowerCase()} to go`
+                  : `Chasing · ${heroNum} to go`
                 }
               </span>
               <span className="ls-cstat__row-name ls-cstat__row-name--live">
-                {chaserName} — {fmt(chaser.current)} {chaser.stat}{chaser.lowerIsBetter ? ' this season' : ''}
+                {chaserName} — {fmt(chaser.current ?? 0)} HR
+                {chaser.leaderboard?.find(m => m.active)?.sb != null
+                  ? ` · ${chaser.leaderboard.find(m => m.active).sb} SB`
+                  : chaser.lowerIsBetter ? ' this season' : ''}
               </span>
               <span className="ls-cstat__row-meta">{chaserTeam} · Active</span>
             </div>
