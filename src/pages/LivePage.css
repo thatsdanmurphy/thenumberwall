@@ -867,7 +867,6 @@
   display:        flex;
   flex-direction: column;
   gap:            var(--space-3);
-  max-width:      520px;
 }
 
 .ls-games-ahead__header {

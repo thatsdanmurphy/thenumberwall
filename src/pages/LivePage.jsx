@@ -509,7 +509,10 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
                   ? 'Last inductee'
                   : 'Record to beat'}
               </span>
-              <span className="ls-cstat__row-name">{chaser.holder} — {fmt(chaser.target)} {chaser.stat}</span>
+              <span className="ls-cstat__row-name">
+                {chaser.holder}
+                {!chaser.targetLabel?.toLowerCase().includes('club') && ` — ${fmt(chaser.target)} ${chaser.stat}`}
+              </span>
               {chaser.holderTeam && (
                 <span className="ls-cstat__row-meta">
                   {[chaser.holderTeam, chaser.holderYear].filter(Boolean).join(' · ')}
