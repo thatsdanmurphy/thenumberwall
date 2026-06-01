@@ -994,10 +994,11 @@ export default function LivePage() {
         />
       )}
 
-      {/* Mobile hint — shows at bottom when nothing is selected */}
+      {/* Mobile idle state — flows in content between grid and screen bottom */}
       {!selectedEntry && (
-        <div className="ls-mobile-hint" aria-hidden="true">
-          <p className="ls-mobile-hint__text">History is live.</p>
+        <div className="ls-mobile-idle">
+          <div className="ls-empty__heat-bar" aria-hidden="true" />
+          <p className="ls-empty__hook">History is live.</p>
         </div>
       )}
     </AppShell>
