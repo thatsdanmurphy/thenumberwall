@@ -483,7 +483,7 @@ function ChaseLine({ current, target, lowerIsBetter, color }) {
 
 // ── ChaserStat — option 14: two stacked rows, progress bar in chaser row ──────
 
-function ChaserStat({ chaser, chaserName, chaserTeam }) {
+function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
   const dist      = chaseDistance(chaser)
   const hasTarget = Boolean(chaser.target)
   const color     = lensColor(chaser.lens)
@@ -549,15 +549,19 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
       {!hasTarget && (
         <div className="ls-cstat__rows">
 
-          {/* Their current total — they ARE the record holder now */}
+          {/* Their current total */}
           <div className="ls-cstat__row ls-cstat__row--live">
             <TrendingUp size={15} className="ls-cstat__row-icon ls-cstat__row-icon--live" aria-hidden="true" />
             <div className="ls-cstat__row-body">
-              <span className="ls-cstat__row-eye ls-cstat__row-eye--live">Record holder · No ceiling</span>
-              <span className="ls-cstat__row-name ls-cstat__row-name--live">
-                {chaserName} — {fmt(chaser.current)} {chaser.stat}
+              <span className="ls-cstat__row-eye ls-cstat__row-eye--live">
+                {chaser.prevHolder ? 'Record holder · No ceiling' : 'Series watch'}
               </span>
-              <span className="ls-cstat__row-meta">{chaserTeam} · Still climbing</span>
+              <span className="ls-cstat__row-name ls-cstat__row-name--live">
+                {chaserName} — {fmt(chaser.current ?? 0)} {chaser.stat}
+              </span>
+              <span className="ls-cstat__row-meta">
+                {chaserTeam}{chaserOpponent ? ` vs ${chaserOpponent}` : ''} · {chaser.prevHolder ? 'Still climbing' : 'Finals ahead'}
+              </span>
             </div>
           </div>
 
@@ -587,7 +591,11 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
               <div key={i} className={`ls-cstat__constellation-row${m.active ? ' ls-cstat__constellation-row--active' : ''}`}>
                 <span className="ls-cstat__constellation-rank">#{m.rank}</span>
                 <span className="ls-cstat__constellation-name">{m.name}</span>
-                <span className="ls-cstat__constellation-meta">{m.team} · {m.year}</span>
+                <span className="ls-cstat__constellation-meta">
+                  {m.active && chaserOpponent
+                    ? `${m.team} vs ${chaserOpponent} · ${m.year}`
+                    : `${m.team} · ${m.year}`}
+                </span>
                 <span className="ls-cstat__constellation-value">
                   {m.active ? fmt(chaser.current ?? 0) : m.value} {chaser.stat}{m.sb != null ? ` · ${m.sb} SB` : ''}
                 </span>
@@ -678,7 +686,12 @@ function DetailPanel({ entry, onVote, onClear }) {
             <LensTag lens={chaser.lens} />
             <span className="ls-chase-section__stat-name">{chaser.stat}</span>
           </div>
-          <ChaserStat chaser={chaser} chaserName={player} chaserTeam={team} />
+          <ChaserStat
+            chaser={chaser}
+            chaserName={player}
+            chaserTeam={team}
+            chaserOpponent={game ? (game.homeTeam === team ? game.awayTeam : game.homeTeam) : null}
+          />
         </section>
       )}
 
