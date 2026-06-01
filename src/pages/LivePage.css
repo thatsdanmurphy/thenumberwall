@@ -717,11 +717,27 @@
 
 .ls-cstat__constellation-row {
   display:               grid;
-  grid-template-columns: 28px 1fr 150px auto; /* ds:intentional — fixed cols so all rows align */
+  grid-template-columns: 24px 1fr 150px auto; /* ds:intentional — fixed cols so all rows align */
   align-items:           center;
   gap:                   var(--space-3);
   padding:               var(--space-2) 0;
-  border-bottom:   1px solid var(--border-faint);
+  border-bottom:         1px solid var(--border-faint);
+}
+
+/* Mobile: 2-col, meta + value stack under name */
+@media (max-width: 767px) {
+  .ls-cstat__constellation-row {
+    grid-template-columns: 20px 1fr; /* ds:intentional — rank flush left, name takes rest */
+    grid-template-rows:    auto auto;
+    gap:                   2px var(--space-2); /* ds:intentional — tight vertical, normal horizontal */
+  }
+  .ls-cstat__constellation-meta,
+  .ls-cstat__constellation-value {
+    grid-column: 2;
+    text-align:  left;
+  }
+  .ls-cstat__constellation-meta { font-size: var(--text-micro); }
+  .ls-cstat__constellation-value { font-size: var(--text-small); }
 }
 
 .ls-cstat__constellation-row:last-child { border-bottom: none; }
