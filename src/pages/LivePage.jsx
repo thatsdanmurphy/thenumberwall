@@ -537,10 +537,12 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
                 }
               </span>
               <span className="ls-cstat__row-name ls-cstat__row-name--live">
-                {chaserName} — {fmt(chaser.current ?? 0)} HR
-                {chaser.leaderboard?.find(m => m.active)?.sb != null
-                  ? ` · ${chaser.leaderboard.find(m => m.active).sb} SB`
-                  : chaser.lowerIsBetter ? ' this season' : ''}
+                {(() => {
+                  const activeSb = chaser.leaderboard?.find(m => m.active)?.sb
+                  const unit = activeSb != null ? 'HR' : chaser.stat
+                  const extra = activeSb != null ? ` · ${activeSb} SB` : chaser.lowerIsBetter ? ' this season' : ''
+                  return `${chaserName} — ${fmt(chaser.current ?? 0)} ${unit}${extra}`
+                })()}
               </span>
               <span className="ls-cstat__row-meta">{chaserTeam} · Active</span>
             </div>
