@@ -663,6 +663,82 @@
   opacity: 0.6;
 }
 
+/* ── Constellation — the full club ──────────────────────────────────────── */
+
+.ls-cstat__constellation {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+  padding-top:    var(--space-3);
+  border-top:     1px solid var(--border-faint);
+}
+
+.ls-cstat__constellation-title {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color:          var(--ink-dim);
+}
+
+.ls-cstat__constellation-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px; /* ds:intentional — tight list */
+}
+
+.ls-cstat__constellation-row {
+  display:         grid;
+  grid-template-columns: 24px 1fr auto auto;
+  align-items:     center;
+  gap:             var(--space-2);
+  padding:         var(--space-1) 0;
+  border-bottom:   0.5px solid var(--border-faint);
+}
+
+.ls-cstat__constellation-row:last-child { border-bottom: none; }
+
+/* Highlight the active/current player */
+.ls-cstat__constellation-row--active .ls-cstat__constellation-name,
+.ls-cstat__constellation-row--active .ls-cstat__constellation-value {
+  color: var(--color-heat);
+}
+
+.ls-cstat__constellation-rank {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
+  text-align:     right;
+}
+
+.ls-cstat__constellation-name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  font-weight:    700;
+  color:          var(--ink-mid);
+  white-space:    nowrap;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+}
+
+.ls-cstat__constellation-meta {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+}
+
+.ls-cstat__constellation-value {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  font-weight:    700;
+  color:          var(--ink-mid);
+  text-align:     right;
+  white-space:    nowrap;
+}
+
 /* Uncharted note */
 .ls-cstat__note {
   font-family: var(--font-program);

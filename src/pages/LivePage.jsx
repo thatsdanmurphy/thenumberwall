@@ -523,8 +523,12 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
             <div className="ls-cstat__row-body">
               <span className="ls-cstat__row-eye ls-cstat__row-eye--live">
                 {chaser.lowerIsBetter
-                  ? `Holding below the record · ${fmt(chaser.current)} ${chaser.stat}`
-                  : `Chasing · ${heroNum} ${chaser.stat.toLowerCase()} to go`
+                  ? chaser.current < chaser.target
+                    ? `Holding below the record · ${fmt(chaser.current)} ${chaser.stat}`
+                    : `Not yet in record territory · ${fmt(chaser.current)} ${chaser.stat}`
+                  : chaser.targetLabel
+                    ? `Chasing the ${chaser.targetLabel} · ${heroNum} ${chaser.stat.toLowerCase()} to go`
+                    : `Chasing · ${heroNum} ${chaser.stat.toLowerCase()} to go`
                 }
               </span>
               <span className="ls-cstat__row-name ls-cstat__row-name--live">
@@ -567,6 +571,25 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
             </div>
           )}
 
+        </div>
+      )}
+
+      {/* Constellation — the full club when it's exclusive enough */}
+      {chaser.leaderboard?.length > 0 && (
+        <div className="ls-cstat__constellation">
+          <span className="ls-cstat__constellation-title">In this echelon</span>
+          <div className="ls-cstat__constellation-list">
+            {chaser.leaderboard.map((m, i) => (
+              <div key={i} className={`ls-cstat__constellation-row${m.active ? ' ls-cstat__constellation-row--active' : ''}`}>
+                <span className="ls-cstat__constellation-rank">#{m.rank}</span>
+                <span className="ls-cstat__constellation-name">{m.name}</span>
+                <span className="ls-cstat__constellation-meta">{m.team} · {m.year}</span>
+                <span className="ls-cstat__constellation-value">
+                  {m.value} {chaser.stat}{m.sb != null ? ` · ${m.sb} SB` : ''}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -650,8 +673,8 @@ function DetailPanel({ entry, onVote, onClear }) {
         </section>
       )}
 
-      {/* ── 3. Games ahead ───────────────────────────────────────────────── */}
-      {gamesAhead?.length > 0 && (
+      {/* ── 3. Games ahead — context shows even before cron populates list ── */}
+      {(gamesAheadContext || gamesAhead?.length > 0) && (
         <section className="ls-games-ahead" aria-label="Games ahead">
           <div className="ls-games-ahead__header">
             <span className="ls-games-ahead__title">GAMES AHEAD</span>
@@ -659,9 +682,11 @@ function DetailPanel({ entry, onVote, onClear }) {
               <span className="ls-games-ahead__context">{gamesAheadContext}</span>
             )}
           </div>
-          <div className="ls-games-ahead__list">
-            {gamesAhead.map(g => <GamesAheadRow key={g.id} game={g} />)}
-          </div>
+          {gamesAhead?.length > 0 && (
+            <div className="ls-games-ahead__list">
+              {gamesAhead.map(g => <GamesAheadRow key={g.id} game={g} />)}
+            </div>
+          )}
         </section>
       )}
 
