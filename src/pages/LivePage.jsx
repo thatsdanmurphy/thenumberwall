@@ -662,7 +662,12 @@ function DetailPanel({ entry, onVote, onClear }) {
         </div>
       </div>
 
-      {/* ── 2. Chase section: lens tag + stat ───────────────────────────── */}
+      {/* ── 2. Hook — the "why this player is here" lede ────────────────── */}
+      {gamesAheadContext && (
+        <p className="ls-detail__hook">{gamesAheadContext}</p>
+      )}
+
+      {/* ── 3. Chase section: lens tag + stat ───────────────────────────── */}
       {chaser && (
         <section className="ls-chase-section" aria-label="Record chase">
           <div className="ls-chase-section__header">
@@ -673,20 +678,15 @@ function DetailPanel({ entry, onVote, onClear }) {
         </section>
       )}
 
-      {/* ── 3. Games ahead — context shows even before cron populates list ── */}
-      {(gamesAheadContext || gamesAhead?.length > 0) && (
+      {/* ── 4. Games ahead ───────────────────────────────────────────────── */}
+      {gamesAhead?.length > 0 && (
         <section className="ls-games-ahead" aria-label="Games ahead">
           <div className="ls-games-ahead__header">
             <span className="ls-games-ahead__title">GAMES AHEAD</span>
-            {gamesAheadContext && (
-              <span className="ls-games-ahead__context">{gamesAheadContext}</span>
-            )}
           </div>
-          {gamesAhead?.length > 0 && (
-            <div className="ls-games-ahead__list">
-              {gamesAhead.map(g => <GamesAheadRow key={g.id} game={g} />)}
-            </div>
-          )}
+          <div className="ls-games-ahead__list">
+            {gamesAhead.map(g => <GamesAheadRow key={g.id} game={g} />)}
+          </div>
         </section>
       )}
 

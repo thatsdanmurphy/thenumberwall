@@ -469,7 +469,18 @@
 .ls-game-line__period { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-mid);  letter-spacing: var(--tracking-wide); }
 .ls-game-line__clock  { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-dim);  letter-spacing: var(--tracking-wide); }
 
-/* ── 2. Chase section ────────────────────────────────────────────────────── */
+/* ── Hook — primary "why this player is here" lede ─────────────────────── */
+
+.ls-detail__hook {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-xs);
+  color:          var(--ink-high);
+  letter-spacing: -0.01em;
+  line-height:    1.2;
+  margin:         0;
+}
+
+/* ── Chase section ───────────────────────────────────────────────────────── */
 
 .ls-chase-section {
   display:        flex;
