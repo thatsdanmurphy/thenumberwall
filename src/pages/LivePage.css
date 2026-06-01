@@ -876,9 +876,10 @@
   flex-wrap:   wrap;
 }
 
+/* Title matches constellation header exactly */
 .ls-games-ahead__title {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
+  font-size:      var(--text-small);
   font-weight:    700;
   letter-spacing: var(--tracking-widest);
   color:          var(--ink-dim);
@@ -889,7 +890,6 @@
   font-family: var(--font-program);
   font-size:   var(--text-body-sm);
   color:       var(--ink-mid);
-  font-style:  italic;
 }
 
 .ls-games-ahead__list {
@@ -901,7 +901,7 @@
 
 .lga-row {
   display:       grid;
-  grid-template-columns: auto auto 1fr; /* ds:intentional — auto lets date/matchup breathe at any length */
+  grid-template-columns: 92px 72px 1fr; /* ds:intentional — fixed cols so @ vs CAR aligns across all rows */
   align-items:   center;
   gap:           var(--space-4);
   padding:       var(--space-2) 0;
@@ -924,14 +924,16 @@
   font-weight:    700;
   color:          var(--ink-mid);
   letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
 }
 
 .lga-row__note {
-  font-family: var(--font-program);
-  font-size:   var(--text-small);
-  color:       var(--ink-dim);
-  font-style:  italic;
-  text-align:  right;
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  text-align:     right;
+  white-space:    nowrap;
 }
 
 /* ── 4. Wall Watch ───────────────────────────────────────────────────────── */
