@@ -585,22 +585,20 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
         </div>
       )}
 
-      {/* Constellation — the full club when it's exclusive enough */}
-      {chaser.leaderboard?.length > 0 && (
+      {/* Constellation — historical greats only, active player shown in chaser row */}
+      {chaser.leaderboard?.filter(m => !m.active).length > 0 && (
         <div className="ls-cstat__constellation">
           <span className="ls-cstat__constellation-title">In company with the greats</span>
           <div className="ls-cstat__constellation-list">
-            {chaser.leaderboard.map((m, i) => (
-              <div key={i} className={`ls-cstat__constellation-row${m.active ? ' ls-cstat__constellation-row--active' : ''}`}>
+            {chaser.leaderboard.filter(m => !m.active).map((m, i) => (
+              <div key={i} className="ls-cstat__constellation-row">
                 <span className="ls-cstat__constellation-rank">#{m.rank}</span>
                 <span className="ls-cstat__constellation-name">{m.name}</span>
                 <span className="ls-cstat__constellation-meta">
-                  {m.active && chaserOpponent
-                    ? `${m.team} vs ${chaserOpponent} · ${m.year}`
-                    : `${m.team} · ${m.year}`}
+                  {m.opponent ? `${m.team} vs ${m.opponent} · ${m.year}` : `${m.team} · ${m.year}`}
                 </span>
                 <span className="ls-cstat__constellation-value">
-                  {m.active ? fmt(chaser.current ?? 0) : m.value} {chaser.stat}
+                  {m.value}
                   {m.sb  != null && ` · ${m.sb} SB`}
                   {m.ppg != null && ` · ${m.ppg} PPG`}
                 </span>

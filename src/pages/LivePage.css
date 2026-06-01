@@ -727,11 +727,11 @@
 }
 
 .ls-cstat__constellation-row {
-  display:         grid;
-  grid-template-columns: 32px 1fr auto auto;
-  align-items:     center;
-  gap:             var(--space-3);
-  padding:         var(--space-2) 0;
+  display:               grid;
+  grid-template-columns: 28px 1fr 150px auto; /* ds:intentional — fixed cols so all rows align */
+  align-items:           center;
+  gap:                   var(--space-3);
+  padding:               var(--space-2) 0;
   border-bottom:   1px solid var(--border-faint);
 }
 
