@@ -993,6 +993,13 @@ export default function LivePage() {
           aria-hidden="true"
         />
       )}
+
+      {/* Mobile hint — shows at bottom when nothing is selected */}
+      {!selectedEntry && (
+        <div className="ls-mobile-hint" aria-hidden="true">
+          <p className="ls-mobile-hint__text">History is live.</p>
+        </div>
+      )}
     </AppShell>
   )
 }

@@ -276,6 +276,33 @@
   .live-page__backdrop { display: none; }
 }
 
+/* Mobile hint — "History is live." at the bottom when no entry selected */
+.ls-mobile-hint { display: none; }
+
+@media (max-width: 767px) {
+  .ls-mobile-hint {
+    position:        fixed;
+    bottom:          0;
+    left:            0;
+    right:           0;
+    padding:         var(--space-4) var(--space-5);
+    background:      var(--color-surface);
+    border-top:      1px solid var(--color-border);
+    z-index:         150; /* ds:intentional — below backdrop (299) and sheet (300) */
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+  }
+
+  .ls-mobile-hint__text {
+    font-family:    var(--font-banner);
+    font-size:      var(--text-display-xs);
+    color:          var(--ink-dim);
+    letter-spacing: -0.01em;
+    margin:         0;
+  }
+}
+
 /* Mobile: always in DOM, slides in/out — mirrors PlayerPanel exactly */
 @media (max-width: 767px) {
   .ls-detail-card {
