@@ -675,7 +675,7 @@
 
 .ls-cstat__constellation-title {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
+  font-size:      var(--text-small);
   font-weight:    700;
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
@@ -685,16 +685,16 @@
 .ls-cstat__constellation-list {
   display:        flex;
   flex-direction: column;
-  gap:            2px; /* ds:intentional — tight list */
+  gap:            var(--space-1);
 }
 
 .ls-cstat__constellation-row {
   display:         grid;
-  grid-template-columns: 24px 1fr auto auto;
+  grid-template-columns: 32px 1fr auto auto;
   align-items:     center;
-  gap:             var(--space-2);
-  padding:         var(--space-1) 0;
-  border-bottom:   0.5px solid var(--border-faint);
+  gap:             var(--space-3);
+  padding:         var(--space-2) 0;
+  border-bottom:   1px solid var(--border-faint);
 }
 
 .ls-cstat__constellation-row:last-child { border-bottom: none; }
@@ -707,16 +707,16 @@
 
 .ls-cstat__constellation-rank {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
+  font-size:      var(--text-small);
   color:          var(--ink-dim);
   text-align:     right;
 }
 
 .ls-cstat__constellation-name {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-small);
+  font-size:      var(--text-body-sm);
   font-weight:    700;
-  color:          var(--ink-mid);
+  color:          var(--ink-high);
   white-space:    nowrap;
   overflow:       hidden;
   text-overflow:  ellipsis;
@@ -724,7 +724,7 @@
 
 .ls-cstat__constellation-meta {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-micro);
+  font-size:      var(--text-small);
   color:          var(--ink-dim);
   letter-spacing: var(--tracking-wide);
   white-space:    nowrap;
@@ -732,7 +732,7 @@
 
 .ls-cstat__constellation-value {
   font-family:    var(--font-scoreboard);
-  font-size:      var(--text-small);
+  font-size:      var(--text-body-sm);
   font-weight:    700;
   color:          var(--ink-mid);
   text-align:     right;
@@ -877,8 +877,8 @@
 
 .ls-games-ahead__context {
   font-family: var(--font-program);
-  font-size:   var(--text-micro);
-  color:       var(--ink-dim);
+  font-size:   var(--text-body-sm);
+  color:       var(--ink-mid);
   font-style:  italic;
 }
 

@@ -577,7 +577,7 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
       {/* Constellation — the full club when it's exclusive enough */}
       {chaser.leaderboard?.length > 0 && (
         <div className="ls-cstat__constellation">
-          <span className="ls-cstat__constellation-title">In this echelon</span>
+          <span className="ls-cstat__constellation-title">In company with the greats</span>
           <div className="ls-cstat__constellation-list">
             {chaser.leaderboard.map((m, i) => (
               <div key={i} className={`ls-cstat__constellation-row${m.active ? ' ls-cstat__constellation-row--active' : ''}`}>
