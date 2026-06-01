@@ -223,6 +223,28 @@ textarea:focus-visible {
   animation: tnw-overlayIn 200ms ease-out;
 }
 
+/* ── Shared close button — circle icon ───────────────────────────────────── */
+/* PlayerPanel, LivePage detail card, any sheet dismiss. One element, one place. */
+.tnw-close-btn {
+  flex-shrink:     0;
+  width:           28px;
+  height:          28px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   50%;
+  background:      var(--surface-2);
+  border:          none;
+  color:           var(--color-muted);
+  cursor:          pointer;
+  transition:      background var(--motion-hover), color var(--motion-hover);
+}
+
+.tnw-close-btn:hover {
+  background: var(--surface-4);
+  color:      var(--color-paper);
+}
+
 @keyframes tnw-overlayIn {
   from { opacity: 0 }
   to   { opacity: 1 }

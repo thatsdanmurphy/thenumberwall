@@ -1,0 +1,218 @@
+/* LiveGameCard — tile-first game card for the /live feed */
+
+/* ── Card shell ──────────────────────────────────────────────────────────── */
+
+.live-game-card {
+  background:     var(--surface-2);
+  border:         1px solid var(--border-soft);
+  border-radius:  var(--radius-xl);
+  padding:        var(--space-4);
+  transition:     border-color var(--motion-hover);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
+}
+
+.live-game-card:hover {
+  border-color: var(--border-medium);
+}
+
+/* ── Tile row ────────────────────────────────────────────────────────────── */
+
+.lgc-tiles {
+  display:   flex;
+  gap:       var(--space-3);
+  flex-wrap: wrap;
+}
+
+.lgc-tile-wrap {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+}
+
+/* The tile cell — same aesthetic as the main wall grid */
+.lgc-tile {
+  position:        relative;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           56px;
+  height:          56px;
+  border-radius:   var(--radius-sm);
+  flex-shrink:     0;
+}
+
+/* Legend tile — player is on the wall. Heat glow, wall-authentic. */
+.lgc-tile--legend {
+  background: rgba(232, 124, 42, 0.26); /* ds:intentional — heat tile bg */
+  border:     1px solid rgba(232, 124, 42, 0.70); /* ds:intentional — heat tile border */
+  box-shadow:
+    0 0 16px rgba(232, 124, 42, 0.40), /* ds:intentional — legend glow */
+    0 0 32px rgba(232, 124, 42, 0.16), /* ds:intentional — legend ambient */
+    inset 0 0 8px rgba(232, 124, 42, 0.08); /* ds:intentional — legend inner warmth */
+}
+
+/* Watch tile — nominated for the wall. Sacred blue — "could this be them?" */
+.lgc-tile--watch {
+  background: rgba(200, 220, 255, 0.14); /* ds:intentional — sacred tile bg */
+  border:     1px solid rgba(200, 220, 255, 0.45); /* ds:intentional — sacred tile border */
+  box-shadow:
+    0 0 14px rgba(200, 220, 255, 0.18), /* ds:intentional — sacred glow */
+    0 0 28px rgba(200, 220, 255, 0.07); /* ds:intentional — sacred ambient */
+}
+
+.lgc-tile__num {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  line-height:    1;
+}
+
+.lgc-tile--legend .lgc-tile__num {
+  color:       var(--color-heat);
+  text-shadow: 0 0 10px rgba(232, 124, 42, 0.70); /* ds:intentional — legend number glow */
+}
+.lgc-tile--watch  .lgc-tile__num {
+  color:       var(--color-sacred);
+  text-shadow: 0 0 10px rgba(200, 220, 255, 0.55); /* ds:intentional — watch number glow */
+}
+
+/* ★ Wall star — top-right corner of legend tile */
+.lgc-tile__star {
+  position:    absolute;
+  top:         2px;
+  right:       4px;
+  font-size:   0.5rem; /* ds:intentional — decorative micro star, no text token this small */
+  color:       var(--color-blaze);
+  line-height: 1;
+}
+
+/* Player name + tonight stat beside the tile */
+.lgc-tile__meta {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.lgc-tile__name {
+  font-family: var(--font-banner);
+  font-size:   var(--text-small);
+  color:       var(--ink-high);
+  line-height: 1.2;
+}
+
+.lgc-tile__stat {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Headline ────────────────────────────────────────────────────────────── */
+
+.lgc-headline {
+  font-family:  var(--font-program);
+  font-size:    var(--text-body);
+  color:        var(--color-heat);
+  font-style:   italic;
+  margin:       0;
+  line-height:  1.4;
+  border-left:  2px solid var(--color-heat);
+  padding-left: var(--space-2);
+}
+
+/* ── Compressed game footer ──────────────────────────────────────────────── */
+
+.lgc-footer {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-1);
+  flex-wrap:   wrap;
+}
+
+/* Pulsing live dot */
+.lgc-footer__dot {
+  display:       inline-block;
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  animation:     lgc-live-pulse 2s ease-in-out infinite;
+  flex-shrink:   0;
+  margin-right:  2px;
+}
+
+@keyframes lgc-live-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.lgc-footer__sport {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.lgc-footer__sep {
+  font-family: var(--font-scoreboard);
+  font-size:   var(--text-micro);
+  color:       var(--border-medium);
+}
+
+.lgc-footer__score {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}
+
+.lgc-footer__period {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}
+
+.lgc-footer__clock {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Wall Watch row ──────────────────────────────────────────────────────── */
+
+.lgc-wall-watch {
+  padding-top:    var(--space-2);
+  border-top:     1px solid var(--border-faint);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+}
+
+.lgc-wall-watch__tag {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--color-sacred);
+  text-transform: uppercase;
+}
+
+.lgc-wall-watch__body {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             var(--space-2);
+}
+
+.lgc-wall-watch__tally {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-mid);
+}

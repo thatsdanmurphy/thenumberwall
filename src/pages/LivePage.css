@@ -1,0 +1,935 @@
+/* LivePage — /live  (split view, v2)
+   Page placemat → 3-col tile grid (left) + detail panel (right).
+   Detail: player mat / chase section / games ahead / wall watch.  */
+
+/* ── Page placemat — follows boston-page__heading pattern ────────────────── */
+
+.live-placemat {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  padding-top:    var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom:  1px solid var(--border-faint);
+  margin-bottom:  var(--space-5);
+}
+
+.live-placemat__title {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-md);
+  color:          var(--color-paper);
+  letter-spacing: -0.02em;
+  line-height:    1.05;
+  margin:         0;
+}
+
+.live-placemat__meta {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+}
+
+.live-placemat__live-dot {
+  display:       inline-block;
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  flex-shrink:   0;
+  animation:     placemat-pulse 2s ease-in-out infinite;
+}
+
+@keyframes placemat-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.live-placemat__count {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-mid);
+}
+
+.live-placemat__sep {
+  font-family: var(--font-scoreboard);
+  font-size:   var(--text-small);
+  color:       var(--border-medium);
+}
+
+.live-placemat__date {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Split container ─────────────────────────────────────────────────────── */
+
+.live-split {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+  padding-bottom: var(--space-7);
+  align-items:    flex-start;
+}
+
+@media (min-width: 768px) {
+  .live-split {
+    flex-direction: row;
+    gap:            var(--space-6);
+  }
+}
+
+/* ── Left column: stacked weekly grids ──────────────────────────────────── */
+
+.live-split__col {
+  width: 100%; /* mobile: full width */
+}
+
+@media (min-width: 768px) {
+  .live-split__col {
+    /* Grid is the narrow side — mirrors main wall player panel width (38.2%) */
+    flex:       1; /* takes remaining after detail panel's 61.8% */
+    width:      auto;
+    position:   sticky;
+    top:        calc(var(--space-4) + var(--space-7));
+    align-self: flex-start;
+  }
+}
+
+/* Stacked week container */
+.live-weeks {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+}
+
+/* Single week block: label + 4×3 grid */
+.live-week__grid {
+  display:               grid;
+  grid-template-columns: repeat(6, 1fr); /* ds:intentional — 6 in 38.2% ≈ 10 in 61.8%, tiles match main wall size */
+  gap:                   5px;            /* ds:intentional — matches main wall gap */
+}
+
+/* Tiles are direct grid children — no wrapper needed */
+
+/* Past weeks: non-active tiles dim out */
+.live-week--past .ls-tile-btn:not(.ls-tile-btn--active) {
+  opacity: 0.40;          /* ds:intentional — past week dim */
+  filter:  saturate(0.5); /* ds:intentional — past week desaturate */
+}
+
+/* Empty cell — direct grid child, matches main wall unwritten tile */
+.ls-tile-empty {
+  aspect-ratio:  1 / 1;   /* matches ls-tile-btn */
+  border-radius: var(--radius-sm);
+  background:    var(--surface-1);
+  border:        1px solid var(--border-faint);
+  opacity:       0.40; /* ds:intentional — unwritten dim */
+}
+
+/* ── Tile button — main wall aesthetic ──────────────────────────────────── */
+
+.ls-tile-btn {
+  position:             relative;
+  display:              flex;
+  align-items:          center;
+  justify-content:      center;
+  aspect-ratio:         1 / 1;   /* direct grid child — matches WallTile */
+  border-radius:        var(--radius-sm);
+  border:               1px solid transparent;
+  background:           none;
+  cursor:               pointer;
+  font-family:          var(--font-banner);
+  font-size:            var(--text-base); /* matches WallTile responsive scale */
+  font-variant-numeric: tabular-nums;
+  letter-spacing:       -0.01em;
+  line-height:          1;
+  color:                var(--ink-dim);
+  /* Matches WallTile transition exactly */
+  transition:           background     var(--motion-heat),
+                        box-shadow     350ms ease-in-out,
+                        border-color   var(--motion-hover),
+                        transform      200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                        color          var(--motion-hover);
+}
+
+@media (min-width: 768px)  { .ls-tile-btn { font-size: var(--text-h2); } }
+@media (min-width: 1024px) { .ls-tile-btn { font-size: var(--text-h1); } }
+
+/* Hover — scale up, matches WallTile :hover */
+.ls-tile-btn:hover {
+  z-index:   1;
+  transform: scale(1.10);
+}
+
+/* Press — matches WallTile :active */
+.ls-tile-btn:active {
+  transform:  scale(0.96);
+  transition: transform 80ms ease;
+}
+
+/* Focus ring — matches WallTile */
+.ls-tile-btn:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 2px;
+}
+
+/* ── Tile heat — exact HEAT_TILES values from the main wall ─────────────────
+   Pulled directly from src/data/index.js HEAT_TILES array.
+   w3 = level 4 "blazing"   w2 = level 3 "hot"   w1 = level 2 "warm"    */
+
+.ls-tile-btn--w3 {
+  background:  rgba(212, 88, 0, 0.72);   /* ds:intentional — HEAT_TILES[4].bg */
+  border-color:rgba(245, 130, 20, 0.85); /* ds:intentional — HEAT_TILES[4].border */
+  color:       rgba(255, 190, 100, 1);   /* ds:intentional — HEAT_TILES[4].text */
+  box-shadow:  0 0 20px rgba(245, 140, 20, 0.78), 0 0 40px rgba(255, 100, 0, 0.38); /* ds:intentional — HEAT_TILES[4].glow */
+  text-shadow: 0 0 12px rgba(245, 140, 20, 0.70); /* ds:intentional */
+}
+
+.ls-tile-btn--w2 {
+  background:  rgba(198, 52, 0, 0.62);   /* ds:intentional — HEAT_TILES[3].bg */
+  border-color:rgba(245, 92, 15, 0.75);  /* ds:intentional — HEAT_TILES[3].border */
+  color:       rgba(255, 170, 85, 1);    /* ds:intentional — HEAT_TILES[3].text */
+  box-shadow:  0 0 16px rgba(255, 100, 15, 0.65), 0 0 32px rgba(255, 75, 0, 0.30); /* ds:intentional — HEAT_TILES[3].glow */
+  text-shadow: 0 0 10px rgba(255, 100, 15, 0.60); /* ds:intentional */
+}
+
+.ls-tile-btn--w1 {
+  background:  rgba(170, 42, 0, 0.52);   /* ds:intentional — HEAT_TILES[2].bg */
+  border-color:rgba(225, 70, 5, 0.65);   /* ds:intentional — HEAT_TILES[2].border */
+  color:       rgba(255, 145, 65, 1);    /* ds:intentional — HEAT_TILES[2].text */
+  box-shadow:  0 0 12px rgba(240, 80, 10, 0.50), 0 0 24px rgba(220, 60, 0, 0.22); /* ds:intentional — HEAT_TILES[2].glow */
+  text-shadow: 0 0 8px  rgba(240, 80, 10, 0.45); /* ds:intentional */
+}
+
+/* Selected — white ring + heat glow, mirrors WallTile active exactly */
+.ls-tile-btn--active {
+  z-index:   3;
+  transform: scale(1.06);
+}
+
+.ls-tile-btn--active:hover { transform: scale(1.10); }
+
+.ls-tile-btn--w3.ls-tile-btn--active {
+  background:   rgba(222, 125, 0, 0.82);           /* ds:intentional — HEAT_TILES[5].bg */
+  border-color: rgba(255, 255, 255, 0.82);          /* ds:intentional — white ring, WallTile active */
+  box-shadow:   0 0 0 2px rgba(255, 255, 255, 0.45),
+                0 0 24px rgba(245, 193, 53, 0.92),
+                0 0 48px rgba(255, 130, 0, 0.50);  /* ds:intentional — HEAT_TILES[5].glow */
+}
+
+.ls-tile-btn--w2.ls-tile-btn--active {
+  background:   rgba(212, 88, 0, 0.82);            /* ds:intentional */
+  border-color: rgba(255, 255, 255, 0.82);          /* ds:intentional */
+  box-shadow:   0 0 0 2px rgba(255, 255, 255, 0.45),
+                0 0 20px rgba(245, 140, 20, 0.78),
+                0 0 40px rgba(255, 100, 0, 0.38);  /* ds:intentional */
+}
+
+.ls-tile-btn--w1.ls-tile-btn--active {
+  background:   rgba(198, 52, 0, 0.72);            /* ds:intentional */
+  border-color: rgba(255, 255, 255, 0.82);          /* ds:intentional */
+  box-shadow:   0 0 0 2px rgba(255, 255, 255, 0.45),
+                0 0 16px rgba(255, 100, 15, 0.65),
+                0 0 32px rgba(255, 75, 0, 0.30);   /* ds:intentional */
+}
+
+/* Hover */
+.ls-tile-btn--w3:hover:not(.ls-tile-btn--active) { background: rgba(222,125,0,0.78); border-color: rgba(245,180,30,0.92); } /* ds:intentional */
+.ls-tile-btn--w2:hover:not(.ls-tile-btn--active) { background: rgba(212,88,0,0.68);  border-color: rgba(245,130,20,0.88); } /* ds:intentional */
+.ls-tile-btn--w1:hover:not(.ls-tile-btn--active) { background: rgba(198,52,0,0.68);  border-color: rgba(245,92,15,0.80);  } /* ds:intentional */
+
+.ls-tile-btn:focus-visible {
+  outline:        2px solid var(--color-sacred);
+  outline-offset: 3px;
+}
+
+/* Dot removed — color/glow now carries the live signal */
+
+/* ── Right: detail panel — takes the wide 61.8% share ───────────────────── */
+
+.live-split__detail {
+  flex:      0 0 61.8%; /* ds:intentional — flipped main wall ratio: detail is the grid-width side */
+  min-width: 0;
+}
+
+/* ── Detail card — desktop: contained card; mobile: bottom sheet ─────────── */
+/* Mirrors PlayerPanel mobile behaviour exactly. Always in DOM for animation. */
+
+.ls-detail-card {
+  background:    var(--color-surface);
+  border:        1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding:       var(--space-5);
+}
+
+/* Handle bar — hidden on desktop */
+.ls-detail-card__handle { display: none; }
+
+/* Mobile backdrop */
+.live-page__backdrop {
+  z-index: 299; /* ds:intentional — below sheet (300), above grid */
+}
+
+@media (min-width: 768px) {
+  .live-page__backdrop { display: none; }
+}
+
+/* Mobile: always in DOM, slides in/out — mirrors PlayerPanel exactly */
+@media (max-width: 767px) {
+  .ls-detail-card {
+    display:       block !important;
+    position:      fixed;
+    bottom:        0;
+    left:          0;
+    right:         0;
+    padding:       0; /* handle sits flush at top; content uses ls-detail-card__inner padding */
+    border-radius: var(--radius-xl) 14px 0 0; /* ds:intentional — matches player-panel mobile radius */
+    border-bottom: none;
+    max-height:    88vh; /* ds:intentional — matches player-panel max-height */
+    overflow-y:    auto;
+    z-index:       300;
+    transform:     translateY(100%);
+    transition:    transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .ls-detail-card:not(.ls-detail-card--idle) {
+    transform: translateY(0);
+  }
+
+  /* Handle — margin matches player-panel__handle exactly */
+  .ls-detail-card__handle {
+    display:       block;
+    width:         36px;
+    height:        4px;
+    border-radius: 2px;
+    background:    var(--surface-4);
+    margin:        12px auto 0; /* ds:intentional — matches player-panel handle margin */
+    flex-shrink:   0;
+  }
+
+  /* Content padding inside the sheet — matches player-panel__inner */
+  .ls-detail-card .ls-detail,
+  .ls-detail-card .ls-empty {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+}
+
+.ls-detail {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+}
+
+/* ── 1. Player mat ───────────────────────────────────────────────────────── */
+
+.ls-player-mat {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+  padding-bottom: var(--space-5);
+  border-bottom:  1px solid var(--border-faint);
+}
+
+/* Top row: big number left, X right */
+.ls-player-mat__top-row {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+}
+
+/* Big number — display scale, font-banner to match wall */
+.ls-player-mat__num {
+  font-family:           var(--font-banner);
+  font-size:             var(--text-display-lg);
+  font-variant-numeric:  tabular-nums;
+  letter-spacing:        -0.03em;
+  line-height:           1;
+  flex-shrink:           0;
+  min-width:             1.6em; /* ds:intentional — consistent width, 1-digit vs 2-digit */
+  transition:            color var(--motion-color);
+}
+
+@media (min-width: 768px) {
+  .ls-player-mat__num { font-size: var(--text-display-xl); }
+}
+
+/* Close button — sits at top-right of mat, aligned with number */
+.ls-player-mat__close {
+  flex-shrink: 0;
+}
+
+/* Number color mirrors HEAT_TILES text values exactly */
+.ls-player-mat__num--w3 {
+  color:       rgba(255, 210, 120, 1);  /* ds:intentional — HEAT_TILES[5].text */
+  text-shadow: 0 0 30px rgba(245, 193, 53, 0.65); /* ds:intentional */
+}
+
+.ls-player-mat__num--w2 {
+  color:       rgba(255, 190, 100, 1);  /* ds:intentional — HEAT_TILES[4].text */
+  text-shadow: 0 0 24px rgba(245, 140, 20, 0.55); /* ds:intentional */
+}
+
+.ls-player-mat__num--w1 {
+  color:       rgba(255, 170, 85, 1);   /* ds:intentional — HEAT_TILES[3].text */
+  text-shadow: 0 0 20px rgba(255, 100, 15, 0.45); /* ds:intentional */
+}
+
+.ls-player-mat__info {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  flex:           1;
+  min-width:      0;
+  padding-top:    var(--space-1); /* optical align with number baseline */
+}
+
+.ls-player-mat__name {
+  font-family:   var(--font-banner);
+  font-size:     var(--text-h1);
+  color:         var(--ink-high);
+  margin:        0;
+  line-height:   1.1;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .ls-player-mat__name { font-size: var(--text-display-xs); }
+}
+
+/* Squad + tonight on the same line */
+.ls-player-mat__sub {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+  flex-wrap:   wrap;
+}
+
+.ls-player-mat__squad {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+/* Tonight stat — inline on same line as squad */
+.ls-player-mat__tonight {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  font-weight:    700;
+  color:          var(--ink-high);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+}
+
+.ls-player-mat__tonight::before {
+  content: '·';
+  margin-right: var(--space-2);
+  color: var(--border-medium);
+  font-weight: 400;
+}
+
+/* ── Game line — compressed score + status ───────────────────────────────── */
+
+.ls-game-line {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-1);
+  flex-wrap:   wrap;
+  margin-top:  2px; /* ds:intentional — sub-space-1 optical gap */
+}
+
+.ls-game-line__dot {
+  display:       inline-block;
+  width:         5px;
+  height:        5px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  flex-shrink:   0;
+  animation:     placemat-pulse 2s ease-in-out infinite;
+}
+
+.ls-game-line__sport {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.ls-game-line__sep    { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--border-medium); }
+.ls-game-line__date   { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-mid);  letter-spacing: var(--tracking-wide); }
+.ls-game-line__time   { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-dim);  letter-spacing: var(--tracking-wide); }
+.ls-game-line__score  { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-mid);  letter-spacing: var(--tracking-wide); }
+.ls-game-line__period { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-mid);  letter-spacing: var(--tracking-wide); }
+.ls-game-line__clock  { font-family: var(--font-scoreboard); font-size: var(--text-small); color: var(--ink-dim);  letter-spacing: var(--tracking-wide); }
+
+/* ── 2. Chase section ────────────────────────────────────────────────────── */
+
+.ls-chase-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
+}
+
+.ls-chase-section__header {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+}
+
+.ls-chase-section__stat-name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  letter-spacing: var(--tracking-wide);
+  color:          var(--ink-high);
+  text-transform: uppercase;
+}
+
+/* Editorial headline — clean, no decoration */
+.ls-detail__headline {
+  font-family: var(--font-program);
+  font-size:   var(--text-body);
+  color:       var(--ink-mid);
+  margin:      0;
+  line-height: 1.55;
+  max-width:   600px;
+}
+
+/* ── Lens tags — CAREER / SEASON / ALL TIME ──────────────────────────────── */
+
+.ls-lens {
+  display:        inline-flex;
+  align-items:    center;
+  padding:        2px 8px; /* ds:intentional — sub-scale vertical, space-2 horizontal */
+  border-radius:  var(--radius-sm);
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: 0.10em; /* ds:intentional — between tracking-wide and tracking-wider */
+  text-transform: uppercase;
+  line-height:    1.6;
+  white-space:    nowrap;
+}
+
+.ls-lens--career {
+  background:   rgba(232, 124, 42, 0.16); /* ds:intentional — career lens bg */
+  border:       1px solid rgba(232, 124, 42, 0.42); /* ds:intentional — career lens border */
+  color:        var(--color-heat);
+}
+
+.ls-lens--season {
+  background:   rgba(200, 220, 255, 0.10); /* ds:intentional — season lens bg */
+  border:       1px solid rgba(200, 220, 255, 0.35); /* ds:intentional — season lens border */
+  color:        var(--color-sacred);
+}
+
+.ls-lens--all-time {
+  background:   rgba(245, 193, 53, 0.14); /* ds:intentional — all-time lens bg */
+  border:       1px solid rgba(245, 193, 53, 0.40); /* ds:intentional — all-time lens border */
+  color:        var(--color-blaze);
+}
+
+.ls-lens--series,
+.ls-lens--game {
+  background:   rgba(245, 193, 53, 0.14); /* ds:intentional — series/game lens: blaze gold, live playoff heat */
+  border:       1px solid rgba(245, 193, 53, 0.40); /* ds:intentional */
+  color:        var(--color-blaze);
+}
+
+/* ── ChaserStat — editorial typography, no bar ───────────────────────────── */
+
+.ls-cstat {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+}
+
+/* Lens-based color — hero num + live card num inherit from modifier class */
+.ls-cstat--heat   .ls-cstat__hero-num,
+.ls-cstat--heat   .ls-cstat__h2h-num--live { color: var(--color-heat); }
+
+.ls-cstat--blaze  .ls-cstat__hero-num,
+.ls-cstat--blaze  .ls-cstat__h2h-num--live { color: var(--color-blaze); }
+
+.ls-cstat--sacred .ls-cstat__hero-num,
+.ls-cstat--sacred .ls-cstat__h2h-num--live { color: var(--color-sacred); }
+
+/* Hero — gap number, large */
+.ls-cstat__hero {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+  flex-wrap:   wrap;
+}
+
+.ls-cstat__hero-num {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-lg);
+  color:          var(--color-heat); /* default — overridden by modifier above */
+  letter-spacing: -0.03em;
+  line-height:    1;
+}
+
+.ls-cstat__hero-label {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  padding-bottom: var(--space-1); /* optical baseline align with large num */
+}
+
+/* Record holder — given full prominence, the record they're chasing */
+.ls-cstat__holder-block {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  padding:        var(--space-4);
+  background:     var(--surface-3);
+  border-radius:  var(--radius-sm);
+}
+
+.ls-cstat__holder-eyebrow {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.ls-cstat__holder-main {
+  display:         flex;
+  align-items:     baseline;
+  justify-content: space-between;
+  gap:             var(--space-3);
+  margin-top:      var(--space-1);
+}
+
+.ls-cstat__holder-name {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-sm);
+  color:          var(--ink-high);
+  letter-spacing: -0.02em;
+  line-height:    1;
+}
+
+.ls-cstat__holder-total {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-sm);
+  color:          var(--ink-high);
+  letter-spacing: -0.02em;
+  line-height:    1;
+  flex-shrink:    0;
+}
+
+.ls-cstat__holder-meta {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  margin-top:     2px; /* ds:intentional — sub-space-1 optical gap */
+}
+
+/* ── Chase line — SVG comparison: chaser dot vs record ring ──────────────── */
+
+.ls-chase-line {
+  margin-top: var(--space-1);
+}
+
+.ls-chase-line__svg {
+  width:    100%;
+  height:   auto;
+  display:  block;
+  overflow: visible;
+}
+
+/* SVG text labels — font set via CSS since SVG text inherits poorly */
+.ls-chase-line__label {
+  font-family: var(--font-scoreboard);
+  font-size:   10px; /* ds:intentional — SVG label, no token equivalent */
+  fill:        var(--ink-dim);
+  letter-spacing: 0.03em;
+}
+
+.ls-chase-line__label--goal {
+  fill: var(--ink-dim);
+  opacity: 0.6;
+}
+
+/* Uncharted note */
+.ls-cstat__note {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  font-style:  italic;
+}
+
+/* ── Two-row stacked layout (option 14) ──────────────────────────────────── */
+
+.ls-cstat__rows {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+.ls-cstat__row {
+  position:      relative;
+  overflow:      hidden;
+  display:       flex;
+  align-items:   flex-start;
+  gap:           var(--space-3);
+  padding:       var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+.ls-cstat__row--holder {
+  background: var(--surface-3);
+}
+
+.ls-cstat__row--live {
+  background: var(--surface-3);
+  border:     1px solid rgba(232, 124, 42, 0.22); /* ds:intentional — chaser row border */
+}
+
+/* WhatsNext-style background bar — grows from left to progress% */
+.ls-cstat__row-bar {
+  position:     absolute;
+  top:          0;
+  left:         0;
+  bottom:       0;
+  background:   rgba(232, 124, 42, 0.12); /* ds:intentional — chaser bg fill, matches WhatsNext pattern */
+  border-radius: inherit;
+  transition:   width 500ms cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+}
+
+/* Lens-colored bar variants */
+.ls-cstat--blaze  .ls-cstat__row-bar { background: rgba(245, 193, 53, 0.14); }  /* ds:intentional */
+.ls-cstat--sacred .ls-cstat__row-bar { background: rgba(200, 220, 255, 0.10); } /* ds:intentional */
+
+.ls-cstat__row-icon,
+.ls-cstat__row-body {
+  position: relative; /* above the absolute bar */
+  z-index:  1;
+}
+
+.ls-cstat__row-icon {
+  flex-shrink: 0;
+  margin-top:  2px; /* ds:intentional — optical align with text baseline */
+  color:       var(--ink-dim);
+}
+
+.ls-cstat__row-icon--live {
+  color: var(--color-heat);
+}
+
+.ls-cstat__row-body {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px; /* ds:intentional — tight stack */
+  min-width:      0;
+}
+
+.ls-cstat__row-eye {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color:          var(--ink-dim);
+}
+
+.ls-cstat__row-eye--live {
+  color: var(--color-heat);
+}
+
+.ls-cstat__row-name {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  color:          var(--ink-high);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+}
+
+.ls-cstat__row-name--live {
+  color: var(--color-heat);
+}
+
+.ls-cstat__row-meta {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-small);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── 3. Games ahead ──────────────────────────────────────────────────────── */
+
+.ls-games-ahead {
+  border-top:     1px solid var(--border-faint);
+  padding-top:    var(--space-4);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-3);
+  max-width:      520px;
+}
+
+.ls-games-ahead__header {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+  flex-wrap:   wrap;
+}
+
+.ls-games-ahead__title {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.ls-games-ahead__context {
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--ink-dim);
+  font-style:  italic;
+}
+
+.ls-games-ahead__list {
+  display:        flex;
+  flex-direction: column;
+}
+
+/* ── Game ahead rows ─────────────────────────────────────────────────────── */
+
+.lga-row {
+  display:       grid;
+  grid-template-columns: 64px 88px 1fr;
+  align-items:   center;
+  gap:           var(--space-3);
+  padding:       var(--space-2);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.lga-row:last-child { border-bottom: none; }
+
+.lga-row__date {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-wide);
+  white-space:    nowrap;
+}
+
+.lga-row__matchup {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  color:          var(--ink-mid);
+  letter-spacing: var(--tracking-wide);
+}
+
+.lga-row__note {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  font-style:  italic;
+  text-align:  right;
+}
+
+/* ── 4. Wall Watch ───────────────────────────────────────────────────────── */
+
+.ls-detail__wall-watch {
+  padding-top:    var(--space-4);
+  border-top:     1px solid var(--border-faint);
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+}
+
+.ls-detail__wall-watch-tag {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  letter-spacing: var(--tracking-widest);
+  color:          var(--color-sacred);
+  text-transform: uppercase;
+}
+
+.ls-detail__wall-watch-body {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             var(--space-3);
+}
+
+.ls-detail__wall-watch-tally {
+  font-family: var(--font-program);
+  font-size:   var(--text-small);
+  color:       var(--ink-mid);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.ls-empty {
+  padding:         var(--space-7) var(--space-4);
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  text-align:      center;
+  gap:             var(--space-3);
+  max-width:       480px;
+  margin:          0 auto;
+}
+
+/* Heat bar — radiating gradient that pulses before the hook text */
+.ls-empty__heat-bar {
+  width:         100%;
+  height:        3px;
+  border-radius: 99px;
+  background:    linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(198, 52, 0, 0.55) 20%,
+    rgba(245, 130, 20, 0.90) 50%,
+    rgba(198, 52, 0, 0.55) 80%,
+    transparent 100%
+  ); /* ds:intentional — decorative heat gradient, matches tile fire palette */
+  animation:     ls-heat-bar-pulse 2.4s ease-in-out infinite;
+  margin-bottom: var(--space-1);
+}
+
+@keyframes ls-heat-bar-pulse {
+  0%, 100% { opacity: 0.55; transform: scaleX(0.92); }
+  50%       { opacity: 1.00; transform: scaleX(1.00); }
+}
+
+.ls-empty__hook {
+  font-family:    var(--font-banner);
+  font-size:      var(--text-display-xs);
+  color:          var(--ink-high);
+  letter-spacing: -0.01em;
+  line-height:    1.1;
+  margin:         0;
+}
+
+.ls-empty__text {
+  font-family: var(--font-program);
+  font-size:   var(--text-body);
+  color:       var(--ink-dim);
+  font-style:  italic;
+  line-height: 1.6;
+  margin:      0;
+}

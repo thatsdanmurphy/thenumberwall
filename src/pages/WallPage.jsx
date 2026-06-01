@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import AppShell    from '../components/AppShell.jsx'
 import AppHeader   from '../components/AppHeader.jsx'
 import AppFooter   from '../components/AppFooter.jsx'

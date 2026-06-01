@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import { Award, Check, ExternalLink, X, ArrowRight, Plus, Minus } from 'lucide-react'
 import { getSportIcon, normalisePosition } from '../data/sports.js'
 import { TIER_RANK, TIER_DESC } from '../data/tiers.js'
@@ -442,8 +442,8 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
   const legendsBase = entries.filter(e => e.tier !== 'UNWRITTEN')
   const legends = votingMode
     ? [...legendsBase].sort((a, b) => {
-        const scoreA = voteScores.get(`${a.number}|${a.name}`)?.netScore ?? 0
-        const scoreB = voteScores.get(`${b.number}|${b.name}`)?.netScore ?? 0
+        const scoreA = voteScores.get(`${number}|${a.name}`)?.netScore ?? 0
+        const scoreB = voteScores.get(`${number}|${b.name}`)?.netScore ?? 0
         if (scoreB !== scoreA) return scoreB - scoreA
         const tierDiff = (TIER_RANK[a.tier] ?? 9) - (TIER_RANK[b.tier] ?? 9)
         if (tierDiff !== 0) return tierDiff
@@ -535,7 +535,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
                     {copied ? <Check size={14} /> : <ExternalLink size={14} />}
                   </button>
                 )}
-                <button className="player-panel__close" onClick={onClear} aria-label="Close panel">
+                <button className="tnw-close-btn" onClick={onClear} aria-label="Close panel">
                   <X size={14} />
                 </button>
               </div>
@@ -610,7 +610,7 @@ export default function PlayerPanel({ selected, onClear, mode = 'default', sport
             {legendCount > 0 && (
               <div className="player-panel__cards">
                 {legends.map((entry, i) => {
-                  const voteKey = `${entry.number}|${entry.name}`
+                  const voteKey = `${number}|${entry.name}`
                   const cardVoteData = votingMode ? {
                     netScore: voteScores.get(voteKey)?.netScore ?? 0,
                     myVote:   myVotes?.get(voteKey) ?? null,

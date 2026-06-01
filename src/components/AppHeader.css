@@ -154,6 +154,40 @@
   border-radius:  2px;
 }
 
+/* ── Live nav link — plain text link + pulsing dot when games are on ─────── */
+
+.app-header__nav-link--live {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             var(--space-1);
+  text-decoration: none;
+}
+
+/* Active — on the /live page: bold white + underline */
+.app-header__nav-link--active {
+  color:                  var(--color-paper) !important;
+  font-weight:            700;
+  text-decoration:        underline;
+  text-underline-offset:  3px;
+  text-decoration-thickness: 1.5px; /* ds:intentional — matches nav visual weight */
+}
+
+/* Pulsing dot — shown when live games are on but not currently on /live */
+.app-header__live-dot {
+  display:       inline-block;
+  width:         5px;
+  height:        5px;
+  border-radius: 50%;
+  background:    var(--color-heat);  /* heat orange, not error red */
+  animation:     live-nav-pulse 2s ease-in-out infinite;
+  flex-shrink:   0;
+}
+
+@keyframes live-nav-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
 /* ── Retained utility classes ────────────────────────────────────────────── */
 
 /* NEW badge — inline next to a nav link */

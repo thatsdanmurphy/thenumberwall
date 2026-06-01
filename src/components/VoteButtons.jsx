@@ -9,7 +9,7 @@
  */
 
 import { ChevronUp, ChevronDown } from 'lucide-react'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import './VoteButtons.css'
 
 export default function VoteButtons({ netScore = 0, myVote = null, onVote, playerName, number, compact = false }) {

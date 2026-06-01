@@ -1,0 +1,269 @@
+/* ChaserCard — Record in reach, /live chaser strip
+   Layout: tile (left) + body (right). The number cell is the hero. */
+
+/* ── Card shell ──────────────────────────────────────────────────────────── */
+
+.chaser-card {
+  display:          flex;
+  align-items:      flex-start;
+  gap:              var(--space-2);
+  flex-shrink:      0;
+  width:            272px;
+  background:       var(--surface-2);
+  border:           1px solid var(--border-soft);
+  border-radius:    var(--radius-lg);
+  padding:          var(--space-3);
+  scroll-snap-align: start;
+  transition:       border-color var(--motion-hover), background var(--motion-hover);
+}
+
+.chaser-card:hover {
+  border-color: var(--border-medium);
+  background:   var(--surface-raised);
+}
+
+/* Tonight — warm border, tile does the glow animation */
+.chaser-card--tonight {
+  border-color: rgba(232, 124, 42, 0.35); /* ds:intentional — heat at 35%, no border token this warm */
+}
+
+/* ── Tile ────────────────────────────────────────────────────────────────── */
+
+.chaser-card__tile {
+  position:       relative;
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  width:          52px;
+  height:         52px;
+  border-radius:  var(--radius-sm);
+  flex-shrink:    0;
+}
+
+/* record-approach: heat orange */
+.chaser-card--record-approach .chaser-card__tile {
+  background:  rgba(232, 124, 42, 0.24); /* ds:intentional — heat tile bg */
+  border:      1px solid rgba(232, 124, 42, 0.65); /* ds:intentional — heat tile border */
+  box-shadow:
+    0 0 14px rgba(232, 124, 42, 0.38), /* ds:intentional — heat tile glow */
+    0 0 28px rgba(232, 124, 42, 0.14), /* ds:intentional — heat tile ambient */
+    inset 0 0 6px rgba(232, 124, 42, 0.08); /* ds:intentional — heat tile inner warmth */
+}
+
+/* uncharted: blaze gold — beyond the map, no ceiling */
+.chaser-card--uncharted .chaser-card__tile {
+  background:  rgba(245, 193, 53, 0.22); /* ds:intentional — blaze tile bg */
+  border:      1px solid rgba(245, 193, 53, 0.60); /* ds:intentional — blaze tile border */
+  box-shadow:
+    0 0 14px rgba(245, 193, 53, 0.35), /* ds:intentional — blaze tile glow */
+    0 0 28px rgba(245, 193, 53, 0.12); /* ds:intentional — blaze tile ambient */
+}
+
+/* Tonight: breathing glow lives on the tile itself */
+.chaser-card--tonight .chaser-card__tile {
+  animation: chaser-tile-breathe 3.2s ease-in-out infinite;
+}
+
+.chaser-card--tonight:hover .chaser-card__tile {
+  animation-play-state: paused;
+  background: rgba(232, 124, 42, 0.34); /* ds:intentional — tonight hover bg */
+  box-shadow:
+    0 0 26px rgba(232, 124, 42, 0.65), /* ds:intentional — tonight tile hover */
+    0 0 52px rgba(232, 124, 42, 0.24), /* ds:intentional — tonight tile hover ambient */
+    inset 0 0 12px rgba(232, 124, 42, 0.16); /* ds:intentional — tonight hover inner */
+  border-color: var(--color-heat);
+}
+
+/* Unknown → First Light → Ascending — states live in this keyframe */
+@keyframes chaser-tile-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 14px rgba(232, 124, 42, 0.35), /* ds:intentional — first light glow */
+      0 0 28px rgba(232, 124, 42, 0.14), /* ds:intentional — first light ambient */
+      inset 0 0 6px rgba(232, 124, 42, 0.08); /* ds:intentional — first light inner */
+    border-color: rgba(232, 124, 42, 0.60); /* ds:intentional */
+    background:   rgba(232, 124, 42, 0.22); /* ds:intentional — first light bg */
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(232, 124, 42, 0.60), /* ds:intentional — ascending glow */
+      0 0 48px rgba(232, 124, 42, 0.22), /* ds:intentional — ascending ambient */
+      inset 0 0 10px rgba(232, 124, 42, 0.14); /* ds:intentional — ascending inner */
+    border-color: var(--color-heat);
+    background:   rgba(232, 124, 42, 0.32); /* ds:intentional — ascending bg */
+  }
+}
+
+.chaser-card__tile-num {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-body-sm);
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  color:          var(--color-heat);
+  line-height:    1;
+  text-shadow:    0 0 12px rgba(232, 124, 42, 0.75); /* ds:intentional — heat number glow */
+}
+
+.chaser-card--uncharted .chaser-card__tile-num {
+  color:       var(--color-blaze);
+  text-shadow: 0 0 12px rgba(245, 193, 53, 0.70); /* ds:intentional — blaze number glow */
+}
+
+/* Live dot — top-right corner of tile when playing tonight */
+.chaser-card__tile-dot {
+  position:      absolute;
+  top:           3px;
+  right:         3px;
+  width:         5px;
+  height:        5px;
+  border-radius: 50%;
+  background:    var(--color-error);
+  animation:     tile-dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes tile-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+
+.chaser-card__body {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  flex:           1;
+  min-width:      0;
+}
+
+.chaser-card__top {
+  display:         flex;
+  align-items:     baseline;
+  justify-content: space-between;
+  gap:             var(--space-1);
+}
+
+.chaser-card__player {
+  font-family:   var(--font-banner);
+  font-size:     var(--text-small);
+  color:         var(--ink-high);
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  line-height:   1.2;
+}
+
+.chaser-card__lens {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  color:          var(--ink-dim);
+  letter-spacing: var(--tracking-widest);
+  flex-shrink:    0;
+  text-transform: uppercase;
+}
+
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+
+.chaser-card__bar-track {
+  position:      relative;
+  height:        5px;
+  background:    var(--surface-3);
+  border-radius: 99px;
+  margin:        2px 0;
+}
+
+.chaser-card__bar-fill {
+  position:      absolute;
+  top: 0; left: 0;
+  height:        100%;
+  background:    linear-gradient(90deg, var(--color-heat), var(--color-blaze));
+  border-radius: 99px;
+  transition:    width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chaser-card__bar-dot {
+  position:      absolute;
+  top:           50%;
+  transform:     translate(-50%, -50%);
+  width:         10px;
+  height:        10px;
+  background:    var(--color-blaze);
+  border:        2px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow:    0 0 6px rgba(245, 193, 53, 0.55); /* ds:intentional — blaze dot glow */
+  transition:    left 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Uncharted bar — fades to horizon */
+.chaser-card__bar-track--uncharted {
+  overflow: visible;
+}
+
+.chaser-card__uncharted-fill {
+  position:      absolute;
+  top: 0; left: 0;
+  width:         62%;
+  height:        100%;
+  background:    linear-gradient(90deg, var(--color-heat) 0%, rgba(232, 124, 42, 0.10) 100%); /* ds:intentional — fade to transparent */
+  border-radius: 99px;
+}
+
+.chaser-card__uncharted-dot {
+  position:      absolute;
+  left:          62%;
+  top:           50%;
+  transform:     translate(-50%, -50%);
+  width:         10px;
+  height:        10px;
+  background:    var(--color-heat);
+  border:        2px solid var(--color-night);
+  border-radius: 50%;
+  box-shadow:    0 0 6px rgba(232, 124, 42, 0.40); /* ds:intentional — heat dot glow */
+}
+
+.chaser-card__horizon {
+  position:    absolute;
+  right:       0;
+  top:         50%;
+  transform:   translateY(-50%);
+  font-family: var(--font-scoreboard);
+  font-size:   var(--text-small);
+  color:       var(--ink-dim);
+  line-height: 1;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+.chaser-card__footer {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2);
+  flex-wrap:   wrap;
+  margin-top:  2px;
+}
+
+.chaser-card__stat-val {
+  font-family:    var(--font-scoreboard);
+  font-size:      var(--text-micro);
+  font-weight:    700;
+  color:          var(--color-heat);
+  letter-spacing: var(--tracking-wide);
+}
+
+.chaser-card--uncharted .chaser-card__stat-val {
+  color: var(--color-blaze);
+}
+
+.chaser-card__to-go {
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--ink-dim);
+}
+
+.chaser-card__context {
+  font-family: var(--font-program);
+  font-size:   var(--text-micro);
+  color:       var(--ink-mid);
+  font-style:  italic;
+  width:       100%;
+}

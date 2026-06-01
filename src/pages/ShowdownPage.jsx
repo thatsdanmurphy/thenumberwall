@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import AppShell         from '../components/AppShell.jsx'
 import AppHeader        from '../components/AppHeader.jsx'
 import AppFooter        from '../components/AppFooter.jsx'

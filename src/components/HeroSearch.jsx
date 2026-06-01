@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Search, X } from 'lucide-react'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import { wallData, bostonLegends, globalIndex } from '../data/index.js'
 import { SPORT_EMOJI } from '../data/sports.js'
 import './HeroSearch.css'

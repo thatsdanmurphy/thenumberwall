@@ -1,5 +1,5 @@
 # TNW Design System Snapshot
-Generated: 2026-05-20 14:11 UTC — run `npm run ds:snapshot` to refresh
+Generated: 2026-06-01 15:25 UTC — run `npm run ds:snapshot` to refresh
 
 > Read this before writing any component or style. If this file is
 > from a previous session, regenerate before building.
@@ -25,6 +25,9 @@ Generated: 2026-05-20 14:11 UTC — run `npm run ds:snapshot` to refresh
 `--color-personal`: rgba(100, 160, 255, 0.90)
 `--color-personal-border`: rgba(60,  130, 255, 0.80)
 `--color-personal-glow`: rgba(50,  100, 240, 0.38)
+`--color-personal-glow-inner`: rgba(100, 160, 255, 0.85)
+`--color-personal-glow-mid`: rgba(60,  130, 255, 0.50)
+`--color-personal-glow-outer`: rgba(40,  90,  220, 0.25)
 `--color-personal-bg`: rgba(50,  100, 240, 0.08)
 `--color-personal-tile-bg`: rgba(28,  65,  200, 0.42)
 `--color-personal-dim`: rgba(60,  130, 255, 0.22)
@@ -117,6 +120,7 @@ These exist in global.css. Reach for them before writing component-local CSS.
 .page-back
 .tnw-backdrop
 .tnw-btn  .tnw-btn--ghost  .tnw-btn--primary  .tnw-btn--secondary
+.tnw-close-btn
 .tnw-eyebrow
 .tnw-input
 .tnw-modal-title
@@ -125,7 +129,7 @@ These exist in global.css. Reach for them before writing component-local CSS.
 
 ---
 
-## Components (33)
+## Components (36)
 
 Import from src/components/ — don't recreate what already exists.
 
@@ -134,6 +138,7 @@ Import from src/components/ — don't recreate what already exists.
 - **AppHeader** — `src/components/AppHeader.jsx`
 - **AppLoading** — `src/components/AppLoading.jsx`
 - **AppShell** — `src/components/AppShell.jsx`
+- **ChaserCard** — `src/components/ChaserCard.jsx`
 - **CreateTeamWall** — `src/components/CreateTeamWall.jsx`
 - **DebateCard** — `src/components/DebateCard.jsx`
 - **EmailCapture** — `src/components/EmailCapture.jsx`
@@ -144,6 +149,7 @@ Import from src/components/ — don't recreate what already exists.
 - **HeroSearch** — `src/components/HeroSearch.jsx`
 - **IdentityTiles** — `src/components/IdentityTiles.jsx`
 - **LegendTimeline** — `src/components/LegendTimeline.jsx`
+- **LiveGameCard** — `src/components/LiveGameCard.jsx`
 - **Modal** — `src/components/Modal.jsx`
 - **MyWallsHub** — `src/components/MyWallsHub.jsx`
 - **NewWallModal** — `src/components/NewWallModal.jsx`
@@ -152,6 +158,7 @@ Import from src/components/ — don't recreate what already exists.
 - **PlayerPanel** — `src/components/PlayerPanel.jsx`
 - **PlayerSearch** — `src/components/PlayerSearch.jsx`
 - **PositionPicker** — `src/components/PositionPicker.jsx`
+- **RivalGrid** — `src/components/RivalGrid.jsx`
 - **ScrollToTop** — `src/components/ScrollToTop.jsx`
 - **ShowdownScrubber** — `src/components/ShowdownScrubber.jsx`
 - **SportsFilter** — `src/components/SportsFilter.jsx`
@@ -165,16 +172,18 @@ Import from src/components/ — don't recreate what already exists.
 
 ---
 
-## Pages (22)
+## Pages (24)
 
 - **AboutPage** — `src/pages/AboutPage.jsx`
 - **BostonPage** — `src/pages/BostonPage.jsx`
 - **DesignSystem** — `src/pages/DesignSystem.jsx`
+- **LivePage** — `src/pages/LivePage.jsx`
 - **MyWallPage** — `src/pages/MyWallPage.jsx`
 - **MyWallsPage** — `src/pages/MyWallsPage.jsx`
 - **NewYorkPage** — `src/pages/NewYorkPage.jsx`
 - **NotFoundPage** — `src/pages/NotFoundPage.jsx`
 - **ReelWallPage** — `src/pages/ReelWallPage.jsx`
+- **SeriesPage** — `src/pages/SeriesPage.jsx`
 - **ShowdownPage** — `src/pages/ShowdownPage.jsx`
 - **TeamWallPage** — `src/pages/TeamWallPage.jsx`
 - **TeamWallsPage** — `src/pages/TeamWallsPage.jsx`

@@ -9,7 +9,7 @@
 import { useEffect, useState } from 'react'
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
 import { MapPin, Check, Loader } from 'lucide-react'
-import { track } from '@vercel/analytics'
+import { trackEvent as track } from '../lib/analytics.js'
 import {
   fetchInterestPings,
   hasAlreadyPinged,
