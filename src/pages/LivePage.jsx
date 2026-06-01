@@ -601,7 +601,7 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
                   {m.opponent ? `${m.team} vs ${m.opponent} · ${m.year}` : `${m.team} · ${m.year}`}
                 </span>
                 <span className="ls-cstat__constellation-value">
-                  {m.value}
+                  {m.value}{m.sb != null ? ' HR' : ''}
                   {m.sb  != null && ` · ${m.sb} SB`}
                   {m.ppg != null && ` · ${m.ppg} PPG`}
                 </span>
