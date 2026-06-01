@@ -585,7 +585,7 @@ function ChaserStat({ chaser, chaserName, chaserTeam }) {
                 <span className="ls-cstat__constellation-name">{m.name}</span>
                 <span className="ls-cstat__constellation-meta">{m.team} · {m.year}</span>
                 <span className="ls-cstat__constellation-value">
-                  {m.value} {chaser.stat}{m.sb != null ? ` · ${m.sb} SB` : ''}
+                  {m.active ? fmt(chaser.current ?? 0) : m.value} {chaser.stat}{m.sb != null ? ` · ${m.sb} SB` : ''}
                 </span>
               </div>
             ))}
@@ -709,7 +709,7 @@ function rowToEntry(row) {
     isOnWall:     row.is_on_wall ?? false,
     chaseWeight:  row.chase_weight ?? 1,
     stat:         row.tonight_stat,
-    game: (row.game_status || row.home_team) ? {
+    game: (row.game_status || row.home_team || row.game_date) ? {
       homeTeam:  row.home_team,
       awayTeam:  row.away_team,
       homeScore: row.home_score ?? 0,
