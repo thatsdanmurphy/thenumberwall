@@ -455,8 +455,10 @@
   display:     flex;
   align-items: center;
   gap:         var(--space-1);
-  flex-wrap:   wrap;
+  flex-wrap:   nowrap; /* ds:intentional — keep score on one line */
   margin-top:  2px; /* ds:intentional — sub-space-1 optical gap */
+  overflow:    hidden;
+  min-width:   0;
 }
 
 .ls-game-line__dot {
@@ -717,27 +719,52 @@
 
 .ls-cstat__constellation-row {
   display:               grid;
-  grid-template-columns: 24px 1fr 150px auto; /* ds:intentional — fixed cols so all rows align */
+  grid-template-columns: 28px 1fr 150px auto; /* ds:intentional — rank tight, fixed meta+value cols */
   align-items:           center;
-  gap:                   var(--space-3);
+  column-gap:            var(--space-2); /* ds:intentional — tighter gap so rank sits flush with name */
+  row-gap:               0;
   padding:               var(--space-2) 0;
   border-bottom:         1px solid var(--border-faint);
 }
 
-/* Mobile: 2-col, meta + value stack under name */
+/* Mobile: name + value on same row, meta below */
 @media (max-width: 767px) {
   .ls-cstat__constellation-row {
-    grid-template-columns: 20px 1fr; /* ds:intentional — rank flush left, name takes rest */
+    grid-template-columns: 24px 1fr auto; /* ds:intentional — rank | name | value on one line */
     grid-template-rows:    auto auto;
-    gap:                   2px var(--space-2); /* ds:intentional — tight vertical, normal horizontal */
+    column-gap:            var(--space-2);
+    row-gap:               2px; /* ds:intentional — tight meta line */
   }
-  .ls-cstat__constellation-meta,
-  .ls-cstat__constellation-value {
+
+  /* Rank spans both rows, aligned to name */
+  .ls-cstat__constellation-rank {
+    grid-column: 1;
+    grid-row:    1 / 3;
+    align-self:  start;
+  }
+
+  /* Name: row 1, col 2 */
+  .ls-cstat__constellation-name {
     grid-column: 2;
-    text-align:  left;
+    grid-row:    1;
   }
-  .ls-cstat__constellation-meta { font-size: var(--text-micro); }
-  .ls-cstat__constellation-value { font-size: var(--text-small); }
+
+  /* Value: row 1, col 3 — same line as name */
+  .ls-cstat__constellation-value {
+    grid-column:  3;
+    grid-row:     1;
+    text-align:   right;
+    font-size:    var(--text-small);
+    align-self:   center;
+  }
+
+  /* Meta: row 2, col 2-3 — below name */
+  .ls-cstat__constellation-meta {
+    grid-column: 2 / 4;
+    grid-row:    2;
+    text-align:  left;
+    font-size:   var(--text-micro);
+  }
 }
 
 .ls-cstat__constellation-row:last-child { border-bottom: none; }

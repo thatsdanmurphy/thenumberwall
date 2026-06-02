@@ -737,7 +737,8 @@ function rowToEntry(row) {
     team:         row.team,
     isOnWall:     row.is_on_wall ?? false,
     chaseWeight:  row.chase_weight ?? 1,
-    stat:         row.tonight_stat,
+    // Only show tonight stat if player actually did something — suppress zero lines
+    stat:         (row.tonight_stat && /[1-9]/.test(row.tonight_stat)) ? row.tonight_stat : null,
     game: (row.game_status || row.home_team || row.game_date) ? {
       homeTeam:  row.home_team,
       awayTeam:  row.away_team,
