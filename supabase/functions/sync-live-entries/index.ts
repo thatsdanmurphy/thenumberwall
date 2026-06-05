@@ -258,21 +258,53 @@ async function syncNBA(entry: Record<string, unknown>): Promise<Record<string, u
 // ── MLB ───────────────────────────────────────────────────────────────────────
 
 async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const playerId = entry.sport_player_id as string
-  const team     = entry.team as string
-  const today    = new Date().toISOString().split('T')[0]
+  const playerId  = entry.sport_player_id as string
+  const team      = entry.team as string
+  const statName  = (entry.stat_name as string ?? '').toLowerCase()
+  const today     = new Date().toISOString().split('T')[0]
+
+  // Determine stat group and type from entry metadata
+  // Pitching stats: ERA, WHIP, K/9. Everything else treated as hitting.
+  const isPitching = ['era', 'whip', 'k/9', 'so', 'strikeouts'].some(s => statName.includes(s))
+  const isCareer   = entry.lens === 'CAREER'
+  const statsType  = isCareer ? 'career' : 'season'
+  const group      = isPitching ? 'pitching' : 'hitting'
+  const seasonParam = isCareer ? '' : `&season=2026`
 
   const [statsData, schedData] = await Promise.all([
     fetchJSON(
-      `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=season&group=pitching&season=2026`
+      `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=${statsType}&group=${group}${seasonParam}`
     ).catch(() => null),
     fetchJSON(
       `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${today}&hydrate=team,linescore`
     ).catch(() => null),
   ])
 
-  const seasonStat = statsData?.stats?.[0]?.splits?.[0]?.stat
-  const era = seasonStat?.era ? parseFloat(seasonStat.era) : null
+  const statSplit = statsData?.stats?.[0]?.splits?.[0]?.stat
+
+  // Resolve current stat value based on what we're tracking
+  let currentStatValue: number | null = entry.current_stat as number | null
+  if (statSplit) {
+    if (isPitching && statSplit.era) {
+      currentStatValue = parseFloat(statSplit.era)
+    } else if (!isPitching) {
+      // Map common hitting stat names to API field names
+      const fieldMap: Record<string, string> = {
+        'home runs': 'homeRuns', 'hr': 'homeRuns', 'career hr': 'homeRuns',
+        'hits': 'hits', 'rbi': 'rbi', 'stolen bases': 'stolenBases', 'sb': 'stolenBases',
+        'doubles': 'doubles', 'runs': 'runs',
+      }
+      const field = Object.entries(fieldMap).find(([k]) => statName.includes(k))?.[1]
+      if (field && statSplit[field] != null) currentStatValue = Number(statSplit[field])
+    }
+  }
+
+  // Tonight's stat label
+  const tonightStat = isPitching && currentStatValue != null
+    ? `${currentStatValue} ERA tonight`
+    : null
+
+  const era = isPitching ? currentStatValue : null
 
   const todayGame = (schedData?.dates?.[0]?.games ?? []).find((g: Record<string, unknown>) => {
     const teams = g.teams as Record<string, Record<string, Record<string, string>>>
@@ -280,7 +312,7 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
            teams?.away?.team?.abbreviation === team
   })
 
-  const mlbCurrent = era ?? entry.current_stat as number | null
+  const mlbCurrent = currentStatValue
   const remaining  = computeRemaining(mlbCurrent, entry)
 
   if (!todayGame) return { current_stat: mlbCurrent, remaining }
@@ -294,7 +326,7 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
   return {
     current_stat:  mlbCurrent,
     remaining,
-    tonight_stat:  era ? `${era} ERA tonight` : null,
+    tonight_stat:  tonightStat,
     home_team:     (teams.home?.team as Record<string, string>)?.abbreviation,
     away_team:     (teams.away?.team as Record<string, string>)?.abbreviation,
     home_score:    teams.home?.score ?? 0,
