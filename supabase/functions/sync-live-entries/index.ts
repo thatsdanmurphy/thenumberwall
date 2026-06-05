@@ -407,9 +407,7 @@ Deno.serve(async (_req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    if (!isGameWindow()) {
-      return new Response('Outside game window — skipping', { status: 200 })
-    }
+    const gameWindow = isGameWindow()
 
     const { data: entries, error } = await supabase
       .from('live_entries')
@@ -419,6 +417,27 @@ Deno.serve(async (_req) => {
 
     if (error) throw error
     if (!entries?.length) return new Response('No active entries', { status: 200 })
+
+    // Outside game window: only refresh games_ahead (schedule data), skip live scores + stats
+    if (!gameWindow) {
+      const scheduleUpdates = await Promise.allSettled(
+        entries.map(async (entry: Record<string, unknown>) => {
+          let gamesAhead: Record<string, unknown>[] = []
+          if (entry.sport === 'nhl') {
+            const schedData = await fetchJSON(
+              `https://api-web.nhle.com/v1/club-schedule/${entry.team}/week/now`
+            ).catch(() => null)
+            if (schedData) gamesAhead = buildNHLGamesAhead(schedData, entry.team as string)
+          } else if (entry.sport === 'mlb') {
+            gamesAhead = await buildMLBGamesAhead(entry.team as string)
+          }
+          if (!gamesAhead.length) return
+          await supabase.from('live_entries').update({ games_ahead: gamesAhead }).eq('id', entry.id)
+        })
+      )
+      const ok = scheduleUpdates.filter(r => r.status === 'fulfilled').length
+      return new Response(`Schedule-only update — ${ok} entries refreshed`, { status: 200 })
+    }
 
     const results = await Promise.allSettled(
       entries.map(async (entry: Record<string, unknown>) => {
