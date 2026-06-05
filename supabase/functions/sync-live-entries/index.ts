@@ -255,6 +255,59 @@ async function syncNBA(entry: Record<string, unknown>): Promise<Record<string, u
   }
 }
 
+// ── MLB team abbreviation → API team ID ──────────────────────────────────────
+const MLB_TEAM_ID: Record<string, number> = {
+  ARI:108,LAA:108,HOU:117,OAK:133,SEA:136,TEX:140,ATL:144,MIA:146,NYM:121,
+  PHI:143,WSH:120,CHC:112,CIN:113,MIL:158,PIT:134,STL:138,ARI2:109,COL:115,
+  LAD:119,SD:135,SF:137,BAL:110,BOS:111,NYY:147,TB:139,TOR:141,CWS:145,
+  CLE:114,DET:116,KC:118,MIN:142,
+}
+
+// Build games_ahead from MLB schedule API — next 3 games for the team
+async function buildMLBGamesAhead(
+  team: string
+): Promise<Record<string, unknown>[]> {
+  const teamId = MLB_TEAM_ID[team]
+  if (!teamId) return []
+
+  const today   = new Date().toISOString().split('T')[0]
+  const endDate = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0]
+
+  const data = await fetchJSON(
+    `https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=${teamId}&startDate=${today}&endDate=${endDate}&hydrate=team`
+  ).catch(() => null)
+
+  if (!data?.dates) return []
+
+  const upcoming: Record<string, unknown>[] = []
+  for (const date of data.dates as Record<string, unknown>[]) {
+    for (const game of (date.games as Record<string, unknown>[]) ?? []) {
+      const status = (game.status as Record<string, string>)?.abstractGameState
+      if (status === 'Final') continue  // skip completed games
+      if (upcoming.length >= 3) break
+
+      const teams   = game.teams as Record<string, Record<string, unknown>>
+      const homeAbb = (teams.home?.team as Record<string, string>)?.abbreviation
+      const awayAbb = (teams.away?.team as Record<string, string>)?.abbreviation
+      const isHome  = homeAbb === team
+      const opp     = isHome ? awayAbb : homeAbb
+
+      const dateStr = date.date as string
+      const d       = new Date(dateStr + 'T12:00:00')
+      const label   = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+      upcoming.push({
+        id:      `g${upcoming.length + 1}`,
+        date:    label,
+        matchup: isHome ? `vs ${opp}` : `@ ${opp}`,
+        note:    null,
+      })
+    }
+    if (upcoming.length >= 3) break
+  }
+  return upcoming
+}
+
 // ── MLB ───────────────────────────────────────────────────────────────────────
 
 async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, unknown>> {
@@ -271,13 +324,14 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
   const group      = isPitching ? 'pitching' : 'hitting'
   const seasonParam = isCareer ? '' : `&season=2026`
 
-  const [statsData, schedData] = await Promise.all([
+  const [statsData, schedData, gamesAhead] = await Promise.all([
     fetchJSON(
       `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=${statsType}&group=${group}${seasonParam}`
     ).catch(() => null),
     fetchJSON(
       `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${today}&hydrate=team,linescore`
     ).catch(() => null),
+    buildMLBGamesAhead(team),
   ])
 
   const statSplit = statsData?.stats?.[0]?.splits?.[0]?.stat
@@ -315,7 +369,11 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
   const mlbCurrent = currentStatValue
   const remaining  = computeRemaining(mlbCurrent, entry)
 
-  if (!todayGame) return { current_stat: mlbCurrent, remaining }
+  if (!todayGame) return {
+    current_stat: mlbCurrent,
+    remaining,
+    ...(gamesAhead.length ? { games_ahead: gamesAhead } : {}),
+  }
 
   const teams  = todayGame.teams as Record<string, Record<string, unknown>>
   const code   = (todayGame.status as Record<string, string>)?.abstractGameCode
@@ -335,6 +393,7 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
       ? `${isTop ? 'Top' : 'Bot'} ${inning}` : code === 'F' ? 'Final' : null,
     game_status:   code === 'I' ? 'live' : code === 'F' ? 'final' : 'upcoming',
     game_date:     'Tonight',
+    ...(gamesAhead.length ? { games_ahead: gamesAhead } : {}),
   }
 }
 
