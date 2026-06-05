@@ -263,49 +263,75 @@ const MLB_TEAM_ID: Record<string, number> = {
   CLE:114,DET:116,KC:118,MIN:142,
 }
 
-// Build games_ahead from MLB schedule API — next 3 games for the team
+// Build games_ahead from MLB schedule API.
+// Fetches 28 days out and returns:
+//   - up to 2 near-term games
+//   - games in the projected milestone window (when remaining + pace are known)
 async function buildMLBGamesAhead(
-  team: string
+  team: string,
+  remaining: number | null = null,
+  pacePerGame: number | null = null,
 ): Promise<Record<string, unknown>[]> {
   const teamId = MLB_TEAM_ID[team]
   if (!teamId) return []
 
-  const today   = new Date().toISOString().split('T')[0]
-  const endDate = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0]
+  const todayStr = new Date().toISOString().split('T')[0]
+  const endDate  = new Date(Date.now() + 28 * 86400000).toISOString().split('T')[0]
 
   const data = await fetchJSON(
-    `https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=${teamId}&startDate=${today}&endDate=${endDate}&hydrate=team`
+    `https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=${teamId}&startDate=${todayStr}&endDate=${endDate}&hydrate=team`
   ).catch(() => null)
 
   if (!data?.dates) return []
 
-  const upcoming: Record<string, unknown>[] = []
+  // Flatten all upcoming games with a sequential game index from today
+  const allGames: { dateStr: string; isHome: boolean; opp: string }[] = []
   for (const date of data.dates as Record<string, unknown>[]) {
     for (const game of (date.games as Record<string, unknown>[]) ?? []) {
       const status = (game.status as Record<string, string>)?.abstractGameState
-      if (status === 'Final') continue  // skip completed games
-      if (upcoming.length >= 3) break
-
+      if (status === 'Final') continue
       const teams   = game.teams as Record<string, Record<string, unknown>>
       const homeAbb = (teams.home?.team as Record<string, string>)?.abbreviation
       const awayAbb = (teams.away?.team as Record<string, string>)?.abbreviation
       const isHome  = homeAbb === team
-      const opp     = isHome ? awayAbb : homeAbb
-
-      const dateStr = date.date as string
-      const d       = new Date(dateStr + 'T12:00:00')
-      const label   = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-
-      upcoming.push({
-        id:      `g${upcoming.length + 1}`,
-        date:    label,
-        matchup: isHome ? `vs ${opp}` : `@ ${opp}`,
-        note:    null,
-      })
+      allGames.push({ dateStr: date.date as string, isHome, opp: isHome ? awayAbb : homeAbb })
     }
-    if (upcoming.length >= 3) break
   }
-  return upcoming
+
+  // Estimate which game index the milestone falls on
+  // Use a buffer of ±3 games around the estimate
+  const milestoneIdx = (remaining != null && pacePerGame != null && pacePerGame > 0)
+    ? Math.round(remaining / pacePerGame)
+    : null
+
+  const result: Record<string, unknown>[] = []
+  const addedIdxs = new Set<number>()
+
+  const addGame = (idx: number, note: string | null) => {
+    if (idx >= allGames.length || addedIdxs.has(idx)) return
+    addedIdxs.add(idx)
+    const { dateStr, isHome, opp } = allGames[idx]
+    const d     = new Date(dateStr + 'T12:00:00')
+    const label = dateStr === todayStr
+      ? 'Tonight'
+      : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    result.push({ id: `g${result.length + 1}`, date: label, matchup: isHome ? `vs ${opp}` : `@ ${opp}`, note })
+  }
+
+  // Always show the next 2 games
+  addGame(0, null)
+  addGame(1, null)
+
+  // Show milestone window games (3 games around the projected idx)
+  if (milestoneIdx != null && milestoneIdx > 1) {
+    for (let i = Math.max(2, milestoneIdx - 1); i <= milestoneIdx + 1 && result.length < 5; i++) {
+      addGame(i, 'Projected milestone window')
+    }
+  } else if (result.length < 3) {
+    addGame(2, null)
+  }
+
+  return result
 }
 
 // ── MLB ───────────────────────────────────────────────────────────────────────
@@ -324,14 +350,19 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
   const group      = isPitching ? 'pitching' : 'hitting'
   const seasonParam = isCareer ? '' : `&season=2026`
 
-  const [statsData, schedData, gamesAhead] = await Promise.all([
+  // For career hitting entries, also fetch season stats for pace calculation
+  const seasonPaceUrl = (isCareer && !isPitching)
+    ? `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=season&group=hitting&season=2026`
+    : null
+
+  const [statsData, schedData, seasonPaceData] = await Promise.all([
     fetchJSON(
       `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=${statsType}&group=${group}${seasonParam}`
     ).catch(() => null),
     fetchJSON(
       `https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${today}&hydrate=team,linescore`
     ).catch(() => null),
-    buildMLBGamesAhead(team),
+    seasonPaceUrl ? fetchJSON(seasonPaceUrl).catch(() => null) : Promise.resolve(null),
   ])
 
   const statSplit = statsData?.stats?.[0]?.splits?.[0]?.stat
@@ -358,6 +389,12 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
     ? `${currentStatValue} ERA tonight`
     : null
 
+  // Pace per game from current season (for milestone projection in games_ahead)
+  const seasonSplit   = seasonPaceData?.stats?.[0]?.splits?.[0]?.stat
+  const pacePerGame   = (seasonSplit?.gamesPlayed > 0 && seasonSplit?.homeRuns > 0)
+    ? seasonSplit.homeRuns / seasonSplit.gamesPlayed
+    : null
+
   const era = isPitching ? currentStatValue : null
 
   const todayGame = (schedData?.dates?.[0]?.games ?? []).find((g: Record<string, unknown>) => {
@@ -368,6 +405,8 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
 
   const mlbCurrent = currentStatValue
   const remaining  = computeRemaining(mlbCurrent, entry)
+
+  const gamesAhead = await buildMLBGamesAhead(team, remaining, pacePerGame)
 
   if (!todayGame) return {
     current_stat: mlbCurrent,
