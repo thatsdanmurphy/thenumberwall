@@ -489,13 +489,14 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
   const color     = lensColor(chaser.lens)
   const pct       = hasTarget ? Math.round(chasePct(chaser) ?? 0) : null
 
-  // For decimal stats (SV%, ERA) format the gap as a percentage string, not a bare decimal
+  // For decimal stats (SV%, ERA) show the raw gap with the stat unit (e.g. "0.014 SV% to go")
+  // ERA uses lowerIsBetter so heroNum isn't shown for it — this path is SV% and similar
   const isDecimalStat = hasTarget && chaser.target != null && chaser.target < 10
   const heroNum = hasTarget
     ? (chaser.remaining != null
         ? chaser.remaining
         : isDecimalStat
-          ? (Math.abs(chaser.target - (chaser.current ?? 0)) * 1000).toFixed(0) + ' points'
+          ? Math.abs(chaser.target - (chaser.current ?? 0)).toFixed(3) + ' ' + chaser.stat
           : fmt(dist))
     : fmt(chaser.current)
 

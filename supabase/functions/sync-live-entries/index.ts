@@ -8,6 +8,11 @@
  *
  * Key fix: createClient is inside the handler, not at module level.
  * Env vars are only available at request time in Edge Functions.
+ *
+ * NHL stat tracking:
+ *   - If entry.playoff_round is set, counts only points from that round
+ *     (e.g., playoff_round=4 = Cup Finals only, chasing series records)
+ *   - If null, counts total playoff points
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -41,29 +46,66 @@ function formatETTime(utcString: string): string {
   } catch { return '' }
 }
 
+// Current NHL season string, e.g. "20252026"
+// Season starts in October; use year-1 if before July
+function currentNHLSeason(): string {
+  const now   = new Date()
+  const year  = now.getFullYear()
+  const month = now.getMonth() + 1
+  const start = month >= 7 ? year : year - 1
+  return `${start}${start + 1}`
+}
+
 // ── NHL ───────────────────────────────────────────────────────────────────────
 
 async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const playerId = entry.sport_player_id as string
-  const team     = entry.team as string
+  const playerId    = entry.sport_player_id as string
+  const team        = entry.team as string
+  const roundFilter = entry.playoff_round as number | null
 
-  const [playerData, scoreData] = await Promise.all([
-    fetchJSON(`https://api-web.nhle.com/v1/player/${playerId}/landing`),
+  // Fetch game-log (for stats) and live scores (for tonight's game) in parallel.
+  // game-log/now redirects to current season; use explicit season URL for reliability.
+  const season = currentNHLSeason()
+  const [logData, scoreData] = await Promise.all([
+    fetchJSON(`https://api-web.nhle.com/v1/player/${playerId}/game-log/${season}/3`).catch(() => null),
     fetchJSON('https://api-web.nhle.com/v1/score/now'),
   ])
 
-  // Series points from playoff totals
-  const playoffTotals = (playerData.seasonTotals ?? [])
-    .find((s: Record<string, unknown>) => s.gameTypeId === 3)
-  const currentStat = playoffTotals?.points ?? entry.current_stat ?? null
+  // ── Current stat ──────────────────────────────────────────────────────────
+  let currentStat: number | null = entry.current_stat as number | null
 
-  // Tonight's stats from most recent game
-  const latestGame = (playerData.last5Games ?? [])[0]
+  if (logData?.gameLog) {
+    const allGames = logData.gameLog as Record<string, unknown>[]
+
+    if (roundFilter) {
+      // Filter to specific playoff round using NHL game ID format:
+      // SSSS TT RR GG — e.g., 2025030412 → round = parseInt("04") = 4
+      const roundStr = String(roundFilter).padStart(2, '0')
+      const roundGames = allGames.filter(g => {
+        const gid = String(g.gameId)
+        return gid.slice(4, 6) === '03' && gid.slice(6, 8) === roundStr
+      })
+      if (roundGames.length > 0) {
+        currentStat = roundGames.reduce((sum: number, g: Record<string, unknown>) => {
+          return sum + ((g.goals as number) || 0) + ((g.assists as number) || 0)
+        }, 0)
+      }
+    } else {
+      // All playoff games this season
+      const totalPoints = allGames.reduce((sum: number, g: Record<string, unknown>) => {
+        return sum + ((g.goals as number) || 0) + ((g.assists as number) || 0)
+      }, 0)
+      if (totalPoints > 0) currentStat = totalPoints
+    }
+  }
+
+  // ── Tonight's stat — from most recent game-log entry ─────────────────────
+  const latestGame = logData?.gameLog?.[0] as Record<string, unknown> | null
   const tonightStat = latestGame
     ? `${latestGame.goals}G, ${latestGame.assists}A tonight`
     : null
 
-  // Find today's game for this team
+  // ── Live game data ────────────────────────────────────────────────────────
   const todayGame = (scoreData.games ?? []).find((g: Record<string, unknown>) => {
     const home = (g.homeTeam as Record<string, unknown>)?.abbrev
     const away = (g.awayTeam as Record<string, unknown>)?.abbrev
@@ -239,6 +281,11 @@ Deno.serve(async (_req) => {
 
     const ok   = results.filter(r => r.status === 'fulfilled').length
     const fail = results.filter(r => r.status === 'rejected').length
+
+    // Log failures for debugging
+    results
+      .filter(r => r.status === 'rejected')
+      .forEach(r => console.error('sync failed:', (r as PromiseRejectedResult).reason))
 
     console.log(`sync-live-entries: ${ok} synced, ${fail} failed`)
     return new Response(`OK — ${ok} synced, ${fail} failed`, { status: 200 })
