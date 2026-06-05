@@ -540,7 +540,9 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
                   ? chaser.current < chaser.target
                     ? `Holding below the record · ${fmt(chaser.current)} ${chaser.stat}`
                     : `Not yet in record territory · ${fmt(chaser.current)} ${chaser.stat}`
-                  : `Chasing · ${heroNum} to go`
+                  : isDecimalStat
+                    ? `${chaser.current?.toFixed(3)} ${chaser.stat} · ${Math.abs(chaser.target - (chaser.current ?? 0)).toFixed(3)} from the record`
+                    : `Chasing · ${heroNum} to go`
                 }
               </span>
               <span className="ls-cstat__row-name ls-cstat__row-name--live">

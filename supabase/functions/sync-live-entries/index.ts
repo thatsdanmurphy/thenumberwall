@@ -56,6 +56,56 @@ function currentNHLSeason(): string {
   return `${start}${start + 1}`
 }
 
+// ── Helpers: remaining + games_ahead ─────────────────────────────────────────
+
+// Dynamically compute remaining (target - current) so the "X to go" display
+// always reflects the actual gap. Returns null if no target or lower-is-better.
+function computeRemaining(
+  currentStat: number | null,
+  entry: Record<string, unknown>
+): number | null {
+  const target = entry.target as number | null
+  if (target == null || currentStat == null) return null
+  if (entry.lower_is_better) return null  // ERA etc — "to go" doesn't apply
+  return Math.max(0, target - currentStat)
+}
+
+// Build games_ahead from NHL club schedule API response.
+// Returns up to 3 upcoming games in the component's expected shape.
+function buildNHLGamesAhead(
+  schedData: Record<string, unknown>,
+  team: string
+): Record<string, unknown>[] {
+  const games = (schedData.games ?? []) as Record<string, unknown>[]
+  const upcoming = games
+    .filter(g => (g.gameState as string) === 'FUT' || (g.gameState as string) === 'PRE')
+    .slice(0, 3)
+
+  return upcoming.map((g, i) => {
+    const home = (g.homeTeam as Record<string, unknown>)?.abbrev as string
+    const away = (g.awayTeam as Record<string, unknown>)?.abbrev as string
+    const opponent = home === team ? away : home
+    const isHome   = home === team
+    const series   = g.seriesStatus as Record<string, unknown> | null
+    const gameNum  = series?.gameNumberOfSeries as number | null
+
+    // Format date: gameDate is "2026-06-06", show "Jun 6"
+    const dateStr = g.gameDate as string
+    let label = 'TBD'
+    if (dateStr) {
+      const d = new Date(dateStr + 'T12:00:00')
+      label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
+
+    return {
+      id:      `g${i + 1}`,
+      date:    label,
+      matchup: isHome ? `vs ${opponent}` : `@ ${opponent}`,
+      note:    gameNum ? `Game ${gameNum}` : null,
+    }
+  })
+}
+
 // ── NHL ───────────────────────────────────────────────────────────────────────
 
 async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, unknown>> {
@@ -63,12 +113,12 @@ async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, u
   const team        = entry.team as string
   const roundFilter = entry.playoff_round as number | null
 
-  // Fetch game-log (for stats) and live scores (for tonight's game) in parallel.
-  // game-log/now redirects to current season; use explicit season URL for reliability.
+  // Fetch in parallel: game-log (stats) + live scores + club schedule (games_ahead)
   const season = currentNHLSeason()
-  const [logData, scoreData] = await Promise.all([
+  const [logData, scoreData, schedData] = await Promise.all([
     fetchJSON(`https://api-web.nhle.com/v1/player/${playerId}/game-log/${season}/3`).catch(() => null),
     fetchJSON('https://api-web.nhle.com/v1/score/now'),
+    fetchJSON(`https://api-web.nhle.com/v1/club-schedule/${team}/week/now`).catch(() => null),
   ])
 
   // ── Current stat ──────────────────────────────────────────────────────────
@@ -78,8 +128,7 @@ async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, u
     const allGames = logData.gameLog as Record<string, unknown>[]
 
     if (roundFilter) {
-      // Filter to specific playoff round using NHL game ID format:
-      // SSSS TT RR GG — e.g., 2025030412 → round = parseInt("04") = 4
+      // Filter to specific playoff round: SSSS TT RR GG (e.g., 2025030412 = round 4 game 12)
       const roundStr = String(roundFilter).padStart(2, '0')
       const roundGames = allGames.filter(g => {
         const gid = String(g.gameId)
@@ -91,7 +140,6 @@ async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, u
         }, 0)
       }
     } else {
-      // All playoff games this season
       const totalPoints = allGames.reduce((sum: number, g: Record<string, unknown>) => {
         return sum + ((g.goals as number) || 0) + ((g.assists as number) || 0)
       }, 0)
@@ -105,6 +153,9 @@ async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, u
     ? `${latestGame.goals}G, ${latestGame.assists}A tonight`
     : null
 
+  // ── games_ahead — from club schedule ─────────────────────────────────────
+  const gamesAhead = schedData ? buildNHLGamesAhead(schedData, team) : null
+
   // ── Live game data ────────────────────────────────────────────────────────
   const todayGame = (scoreData.games ?? []).find((g: Record<string, unknown>) => {
     const home = (g.homeTeam as Record<string, unknown>)?.abbrev
@@ -112,27 +163,38 @@ async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, u
     return home === team || away === team
   })
 
-  if (!todayGame) return { current_stat: currentStat, tonight_stat: tonightStat }
+  const remaining = computeRemaining(currentStat, entry)
 
-  const home   = todayGame.homeTeam as Record<string, unknown>
-  const away   = todayGame.awayTeam as Record<string, unknown>
-  const state  = todayGame.gameState as string
-  const isLive = state === 'LIVE' || state === 'CRIT'
+  if (!todayGame) {
+    return {
+      current_stat: currentStat,
+      tonight_stat: tonightStat,
+      remaining,
+      ...(gamesAhead?.length ? { games_ahead: gamesAhead } : {}),
+    }
+  }
+
+  const home    = todayGame.homeTeam as Record<string, unknown>
+  const away    = todayGame.awayTeam as Record<string, unknown>
+  const state   = todayGame.gameState as string
+  const isLive  = state === 'LIVE' || state === 'CRIT'
   const isFinal = state === 'FINAL' || state === 'OFF'
-  const pd     = todayGame.periodDescriptor as Record<string, unknown> | null
+  const pd      = todayGame.periodDescriptor as Record<string, unknown> | null
 
   return {
-    current_stat:  currentStat,
-    tonight_stat:  tonightStat,
-    home_team:     home.abbrev,
-    away_team:     away.abbrev,
-    home_score:    home.score ?? 0,
-    away_score:    away.score ?? 0,
-    period:        isLive ? ordinal(pd?.number as number) : isFinal ? 'Final' : null,
-    game_status:   isLive ? 'live' : isFinal ? 'final' : 'upcoming',
-    game_date:     'Tonight',
-    game_time:     todayGame.startTimeUTC
+    current_stat: currentStat,
+    tonight_stat: tonightStat,
+    remaining,
+    home_team:    home.abbrev,
+    away_team:    away.abbrev,
+    home_score:   home.score ?? 0,
+    away_score:   away.score ?? 0,
+    period:       isLive ? ordinal(pd?.number as number) : isFinal ? 'Final' : null,
+    game_status:  isLive ? 'live' : isFinal ? 'final' : 'upcoming',
+    game_date:    'Tonight',
+    game_time:    todayGame.startTimeUTC
       ? formatETTime(todayGame.startTimeUTC as string) : null,
+    ...(gamesAhead?.length ? { games_ahead: gamesAhead } : {}),
   }
 }
 
@@ -169,7 +231,9 @@ async function syncNBA(entry: Record<string, unknown>): Promise<Record<string, u
     return h === team || a === team
   })
 
-  if (!todayGame) return { current_stat: currentStat, tonight_stat: tonightStat }
+  const remaining = computeRemaining(currentStat as number | null, entry)
+
+  if (!todayGame) return { current_stat: currentStat, tonight_stat: tonightStat, remaining }
 
   const home   = todayGame.homeTeam as Record<string, unknown>
   const away   = todayGame.awayTeam as Record<string, unknown>
@@ -178,6 +242,7 @@ async function syncNBA(entry: Record<string, unknown>): Promise<Record<string, u
   return {
     current_stat:  currentStat,
     tonight_stat:  tonightStat,
+    remaining,
     home_team:     home.teamTricode,
     away_team:     away.teamTricode,
     home_score:    home.score ?? 0,
@@ -215,7 +280,10 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
            teams?.away?.team?.abbreviation === team
   })
 
-  if (!todayGame) return { current_stat: era ?? entry.current_stat }
+  const mlbCurrent = era ?? entry.current_stat as number | null
+  const remaining  = computeRemaining(mlbCurrent, entry)
+
+  if (!todayGame) return { current_stat: mlbCurrent, remaining }
 
   const teams  = todayGame.teams as Record<string, Record<string, unknown>>
   const code   = (todayGame.status as Record<string, string>)?.abstractGameCode
@@ -224,7 +292,8 @@ async function syncMLB(entry: Record<string, unknown>): Promise<Record<string, u
   const isTop  = ls?.isTopInning as boolean | null
 
   return {
-    current_stat:  era ?? entry.current_stat,
+    current_stat:  mlbCurrent,
+    remaining,
     tonight_stat:  era ? `${era} ERA tonight` : null,
     home_team:     (teams.home?.team as Record<string, string>)?.abbreviation,
     away_team:     (teams.away?.team as Record<string, string>)?.abbreviation,
