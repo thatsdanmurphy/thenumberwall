@@ -311,6 +311,7 @@ function chaseDistance(chaser) {
 // chaseWeight → tile heat intensity, all in the orange heat family
 // Matches the main wall aesthetic — no multi-color system, just heat levels.
 function tileVariant(entry) {
+  if (entry.isMonument) return 'monument'
   const w = entry.chaseWeight ?? 1
   return `w${Math.max(1, Math.min(3, w))}`
 }
@@ -339,6 +340,7 @@ function buildEntryMap(weeks) {
 
 function TileBtn({ entry, active, onClick }) {
   const variant = tileVariant(entry)
+  const label   = entry.tileLabel ?? entry.number
 
   return (
     <button
@@ -349,9 +351,9 @@ function TileBtn({ entry, active, onClick }) {
       ].filter(Boolean).join(' ')}
       onClick={onClick}
       aria-pressed={active}
-      aria-label={`${entry.player}, number ${entry.number}`}
+      aria-label={`${entry.player}, number ${label}`}
     >
-      {entry.number}
+      {label}
     </button>
   )
 }
@@ -488,7 +490,7 @@ function ChaseLine({ current, target, lowerIsBetter, color }) {
 
 // ── ChaserStat — option 14: two stacked rows, progress bar in chaser row ──────
 
-function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
+function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent, isMonument = false }) {
   const dist      = chaseDistance(chaser)
   const hasTarget = Boolean(chaser.target)
   const color     = lensColor(chaser.lens)
@@ -545,9 +547,11 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent }) {
                   ? chaser.current < chaser.target
                     ? `Holding below the record · ${fmt(chaser.current)} ${chaser.stat}`
                     : `Not yet in record territory · ${fmt(chaser.current)} ${chaser.stat}`
-                  : isDecimalStat
-                    ? `${chaser.current?.toFixed(3)} ${chaser.stat} · ${Math.abs(chaser.target - (chaser.current ?? 0)).toFixed(3)} from the record`
-                    : `Chasing · ${heroNum} to go`
+                  : isMonument
+                    ? `Closest ever · ${heroNum} short`
+                    : isDecimalStat
+                      ? `${chaser.current?.toFixed(3)} ${chaser.stat} · ${Math.abs(chaser.target - (chaser.current ?? 0)).toFixed(3)} from the record`
+                      : `Chasing · ${heroNum} to go`
                 }
               </span>
               <span className="ls-cstat__row-name ls-cstat__row-name--live">
@@ -655,27 +659,108 @@ function EmptyState() {
   )
 }
 
+// ── CompoundChaserSection — one record holder, multiple chasers ──────────────
+// Used in CompoundDetailPanel. Renders ONE trophy row (the shared record) and
+// ONE flame row per chaser. No repeated record cards.
+
+function CompoundChaserSection({ entries }) {
+  const first = entries.find(e => e.chaser)
+  if (!first) return null
+
+  const chaser = first.chaser
+  const color  = lensColor(chaser.lens)
+
+  return (
+    <div className={`ls-cstat ls-cstat--${color}`}>
+      <div className="ls-cstat__rows">
+
+        {/* ── Shared record holder — shown once ───────────────────────── */}
+        <div className="ls-cstat__row ls-cstat__row--holder">
+          <Trophy size={15} className="ls-cstat__row-icon" aria-hidden="true" />
+          <div className="ls-cstat__row-body">
+            <span className="ls-cstat__row-eye">Record to beat</span>
+            <span className="ls-cstat__row-name">
+              {chaser.holder} — {fmt(chaser.target)} {chaser.stat}
+            </span>
+            {chaser.holderTeam && (
+              <span className="ls-cstat__row-meta">
+                {[chaser.holderTeam, chaser.holderYear].filter(Boolean).join(' · ')}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* ── One chaser row per entry ─────────────────────────────────── */}
+        {entries.map(e => {
+          if (!e.chaser) return null
+          const rem = e.chaser.remaining ??
+            (e.chaser.target != null ? Math.max(0, e.chaser.target - (e.chaser.current ?? 0)) : null)
+          const pct = e.chaser.target
+            ? Math.min(100, Math.max(0, ((e.chaser.current ?? 0) / e.chaser.target) * 100))
+            : null
+
+          return (
+            <div key={e.id} className="ls-cstat__row ls-cstat__row--live">
+              {pct != null && (
+                <div className="ls-cstat__row-bar" style={{ width: `${pct}%` }} aria-hidden="true" />
+              )}
+              <Flame size={15} className="ls-cstat__row-icon ls-cstat__row-icon--live" aria-hidden="true" />
+              <div className="ls-cstat__row-body">
+                <span className="ls-cstat__row-eye ls-cstat__row-eye--live">
+                  {rem != null ? `Chasing · ${rem} to go` : 'Series watch'}
+                </span>
+                <span className="ls-cstat__row-name ls-cstat__row-name--live">
+                  {e.player} — {fmt(e.chaser.current ?? 0)} {e.chaser.stat}
+                </span>
+                <span className="ls-cstat__row-meta">{e.team} · Active</span>
+              </div>
+            </div>
+          )
+        })}
+
+      </div>
+
+      {/* Constellation — use first entry's leaderboard, filter active out */}
+      {chaser.leaderboard?.filter(m => !m.active).length > 0 && (
+        <div className="ls-cstat__constellation">
+          <span className="ls-cstat__constellation-title">In company with the greats</span>
+          <div className="ls-cstat__constellation-list">
+            {chaser.leaderboard.filter(m => !m.active).map((m, i) => (
+              <div key={i} className="ls-cstat__constellation-row">
+                <span className="ls-cstat__constellation-rank">#{m.rank}</span>
+                <span className="ls-cstat__constellation-name">{m.name}</span>
+                <span className="ls-cstat__constellation-meta">
+                  {m.team} · {m.year}
+                </span>
+                <span className="ls-cstat__constellation-value">{m.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── CompoundDetailPanel — two chasers, one number ────────────────────────────
-// Used when entry.compound has multiple entries (e.g. Messi + Mbappé at #10).
-// Header: big number + both names. No single-player header name.
-// Each compound entry gets its own chase section.
 
 function CompoundDetailPanel({ entry, onClear }) {
   const entries  = entry.compound ?? [entry]
   const variant  = tileVariant(entry)
-  const { number } = entry
+  const { number, tileLabel } = entry
 
-  // Shared games ahead — use the first entry that has any
   const sharedGamesAhead = entries.find(e => e.gamesAhead?.length)?.gamesAhead ?? []
   const sharedContext    = entries.find(e => e.gamesAheadContext)?.gamesAheadContext ?? null
+  const first            = entries.find(e => e.chaser)
 
   return (
     <div className={`ls-detail ls-detail--${variant}`}>
 
-      {/* ── Header: number + both names ─────────────────────────────────── */}
       <div className="ls-player-mat">
         <div className="ls-player-mat__top-row">
-          <span className={`ls-player-mat__num ls-player-mat__num--${variant}`}>{number}</span>
+          <span className={`ls-player-mat__num ls-player-mat__num--${variant}`}>
+            {tileLabel ?? number}
+          </span>
           <button className="tnw-close-btn ls-player-mat__close" onClick={onClear} aria-label="Clear selection">
             <X size={14} />
           </button>
@@ -692,26 +777,19 @@ function CompoundDetailPanel({ entry, onClear }) {
         </div>
       </div>
 
-      {/* ── Hook ────────────────────────────────────────────────────────── */}
       {sharedContext && <p className="ls-detail__hook">{sharedContext}</p>}
 
-      {/* ── One chase section per player ────────────────────────────────── */}
-      {entries.map(e => e.chaser && (
-        <section key={e.id} className="ls-chase-section" aria-label={`${e.player} record chase`}>
+      {/* ── One record + all chasers in a single section ─────────────── */}
+      {first?.chaser && (
+        <section className="ls-chase-section" aria-label="Record chase">
           <div className="ls-chase-section__header">
-            <LensTag lens={e.chaser.lens} />
-            <span className="ls-chase-section__stat-name">{e.player.split(' ').pop()} — {e.chaser.stat}</span>
+            <LensTag lens={first.chaser.lens} />
+            <span className="ls-chase-section__stat-name">{first.chaser.stat}</span>
           </div>
-          <ChaserStat
-            chaser={e.chaser}
-            chaserName={e.player}
-            chaserTeam={e.team}
-            chaserOpponent={null}
-          />
+          <CompoundChaserSection entries={entries} />
         </section>
-      ))}
+      )}
 
-      {/* ── Shared games ahead ──────────────────────────────────────────── */}
       {sharedGamesAhead.length > 0 && (
         <section className="ls-games-ahead" aria-label="Games ahead">
           <div className="ls-games-ahead__header">
@@ -735,7 +813,7 @@ function DetailPanel({ entry, onVote, onClear }) {
   if (entry.compound?.length > 1) return <CompoundDetailPanel entry={entry} onClear={onClear} />
 
   const {
-    number, player, sport, team, isOnWall,
+    number, player, sport, team, isOnWall, isMonument,
     stat, game, chaser,
     gamesAhead, gamesAheadContext,
   } = entry
@@ -784,6 +862,7 @@ function DetailPanel({ entry, onVote, onClear }) {
             chaserName={player}
             chaserTeam={team}
             chaserOpponent={game ? (game.homeTeam === team ? game.awayTeam : game.homeTeam) : null}
+            isMonument={isMonument}
           />
         </section>
       )}
@@ -813,6 +892,8 @@ function rowToEntry(row) {
   return {
     id:           row.id,
     compoundId:   row.compound_id ?? null,
+    isMonument:   row.is_monument ?? false,
+    tileLabel:    row.tile_label ?? null,
     number:       row.number,
     player:       row.player,
     sport:        row.sport,
