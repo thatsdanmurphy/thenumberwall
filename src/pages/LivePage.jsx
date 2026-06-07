@@ -319,12 +319,17 @@ function todayLabel() {
   return new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 }
 
-// Flatten all non-null entries across all weeks into a map
+// Flatten all non-null entries across all weeks into a map.
+// Compound entries are stored by their primary id AND each sub-entry id.
 function buildEntryMap(weeks) {
   const map = new Map()
   for (const week of weeks) {
     for (const entry of week.entries) {
-      if (entry) map.set(entry.id, entry)
+      if (!entry) continue
+      map.set(entry.id, entry)
+      if (entry.compound) {
+        for (const sub of entry.compound) map.set(sub.id, entry)
+      }
     }
   }
   return map
@@ -650,11 +655,84 @@ function EmptyState() {
   )
 }
 
+// ── CompoundDetailPanel — two chasers, one number ────────────────────────────
+// Used when entry.compound has multiple entries (e.g. Messi + Mbappé at #10).
+// Header: big number + both names. No single-player header name.
+// Each compound entry gets its own chase section.
+
+function CompoundDetailPanel({ entry, onClear }) {
+  const entries  = entry.compound ?? [entry]
+  const variant  = tileVariant(entry)
+  const { number } = entry
+
+  // Shared games ahead — use the first entry that has any
+  const sharedGamesAhead = entries.find(e => e.gamesAhead?.length)?.gamesAhead ?? []
+  const sharedContext    = entries.find(e => e.gamesAheadContext)?.gamesAheadContext ?? null
+
+  return (
+    <div className={`ls-detail ls-detail--${variant}`}>
+
+      {/* ── Header: number + both names ─────────────────────────────────── */}
+      <div className="ls-player-mat">
+        <div className="ls-player-mat__top-row">
+          <span className={`ls-player-mat__num ls-player-mat__num--${variant}`}>{number}</span>
+          <button className="tnw-close-btn ls-player-mat__close" onClick={onClear} aria-label="Clear selection">
+            <X size={14} />
+          </button>
+        </div>
+        <div className="ls-player-mat__info">
+          <h2 className="ls-player-mat__name">
+            {entries.map(e => e.player).join(' · ')}
+          </h2>
+          <div className="ls-player-mat__sub">
+            <span className="ls-player-mat__squad">
+              {entries.map(e => e.team).join(' · ')}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Hook ────────────────────────────────────────────────────────── */}
+      {sharedContext && <p className="ls-detail__hook">{sharedContext}</p>}
+
+      {/* ── One chase section per player ────────────────────────────────── */}
+      {entries.map(e => e.chaser && (
+        <section key={e.id} className="ls-chase-section" aria-label={`${e.player} record chase`}>
+          <div className="ls-chase-section__header">
+            <LensTag lens={e.chaser.lens} />
+            <span className="ls-chase-section__stat-name">{e.player.split(' ').pop()} — {e.chaser.stat}</span>
+          </div>
+          <ChaserStat
+            chaser={e.chaser}
+            chaserName={e.player}
+            chaserTeam={e.team}
+            chaserOpponent={null}
+          />
+        </section>
+      ))}
+
+      {/* ── Shared games ahead ──────────────────────────────────────────── */}
+      {sharedGamesAhead.length > 0 && (
+        <section className="ls-games-ahead" aria-label="Games ahead">
+          <div className="ls-games-ahead__header">
+            <span className="ls-games-ahead__title">GAMES AHEAD</span>
+          </div>
+          <div className="ls-games-ahead__list">
+            {sharedGamesAhead.map(g => <GamesAheadRow key={g.id} game={g} />)}
+          </div>
+        </section>
+      )}
+    </div>
+  )
+}
+
 // ── DetailPanel — right panel ─────────────────────────────────────────────────
 
 // DetailPanel renders content only — card wrapper lives in LivePage for mobile sheet control.
+// If entry.compound exists (multiple players, one tile), delegates to CompoundDetailPanel.
 function DetailPanel({ entry, onVote, onClear }) {
   if (!entry) return null
+  if (entry.compound?.length > 1) return <CompoundDetailPanel entry={entry} onClear={onClear} />
 
   const {
     number, player, sport, team, isOnWall,
@@ -734,13 +812,13 @@ function DetailPanel({ entry, onVote, onClear }) {
 function rowToEntry(row) {
   return {
     id:           row.id,
+    compoundId:   row.compound_id ?? null,
     number:       row.number,
     player:       row.player,
     sport:        row.sport,
     team:         row.team,
     isOnWall:     row.is_on_wall ?? false,
     chaseWeight:  row.chase_weight ?? 1,
-    // Only show tonight stat if player actually did something — suppress zero lines
     stat:         (row.tonight_stat && /[1-9]/.test(row.tonight_stat)) ? row.tonight_stat : null,
     game: (row.game_status || row.home_team || row.game_date) ? {
       homeTeam:  row.home_team,
@@ -775,6 +853,30 @@ function rowToEntry(row) {
   }
 }
 
+// Merges entries sharing a compound_id into a single slot.
+// The first entry in the group becomes the tile; others are attached as entry.compound[].
+function mergeCompoundEntries(entries) {
+  const seen = {}    // compoundId → index in result
+  const result = []
+  for (const entry of entries) {
+    if (!entry || !entry.compoundId) {
+      result.push(entry)
+      continue
+    }
+    if (seen[entry.compoundId] !== undefined) {
+      // Attach to the primary entry's compound array
+      result[seen[entry.compoundId]].compound = [
+        ...(result[seen[entry.compoundId]].compound ?? [result[seen[entry.compoundId]]]),
+        entry,
+      ]
+    } else {
+      seen[entry.compoundId] = result.length
+      result.push({ ...entry, compound: [entry] })
+    }
+  }
+  return result
+}
+
 // Groups sorted rows into the WEEKS array shape the component renders.
 function rowsToWeeks(rows) {
   const grouped = {}
@@ -786,7 +888,7 @@ function rowsToWeeks(rows) {
 
   const dates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a))
   return dates.map((date, i) => {
-    const entries = grouped[date]
+    const entries = mergeCompoundEntries(grouped[date])
     const padded  = [...entries, ...Array(Math.max(0, 24 - entries.length)).fill(null)]
     return {
       id:            `week-${date}`,
@@ -827,7 +929,15 @@ function useLiveEntries() {
         const updated = rowToEntry(payload.new)
         setWeeks(prev => prev.map(week => ({
           ...week,
-          entries: week.entries.map(e => e?.id === updated.id ? updated : e),
+          entries: week.entries.map(e => {
+            if (!e) return e
+            // Compound tile: update the matching entry within compound[]
+            if (e.compound) {
+              const newCompound = e.compound.map(c => c.id === updated.id ? updated : c)
+              return { ...e, compound: newCompound }
+            }
+            return e.id === updated.id ? updated : e
+          }),
         })))
       })
       .subscribe()
