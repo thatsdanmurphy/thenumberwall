@@ -43,14 +43,7 @@ export default function AppHeader({  // eslint-disable-line no-unused-vars
         </div>
 
         <nav className="app-header__nav">
-          <Link
-            to="/live"
-            className={`app-header__nav-link app-header__nav-link--live${isOnLive ? ' app-header__nav-link--active' : ''}`}
-            aria-current={isOnLive ? 'page' : undefined}
-          >
-            <span className="app-header__live-dot" aria-hidden="true" />
-            Live
-          </Link>
+          {/* Live link hidden — page exists at /live for testing but not publicly linked */}
           <button
             className={`app-header__nav-link${isOnMyWall ? ' app-header__nav-link--active' : ''}`}
             onClick={() => navigate('/my-wall')}

@@ -276,7 +276,7 @@ async function buildMLBGamesAhead(
   if (!teamId) return []
 
   const todayStr = new Date().toISOString().split('T')[0]
-  const endDate  = new Date(Date.now() + 28 * 86400000).toISOString().split('T')[0]
+  const endDate  = new Date(Date.now() + 42 * 86400000).toISOString().split('T')[0]
 
   const data = await fetchJSON(
     `https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=${teamId}&startDate=${todayStr}&endDate=${endDate}&hydrate=team`
