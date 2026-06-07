@@ -606,12 +606,12 @@ function ChaserStat({ chaser, chaserName, chaserTeam, chaserOpponent, isMonument
         </div>
       )}
 
-      {/* Constellation — historical greats only, active player shown in chaser row */}
-      {chaser.leaderboard?.filter(m => !m.active).length > 0 && (
+      {/* Constellation — filter active + for monuments filter the record holder's own entries */}
+      {chaser.leaderboard?.filter(m => !m.active && !(isMonument && m.name === chaser.holder)).length > 0 && (
         <div className="ls-cstat__constellation">
           <span className="ls-cstat__constellation-title">In company with the greats</span>
           <div className="ls-cstat__constellation-list">
-            {chaser.leaderboard.filter(m => !m.active).map((m, i) => (
+            {chaser.leaderboard.filter(m => !m.active && !(isMonument && m.name === chaser.holder)).map((m, i) => (
               <div key={i} className="ls-cstat__constellation-row">
                 <span className="ls-cstat__constellation-rank">#{m.rank}</span>
                 <span className="ls-cstat__constellation-name">{m.name}</span>
@@ -720,12 +720,12 @@ function CompoundChaserSection({ entries }) {
 
       </div>
 
-      {/* Constellation — use first entry's leaderboard, filter active out */}
-      {chaser.leaderboard?.filter(m => !m.active).length > 0 && (
+      {/* Constellation — filter active + the chasers already shown in flame rows */}
+      {chaser.leaderboard?.filter(m => !m.active && !entries.some(e => e.player === m.name)).length > 0 && (
         <div className="ls-cstat__constellation">
           <span className="ls-cstat__constellation-title">In company with the greats</span>
           <div className="ls-cstat__constellation-list">
-            {chaser.leaderboard.filter(m => !m.active).map((m, i) => (
+            {chaser.leaderboard.filter(m => !m.active && !entries.some(e => e.player === m.name)).map((m, i) => (
               <div key={i} className="ls-cstat__constellation-row">
                 <span className="ls-cstat__constellation-rank">#{m.rank}</span>
                 <span className="ls-cstat__constellation-name">{m.name}</span>
@@ -783,7 +783,6 @@ function CompoundDetailPanel({ entry, onClear }) {
       {first?.chaser && (
         <section className="ls-chase-section" aria-label="Record chase">
           <div className="ls-chase-section__header">
-            <LensTag lens={first.chaser.lens} />
             <span className="ls-chase-section__stat-name">{first.chaser.stat}</span>
           </div>
           <CompoundChaserSection entries={entries} />
@@ -813,48 +812,49 @@ function DetailPanel({ entry, onVote, onClear }) {
   if (entry.compound?.length > 1) return <CompoundDetailPanel entry={entry} onClear={onClear} />
 
   const {
-    number, player, sport, team, isOnWall, isMonument,
+    number, tileLabel, player, recordHolder, sport, team, isOnWall, isMonument,
     stat, game, chaser,
     gamesAhead, gamesAheadContext,
   } = entry
 
-  const variant = tileVariant(entry)
+  const variant    = tileVariant(entry)
+  // Monument entries: show the record holder's name in the header, not the chaser
+  const headerName = isMonument && recordHolder ? recordHolder : player
 
   return (
     <div className={`ls-detail ls-detail--${variant}`}>
 
-      {/* ── 1. Player mat: number alone on top, details below ───────────── */}
+      {/* ── 1. Player mat ───────────────────────────────────────────────── */}
       <div className="ls-player-mat">
         <div className="ls-player-mat__top-row">
           <span className={`ls-player-mat__num ls-player-mat__num--${variant}`}>
-            {number}
+            {tileLabel ?? number}
           </span>
           <button className="tnw-close-btn ls-player-mat__close" onClick={onClear} aria-label="Clear selection">
             <X size={14} />
           </button>
         </div>
         <div className="ls-player-mat__info">
-          <h2 className="ls-player-mat__name">{player}</h2>
+          <h2 className="ls-player-mat__name">{headerName}</h2>
           <div className="ls-player-mat__sub">
             <span className="ls-player-mat__squad">
               {SPORT_LABEL[sport] ?? sport.toUpperCase()} · {team}
             </span>
             {stat && <span className="ls-player-mat__tonight">{stat}</span>}
           </div>
-          <GameLine game={game} />
+          {!isMonument && <GameLine game={game} />}
         </div>
       </div>
 
-      {/* ── 2. Hook — the "why this player is here" lede ────────────────── */}
+      {/* ── 2. Hook ─────────────────────────────────────────────────────── */}
       {gamesAheadContext && (
         <p className="ls-detail__hook">{gamesAheadContext}</p>
       )}
 
-      {/* ── 3. Chase section: lens tag + stat ───────────────────────────── */}
+      {/* ── 3. Chase section — no lens tag ──────────────────────────────── */}
       {chaser && (
         <section className="ls-chase-section" aria-label="Record chase">
           <div className="ls-chase-section__header">
-            <LensTag lens={chaser.lens} />
             <span className="ls-chase-section__stat-name">{chaser.stat}</span>
           </div>
           <ChaserStat
@@ -894,6 +894,7 @@ function rowToEntry(row) {
     compoundId:   row.compound_id ?? null,
     isMonument:   row.is_monument ?? false,
     tileLabel:    row.tile_label ?? null,
+    recordHolder: row.holder ?? null,  // monument: who holds the record (for header display)
     number:       row.number,
     player:       row.player,
     sport:        row.sport,
@@ -969,7 +970,12 @@ function rowsToWeeks(rows) {
 
   const dates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a))
   return dates.map((date, i) => {
-    const entries = mergeCompoundEntries(grouped[date])
+    // Sort numerically: monuments first (sacred tiles top), then heat tiles by number
+    const sorted  = [...grouped[date]].sort((a, b) => {
+      if (a.isMonument !== b.isMonument) return a.isMonument ? -1 : 1
+      return (a.number ?? 0) - (b.number ?? 0)
+    })
+    const entries = mergeCompoundEntries(sorted)
     const padded  = [...entries, ...Array(Math.max(0, 24 - entries.length)).fill(null)]
     return {
       id:            `week-${date}`,
