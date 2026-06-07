@@ -274,6 +274,157 @@ async function syncNBA(entry: Record<string, unknown>): Promise<Record<string, u
   }
 }
 
+// ── Soccer (World Cup) ────────────────────────────────────────────────────────
+// Uses ESPN soccer API with fifa.world competition slug.
+// espn_player_id required. Games run at various times globally — no game window
+// restriction for soccer; schedule updates always run.
+
+// ESPN national team abbreviation → team ID
+const SOCCER_TEAM_ID: Record<string, number> = {
+  FRA: 2, ARG: 6, BRA: 9, GER: 11, ESP: 8, ENG: 10, POR: 9879,
+  NED: 19, ITA: 5, USA: 30, MEX: 58,
+}
+
+// Build soccer games_ahead from ESPN World Cup schedule
+async function buildSoccerGamesAhead(
+  espnId: string,
+  team: string,
+): Promise<Record<string, unknown>[]> {
+  if (!espnId) return []
+
+  const todayStr = new Date().toISOString().split('T')[0]
+  const teamId   = SOCCER_TEAM_ID[team]
+  if (!teamId) return []
+
+  const data = await fetchJSON(
+    `https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/teams/${teamId}/schedule`
+  ).catch(() => null)
+
+  if (!data?.events) return []
+
+  const upcoming: Record<string, unknown>[] = []
+  for (const event of data.events as Record<string, unknown>[]) {
+    const status = (event.status as Record<string, unknown>)?.type as Record<string, unknown>
+    if (status?.completed) continue
+    if (upcoming.length >= 3) break
+
+    const dateStr = (event.date as string)?.split('T')[0] ?? ''
+    const d       = new Date((event.date as string) ?? '')
+    const label   = dateStr === todayStr
+      ? 'Tonight'
+      : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+    // Find opponent
+    const comps    = (event.competitions as Record<string, unknown>[])?.[0]
+    const teams    = (comps?.competitors as Record<string, unknown>[]) ?? []
+    const opp      = teams.find((t: Record<string, unknown>) => {
+      return (t.team as Record<string, unknown>)?.abbreviation !== team
+    })
+    const oppAbbr  = (opp?.team as Record<string, unknown>)?.abbreviation as string ?? '???'
+    const isHome   = (teams.find((t: Record<string, unknown>) =>
+      (t.team as Record<string, unknown>)?.abbreviation === team
+    ) as Record<string, unknown>)?.homeAway === 'home'
+
+    const note = (event.name as string)?.includes('Round')
+      ? (event.name as string).replace(/.*?(Round.*?)\s*-.*/, '$1').trim()
+      : null
+
+    upcoming.push({
+      id:      `g${upcoming.length + 1}`,
+      date:    label,
+      matchup: isHome ? `vs ${oppAbbr}` : `@ ${oppAbbr}`,
+      note,
+    })
+  }
+  return upcoming
+}
+
+async function syncSoccer(entry: Record<string, unknown>): Promise<Record<string, unknown>> {
+  const espnId = entry.espn_player_id as string
+  if (!espnId) return {}
+
+  const [logData, schedData] = await Promise.all([
+    fetchJSON(
+      `https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/athletes/${espnId}/gamelog`
+    ).catch(() => null),
+    fetchJSON(
+      `https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard`
+    ).catch(() => null),
+  ])
+
+  // Count WC goals from gamelog
+  let currentStat = entry.current_stat as number | null
+  let tonightStat: string | null = null
+
+  if (logData?.events) {
+    const goals = (logData.events as Record<string, unknown>[]).reduce(
+      (sum: number, e: Record<string, unknown>) => {
+        const stats  = e.stats as string[] ?? []
+        const labels = logData.labels as string[] ?? []
+        const gIdx   = labels.indexOf('G')
+        return sum + (gIdx >= 0 ? (Number(stats[gIdx]) || 0) : 0)
+      }, 0
+    )
+    if (goals > 0) currentStat = goals
+
+    const latestStats = (logData.events as Record<string, unknown>[])[0]?.stats as string[]
+    const labels      = logData.labels as string[] ?? []
+    const gIdx        = labels.indexOf('G')
+    if (latestStats && gIdx >= 0 && Number(latestStats[gIdx]) > 0) {
+      tonightStat = `${latestStats[gIdx]} goal${Number(latestStats[gIdx]) > 1 ? 's' : ''} today`
+    }
+  }
+
+  const remaining  = computeRemaining(currentStat, entry)
+  const gamesAhead = await buildSoccerGamesAhead(espnId, entry.team as string)
+
+  // Check for a live WC game today
+  const team     = entry.team as string
+  const todayStr = new Date().toISOString().split('T')[0]
+  const todayGame = (schedData?.events as Record<string, unknown>[] ?? []).find(
+    (e: Record<string, unknown>) => {
+      const comps = (e.competitions as Record<string, unknown>[])?.[0]
+      const teams = (comps?.competitors as Record<string, unknown>[]) ?? []
+      const dateStr = (e.date as string)?.split('T')[0]
+      return dateStr === todayStr && teams.some(
+        (t: Record<string, unknown>) =>
+          (t.team as Record<string, unknown>)?.abbreviation === team
+      )
+    }
+  )
+
+  const base = {
+    current_stat: currentStat,
+    tonight_stat: tonightStat,
+    remaining,
+    ...(gamesAhead.length ? { games_ahead: gamesAhead } : {}),
+  }
+
+  if (!todayGame) return base
+
+  const comps   = (todayGame.competitions as Record<string, unknown>[])?.[0]
+  const teams   = (comps?.competitors as Record<string, unknown>[]) ?? []
+  const status  = (todayGame.status as Record<string, unknown>)?.type as Record<string, unknown>
+  const isLive  = status?.state === 'in'
+  const isFinal = status?.completed === true
+
+  const homeTeam = teams.find((t: Record<string, unknown>) => t.homeAway === 'home')
+  const awayTeam = teams.find((t: Record<string, unknown>) => t.homeAway === 'away')
+
+  return {
+    ...base,
+    home_team:   (homeTeam?.team as Record<string, unknown>)?.abbreviation,
+    away_team:   (awayTeam?.team as Record<string, unknown>)?.abbreviation,
+    home_score:  Number(homeTeam?.score ?? 0),
+    away_score:  Number(awayTeam?.score ?? 0),
+    period:      isLive ? String(status?.detail ?? '') : isFinal ? 'Final' : null,
+    game_status: isLive ? 'live' : isFinal ? 'final' : 'upcoming',
+    game_date:   'Tonight',
+    game_time:   todayGame.date
+      ? formatETTime(todayGame.date as string) : null,
+  }
+}
+
 // ── MLB team abbreviation → API team ID ──────────────────────────────────────
 const MLB_TEAM_ID: Record<string, number> = {
   ARI:108,LAA:108,HOU:117,OAK:133,SEA:136,TEX:140,ATL:144,MIA:146,NYM:121,
@@ -488,6 +639,8 @@ Deno.serve(async (_req) => {
             if (schedData) gamesAhead = buildNHLGamesAhead(schedData, entry.team as string)
           } else if (entry.sport === 'mlb') {
             gamesAhead = await buildMLBGamesAhead(entry.team as string)
+          } else if (entry.sport === 'soccer') {
+            gamesAhead = await buildSoccerGamesAhead(entry.espn_player_id as string, entry.team as string)
           }
           if (!gamesAhead.length) return
           await supabase.from('live_entries').update({ games_ahead: gamesAhead }).eq('id', entry.id)
@@ -501,9 +654,10 @@ Deno.serve(async (_req) => {
       entries.map(async (entry: Record<string, unknown>) => {
         let update: Record<string, unknown> = {}
 
-        if (entry.sport === 'nhl')      update = await syncNHL(entry)
-        else if (entry.sport === 'nba') update = await syncNBA(entry)
-        else if (entry.sport === 'mlb') update = await syncMLB(entry)
+        if (entry.sport === 'nhl')        update = await syncNHL(entry)
+        else if (entry.sport === 'nba')   update = await syncNBA(entry)
+        else if (entry.sport === 'mlb')   update = await syncMLB(entry)
+        else if (entry.sport === 'soccer') update = await syncSoccer(entry)
         else return
 
         const { error: updateError } = await supabase
