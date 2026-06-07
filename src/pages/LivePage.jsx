@@ -905,14 +905,11 @@ export default function LivePage() {
   const hasAutoSelected = useRef(false)   // prevents re-select after user clears
   const handleClear     = useCallback(() => setSelectedId(null), [])
 
-  // Auto-select first entry on initial load only — not after user clears
+  // No auto-select on load — user picks the tile they want
   useEffect(() => {
     if (!hasAutoSelected.current && weeks.length > 0) {
-      const first = weeks[0]?.entries.find(Boolean)
-      if (first) {
-        setSelectedId(first.id)
-        hasAutoSelected.current = true
-      }
+      hasAutoSelected.current = true
+      // intentionally not selecting any entry
     }
   }, [weeks])
 

@@ -199,31 +199,50 @@ async function syncNHL(entry: Record<string, unknown>): Promise<Record<string, u
 }
 
 // ── NBA ───────────────────────────────────────────────────────────────────────
+// stats.nba.com blocks server requests — using ESPN unofficial API instead.
+// ESPN player game log: site.api.espn.com/apis/site/v2/sports/basketball/nba/athletes/{id}/gamelog
 
 async function syncNBA(entry: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const playerId = entry.sport_player_id as string
-  const team     = entry.team as string
-  const nbaHeaders = { 'Referer': 'https://www.nba.com', 'User-Agent': 'Mozilla/5.0' }
+  const espnId = entry.espn_player_id as string | null  // ESPN player ID (separate from NBA ID)
+  const team   = entry.team as string
 
   const [scoreData, logData] = await Promise.all([
-    fetchJSON(
-      'https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json',
-      nbaHeaders
-    ).catch(() => null),
-    fetchJSON(
-      `https://stats.nba.com/stats/playergamelog?PlayerID=${playerId}&Season=2025-26&SeasonType=Playoffs`,
-      nbaHeaders
-    ).catch(() => null),
+    fetchJSON('https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json')
+      .catch(() => null),
+    espnId
+      ? fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/athletes/${espnId}/gamelog`)
+          .catch(() => null)
+      : Promise.resolve(null),
   ])
 
-  // Series total points (sum of column index 26 = PTS across all playoff games)
-  const games = logData?.resultSets?.[0]?.rowSet ?? []
-  const currentStat = games.length > 0
-    ? games.reduce((sum: number, g: unknown[]) => sum + (Number(g[26]) || 0), 0)
-    : entry.current_stat
+  // ESPN game log: filter to playoff games (seasontype=3), sum PTS
+  let currentStat = entry.current_stat as number | null
+  let tonightStat: string | null = null
 
-  const latest = games[0]
-  const tonightStat = latest ? `${latest[26]} PTS tonight` : null
+  if (logData?.events) {
+    const playoffGames = (logData.events as Record<string, unknown>[])
+      .filter(e => {
+        const seasonType = (e.seasonType as Record<string, unknown>)?.type
+        return seasonType === 3 || seasonType === '3'
+      })
+
+    if (playoffGames.length > 0) {
+      // Sum points across all playoff games — stats array index varies, find PTS by label
+      const labels: string[] = logData.labels ?? []
+      const ptsIdx = labels.findIndex((l: string) => l === 'PTS')
+
+      if (ptsIdx >= 0) {
+        currentStat = playoffGames.reduce((sum: number, e: Record<string, unknown>) => {
+          const stats = (e.stats as string[]) ?? []
+          return sum + (Number(stats[ptsIdx]) || 0)
+        }, 0)
+
+        const latestStats = (playoffGames[0]?.stats as string[]) ?? []
+        const pts = latestStats[ptsIdx]
+        if (pts) tonightStat = `${pts} PTS tonight`
+      }
+    }
+  }
 
   const todayGame = (scoreData?.scoreboard?.games ?? []).find((g: Record<string, unknown>) => {
     const h = (g.homeTeam as Record<string, unknown>)?.teamTricode
