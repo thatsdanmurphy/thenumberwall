@@ -35,3 +35,9 @@ Run `npm run ds:lint` and fix all violations before closing the session. Review 
 ## Jersey verification rule
 
 Any jersey number added to the wall must be verified via two independent sources. Cross-reference honors table for year and award claims. See `feedback_jersey_verification.md` in memory.
+
+## Fun Fact copy rule
+
+**1–2 sentences. ≤ 45 words. Never repeat the Signature Stat.**
+
+The stat widget already shows the number. The Fun Fact must add something the stat can't say — a scene, a decision, a detail that earns its place. Write it like a text to a friend who loves sports, not a Wikipedia summary. If it reads like a résumé, cut it.
